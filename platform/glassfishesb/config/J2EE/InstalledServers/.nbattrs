@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE attributes PUBLIC "-//NetBeans//DTD DefaultAttributes 1.0//EN" "http://www.netbeans.org/dtds/attributes-1_0.dtd">
+<attributes version="1.0">
+    <fileobject name="instance">
+        <attr name="DOMAIN" stringvalue="domain1"/>
+        <attr name="DatabaseStartEnabled" stringvalue="false"/>
+        <attr name="DirectoryDeploymentPossible" stringvalue="true"/>
+        <attr name="DriverDeploymentEnabled" stringvalue="false"/>
+        <attr name="HttpMonitorOn" stringvalue="false"/>
+        <attr name="HttpProxySynced" stringvalue="true"/>
+        <attr name="LOCATION" stringvalue="/Applications/NetBeans/SUNWappserver/domains"/>
+        <attr name="PROP_INSTANCE_ID" stringvalue="glassfish"/>
+        <attr name="deploymentTimeout" stringvalue="144"/>
+        <attr name="displayName" stringvalue="GlassFish v2.1"/>
+        <attr name="httpportnumber" stringvalue="8080"/>
+        <attr name="password" stringvalue="adminadmin"/>
+        <attr name="registeredWithoutUI" stringvalue="false"/>
+        <attr name="startupTimeout" stringvalue="288"/>
+        <attr name="url" stringvalue="[/Applications/NetBeans/SUNWappserver]deployer:Sun:AppServer::localhost:4848"/>
+        <attr name="username" stringvalue="admin"/>
+    </fileobject>
+</attributes>

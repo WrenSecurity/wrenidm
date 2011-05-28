@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN"
+         "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd"-->
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+    <!--system systemId="http://localhost:8080/repositoryService/RepositoryService?wsdl" uri="wsdl/repositoryWrapper.wsdl"/>
+    <system systemId="http://localhost:8080/modelService/ModelService?wsdl" uri="wsdl/modelWrapper.wsdl"/>
+    <system systemId="http://localhost:8080/stagingService/StagingService?wsdl" uri="wsdl/stagingWrapper.wsdl"/>
+    <system systemId="http://localhost:8080/provisioningService/ProvisioningService?wsdl" uri="wsdl/provisioningWrapper.wsdl"/-->
+
+    <rewriteSystem systemIdStartString="http://openidm.forgerock.com/xml/" rewritePrefix="wsdl/xml/"/>
+    <nextCatalog catalog="catalog.xml"/>
+</catalog>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process
+    name="listResourceObjectShadows"
+    targetNamespace="http://openidm.forgerock.com/xml/ns/openidm-bpel-model-interceptor/process"
+    xmlns:tns="http://openidm.forgerock.com/xml/ns/openidm-bpel-model-interceptor/process"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+    xmlns:sxt="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Trace" 
+    xmlns:sxed="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Editor"
+    xmlns:sxeh="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/ErrorHandling">
+    <import namespace="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" location="openidm-model/contract/model.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <partnerLinks>
+        <partnerLink name="invokedModel" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" partnerLinkType="tns:idmModel" partnerRole="idmModelPortTypeRole"/>
+        <partnerLink name="implementedModel" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" partnerLinkType="tns:idmModel" myRole="idmModelPortTypeRole"/>
+    </partnerLinks>
+    <variables>
+        <variable name="invokedListResourceObjectShadowsOut" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" messageType="tns:listResourceObjectShadowsResponse"/>
+        <variable name="implementedListResourceObjectShadowsIn" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" messageType="tns:listResourceObjectShadowsRequest"/>
+    </variables>
+    <sequence>
+        <receive name="ReceiveListResourceObjectShadows" createInstance="yes" partnerLink="implementedModel" operation="listResourceObjectShadows" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" portType="tns:idmModelPortType" variable="implementedListResourceObjectShadowsIn"/>
+        <invoke name="InvokeListResourceObjectShadows" partnerLink="invokedModel" operation="listResourceObjectShadows" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" portType="tns:idmModelPortType" inputVariable="implementedListResourceObjectShadowsIn" outputVariable="invokedListResourceObjectShadowsOut"/>
+        <reply name="ReplyListResourceObjectShadows" partnerLink="implementedModel" operation="listResourceObjectShadows" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" portType="tns:idmModelPortType" variable="invokedListResourceObjectShadowsOut"/>
+    </sequence>
+</process>
+
+

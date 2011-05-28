@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<javaee-project xmlns="http://java.sun.com/xml/ns/jbi/javaee/config/1/" xmlns:ns0="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" xmlns:ns1="http://model.openidm.forgerock.com/" xmlns:ns2="http://openidm.forgerock.com/xml/ns/public/provisioning/resource-object-change-listener-1.wsdl" xmlns:ns3="http://openidm.forgerock.com/xml/ns/public/model/password-1.wsdl" xmlns:ns4="http://openidm.forgerock.com/xml/ns/public/model/cycle-management-1.wsdl" xmlns:ns5="http://openidm.forgerock.com/xml/ns/public/repository/repository-1.wsdl" xmlns:ns6="http://openidm.forgerock.com/xml/ns/public/provisioning/provisioning-1.wsdl" name="openidm-model">
+    <services>
+        <provides enable-for-javaee-http="true" endpoint-name="javaee_modelPort" interface-name="ns0:modelPortType" service-name="ns0:modelService"/>
+        <provides enable-for-javaee-http="true" endpoint-name="javaee_passwordPort" interface-name="ns1:PasswordService" service-name="ns1:passwordService"/>
+        <provides enable-for-javaee-http="true" endpoint-name="javaee_resourceObjectChangeListenerPort" interface-name="ns2:ResourceObjectChangeService" service-name="ns2:resourceObjectChangeListenerService"/>
+        <provides enable-for-javaee-http="true" endpoint-name="javaee_resourceObjectChangeListenerPort" interface-name="ns2:resourceObjectChangeListenerPortType" service-name="ns2:resourceObjectChangeListenerService"/>
+        <provides enable-for-javaee-http="true" endpoint-name="javaee_passwordPort" interface-name="ns3:passwordPortType" service-name="ns3:passwordService"/>
+        <provides enable-for-javaee-http="true" endpoint-name="javaee_cycleManagementPort" interface-name="ns4:cycleManagementPortType" service-name="ns4:cycleManagementService"/>
+        <provides enable-for-javaee-http="true" endpoint-name="javaee_cycleManagementPort" interface-name="ns4:CycleManagementService" service-name="ns4:cycleManagementService"/>
+        <consumes enable-for-nmr="true" endpoint-name="javaee_repositoryPortModelClient" interface-name="ns5:repositoryPortType" service-name="ns5:repositoryService"/>
+        <consumes enable-for-nmr="true" endpoint-name="javaee_provisioningPortModelClient" interface-name="ns6:provisioningPortType" service-name="ns6:provisioningService"/>
+        <consumes enable-for-nmr="true" endpoint-name="javaee_modelPortClient" interface-name="ns0:modelPortType" service-name="ns0:modelService"/>
+        <consumes enable-for-nmr="true" endpoint-name="javaee_cycleManagementPortClient" interface-name="ns4:cycleManagementPortType" service-name="ns4:cycleManagementService"/>
+    </services>
+</javaee-project>

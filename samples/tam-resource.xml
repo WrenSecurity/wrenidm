@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<c:objects xmlns:c="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd">
+    <c:resource version="0" oid="f9691190-fb8c-11df-8cff-0800200c9a66" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <c:name>Tivoli Access Manager</c:name>
+        <c:type>http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resourceaccessconfiguration-1.xsd</c:type>
+        <c:namespace>http://openidm.forgerock.com/xml/ns/public/resource/instances/f9691190-fb8c-11df-8cff-0800200c9a66</c:namespace>
+        <c:schema>
+            <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+                targetNamespace="http://openidm.forgerock.com/xml/ns/public/resource/instances/f9691190-fb8c-11df-8cff-0800200c9a66"
+                xmlns:c="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd"
+                xmlns:xns0="http://openidm.forgerock.com/xml/ns/public/resource/instances/f9691190-fb8c-11df-8cff-0800200c9a66"
+                xmlns:xns1="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd">
+                <xsd:import namespace="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd"/>
+                <xsd:import namespace="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd"/>
+                <xsd:import namespace="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd"/>
+                <xsd:complexType name="Account">
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <r:identifier xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd" ref="xns1:__UID__"/>
+                            <r:secondaryIdentifier xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd" ref="xns1:__NAME__"/>
+                            <r:nativeObjectClass xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">__ACCOUNT__</r:nativeObjectClass>
+                            <r:accountType default="true" xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd"/>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                    <xsd:complexContent>
+                        <xsd:extension base="r:ResourceObjectClass" xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">
+                            <xsd:sequence>
+                                <xsd:element ref="xns1:__UID__" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>__UID__</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element ref="xns1:__NAME__">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>__NAME__</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="registryName" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <!--r:attributeFlag xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">NOT_UPDATEABLE</r:attributeFlag-->
+                                            <r:nativeAttributeName>registryName</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+
+
+                                <xsd:element name="firstname" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <!--r:attributeFlag xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">NOT_UPDATEABLE</r:attributeFlag-->
+                                            <r:nativeAttributeName>firstname</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="lastname" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <!--r:attributeFlag xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">NOT_UPDATEABLE</r:attributeFlag-->
+                                            <r:nativeAttributeName>lastname</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="ssoUser" type="xsd:boolean">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>ssoUser</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="passwordPolicy" type="xsd:boolean">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <!--r:attributeFlag xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">NOT_UPDATEABLE</r:attributeFlag-->
+                                            <r:nativeAttributeName>passwordPolicy</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="deleteFromRegistry" type="xsd:boolean">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>deleteFromRegistry</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="expirePassword" type="xsd:boolean">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>expirePassword</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+
+                                <xsd:element minOccurs="0" ref="xns1:__DESCRIPTION__">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>__DESCRIPTION__</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                
+                                <xsd:element maxOccurs="unbounded" minOccurs="0" ref="xns1:__GROUPS__">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>__GROUPS__</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element maxOccurs="unbounded" minOccurs="0" name="gsoWebCredentials" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>gsoWebCredentials</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element maxOccurs="unbounded" minOccurs="0" name="gsoGroupCredentials" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>gsoGroupCredentials</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+
+                                <xsd:element minOccurs="0" name="importFromRegistry" type="xsd:boolean">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>importFromRegistry</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element ref="xns1:__PASSWORD__">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:attributeFlag xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">PASSWORD</r:attributeFlag>
+                                            <r:classifiedAttribute xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">
+                                                <r:encryption>HASH</r:encryption>
+                                                <r:classificationLevel>password</r:classificationLevel>
+                                            </r:classifiedAttribute>
+                                            <r:nativeAttributeName>__PASSWORD__</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+
+                                <xsd:element minOccurs="0" ref="xns1:__ENABLE__">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>__ENABLE__</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+
+                                <!--
+                                __PASSWORD_CHANGE_INTERVAL_NAME__
+                                __ENABLE__
+                                __ENABLE_DATE__
+                                __DISABLE_DATE__
+
+                                __ENABLE_NAME__
+                                __ENABLE_DATE_NAME__
+                                __DISABLE_DATE_NAME__
+                                __PASSWORD_EXPIRED__
+                                __LAST_LOGIN_DATE__
+                                __LAST_PASSWORD_CHANGE_DATE__
+
+                                -->
+
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+                <xsd:complexType name="Group">
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <r:identifier xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd" ref="xns1:__NAME__"/>
+                            <r:nativeObjectClass xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">__GROUP__</r:nativeObjectClass>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                    <xsd:complexContent>
+                        <xsd:extension base="r:ResourceObjectClass" xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">
+                            <xsd:sequence>
+                                <xsd:element ref="xns1:__NAME__">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>__NAME__</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="registryName" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:attributeFlag xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">NOT_UPDATEABLE</r:attributeFlag>
+                                            <r:nativeAttributeName>registryName</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+
+                                <xsd:element minOccurs="0" ref="xns1:__DESCRIPTION__">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>__DESCRIPTION__</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+
+                                <xsd:element maxOccurs="unbounded" minOccurs="0" name="members" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>members</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                
+                                <xsd:element minOccurs="0" name="importFromRegistry" type="xsd:boolean">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>importFromRegistry</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:schema>
+        </c:schema>
+        <c:schemaHandling>
+            <c:accountType>
+                <c:name>Default Account</c:name>
+            </c:accountType>
+        </c:schemaHandling>
+        <c:configuration>
+            <ns2:ConnectorConfiguration xmlns:ns2="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/configuration-1.xsd"
+                xmlns:ns4="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd" 
+                xmlns:c="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd"
+                xmlns:ri="http://openidm.forgerock.com/xml/ns/resource/idconnector/bundle/com.forgerock.openconnector.tam/com.forgerock.openconnector.tam.TAMConnector/1.1.887">
+                <ns2:ConnectorRef bundleName="com.forgerock.openconnector.tam" bundleVersion="1.1.887" connectorName="com.forgerock.openconnector.tam.TAMConnector" connectorHost="localhost" connectorPort="8759" connectorSecret="Passw0rd"/>
+                <ns2:BundleProperties>
+                    <ri:adminUser>sec_master</ri:adminUser>
+                    <ri:adminPassword>admin</ri:adminPassword>
+                    <ri:configUrl>file:///d:\\openidm\\connectorserver\\openidm_tam.conf</ri:configUrl>
+
+                    <!--ri:certificateBased>false</ri:certificateBased>
+                    <ri:deleteFromRegistry>true</ri:deleteFromRegistry>
+                    <ri:syncGSOCredentials>false</ri:syncGSOCredentials-->
+                </ns2:BundleProperties>
+                <ns2:PoolConfigOption minEvictTimeMillis="120000" minIdle="1" maxIdle="10" maxObjects="10" maxWait="150000"/>
+                <ns2:OperationTimeouts>
+                    <ns2:OperationTimeout name="create" timeout="-1"/>
+                    <ns2:OperationTimeout name="update" timeout="-1"/>
+                    <ns2:OperationTimeout name="delete" timeout="-1"/>
+                    <ns2:OperationTimeout name="test" timeout="-1"/>
+                    <ns2:OperationTimeout name="scriptOnConnector" timeout="-1"/>
+                    <ns2:OperationTimeout name="scriptOnResource" timeout="-1"/>
+                    <ns2:OperationTimeout name="get" timeout="-1"/>
+                    <ns2:OperationTimeout name="authenticate" timeout="-1"/>
+                    <ns2:OperationTimeout name="search" timeout="-1"/>
+                    <ns2:OperationTimeout name="validate" timeout="-1"/>
+                    <ns2:OperationTimeout name="sync" timeout="-1"/>
+                    <ns2:OperationTimeout name="schema" timeout="-1"/>
+                </ns2:OperationTimeouts>
+            </ns2:ConnectorConfiguration>
+        </c:configuration>
+    </c:resource>
+</c:objects>

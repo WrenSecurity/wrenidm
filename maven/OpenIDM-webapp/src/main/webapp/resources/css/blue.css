@@ -1,0 +1,38 @@
+/*------ color and font definition ------*/
+body *,body, *,input{font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;}
+/*h1,h2{font-family: "Comic Sans MS", "Brush Script MT",  cursive;}*/
+
+a{color:red;}
+.error{color:red;}
+.info{color:green;}
+body{background-color: #6492AA;} /*#534F88*/
+
+.list-main{border-bottom: 1px solid #295A75;color:#fff;}
+.list-odd-row{background-color: #5B8EAA;color:#fff;}
+.list-odd-row:hover, .list-even-row:hover {background-color: #fff;color:#000;}
+.list-even-row{background-color: #42687C;color:#fff;}
+.list-header{background-color: #42738E;font-weight: bold;color:#fff;}
+.list-header,.list-odd-row td,.list-even-row td{border-right:1px solid #295A75;}
+
+#nav h3{background-color: #295A75;color:#fff;}
+#nav ul ul li:hover{background-color:#F6F6F6;}
+#page, #login {
+    margin: 40px auto;width: 80%;
+    font-size:0.8em;    
+    border:15px solid #295A75;
+    background-color: #fff;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+    -moz-box-shadow: 10px 10px 20px #000;
+    -webkit-box-shadow: 10px 10px 20px #000;
+    box-shadow: 10px 10px 20px #000;
+    behavior: url(/resources/css/ie-css3.htc);
+}
+
+#top {background-color: #5B8EAA;color:#fff;}
+#top a, #footer a{color:#DFDF62;}
+#container {background-color: #fff;color: #333;}
+#footer {color: #fff;background-color: #5B8EAA;}
+#container.nav-left #nav {border-right: 1px solid #295A75;}
+#container.nav-right #nav {border-left: 1px solid #295A75;}

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:ice="http://www.icesoft.com/icefaces/component"
+             xmlns:comp="http://java.sun.com/jsf/composite/components/comp"
+             template="/resources/templates/master-template.xhtml">
+
+    <ui:define name="title">Dynamic Resource forms</ui:define>
+    <ui:define name="content-title">Dynamic Resource forms</ui:define>
+
+    <ui:define name="content">
+        <ice:form>
+            Account oid:
+            <ice:inputText value="#{testBean.accountOid}" immediate="true"/>
+            <ice:commandButton value="Submit" actionListener="#{testBean.reloadForm}" action="/index3" />
+        </ice:form>
+        <c:forEach items="#{testBean.beanList}" var="item">
+            <ice:form>
+                <ice:panelCollapsible style="width: 800px;" expanded="#{item.rendered}">
+                    <f:facet name="header">
+                        <ice:panelGroup>
+                            <ice:outputText value="Some Resource Attributes"/>
+                        </ice:panelGroup>
+                    </f:facet>
+                    <idm:schemaFormGrid bean="#{item.bean}" />
+                </ice:panelCollapsible>
+                <br />
+                <ice:commandButton value="Submit" action="#{testBean.submitForm}" />
+                <br />
+                Values:
+                <ui:repeat value="#{item.bean.formValuesList}" var="b">
+                    <ice:panelGroup>
+                        <ice:outputText value="#{b.key}" />
+                        <ice:outputText value="" style="width: 20px;display: inline-block;" />
+                        <ice:outputText value="'#{b.value}'" />
+                    </ice:panelGroup>
+                </ui:repeat>
+            </ice:form>
+        </c:forEach>
+    </ui:define>
+</ui:composition>

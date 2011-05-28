@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="model"
+    targetNamespace="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:abs="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl"
+    xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+    <import namespace="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" location="xml/ns/public/model/model-1.wsdl"/>
+    <service name="modelService">
+        <port name="modelPortWebappClient" binding="abs:modelBinding">
+            <!-- http://localhost:${HttpDefaultPort}/modelService/ModelService
+            <soap:address location="http://localhost:${HttpDefaultPort}/modelService/ModelService"/>
+            <soap:address location="REPLACE_WITH_ACTUAL_URL"/>
+            <soap:address location="http://localhost:8080/modelService/ModelService"/-->
+            <soap:address location="http://localhost:${HttpDefaultPort}/modelService/modelPort"/>
+        </port>
+    </service>
+</definitions>
+
+
+
+
+
+

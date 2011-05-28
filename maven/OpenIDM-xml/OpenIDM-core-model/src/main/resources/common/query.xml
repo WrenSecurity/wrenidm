@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : common.xml
+    Created on : June 21, 2010, 6:44 PM
+    Author     : semancik
+    Description:
+        Purpose of the document follows.
+-->
+
+<query  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xmlns='http://openidm.forgerock.com/xml/ns/common/1#'
+   xsi:schemaLocation='http://openidm.forgerock.com/xml/ns/common/1# common.xsd'
+   xmlns:foo="http://foo.com/">
+
+   <!-- Query filter example -->
+
+    <and>
+        <type uri="http://openidm.forgerock.com/xml/ns/identity/1#User"/>
+        <equal property="foo:bar">baz</equal>
+        <not>
+            <true property="foo:barbar"/>
+        </not>
+        <present property="foo:x"/>
+        <or>
+            <substring property="foo:y">a*b</substring>
+            <lessOrEqual property="foo:n">100</lessOrEqual>
+            <equal property="foo:foofoo"><foo:foo foo="foo"><foo:foofoo/></foo:foo></equal>
+        </or>
+    </and>
+    
+</query>

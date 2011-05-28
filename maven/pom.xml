@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.forgerock.openidm</groupId>
+    <artifactId>OpenIDM-root</artifactId>
+    <version>1.7-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>OpenIDM parent pom</name>
+    <description>Utility module to compile all of the maven based OpenIDM projects.</description>
+    <url>http://www.forgerock.com/openidm.html</url>
+    <organization>
+        <name>ForgeRock</name>
+        <url>http://www.forgerock.com</url>
+    </organization>
+    
+    <scm>
+        <connection>scm:svn:https://svn.forgerock.org/openidm/trunk/maven</connection>
+        <developerConnection>scm:svn:https://svn.forgerock.org/openidm/trunk/maven</developerConnection>
+        <tag>HEAD</tag>
+        <url>http://sources.forgerock.org/changelog/openidm/trunk/maven</url>
+    </scm>
+    <modules>
+	    <module>OpenIDM-test-tools</module>
+        <module>OpenIDM-parent</module>
+        <module>OpenIDM-api</module>
+        <module>OpenIDM-annotations</module>
+        <module>OpenIDM-xml</module>
+        <module>OpenIDM-commons</module>
+        <module>OpenIDM-cryptography</module>
+    <!--module>OpenIDM-database</module-->
+        <module>OpenIDM-repository</module>
+        <module>OpenIDM-model</module>
+        <module>OpenIDM-provisioning</module>
+        <module>OpenIDM-staging</module>
+        <module>OpenIDM-webapp</module>
+    <!--module>OpenIDM-services</module-->
+  </modules>
+</project>

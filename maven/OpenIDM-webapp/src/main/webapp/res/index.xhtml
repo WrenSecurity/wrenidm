@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:ice="http://www.icesoft.com/icefaces/component"            
+             template="/resources/templates/master-template.xhtml">
+
+    <ui:define name="title">Resources</ui:define>
+    <ui:define name="content-title">List resources</ui:define>
+
+    <ui:define name="content">
+        resource list...
+
+        <ice:commandButton value="Test configuration" />
+        <ice:commandButton value="New resource" />
+        <ice:commandButton value="Edit resource" />
+        <ice:commandButton value="Delete resource" />
+
+        <ice:dataTable id="userTable"
+                                   rows="10"
+                                   value="#{resourceListController.resourceList}"
+                                   var="item"
+                                   sortColumn="Display Name"
+                                   sortAscending="true"
+                                   columnClasses="iceDatTblCol1"
+                                   rowClasses="iceDatTblRow1 iceDatTblRow2"
+                                   columnWidths="230px, 100px, 100px, 170px, 100px, 100px, 150px"
+                                   resizable="true"
+                                   >
+            
+        </ice:dataTable>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             xmlns:ice="http://www.icesoft.com/icefaces/component"
+             template="../resources/templates/admin-template.xhtml">
+
+    <ui:define name="title">
+        Versions
+    </ui:define>
+    
+    <ui:define name="admin-content">
+        <div id="admin-content" style="width: 50%">
+            
+        <h1>OpenIDM Software and other Versions</h1>
+        These values where collected during the build phase and might be different on the machine where OpenIDM is deployed!
+        <h2>OpenIDM Version</h2>
+        This build is based on the Revision
+        <ice:outputLabel value="#{lang.messages['OpenIDMRevision']}"/>
+        of the OpenIDM subversion repository at: <br/>
+        <a href="https://svn.forgerock.org/openidm/trunk/">https://svn.forgerock.org/openidm/trunk/</a>
+
+        <h2>Other Versions and Values</h2>
+        <table border="1" cellpadding="5">
+            <thead>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>JAVA_HOME</td>
+                    <td>#{lang.messages['java_home']}</td>
+                </tr>
+                <tr>
+                    <td>JAVA_VERSION</td>
+                    <td>#{lang.messages['java.version']}</td>
+                </tr>
+                <tr>
+                    <td>JAVA_VENDOR</td>
+                    <td>#{lang.messages['java.vendor']}</td>
+                </tr>
+                <tr>
+                    <td>JAVA_CLASS_PATH</td>
+                    <td>#{lang.messages['java.class.path']}</td>
+                </tr>
+                <tr>
+                    <td>OS_NAME</td>
+                    <td>#{lang.messages['os.name']}</td>
+                </tr>
+                <tr>
+                    <td>OS_VERSION</td>
+                    <td>#{lang.messages['os.version']}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        </div>
+    </ui:define>
+</ui:composition>

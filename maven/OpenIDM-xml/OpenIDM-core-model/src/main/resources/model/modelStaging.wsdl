@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="modelStaging"
+    targetNamespace="http://openidm.forgerock.com/xml/ns/model/staging/1#"
+    xmlns:tns="http://openidm.forgerock.com/xml/ns/model/staging/1#"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype"
+    xmlns:c="http://openidm.forgerock.com/xml/ns/common/1#"
+    xmlns:idm="http://openidm.forgerock.com/xml/ns/common/1#">
+
+    <!-- Prefix "idm" defined above is all wrong! It is workaround for OPENIDM-124 -->
+
+    <documentation>
+        TODO
+
+    </documentation>
+
+    <types>
+        <xsd:schema targetNamespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#">
+
+            <xsd:import namespace="http://openidm.forgerock.com/xml/ns/common/1#" schemaLocation="../common/common.xsd"/>
+            <!-- This should import identity schema. But it deos not now. Workaround for OPENIDM-124 -->
+            <!--
+            <xsd:import namespace="http://openidm.forgerock.com/xml/ns/identity/1#" schemaLocation="../repository/identity.xsd"/>
+            -->
+
+        </xsd:schema>
+    </types>
+
+    <message name="createObjectStageRequest">
+        <part name="objectType" type="xsd:anyURI"/>
+    </message>
+    <message name="createObjectStageResponse">
+        <part name="stage" type="idm:ObjectStageType"/>
+    </message>
+
+    <message name="getObjectStageRequest">
+        <part name="oid" type="xsd:string"/>
+        <part name="resolve" type="c:PropertyReferenceListType"/>
+    </message>
+    <message name="getObjectStageResponse">
+        <part name="stage" type="idm:ObjectStageType"/>
+    </message>
+
+    <message name="submitObjectStageRequest">
+        <part name="stage" type="idm:ObjectStageType"/>
+    </message>
+    <message name="submitObjectStageResponse">
+        <part name="oid" type="xsd:string"/>
+    </message>
+
+    <message name="addUserStageAccountRequest">
+        <part name="stage" type="idm:ObjectStageType"/>
+        <part name="resourceOid" type="xsd:string"/>
+    </message>
+    <message name="addUserStageAccountResponse">
+        <part name="stage" type="idm:ObjectStageType"/>
+    </message>
+
+    <portType name="stagingPortType">
+
+        <operation name="createObjectStage">
+            <documentation>
+                    Returns empty object stage for new object.
+
+                    Submitting this stage results in "add" action on the object.
+
+                    WARNING: just an idea, not thought over
+                    
+                    TODO: handling of unknown types.
+            </documentation>
+            <input name="createObjectStageInput" message="tns:createObjectStageRequest"/>
+            <output name="createObjectStageOutput" message="tns:createObjectStageResponse"/>
+        </operation>
+
+        <operation name="getObjectStage">
+            <documentation>
+                    Returns object stage for provided OID.
+                    Must fail if object with the OID does not exists.
+
+                    Submitting this stage results in "modify" action on the
+                    object.
+            </documentation>
+            <input name="getObjectStageInput" message="tns:getObjectStageRequest"/>
+            <output name="getObjectStageOutput" message="tns:getObjectStageResponse"/>
+        </operation>
+
+        <operation name="submitObjectStage">
+            <documentation>
+                Submits modified state to process any changes.
+                TODO
+                
+                WARNING: This may not complete the operation immediately
+                (in case of approvals or async provisioning). But the flow in
+                such a case is still TBD.
+            </documentation>
+            <input name="submitObjectStageInput" message="tns:submitObjectStageRequest"/>
+            <output name="submitObjectStageOutput" message="tns:submitObjectStageResponse"/>
+        </operation>
+
+        <!-- Type-specific operations -->
+
+        <operation name="addUserStageAccount">
+            <documentation>
+                Adds account to the existing user stage.
+                Works only on stages created for UserType objects.
+                TODO
+            </documentation>
+            <input name="addUserStageAccountInput" message="tns:addUserStageAccountRequest"/>
+            <output name="addUserStageAccountOutput" message="tns:addUserStageAccountResponse"/>
+        </operation>
+
+        <!-- Something like "addUserStageRole" operation will be added later -->
+
+    </portType>
+
+    <plnk:partnerLinkType name="stagingPortType">
+        <!-- A partner link type is automatically generated when a new port type is added. Partner link types are used by BPEL processes.
+In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.-->
+        <plnk:role name="stagingPortTypePort" portType="tns:stagingPortType"/>
+    </plnk:partnerLinkType>
+
+</definitions>
+

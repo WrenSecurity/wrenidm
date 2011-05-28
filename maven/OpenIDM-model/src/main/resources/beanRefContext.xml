@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+     http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+     default-lazy-init="false">
+
+    <bean id="ejb-context" class="org.springframework.context.support.ClassPathXmlApplicationContext">
+        <constructor-arg>
+            <list>
+                <value>application-context-model.xml</value>
+                <value>application-context-repository.xml</value>
+                <value>application-context-provisioning.xml</value>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false" />
+    <bean id="loggerExporter" class="com.forgerock.openidm.logging.LoggerMXBeanExporter">
+        <property name="exporter" ref="exporter" />
+        <property name="beans">
+            <map>
+                <entry key="openidm:name=ModelLogger" value-ref="ModelLoggerBean" />
+                <entry key="openidm:name=RepositoryLogger" value-ref="RepositoryLoggerBean" />
+                <entry key="openidm:name=ProvisioningLogger" value-ref="ProvisioningLoggerBean" />
+            </map>
+        </property>
+    </bean>
+
+    <bean id="ModelLoggerBean" class="com.forgerock.openidm.logging.LoggerMXBeanExporter$LoggerBean">
+        <constructor-arg type="java.lang.String" value="application-context-model.xml" />
+        <constructor-arg type="java.lang.String" value="ModelLoggerMXBean" />
+    </bean>
+    <bean id="RepositoryLoggerBean" class="com.forgerock.openidm.logging.LoggerMXBeanExporter$LoggerBean">
+        <constructor-arg type="java.lang.String" value="application-context-repository.xml" />
+        <constructor-arg type="java.lang.String" value="RepositoryLoggerMXBean" />
+    </bean>
+    <bean id="ProvisioningLoggerBean" class="com.forgerock.openidm.logging.LoggerMXBeanExporter$LoggerBean">
+        <constructor-arg type="java.lang.String" value="application-context-provisioning.xml" />
+        <constructor-arg type="java.lang.String" value="ProvisioningLoggerMXBean" />
+    </bean>
+</beans>

@@ -1,0 +1,99 @@
+Index: projects/bundles/ldap/src/main/java/org/identityconnectors/ldap/sync/sunds/SunDSChangeLogSyncStrategy.java
+===================================================================
+--- projects/bundles/ldap/src/main/java/org/identityconnectors/ldap/sync/sunds/SunDSChangeLogSyncStrategy.java	(revision 5788)
++++ projects/bundles/ldap/src/main/java/org/identityconnectors/ldap/sync/sunds/SunDSChangeLogSyncStrategy.java	(working copy)
+@@ -67,6 +67,7 @@
+ import org.identityconnectors.framework.common.objects.SyncDeltaType;
+ import org.identityconnectors.framework.common.objects.SyncResultsHandler;
+ import org.identityconnectors.framework.common.objects.SyncToken;
++import org.identityconnectors.framework.common.objects.Uid;
+ import org.identityconnectors.ldap.LdapConnection;
+ import org.identityconnectors.ldap.LdapEntry;
+ import org.identityconnectors.ldap.search.DefaultSearchStrategy;
+@@ -125,7 +126,7 @@
+         final String changeNumberAttr = getChangeNumberAttribute();
+         SearchControls controls = LdapInternalSearch.createDefaultSearchControls();
+         controls.setSearchScope(SearchControls.ONELEVEL_SCOPE);
+-        controls.setReturningAttributes(new String[] { changeNumberAttr, "targetDN", "changeType", "changes", "newRdn", "deleteOldRdn", "newSuperior" });
++        controls.setReturningAttributes(new String[] { changeNumberAttr, "targetDN", "changeType", "changes", "newRdn", "deleteOldRdn", "newSuperior", "targetuniqueid", "targetEntryUUID","changeInitiatorsName" });
+ 
+         final int[] currentChangeNumber = { getStartChangeNumber(token) };
+ 
+@@ -177,6 +178,14 @@
+             return null;
+         }
+ 
++        // Try to filter out the changelog entry according to the changeInitiatorsName attribute
++        // that may be there. This will work even for new and deleted entries, as modifiersName
++        // will not work for these entries.
++        if (filterOutByChangeInitiatorsName(changeLogEntry)) {
++            log.ok("Skipping entry because changeInitiatorsName is in the list of modifiersName's to filter out");
++            return null;
++        }
++
+         String changeType = getStringAttrValue(changeLogEntry.getAttributes(), "changeType");
+         SyncDeltaType deltaType = getSyncDeltaType(changeType);
+ 
+@@ -188,10 +197,32 @@
+             log.ok("Creating sync delta for deleted entry");
+             // XXX fix this!
+             String uidAttr = conn.getSchemaMapping().getLdapUidAttribute(oclass);
+-            if (!LdapEntry.isDNAttribute(uidAttr)) {
++            if (LdapEntry.isDNAttribute(uidAttr)) {
++                log.ok("The UID attribute is DN");
++                syncDeltaBuilder.setUid(conn.getSchemaMapping().createUid(oclass, targetDN));
++            } else if ("entryUUID".equals(uidAttr)) {
++                log.ok("The UID attribute is entryUUID");
++
++                // If the UID attribute is entryUUID, then we need to behave in a
++                // bit different way. The original entry does not exist any more
++                // (it is deleted), therefore the only way is to take the UUID of
++                // the deleted entry from the targetuniqueid changelog entry attribute.
++                log.ok("targetuniqueid is "+getStringAttrValue(changeLogEntry.getAttributes(), "targetuniqueid"));
++                log.ok("targetEntryUUID is "+getStringAttrValue(changeLogEntry.getAttributes(), "targetEntryUUID"));
++
++                // Prefer targetEntryUUID. If that is present, it provides better UUID format.
++                // This should be present on OpenDJ/OpenDS servers.
++                String targetEntryUUID = getStringAttrValue(changeLogEntry.getAttributes(), "targetEntryUUID");
++                if (targetEntryUUID != null && !targetEntryUUID.isEmpty()) {
++                    syncDeltaBuilder.setUid(new Uid(targetEntryUUID));
++
++                } else {
++                    // Use targetuniqueid otherwise. This is most likely Sun DSEE
++                    syncDeltaBuilder.setUid(new Uid(getStringAttrValue(changeLogEntry.getAttributes(), "targetuniqueid")));
++                }
++            } else {
+                 throw new ConnectorException("Unsupported Uid attribute " + uidAttr);
+             }
+-            syncDeltaBuilder.setUid(conn.getSchemaMapping().createUid(oclass, targetDN));
+             return syncDeltaBuilder.build();
+         }
+ 
+@@ -337,6 +368,27 @@
+         return filter.contains(modifiersName);
+     }
+ 
++    /**
++     * Filter out the changelog entry according to the changeInitiatorsName attribute.
++     *
++     * @param changeLogEntry change log entry describing the change
++     * @return true if the entry has be filtered out, flase otherwise
++     */
++    private boolean filterOutByChangeInitiatorsName(LdapEntry changeLogEntry) {
++        Set<LdapName> filter = conn.getConfiguration().getModifiersNamesToFilterOutAsLdapNames();
++        if (filter.isEmpty()) {
++            log.ok("Filtering by modifiersName disabled");
++            return false;
++        }
++        String changeInitiatorsName = getStringAttrValue(changeLogEntry.getAttributes(), "changeInitiatorsName");
++        if (changeInitiatorsName==null || changeInitiatorsName.isEmpty()) {
++            log.ok("Not filtering by changeInitiatorsName because not set for this changelog entry");
++            return false;
++        }
++        LdapName changeInitiatorsNameLdapName = quietCreateLdapName(changeInitiatorsName);
++        return filter.contains(changeInitiatorsNameLdapName);
++    }
++
+     private boolean filterOutByAttributes(Map<String, List<Object>> attrChanges) {
+         Set<String> filter = getAttributesToSynchronize();
+         if (filter.isEmpty()) {

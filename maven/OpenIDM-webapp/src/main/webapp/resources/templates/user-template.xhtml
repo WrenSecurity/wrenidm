@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/resources/templates/page-template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:prefs="http://java.sun.com/jsf/composite/components/preferences"
+                xmlns:ice="http://www.icesoft.com/icefaces/component">
+
+    <ui:define name="header">
+
+            <ice:graphicImage value="/resources/images/ForgeRock-tagline-226x70.png" alt="OpenIDM" />
+            <div id="preferences">
+                <ui:insert name="preferences">
+                    <ice:form>
+                        <!--prefs:preferences /-->
+                        <prefs:language />
+                        <!--ice:commandLink action="login" value="#{lang.messages['login.title']}" style="margin-left: 10px;" rendered="#{not preferencesBean.isUserLoggedIn}" immediate="true" /-->
+                        <ice:outputLink value="#{facesContext.externalContext.requestContextPath}/j_spring_security_logout" style="margin-left: 10px;" rendered="#{preferencesBean.isUserLoggedIn}">#{lang.messages['logout.title']}</ice:outputLink>
+                    </ice:form>
+                </ui:insert>
+            </div>
+
+    </ui:define>
+
+    <ui:define name="main-block">
+        <ui:insert name="main-block">Default content login template</ui:insert>
+    </ui:define>
+</ui:composition>

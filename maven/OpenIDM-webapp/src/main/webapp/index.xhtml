@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ice="http://www.icesoft.com/icefaces/component"
+                template="/resources/templates/admin-template.xhtml">
+
+    <ui:define name="title">#{lang.messages['welcome.title']}</ui:define>
+    <ui:define name="content-title">#{lang.messages['welcome.title']}</ui:define>
+
+    <ui:define name="admin-content">
+        <ice:form>
+            <div id="admin-content" style="width: 50%">
+                <h1>Welcome to ForgeRock OpenIDM</h1>
+                <hr/>
+                <h1>Common Tasks</h1>
+                <ul>
+                    <li><h2>List Users</h2></li>
+                    <h:commandLink action="#{userTypeController.fillTableList}">List All Users</h:commandLink>
+                    <li><h2>Create New User</h2></li>
+                    <h:commandLink action="createUser">Create A New User</h:commandLink>
+                    <!--li><h2>List Configured Resources</h2></li-->
+                </ul>
+            </div>
+        </ice:form>
+    </ui:define>
+</ui:composition>

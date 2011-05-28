@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<javaee-project xmlns="http://java.sun.com/xml/ns/jbi/javaee/config/1/" xmlns:ns0="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" xmlns:ns1="http://openidm.forgerock.com/xml/ns/public/model/staging-1.wsdl" name="openidm-staging">
+    <services>
+        <provides enable-for-javaee-http="true" endpoint-name="javaee_stagingPort" interface-name="ns1:stagingPortType" service-name="ns1:stagingService"/>
+        <consumes enable-for-nmr="true" endpoint-name="javaee_modelPortStagingClient" interface-name="ns0:modelPortType" service-name="ns0:modelService"/>
+    </services>
+</javaee-project>

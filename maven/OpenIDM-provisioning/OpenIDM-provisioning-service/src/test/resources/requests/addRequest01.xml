@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+   xmlns:prov="http://openidm.forgerock.com/xml/ns/public/provisioning/provisioning-1.wsdl"
+   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xmlns:com='http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd'
+   xmlns:r='http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd'
+   xmlns:ics="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd"
+   xmlns:icc="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/configuration-1.xsd"
+   xmlns:iccldap="http://openidm.forgerock.com/xml/ns/resource/idconnector/bundle/org.identityconnectors.ldap/org.identityconnectors.ldap.LdapConnector/1.0.5531"
+   xmlns:dj="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xsi:schemaLocation='http://schemas.xmlsoap.org/soap/envelope/ http://schemas.xmlsoap.org/soap/envelope/
+   http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema
+   http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd ../../../../../../OpenIDM-xml/OpenIDM-schemas/src/main/resources/META-INF/wsdl/xml/ns/public/common/common-1.xsd   
+   http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd ../../../../../../OpenIDM-xml/OpenIDM-schemas/src/main/resources/META-INF/wsdl/xml/ns/public/resource/idconnector/resource-schema-1.xsd
+   http://openidm.forgerock.com/xml/ns/public/resource/idconnector/configuration-1.xsd ../../../../../../OpenIDM-xml/OpenIDM-schemas/src/main/resources/META-INF/wsdl/xml/ns/public/resource/idconnector/configuration-1.xsd'>
+    <soapenv:Header/>
+    <soapenv:Body>
+        <prov:addObject>
+            <objectContainer>
+                <com:ResourceObjectShadowType>
+                    <com:name>jbond</com:name>
+                    <com:resourceRef oid="ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2"/>
+                    <com:objectClass xmlns:ns1="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2">ns1:__ACCOUNT__</com:objectClass>
+                    <com:attributes>
+                        <ics:__NAME__>uid=ahoi,ou=People,dc=example,dc=com</ics:__NAME__>
+                        <dj:givenName xmlns:dj="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2">John</dj:givenName>
+                        <dj:sn xmlns:dj="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2">Doe</dj:sn>
+                        <dj:fullName xmlns:dj="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2">John Doe</dj:fullName>
+                        <ics:__PASSWORD__>Passw0rd</ics:__PASSWORD__>
+                        <dj:ou xmlns:dj="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2">People</dj:ou>
+                    </com:attributes>
+                </com:ResourceObjectShadowType>
+            </objectContainer>
+            <result oid="?" type="?">
+                <com:extension>
+               <!--You may enter ANY elements at this point-->
+                </com:extension>
+                <!--Zero or more repetitions:-->
+                <result oid="?" type="?">
+                    <com:extension>
+                    <!--You may enter ANY elements at this point-->
+                    </com:extension>
+                </result>
+            </result>
+        </prov:addObject>
+    </soapenv:Body>
+</soapenv:Envelope>

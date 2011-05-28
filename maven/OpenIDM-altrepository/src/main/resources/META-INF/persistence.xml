@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence">
+  <persistence-unit name="openidm-repository-pu" transaction-type="RESOURCE_LOCAL">
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+    <non-jta-data-source/>
+    <class>com.forgerock.openidm.model.Account</class>
+    <class>com.forgerock.openidm.model.BooleanProperty</class>
+    <class>com.forgerock.openidm.model.DateProperty</class>
+    <class>com.forgerock.openidm.model.GenericEntityBase</class>
+    <class>com.forgerock.openidm.model.IntegerProperty</class>
+    <class>com.forgerock.openidm.model.Resource</class>
+    <class>com.forgerock.openidm.model.SimpleDomainObject</class>
+    <class>com.forgerock.openidm.model.StringProperty</class>
+    <class>com.forgerock.openidm.model.User</class>
+    <class>com.forgerock.openidm.model.ResourceAccessConfiguration</class>
+    <class>com.forgerock.openidm.model.ResourceObjectShadow</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <properties>
+      <property name="hibernate.hbm2ddl.auto" value="update"/>
+      <property name="hibernate.ejb.interceptor" value="com.forgerock.openidm.model.GeneratedEntityInterceptor"/>
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="openidm-repository-pu-test" transaction-type="RESOURCE_LOCAL">
+    <class>com.forgerock.openidm.model.Account</class>
+    <class>com.forgerock.openidm.model.BooleanProperty</class>
+    <class>com.forgerock.openidm.model.DateProperty</class>
+    <class>com.forgerock.openidm.model.GenericEntityBase</class>
+    <class>com.forgerock.openidm.model.IntegerProperty</class>
+    <class>com.forgerock.openidm.model.Resource</class>
+    <class>com.forgerock.openidm.model.SimpleDomainObject</class>
+    <class>com.forgerock.openidm.model.StringProperty</class>
+    <class>com.forgerock.openidm.model.User</class>
+    <class>com.forgerock.openidm.model.ResourceAccessConfiguration</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <properties>
+      <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+      <property name="hibernate.connection.password" value="Egy42-eslaposTalpu_GUMIcsIzMA"/>
+      <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/OpenIDM"/>
+      <property name="hibernate.connection.username" value="OPENIDM_PROXY"/>
+      <property name="hibernate.hbm2ddl.auto" value="update"/>
+      <property name="hibernate.max_fetch_depth" value="5"/>
+      <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+      <property name="hibernate.ejb.interceptor" value="com.forgerock.openidm.model.GeneratedEntityInterceptor"/>
+    </properties>
+  </persistence-unit>
+</persistence>

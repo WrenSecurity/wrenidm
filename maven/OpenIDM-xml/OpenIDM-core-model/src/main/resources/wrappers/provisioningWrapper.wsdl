@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" xmlns:c="http://openidm.forgerock.com/xml/ns/common/1#" xmlns:cw="http://openidm.forgerock.com/xml/ns/common/object/wsdl/1#" xmlns:idm="http://openidm.forgerock.com/xml/ns/identity/1#" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" name="provisioning" targetNamespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#">
+<wsdl:import namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" location="../provisioning/provisioning.wsdl"/>
+<wsdl:binding name="provisioningBinding" type="tns:provisioningPortType">
+<soap:binding xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" transport="http://schemas.xmlsoap.org/soap/http" style="rpc"/>
+<wsdl:operation name="addObject">
+<soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="addObject_action"/>
+<wsdl:input name="addObjectInput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:input>
+<wsdl:output name="addObjectOutput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:output>
+<wsdl:fault name="fault">
+<soap:fault xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="fault" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getObject">
+<soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="getObject_action"/>
+<wsdl:input name="getObjectInput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:input>
+<wsdl:output name="getObjectOutput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:output>
+<wsdl:fault name="fault">
+<soap:fault xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="fault" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="listObjects">
+<soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="listObjects_action"/>
+<wsdl:input name="listObjectsInput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:input>
+<wsdl:output name="listObjectsOutput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:output>
+<wsdl:fault name="fault">
+<soap:fault xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="fault" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="searchObjects">
+<soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="searchObjects_action"/>
+<wsdl:input name="searchObjectsInput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:input>
+<wsdl:output name="searchObjectsOutput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:output>
+<wsdl:fault name="fault">
+<soap:fault xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="fault" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="modifyObject">
+<soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="modifyObject_action"/>
+<wsdl:input name="modifyObjectInput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:input>
+<wsdl:output name="modifyObjectOutput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:output>
+<wsdl:fault name="fault">
+<soap:fault xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="fault" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="deleteObject">
+<soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="deleteObject_action"/>
+<wsdl:input name="deleteObjectInput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:input>
+<wsdl:output name="deleteObjectOutput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:output>
+<wsdl:fault name="fault">
+<soap:fault xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="fault" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getPropertyAvailableValues">
+<soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="getPropertyAvailableValues_action"/>
+<wsdl:input name="getPropertyAvailableValuesInput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:input>
+<wsdl:output name="getPropertyAvailableValuesOutput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:output>
+<wsdl:fault name="fault">
+<soap:fault xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="fault" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="addResourceObject">
+<soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="addResourceObject_action"/>
+<wsdl:input name="addResourceObjectInput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:input>
+<wsdl:output name="addResourceObjectOutput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:output>
+<wsdl:fault name="fault">
+<soap:fault xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="fault" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="getResourceObject">
+<soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="getResourceObject_action"/>
+<wsdl:input name="getResourceObjectInput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:input>
+<wsdl:output name="getResourceObjectOutput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:output>
+<wsdl:fault name="fault">
+<soap:fault xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="fault" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="modifyResourceObject">
+<soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="modifyResourceObject_action"/>
+<wsdl:input name="modifyResourceObjectInput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:input>
+<wsdl:output name="modifyResourceObjectOutput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:output>
+<wsdl:fault name="fault">
+<soap:fault xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="fault" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="deleteResourceObject">
+<soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="deleteResourceObject_action"/>
+<wsdl:input name="deleteResourceObjectInput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:input>
+<wsdl:output name="deleteResourceObjectOutput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" use="literal"/>
+</wsdl:output>
+<wsdl:fault name="fault">
+<soap:fault xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="fault" use="literal"/>
+</wsdl:fault>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="provisioningService">
+<wsdl:port name="provisioningPort" binding="tns:provisioningBinding">
+<soap:address xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" location="REPLACE_WITH_ACTUAL_URL"/>
+</wsdl:port>
+</wsdl:service>
+</definitions>

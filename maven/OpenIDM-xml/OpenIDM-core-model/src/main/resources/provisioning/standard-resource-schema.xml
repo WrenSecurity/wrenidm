@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+        Example of Resource schema usage.
+        See the schema definition for explanation.
+-->
+
+<objects  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xmlns='http://openidm.forgerock.com/xml/ns/resource/1#'
+   xsi:schemaLocation='http://openidm.forgerock.com/xml/ns/resource/1# standard-resource-schema.xsd'>
+       
+    <object xsi:type="UnixGroupType">
+        <gid>111</gid>
+        <name>foogroup</name>
+        <!-- should members be here? Only "secondary" or primary as well? probably yes and all of them -->
+    </object>
+
+    <object xsi:type="UnixGroupType">
+        <gid>222</gid>
+        <name>bargroup</name>
+    </object>
+
+    <object xsi:type="UnixGroupType">
+        <gid>333</gid>
+        <name>bazgroup</name>
+    </object>
+
+    <object xsi:type="UnixAccountType">
+        <uid>2001</uid>
+        <name>foobar</name>
+        <primaryGroup>
+            <gid>111</gid>
+        </primaryGroup>
+        <secondaryGroup>
+            <gid>222</gid>
+        </secondaryGroup>
+        <secondaryGroup>
+            <gid>333</gid>
+        </secondaryGroup>
+    </object>
+
+    <object xsi:type="LdapAccountType">
+        <dn>uid=foobar,ou=people,dc=foo,dc=com</dn>
+        <uid>foobar</uid>
+        <cn>Foo Bar</cn>
+        <sn>Bar</sn>
+        <ldapGroup>
+            <dn>cn=foogroup,ou=gropups,dc=foo,dc=com</dn>
+        </ldapGroup>
+    </object>
+
+    <object xsi:type="LdapAccountType">
+        <dn>cn=foogroup,ou=gropups,dc=foo,dc=com</dn>
+        <cn>foogroup</cn>
+        <!-- should members be here? probably yes -->
+    </object>
+
+</objects>

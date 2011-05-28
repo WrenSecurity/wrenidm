@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema targetNamespace="http://openidm.forgerock.org/schema/object"
+    xmlns="http://openidm.forgerock.org/schema/object"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:p="http://openidm.forgerock.org/schema/persistence"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0" jaxb:version="2.0">
+    <xs:import namespace="http://openidm.forgerock.org/schema/persistence" schemaLocation="../persistence/openidm-persistence-1.0.xsd"/>
+
+
+    <xs:annotation>
+        <xs:appinfo>
+            <jaxb:schemaBindings>
+                <jaxb:package name="org.forgerock.openidm.xml.object">
+                    <jaxb:javadoc><![CDATA[<body>Package level documentation for generated package org.forgerock.openidm.xml.persistence.</body>]]>
+                    </jaxb:javadoc>
+                </jaxb:package>
+            </jaxb:schemaBindings>
+        </xs:appinfo>
+    </xs:annotation>
+
+</xs:schema>

@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <Domains/>
+    <Domains_Objects/>
+    <Objects/>
+    <BooleanProperties/>
+    <DateProperties/>
+    <GenericEntities/>
+    <IntegerProperties/>
+    <Objects_Properties/>
+    <StringProperties/>
+    <Users/>
+    <Resources/>
+    <ResourcesStates/>
+    <Accounts/>
+    <AccountAttributes/>
+	
+	<Objects_additionalNames/>
+    <Objects_EMailAddress/>
+    <Objects_employeeType/>
+    <Objects_organizationalUnit/>
+    <Objects_telephoneNumber/>
+
+
+</dataset>

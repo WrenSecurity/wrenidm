@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="repository"
+    targetNamespace="http://openidm.forgerock.com/xml/ns/public/repository/repository-1.wsdl"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:abs="http://openidm.forgerock.com/xml/ns/public/repository/repository-1.wsdl"
+    xmlns:tns="http://openidm.forgerock.com/xml/ns/public/repository/repository-1.wsdl"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+    <import namespace="http://openidm.forgerock.com/xml/ns/public/repository/repository-1.wsdl" location="xml/ns/public/repository/repository-1.wsdl"/>
+    <service name="repositoryService">
+        <port name="repositoryPortWebappClient" binding="abs:repositoryBinding">
+            <!-- http://localhost:${HttpDefaultPort}/repositoryService/RepositoryService
+            <soap:address location="http://localhost:${HttpDefaultPort}/repositoryService/RepositoryService"/>
+            <soap:address location="REPLACE_WITH_ACTUAL_URL"/>
+            <soap:address location="http://localhost:8080/repositoryService/RepositoryService"/-->
+            <soap:address location="http://localhost:${HttpDefaultPort}/repositoryService/repositoryPort"/>
+        </port>
+    </service>
+</definitions>
+
+
+

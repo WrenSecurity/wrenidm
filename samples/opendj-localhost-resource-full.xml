@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+
+<!-- NOTE: This file is most likely out of date -->
+
+<c:objects xmlns:c="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd">
+    <c:resource version="0" oid="ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a3"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <c:name>Localhost OpenDJ v3</c:name>
+        <c:type>http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resourceaccessconfiguration-1.xsd</c:type>
+        <c:namespace>http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a3</c:namespace>
+        <c:schema>
+            <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+targetNamespace="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a3"
+ xmlns:c="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd" 
+xmlns:xns0="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a3" 
+xmlns:xns1="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd">
+                <xsd:import namespace="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd"/>
+                <xsd:import namespace="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd"/>
+                <xsd:import namespace="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd"/>
+                <xsd:complexType name="Account">
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <r:identifier xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd" ref="xns1:__UID__"/>
+                            <r:secondaryIdentifier xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd" ref="xns1:__NAME__"/>
+                            <r:compositeIdentifier xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd" ref="xns0:sn"/>
+                            <r:displayName xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd" ref="xns0:description"/>
+                            <r:descriptionAttribute xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd" ref="xns0:description"/>
+                            <r:nativeObjectClass xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">__ACCOUNT__</r:nativeObjectClass>
+                            <r:accountType default="true" xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd"/>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                    <xsd:complexContent>
+                        <xsd:extension base="r:ResourceObjectClass" xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">
+                            <xsd:sequence>
+                                <xsd:element ref="xns1:__NAME__">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">__NAME__</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="description" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:help xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">DESCRIPTION_NAME_HELP_KEY</r:help>
+                                            <r:nativeAttributeName xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">description</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element ref="xns1:__PASSWORD__">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:attributeFlag xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">PASSWORD</r:attributeFlag>
+                                            <r:classifiedAttribute xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">
+                                                <r:encryption>HASH</r:encryption>
+                                                <r:classificationLevel>password</r:classificationLevel>
+                                            </r:classifiedAttribute>
+                                            <r:nativeAttributeName xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">__PASSWORD__</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="sn" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">sn</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="cn" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">cn</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element maxOccurs="unbounded" minOccurs="0" name="groups" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">groups</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="custom" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:attributeFlag xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">IGNORE_ATTRIBUTE</r:attributeFlag>
+                                            <r:help xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">This attribute part of the SchemaHandling</r:help>
+                                            <r:nativeAttributeName xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">custom</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" ref="xns1:__UID__">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>    
+											<r:attributeFlag xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">NOT_UPDATEABLE</r:attributeFlag>                                       
+                                            <r:nativeAttributeName xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">__UID__</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="givenName" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">givenName</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="fullName" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:help xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">DISPLAY_NAME_HELP_KEY</r:help>
+                                            <r:nativeAttributeName xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">fullName</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+                <xsd:complexType name="Group">
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <r:identifier xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd" ref="xns1:__UID__"/>
+                            <r:secondaryIdentifier xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd" ref="xns1:__NAME__"/>
+                            <r:displayName xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd" ref="xns0:description"/>
+                            <r:descriptionAttribute xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd" ref="xns0:description"/>
+                            <r:nativeObjectClass xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">__GROUP__</r:nativeObjectClass>
+                            <r:container xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd"/>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                    <xsd:complexContent>
+                        <xsd:extension base="r:ResourceObjectClass" xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">
+                            <xsd:sequence>
+                                <xsd:element ref="xns1:__NAME__">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">__NAME__</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="description" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:help xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">DESCRIPTION_NAME_HELP_KEY</r:help>
+                                            <r:nativeAttributeName xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">description</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" ref="xns1:__UID__">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:attributeFlag xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">NOT_UPDATEABLE</r:attributeFlag>
+                                            <r:nativeAttributeName xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">__UID__</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:schema>
+        </c:schema>
+        <c:schemaHandling>
+            <c:accountType>
+                <c:name>Default Account</c:name>
+            </c:accountType>
+        </c:schemaHandling>
+        <c:configuration>
+            <ns2:ConnectorConfiguration xmlns:ns2="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/configuration-1.xsd"
+                                xmlns:ns4="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd" 
+                                xmlns:c="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd">
+                <ns2:ConnectorRef bundleName="org.identityconnectors.ldap" bundleVersion="1.0.5531" connectorName="org.identityconnectors.ldap.LdapConnector"/>
+                <ns2:BundleProperties>
+                    <iccldap:port xmlns:iccldap="http://openidm.forgerock.com/xml/ns/resource/idconnector/bundle/org.identityconnectors.ldap/org.identityconnectors.ldap.LdapConnector/1.0.5531">1389</iccldap:port>
+                    <iccldap:host xmlns:iccldap="http://openidm.forgerock.com/xml/ns/resource/idconnector/bundle/org.identityconnectors.ldap/org.identityconnectors.ldap.LdapConnector/1.0.5531">localhost</iccldap:host>
+                    <iccldap:baseContexts xmlns:iccldap="http://openidm.forgerock.com/xml/ns/resource/idconnector/bundle/org.identityconnectors.ldap/org.identityconnectors.ldap.LdapConnector/1.0.5531">dc=example,dc=com</iccldap:baseContexts>
+                    <iccldap:principal xmlns:iccldap="http://openidm.forgerock.com/xml/ns/resource/idconnector/bundle/org.identityconnectors.ldap/org.identityconnectors.ldap.LdapConnector/1.0.5531">cn=directory manager</iccldap:principal>
+                    <iccldap:credentials xmlns:iccldap="http://openidm.forgerock.com/xml/ns/resource/idconnector/bundle/org.identityconnectors.ldap/org.identityconnectors.ldap.LdapConnector/1.0.5531">qwe123</iccldap:credentials>
+                </ns2:BundleProperties>
+                <ns2:PoolConfigOption minEvictTimeMillis="120000" minIdle="1" maxIdle="10" maxObjects="10" maxWait="150000"/>
+                <ns2:OperationTimeouts>
+                    <ns2:OperationTimeout name="create" timeout="-1"/>
+                    <ns2:OperationTimeout name="update" timeout="-1"/>
+                    <ns2:OperationTimeout name="delete" timeout="-1"/>
+                    <ns2:OperationTimeout name="test" timeout="-1"/>
+                    <ns2:OperationTimeout name="scriptOnConnector" timeout="-1"/>
+                    <ns2:OperationTimeout name="scriptOnResource" timeout="-1"/>
+                    <ns2:OperationTimeout name="get" timeout="-1"/>
+                    <ns2:OperationTimeout name="authenticate" timeout="-1"/>
+                    <ns2:OperationTimeout name="search" timeout="-1"/>
+                    <ns2:OperationTimeout name="validate" timeout="-1"/>
+                    <ns2:OperationTimeout name="sync" timeout="-1"/>
+                    <ns2:OperationTimeout name="schema" timeout="-1"/>
+                </ns2:OperationTimeouts>
+            </ns2:ConnectorConfiguration>
+        </c:configuration>
+    </c:resource>
+</c:objects>

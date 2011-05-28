@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object xsi:type="AccountShadowType" xmlns="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:i="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd">
+    <name>janko</name>
+    <resource oid="ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2" version="2">
+        <name>Localhost OpenDJ</name>
+        <type>http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resourceaccessconfiguration-1.xsd</type>
+        <namespace>http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2</namespace>
+        <configuration>
+        </configuration>
+        <schema>
+                        <xsd:schema elementFormDefault="qualified" targetNamespace="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2" xmlns:ns3="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd" xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd" xmlns:c="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd" xmlns:ids="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd" xmlns:ri="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:i="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd">
+                <xsd:import namespace="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd"/>
+                <xsd:import namespace="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd"/>
+                <xsd:import namespace="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd"/>
+                <xsd:complexType name="Account">
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <r:identifier ref="ids:__UID__"/>
+                            <r:secondaryIdentifier ref="ids:__NAME__"/>
+                            <r:displayName ref="ri:description"/>
+                            <r:descriptionAttribute ref="ri:description"/>
+                            <r:nativeObjectClass>__ACCOUNT__</r:nativeObjectClass>
+                            <r:accountType default="true"/>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                    <xsd:complexContent>
+                        <xsd:extension base="r:ResourceObjectClass">
+                            <xsd:sequence>
+                                <xsd:element ref="ids:__NAME__">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>__NAME__</r:nativeAttributeName>
+                                            <r:attributeDisplayName>DN</r:attributeDisplayName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:schema>
+        </schema>
+        <schemaHandling>
+            <accountType default="true">
+                <name>Default Account</name>
+                <objectClass xmlns:ri="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2">ri:Account</objectClass>
+                <attribute ref="ids:__NAME__" xmlns:ids="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd" xmlns:ri="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:i="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd">
+                    <name>Distinguished Name</name>
+                    <access>create</access>
+                    <access>read</access>
+                    <outbound default="true" xmlns:c="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd">
+                        <valueExpression xmlns:custom="http://openidm.forgerock.com/custom">custom:capitalize($i:user/i:name)</valueExpression>
+                    </outbound>
+                </attribute>
+        </accountType>
+    </schemaHandling>
+</resource>
+<objectClass xmlns:ri="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2">ri:Account</objectClass>
+<attributes>
+</attributes>
+</object>

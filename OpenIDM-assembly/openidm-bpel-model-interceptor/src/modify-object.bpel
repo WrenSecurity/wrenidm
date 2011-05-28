@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process
+    name="modifyObject"
+    targetNamespace="http://openidm.forgerock.com/xml/ns/openidm-bpel-model-interceptor/process"
+    xmlns:tns="http://openidm.forgerock.com/xml/ns/openidm-bpel-model-interceptor/process"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+    xmlns:sxt="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Trace" 
+    xmlns:sxed="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Editor"
+    xmlns:sxeh="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/ErrorHandling" xmlns:sxed2="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Editor2">
+    <import namespace="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" location="openidm-model/contract/model.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <partnerLinks>
+        <partnerLink name="invokedModel" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" partnerLinkType="tns:idmModel" partnerRole="idmModelPortTypeRole"/>
+        <partnerLink name="implementedModel" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" partnerLinkType="tns:idmModel" myRole="idmModelPortTypeRole"/>
+    </partnerLinks>
+    <variables>
+        <variable name="invokedModifyObjectOut" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" messageType="tns:modifyObjectResponse"/>
+        <variable name="implementedModifyObjectIn" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" messageType="tns:modifyObjectRequest"/>
+    </variables>
+    <sequence>
+        <receive name="ReceiveModifyObject" createInstance="yes" partnerLink="implementedModel" operation="modifyObject" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" portType="tns:idmModelPortType" variable="implementedModifyObjectIn">
+            <sxt:trace>
+                <sxt:log level="info" location="onComplete">
+                    <from>concat('[BPEL] modifyObject IN change: ', $implementedModifyObjectIn.objectChange)</from>
+                </sxt:log>
+            </sxt:trace>
+        </receive>
+        <invoke name="InvokeModifyObject" partnerLink="invokedModel" operation="modifyObject" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" portType="tns:idmModelPortType" inputVariable="implementedModifyObjectIn" outputVariable="invokedModifyObjectOut"/>
+        <reply name="ReplyModifyObject" partnerLink="implementedModel" operation="modifyObject" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" portType="tns:idmModelPortType" variable="invokedModifyObjectOut"/>
+    </sequence>
+</process>
+
+

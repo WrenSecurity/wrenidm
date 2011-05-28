@@ -1,0 +1,24 @@
+
+<c:object oid="007" xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xmlns='http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd'
+   xmlns:c='http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd'
+   xmlns:r='http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd'
+   xmlns:ldap="http://openidm.forgerock.com/xml/ns/experimental/ldap-resource-1.xsd"
+   xmlns:unix="http://openidm.forgerock.com/xml/ns/experimental/unix-resource-1.xsd"
+   xmlns:mi6="http://mi6.gov.uk/schema/"
+   xmlns:ics="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd"
+   xmlns:icc="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/configuration-1.xsd"
+   xmlns:iccldap="http://openidm.forgerock.com/xml/ns/resource/idconnector/bundle/org.identityconnectors.ldap/org.identityconnectors.ldap.LdapConnector/1.0.x"
+   xmlns:opendse="http://openidm.forgerock.com/schema/resources/instances/ldap/embeddedJUnitOpenDS"
+   xmlns:opendsl="http://openidm.forgerock.com/schema/resources/instances/ldap/localhostOpenDS"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xsi:type="c:UserType"
+   xsi:schemaLocation='http://www.w3.org/2001/XMLSchema ../standard/XMLSchema.xsd
+   http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd ../ns/public/common/common-1.xsd
+   http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd ../ns/public/resource/resource-schema-1.xsd
+   http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd ../ns/public/resource/idconnector/resource-schema-1.xsd
+   http://openidm.forgerock.com/xml/ns/public/resource/idconnector/configuration-1.xsd ../ns/public/resource/idconnector/configuration-1.xsd'>
+    <c:extension>
+        <mi6:licence>to kill</mi6:licence>
+    </c:extension>
+</c:object>

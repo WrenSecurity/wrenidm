@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>OpenIDM-parent</artifactId>
+        <groupId>com.forgerock.openidm</groupId>
+        <version>1.7-SNAPSHOT</version>
+        <relativePath>../OpenIDM-parent</relativePath>
+    </parent>
+    <groupId>com.forgerock.openidm</groupId>
+    <artifactId>OpenIDM-database</artifactId>
+    <version>1.7-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>OpenIDM Database Scripts</name>
+    <description>OpenIDM is an open standards based Identity Management, Provisioning and Compliance solution. Experience shows that the most important features of an identity management product are: high flexibility in Business Process handling and compliance with open standards and interfaces. A highly flexible user interface combined with a very robust workflow engine make OpenIDM ready for any Identity Management project.</description>
+    <url>http://www.forgerock.com/openidm.html</url>
+    <organization>
+        <name>ForgeRock</name>
+        <url>http://www.forgerock.com</url>
+    </organization>
+    <build>
+        <defaultGoal>package</defaultGoal>
+        <filters>
+            <filter>src/main/filters/${targetEnvironment}-filter.properties</filter>
+        </filters>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.sql</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/*.sql</exclude>
+                    <exclude>**/*.bak</exclude>
+                </excludes>
+            </resource>
+        </resources>
+
+
+        <!-- Plugin settings -->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!-- default environment -->
+    <properties>
+        <targetEnvironment>sandbox</targetEnvironment>
+    </properties>
+    
+    <!-- profiles -->
+    <profiles>
+        <profile>
+            <id>sandbox</id>
+            <properties>
+                <targetEnvironment>sandbox</targetEnvironment>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <targetEnvironment>test</targetEnvironment>
+            </properties>
+        </profile>
+        <profile>
+            <id>quality</id>
+            <properties>
+                <targetEnvironment>quality</targetEnvironment>
+            </properties>
+        </profile>
+        <profile>
+            <id>production</id>
+            <properties>
+                <targetEnvironment>production</targetEnvironment>
+            </properties>
+        </profile>
+    </profiles>
+
+</project>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ice="http://www.icesoft.com/icefaces/component">
+
+    <h:head>
+        <title>
+            <ui:insert name="title">Default title</ui:insert>
+        </title>
+    </h:head>
+    <h:body>
+        <div id="header">
+            <!--
+            <ui:include src="/header.xhtml" >
+	          <ui:param name="param_name" value="param_value" />
+            </ui:include>
+            -->
+        </div>
+        <div id="content">
+            <ice:form>
+                <ice:inputText id="username" value="#{userForm.user.username}" title="#{msg['person.userName']}"
+                               requiredMessage="#{msg['field.required']}"
+                               required="true" />
+                <ice:message for="username" errorClass="error"/>
+                <ice:outputText value="#{userForm.user.id}"/>
+                <ice:commandButton action="#{userForm.add}" value="#{msg['crud.button.save']}"
+                                   styleClass="image-save">
+                </ice:commandButton>
+            </ice:form>
+        </div>
+    </h:body>
+</html>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<objects  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xmlns='http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd'
+   xmlns:c='http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd'
+   xmlns:r='http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd'
+   xmlns:ics="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd"
+   xmlns:icc="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/configuration-1.xsd"
+   xmlns:iccldap="http://openidm.forgerock.com/xml/ns/resource/idconnector/bundle/org.identityconnectors.ldap/org.identityconnectors.ldap.LdapConnector/1.0.x"
+   xmlns:opendsl="http://openidm.forgerock.com/xml/ns/samples/localhostOpenDJ"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <resource oid="92c058ac-97ce-4d44-a443-4d9b6ad56ccc">
+        <c:name>Regression resource</c:name>
+        <type>http://openidm.forgerock.com/xml/ns/resource/1#ICResource</type>
+        <namespace>http://openidm.forgerock.com/xml/ns/samples/localhostOpenDJ</namespace>
+        <schema>
+
+            <xsd:schema>
+
+            </xsd:schema>
+
+        </schema>
+        <schemaHandling>
+            <accountType objectClass="opendsl:AccountObjectClass" default="true">
+                <c:name>Default Account</c:name>
+            </accountType>
+        </schemaHandling>
+        <configuration>
+        </configuration>
+    </resource>
+
+</objects>

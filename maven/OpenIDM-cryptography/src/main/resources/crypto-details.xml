@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EncryptedData xmlns="http://www.w3.org/2000/11/temp-xmlenc" Type="Element">
+    <EncryptedKey>
+        <EncryptionMethod Algorithm="urn:rsadsi-com:rsa-v1.5"/>
+        <KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
+            <KeyName>key</KeyName>
+        </KeyInfo>
+    </EncryptedKey>
+    <EncryptionMethod Algorithm="urn:nist-gov:tripledes-ede-cbc"/>
+</EncryptedData>

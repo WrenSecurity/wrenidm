@@ -1,0 +1,787 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://openidm.forgerock.com/xml/ns/identity/1#"
+    xmlns:tns="http://openidm.forgerock.com/xml/ns/identity/1#"
+    xmlns="http://openidm.forgerock.com/xml/ns/identity/1#"
+    xmlns:c="http://openidm.forgerock.com/xml/ns/common/1#"
+    elementFormDefault="qualified">
+
+    <xsd:import namespace="http://openidm.forgerock.com/xml/ns/common/1#"
+                schemaLocation="common.xsd"/>
+
+    <xsd:annotation>
+        <xsd:documentation>
+            This schema defines the "identity model", the basic objects for
+            OpenIDM system that are common for most IDM deployments. It is
+            supposed to be heavily used by OpenIDM low-level components and
+            also by business logic.
+
+            The schema defines the data model. It specifies very little about
+            how the objects should be used (e.g. in interface definition). In
+            fact it defines only basic limitations, such as mutability and
+            writability of data elements. Please refer to the corresponding
+            interface definitions form more details.
+        </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:complexType name="UserType">
+        <xsd:annotation>
+            <xsd:documentation>
+                User object type. Represents physical user of the system.
+
+                TODO: More details
+
+                Inspired by FOAF, but still quite LDAP-ish
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="c:ExtensibleObjectType">
+                <xsd:sequence>
+                    <xsd:element name="fullName" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Full name of the user with all the decorations,
+                                middle name initials, honorific title and any
+                                other structure that is usual in the cultural
+                                environment that the system operates in. This
+                                element is intended to be displayed to a common
+                                user of the system.
+
+                                Examples: cpt. Jack Sparrow,
+                                          William "Bootstrap" Turner,
+                                          James W. Random, PhD.,
+                                          Chuck Norris
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+
+                    <xsd:element name="givenName" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Given name of the user. It is usually the first
+                                name of the user, but the order of names may
+                                differ in various cultural environments. This
+                                element will always contain the name that was
+                                given to the user at birth or was chosen by the
+                                user.
+
+                                Examples: Jack, Chuck
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+
+                    <xsd:element name="familyName" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Family name of the user. It is usually the last
+                                name of the user, but the order of names may
+                                differ in various cultural environments. This
+                                element will always contain the name that was
+                                inherited from the family or was assigned to a
+                                user by some other means.
+
+                                Examples: Sparrow, Norris
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+
+                    <xsd:element name="additionalNames" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Middle name, nick name or any other names of a person.
+
+                                Examples: "Bootstrap", Walker
+
+                                Multi-valued property. Please note that the order
+                                of additional names may not be preserved. If
+                                the order is important, the use a single
+                                value with all the names concatenated as
+                                appropriate.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+
+                    <xsd:element name="honorificPrefix" type="xsd:string" minOccurs="0" maxOccurs="1">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Honorific titles that go before the name.
+
+                                Examples: cpt., Ing., Sir
+                                
+                                This property is single-valued.
+                                If more than one title is applicable, they have to be represented in
+                                a single string (concatenated) form in the correct order.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+
+                    <xsd:element name="honorificSuffix" type="xsd:string" minOccurs="0" maxOccurs="1">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Honorific titles that go after the name.
+
+                                Examples: PhD., KBE
+
+                                This property is single-valued.
+                                If more than one title is applicable, they have to be represented in
+                                a single string (concatenated) form in the correct order.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+
+                    <xsd:element name="eMailAddress" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                E-Mail address of the user. This is the address
+                                supposed to be used for communication with the
+                                user. E.g. IDM system may send notifications
+                                to the e-mail address. It is NOT supposed to be
+                                full-featured e-mail address data structure e.g.
+                                for the purpose of comlex address-book application.
+
+                                This is mult-valued property. In case more than
+                                one e-mail address is specified, the same message
+                                should be sent to all the addresses.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+
+                    <xsd:element name="telephoneNumber" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Primary telephone number of the user.
+
+                                This is multi-valued attribute. In case more than
+                                one telephone number is specified, all telephone
+                                numbers are considered equivalent.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+
+                    <xsd:element name="employeeNumber" type="xsd:string" minOccurs="0" maxOccurs="1">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Unique, business-oriented identifier of the employee.
+                                Typically used as correlation identifier and for
+                                auditing purposes. Should be immutable, but the
+                                specefic properties and usage are deployment-specific.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+
+                    <xsd:element name="employeeType" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Employee type specification such as internal employee,
+                                external or partner. The specific values are
+                                deployment-specific.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+
+                    <xsd:element name="organizationalUnit" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Name or (preferrably) immutable identifier of
+                                organizational unit that the user belongs to.
+                                The format is deployment-specific.
+
+                                This is multi-valued property to allow membership
+                                of a user to several organizational units.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+
+                    <xsd:element name="locality" type="xsd:string" minOccurs="0" maxOccurs="1">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Primary locality of the user, the place where
+                                the user usually works, the contry, city or
+                                building that he belongs to. The specific meaning
+                                and form of this property is deployment-specific.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+
+                    <xsd:element name="account" type="tns:AccountShadowType" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Set of user's accounts. This is the set of
+                                accounts that belongs to the user in a sense
+                                that these accounts represents the user (the
+                                same physical person, they are analogous).
+                                This element contains full
+                                AccountType XML elements. This version will
+                                probably be used in workflows and
+                                business logic.
+
+                                If this attribute is present in the User object,
+                                the accountRef attribute must not be present.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+
+                    <xsd:element name="accountRef" type="c:ObjectReferenceType" minOccurs="0" maxOccurs="unbounded">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Set of user's accounts. This is the set of
+                                accounts that belongs to the user in a sense
+                                that these accounts represents the user (the
+                                same physical person, they are analogous).
+                                This element contains a set of pointers to
+                                Account objects (by OID) this version
+                                will be used in repository (for storage).
+
+                                If this attribute is present in the User object,
+                                the account attribute must not be present.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="ResourceType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Resource represents a system or component external to the IDM
+                system which we manage. It is sometimes called _IT resource_,
+                _target system_, _source system_, _provisioning target_, etc.
+                IDM system connects to it to create accounts, assign accounts
+                to groups, etc. But it also may be an authoritative source of
+                data, system that maintains lookup tables, database that
+                contains organizational structure, etc. The {{Resource}} will
+                most likely provide a combination of several functions (e.g.
+                both provisioning and authoritative data for some attributes).
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="c:ExtensibleObjectType">
+                <xsd:sequence>
+                    <xsd:element name="type" type="xsd:anyURI">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Type of the resource expressed as URI.
+                                The type (indirectly) defines what method to use
+                                to connect to the resource. E.g. it may specify
+                                the name of a Identity Connector bundle, version
+                                and connector name. Or it may specify the URI
+                                of built-in SPML connector, etc.
+
+                                Note: QName may be more appropriate here.
+                                But due to OpenESB bug we have URI. But these
+                                should be the same anyway.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="namespace" type="xsd:anyURI">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Resource private namespace. This is the namespace
+                                that is private for a specific resource INSTANCE.
+                                It may be used by the connector e.g. to generate
+                                instance-specific resource schema or for other
+                                purposes. It should be set by the system
+                                administrator to a unique value for each resource
+                                instance. The configuration tools (e.g. admin GUI)
+                                should provide a reasonable default value.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="schema">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Schema for resource objects.
+                                
+                                This element contains the XSD-formatted definition
+                                of resource schema. It defines data types for
+                                accounts, groups, roles, entitlements,
+                                organizational units or any other objects
+                                related to identity management that the resource
+                                supports.
+
+                                Resource schema will be only available at run-time
+                                and can be diffrent for every resource instance,
+                                even for resource instances of the same type.
+                                It is supposed to be dynamically interpreted in
+                                run-time.
+
+                                Schema defines data types (XSD types), but it
+                                does NOT define how these types are handled.
+                                E.g. it defines attributes and object class for
+                                inetOrgPerson, it defines that inetOrgPerson
+                                extends organizationalPerson and persona, that
+                                cn is multi-valued string attributed of Person,
+                                etc. But it does NOT define that inetOrgPerson
+                                object class should be used as account and that
+                                modifyTimestamp attribute is read-only. Such
+                                additional details are specified in
+                                schemaHandling element defined below.
+
+                                Resource schema is read-only. Changing resource
+                                schema is not supported.
+
+                                TODO: annotations in the schema
+
+                                Note: xsd:any is here, but maybe a stricter type
+                                would be preferable. However xsd:any seems to be
+                                a common practice (e.g. SPML, WSDL).
+                            </xsd:documentation>
+                        </xsd:annotation>
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="schemaHandling" type="ResourceSchemaHandlingType">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Specification of handling details for resource
+                                schema. E.g. read-only or read-write attributes,
+                                account object classes, etc.
+
+                                TODO: more details
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="capabilities" minOccurs="0" maxOccurs="1">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Resource and resource connector capabilities. E.g. the ability to reset passwords, detect changes in real-time, etc.
+                                
+                                TODO
+
+                                xsd:any for now. It will be modified to stricter
+                                schema later.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:any/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="configuration">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Resource configuration (hostname, port, ...).
+                                Specific for each resource type.
+                                TODO
+                            </xsd:documentation>
+                        </xsd:annotation>
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:any minOccurs="0" maxOccurs="unbounded"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="ResourceSchemaHandlingType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Specification of handling details for resource schema. E.g.
+                read-only or read-write attributes, account object classes, etc.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="accountType" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Defiens a type from the resource schema (object class)
+                        that can be used for creating accounts.
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element ref="c:name" minOccurs="0" maxOccurs="1">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    Human readable name for the account object class.
+                                    This name may be displayd in tools and GUIs to
+                                    provide more pleasant user experience, as the
+                                    XML data type names may look quite frightening.
+                                </xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="attribute" minOccurs="0" maxOccurs="unbounded">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    Specification of handling of an account attribute.
+                                    This overrides annotations in the resource schema.
+                                </xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element ref="c:name" minOccurs="0" maxOccurs="1">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Human readable name for the account attribute.
+                                                This name may be displayd in tools and GUIs to
+                                                provide more pleasant user experience, as the
+                                                native attribute names may look quite frightening
+                                                (especially in LDAP).
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                    <xsd:element ref="c:access" minOccurs="0" maxOccurs="unbounded">
+                                        <xsd:annotation>
+                                            <xsd:documentation>
+                                                Access to the attribute as defined
+                                                by the system administrator or deployer.
+                                                This can constrain the access defined by
+                                                resource schema annotations.
+                                                Specifying broader access that the resource
+                                                connector can handle is an error.
+
+                                                If no access is specified, it defaults to
+                                                read-write.
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:element>
+                                </xsd:sequence>
+                                <xsd:attribute name="ref" type="xsd:QName">
+                                    <xsd:annotation>
+                                        <xsd:documentation>
+                                            Name of the property attribute (XSD element)
+                                            that this definition describes.
+                                        </xsd:documentation>
+                                    </xsd:annotation>
+                                </xsd:attribute>
+                            </xsd:complexType>
+                        </xsd:element>
+                    </xsd:sequence>
+                    <xsd:attribute name="objectClass" type="xsd:QName">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                XSD type from the resource schema (Object Class)
+                                that should be used for accounts on this resource.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                    <xsd:attribute name="default" type="xsd:boolean" default="false">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Specifies whether this account type is the default
+                                account type for the resource. Only one account
+                                type can be default. Setting this flag for more
+                                than one type is an error.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="assignableType" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Type of assignable resource objects such as groups, roles
+                        entitlements, organizatrions, etc.
+
+                        Not yet figured out. Please ignore for now.
+
+                        TODO
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element ref="c:name" minOccurs="0" maxOccurs="1">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                                        Human readable name for
+                                                        the object class.
+                                </xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                    </xsd:sequence>
+                    <xsd:attribute name="objectClass" type="xsd:QName">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                                    TODO
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:attribute>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ResourceObjectShadowType">
+        <xsd:annotation>
+            <xsd:documentation>
+                    Local copy of any object on the provisioning resource that
+                    is related to provisioning.
+                    It may be account, group, role (on the target
+                    system), privilege, security label, organizational unit or
+                    anything else that is worth managing in identity management.
+
+                    This XML object provides a representation of the
+                    resource object in the IDM system, in the LOCAL REPOSITORY.
+                    It may represents a minimal data structure in IDM repository
+                    that contains only identifier and nothing else. It may also
+                    represent a rich structure with a lot of cached or fetched
+                    data. The actual
+                    content of this object depends on usage: on the specific
+                    interface and operation used and even on the system state
+                    and configuration.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="c:ExtensibleObjectType">
+                <xsd:sequence>
+                    <xsd:choice>
+                        <xsd:element name="resourceRef" type="c:ObjectReferenceType">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                Reference to a resource that this resource
+                                object shadow belongs to.
+                                </xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="resource" type="ResourceType">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                Resource that this resource
+                                object shadow belongs to.
+                                </xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                    </xsd:choice>
+                    <xsd:element name="objectClass" type="xsd:QName">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                TODO
+                                This QName instead of URI becase it may refer to
+                                a foreign (non-OpenIDM) schema. Such schemas may
+                                have uknown URI-QName mapping, therefore using
+                                QName seems to be more reliable.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:choice>
+                        <xsd:element name="attributes">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                Attribute values from the resource. The values
+                                may be freshly fetched from the resource or
+                                cached. The set of attributes
+                                may be empty, may provide a complete copy of the
+                                resource object or anything in between. This
+                                depends on the implementation of the caching
+                                and fetching strategy, configuration of the
+                                provisioning service or operation that was
+                                invoked.
+
+                                While this object is stored, attibutes set will
+                                contain attribute values that are (persistently)
+                                cached from the resource.
+
+                                At the normal case there should be at least
+                                attributes that identify the resource object
+                                on the resouce (identifiers).
+                                This will be a single attribute
+                                in a normal case, something like uid, username,
+                                DN, etc. But if a single attribute is not
+                                enough to identify the account, more than one
+                                attribute may be present.
+
+                                There also may be no attributes. This can happen
+                                e.g. if IDM system knows that user should have
+                                account on the resource, but the account is not
+                                yet created and no identifier is yet assigned to
+                                it.
+
+                                This schema does not distinguish which
+                                attributes are idenfiers are which are ordinary
+                                attributes. That can be learned from the
+                                resource schema provided byresource or resource
+                                connector.
+                                Motivation: resource schema is dynamic, the
+                                attribute that is identifier for a specific
+                                object may be different for different resources,
+                                even if the resources are of the same type
+                                (e.g. directory servers with different LDAP
+                                schema). And we do not really need to know which
+                                of the attributes is identifier in the
+                                compile-time. Knowing that in run-time is
+                                enough.
+
+                                Please note that this may be out of sync with
+                                regard to the resource. In some operations
+                                (e.g. lookup) it will be only milliseconds old,
+                                but in case of sotred cached values this may be
+                                days or even weeks old value.
+
+                                Even though there is a single extenaible element
+                                "attributes", we do not want to put its content
+                                directly to the body of resource object. Doing
+                                so will cause problems with UPA rule and it will
+                                effectively prohibit the the of type replacement
+                                extensibility on this object.
+
+                                This element is supposed to be used only for
+                                resource object that follow standard resource
+                                schema. It must not be used for other resource
+                                objects.
+                                </xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:any namespace="##other" minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                        <xsd:any namespace="##other" minOccurs="1" maxOccurs="1" processContents="lax">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    Any representation of resource object (as a
+                                    single element). This may be used only for
+                                    resource object that do not use standard
+                                    resource schema.
+                                    For non-standard resource schemas.
+                                </xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:any>
+                    </xsd:choice>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="AccountShadowType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Account object type. Represents account on a target system.
+                May be used for locally caching the account data (in local
+                repository).
+
+                This is not much more than a marker type, but it is necessary
+                as accounts are important objects in identity management and
+                a lot of functionality has special behavior for accounts.
+
+                This object is supposed to be stored in LOCAL REPOSITORY, it is
+                NOT the object on provisioning resource. For that please see
+                the resource schema which is dynamic and may be different for
+                each resource. There is a standard Account type in standard
+                resource schema provided by OpenIDM project. Resource connectors
+                should use that as a supertype (marker type) for accounts, but
+                there may be exceptions.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="tns:ResourceObjectShadowType">
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <!--
+        Following types SHOULD NOT be here. They should be in the respository
+        WSDL definition. However, there is a bug in OpenESB (OPENESB-5) and 
+        placing the elements to this namespace works around that bug.
+        This should be moved to the WSDL once the bug is resolved. 
+    -->
+
+    <xsd:complexType name="ResourceObjectShadowListType">
+        <xsd:sequence>
+            <xsd:element name="object" type="ResourceObjectShadowType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="UserContainerType">
+        <xsd:sequence>
+            <xsd:element name="user" type="UserType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="UserListType">
+        <xsd:sequence>
+            <xsd:element name="user" type="UserType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ObjectStageType">
+        <xsd:annotation>
+            <xsd:documentation>
+                TODO
+
+                This should REALY REALY be in the IDM model interface
+                definition. The specific properties of a stage may be different
+                for each implementation. The implementation may replace this
+                with a similar concept of stage.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element ref="c:object">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        This element must contain the object that the stage 
+                        describes. This is visible to the client and client may
+                        change it (almost) freely.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:any namespace="##other" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        This is supposed to contain conversation/interaction
+                        state, the original object values, etc.
+                        It is specific for each implementation of the IDM model.
+
+                        it is under control of the IDM model implementation. The
+                        client (GUI) should treat it as an opaque data.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:any>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="user" type="UserType" substitutionGroup="c:object"/>
+    <xsd:element name="resource" type="ResourceType" substitutionGroup="c:object"/>
+    <xsd:element name="account" type="AccountShadowType" substitutionGroup="c:object"/>
+
+    <!--
+        Following types SHOULD NOT be here. They should be in the provisioning
+        WSDL definition. However, there is a bug in OpenESB (OPENESB-5) and
+        placing the elements to this namespace works around that bug.
+        This should be moved to the WSDL once the bug is resolved.
+    -->
+
+    <xsd:complexType name="ResourceObjectType">
+        <xsd:sequence>
+            <xsd:any namespace="##other" minOccurs="1" maxOccurs="unbounded" processContents="lax"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ResourceObjectIdentificationType">
+        <xsd:sequence>
+            <xsd:any namespace="##other" minOccurs="1" maxOccurs="unbounded" processContents="lax"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!-- CONVENIENCE ELEMENTS
+         Following definitions are there to use in examples, import files, etc.
+         These should not be used in the services -->
+
+    <xsd:element name="objects">
+        <xsd:complexType>
+            <xsd:annotation>
+                <xsd:documentation>
+                Object list, to be used in import files and examples.
+                </xsd:documentation>
+            </xsd:annotation>
+            <xsd:sequence>
+                <xsd:element ref="c:object" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+
+    </xsd:element>
+
+</xsd:schema>
+
+
+

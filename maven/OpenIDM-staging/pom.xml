@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>OpenIDM-parent</artifactId>
+        <groupId>com.forgerock.openidm</groupId>
+        <version>1.7-SNAPSHOT</version>
+        <relativePath>../OpenIDM-parent</relativePath>
+    </parent>
+    <groupId>com.forgerock.openidm</groupId>
+    <artifactId>OpenIDM-staging</artifactId>
+    <version>1.7-SNAPSHOT</version>
+    <packaging>ejb</packaging>
+    <name>OpenIDM Staging</name>
+    <description>OpenIDM is an open standards based Identity Management, Provisioning and Compliance solution. Experience shows that the most important features of an identity management product are: high flexibility in Business Process handling and compliance with open standards and interfaces. A highly flexible user interface combined with a very robust workflow engine make OpenIDM ready for any Identity Management project.</description>
+    <url>http://www.forgerock.com/openidm.html</url>
+    <organization>
+        <name>ForgeRock</name>
+        <url>http://www.forgerock.com</url>
+    </organization>
+	<!--
+		properties> <serverID>glassfish</serverID>
+		<hibernate.version>3.4.0.GA</hibernate.version>
+		<hibernate-core.version>3.3.2.GA</hibernate-core.version>
+		<hibernate.version1>3.5.0-CR-1</hibernate.version1> </properties -->
+
+    <dependencies>
+        <dependency>
+            <groupId>com.forgerock.openidm</groupId>
+            <artifactId>OpenIDM-commons</artifactId>
+            <version>${openidm.currentVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.forgerock.openidm.xml</groupId>
+            <artifactId>OpenIDM-schemas</artifactId>
+            <classifier>modelws</classifier>
+            <version>${openidm.currentVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+
+        <!-- Spring Dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>org.springframework.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>org.springframework.web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>org.springframework.beans</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>org.springframework.context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>org.springframework.transaction</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>org.springframework.orm</artifactId>
+        </dependency>
+
+        <!--Provided dependencies-->        
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>6.0</version>
+            <scope>provided</scope>
+        </dependency>
+        
+	<!-- Test dependencies -->
+
+
+		
+    </dependencies>
+
+    <!-- Build settings -->
+    <build>
+	<!-- Plugin settings -->
+        <plugins>
+            <!--plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>1.12</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>wsgen</goal>
+                        </goals>
+                        <configuration>
+                            <sei>com.forgerock.openidm.staging.StagingService</sei>
+                            <resourceDestDir>${project.build.directory}/classes/META-INF/wsdl</resourceDestDir>
+                            <genWsdl>true</genWsdl>
+                            <keep>false</keep>
+                            <verbose>true</verbose>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <goals>
+                            <goal>wsgen</goal>
+                        </goals>
+                        <configuration>
+                            <sei>com.forgerock.openidm.model.ModelService</sei>
+                            <resourceDestDir>${project.build.directory}/classes/META-INF/wsdl</resourceDestDir>
+                            <genWsdl>true</genWsdl>
+                            <keep>false</keep>
+                            <verbose>true</verbose>
+                        </configuration>
+                        <id>wsgen-generate-ModelService</id>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>servlet-api</artifactId>
+                        <version>2.5</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>javax</groupId>
+                        <artifactId>javaee-api</artifactId>
+                        <version>6.0</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.forgerock.openidm.xml</groupId>
+                        <artifactId>OpenIDM-core-model</artifactId>
+                        <version>1.7-SNAPSHOT</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.forgerock.openidm.xml</groupId>
+                                    <artifactId>OpenIDM-core-model</artifactId>
+                                    <version>1.7-SNAPSHOT</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                                    <includes>**/idmmodel/wsdl/**/*.*</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                            <includeScope>compile</includeScope>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.forgerock.openidm.xml</groupId>
+                                    <artifactId>OpenIDM-schemas</artifactId>
+                                    <classifier>stagingws</classifier>
+                                    <version>1.7-SNAPSHOT</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                                    <includes>**</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.forgerock.openidm.xml</groupId>
+                                    <artifactId>OpenIDM-schemas</artifactId>
+                                    <classifier>modelws</classifier>
+                                    <version>1.7-SNAPSHOT</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                                    <includes>com/**/*.*,META-INF/wsdl/xml/ns/public/**</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ejb-plugin</artifactId>
+                <configuration>
+                    <ejbVersion>3.0</ejbVersion>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>OpenIDM-parent</artifactId>
+        <groupId>com.forgerock.openidm</groupId>
+        <version>1.7-SNAPSHOT</version>
+        <relativePath>../OpenIDM-parent</relativePath>
+    </parent>
+    <groupId>com.forgerock.openidm</groupId>
+    <artifactId>OpenIDM-model</artifactId>
+    <version>1.7-SNAPSHOT</version>
+    <packaging>ejb</packaging>
+    <name>OpenIDM Model</name>
+    <description>OpenIDM is an open standards based Identity Management, Provisioning and Compliance solution. Experience shows that the most important features of an identity management product are: high flexibility in Business Process handling and compliance with open standards and interfaces. A highly flexible user interface combined with a very robust workflow engine make OpenIDM ready for any Identity Management project.</description>
+    <url>http://www.forgerock.com/openidm.html</url>
+    <organization>
+        <name>ForgeRock</name>
+        <url>http://www.forgerock.com</url>
+    </organization>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.forgerock.openidm</groupId>
+            <artifactId>OpenIDM-commons</artifactId>
+            <version>${openidm.currentVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.forgerock.openidm</groupId>
+            <artifactId>OpenIDM-repository</artifactId>
+            <version>${openidm.currentVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.forgerock.openidm.provisioning</groupId>
+            <artifactId>OpenIDM-provisioning-service</artifactId>
+            <version>${openidm.currentVersion}</version>
+        </dependency>
+
+        <!-- Spring Dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>org.springframework.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>org.springframework.beans</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>org.springframework.context</artifactId>
+        </dependency>
+
+        <!--Provided dependencies-->
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>6.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.forgerock.openidm.test</groupId>
+            <artifactId>OpenIDM-test-tools</artifactId>
+            <version>${openidm.currentVersion}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.13</version>
+            <scope>test</scope>
+        </dependency>
+
+
+
+
+    </dependencies>
+
+    <!-- Build settings -->
+    <build>
+	<!-- Plugin settings -->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                            <includeScope>compile</includeScope>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-resource-initialize</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>OpenIDM-test-tools</includeArtifactIds>
+                            <includes>test-data/**</includes>
+                            <outputDirectory>${basedir}/target</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.forgerock.openidm.xml</groupId>
+                                    <artifactId>OpenIDM-schemas</artifactId>
+                                    <classifier>modelws</classifier>
+                                    <version>1.7-SNAPSHOT</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                                    <includes>**</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.forgerock.openidm.xml</groupId>
+                                    <artifactId>OpenIDM-schemas</artifactId>
+                                    <classifier>cyclemanagementws</classifier>
+                                    <version>1.7-SNAPSHOT</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                                    <includes>**</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.forgerock.openidm.xml</groupId>
+                                    <artifactId>OpenIDM-schemas</artifactId>
+                                    <classifier>repositoryws</classifier>
+                                    <version>1.7-SNAPSHOT</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                                    <includes>com/**/*.*,META-INF/wsdl/xml/ns/public/**</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.forgerock.openidm.xml</groupId>
+                                    <artifactId>OpenIDM-schemas</artifactId>
+                                    <classifier>passwordws</classifier>
+                                    <version>1.7-SNAPSHOT</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                                    <includes>com/**/*.*,META-INF/wsdl/xml/ns/public/**</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.forgerock.openidm.xml</groupId>
+                                    <artifactId>OpenIDM-schemas</artifactId>
+                                    <classifier>provisioningws</classifier>
+                                    <version>1.7-SNAPSHOT</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                                    <includes>com/**/*.*,META-INF/wsdl/xml/ns/public/**</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.forgerock.openidm</groupId>
+                                    <artifactId>OpenIDM-repository</artifactId>
+                                    <version>1.7-SNAPSHOT</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/classes/</outputDirectory>
+                                    <includes>META-INF/*.xml</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                   
+
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ejb-plugin</artifactId>
+                <configuration>
+                    <ejbVersion>3.0</ejbVersion>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+

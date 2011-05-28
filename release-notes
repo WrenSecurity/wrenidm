@@ -1,0 +1,27 @@
+================================================================================
+=                            OpenIDM Snapshot 1.6                              =
+================================================================================
+
+                               RELEASE NOTES
+
+Known Issues
+============
+
+An error is encoutered on the very first attempt to login. Reload the page
+to be able to log in.
+This is most likely caused by ICEFaces, we are working on it. The error is:
+com.sun.faces.application.view.StateHolderSaver cannot be cast to
+[Ljava.lang.Object; exception but It's ICEFaces exception
+
+Many error messages are not yet propagated to the GUI. To see the reason of a
+failure please see the error log.
+
+Session timeouts are not handled well. This also seems to be a problem with
+ICEFaces.
+
+Default XML namespace occasionally does not work during import and in web
+service calls. The problem seems to be in OpenESBv2 message normalization
+routine. The workaround is to qualify all XML elements with a namespace prefix
+and also remove the default namespace declaration (xmlns="...").
+
+Running the application using JDK 6 update 17 can cause problems with saxon: instead of it the default xerces implementation is used and can cause errors in XPathExpression evaluation (reproduced on Linux). Using the latest JDK solves the problem.

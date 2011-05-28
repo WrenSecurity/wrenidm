@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<javaee-project xmlns="http://java.sun.com/xml/ns/jbi/javaee/config/1/" xmlns:ns0="http://openidm.forgerock.com/xml/ns/public/provisioning/password-1.wsdl" xmlns:ns1="http://openidm.forgerock.com/xml/ns/public/model/password-1.wsdl" xmlns:ns2="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" name="openidm-services">
+    <services>
+        <provides enable-for-javaee-http="true" endpoint-name="javaee_passwordSyncPort" interface-name="ns0:passwordSyncPortType" service-name="ns0:passwordSyncService"/>
+        <consumes enable-for-nmr="true" endpoint-name="javaee_passwordPortServicesClient" interface-name="ns1:passwordPortType" service-name="ns1:passwordService"/>
+        <consumes enable-for-nmr="true" endpoint-name="javaee_modelPortServicesClient" interface-name="ns2:modelPortType" service-name="ns2:modelService"/>
+    </services>
+</javaee-project>

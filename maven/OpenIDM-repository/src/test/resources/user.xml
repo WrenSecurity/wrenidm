@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<i:user oid="c0c010c0-d34d-b33f-f00d-111111111111" xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xmlns:i='http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd'
+   xmlns:c='http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd'
+   xmlns:piracy='http://openidm.forgerock.com/xml/ns/samples/piracy'>
+    <c:name>jack</c:name>
+    <c:extension>
+        <piracy:ship>Black Pearl</piracy:ship>
+    </c:extension>
+    <i:fullName>Cpt. Jack Sparrow</i:fullName>
+    <i:givenName>Jack</i:givenName>
+    <i:familyName>Sparrow</i:familyName>
+    <i:additionalNames>yet another name</i:additionalNames>
+    <i:honorificPrefix>Cpt.</i:honorificPrefix>
+    
+    <i:honorificSuffix>PhD.</i:honorificSuffix>
+    <i:eMailAddress>jack.sparrow@forgerock.com</i:eMailAddress>
+    <i:telephoneNumber>555-1234</i:telephoneNumber>
+    <i:employeeNumber>emp1234</i:employeeNumber>
+    <i:employeeType>CAPTAIN</i:employeeType>
+    <i:organizationalUnit>Leaders</i:organizationalUnit>
+    <i:locality>Black Pearl</i:locality>
+
+    <i:credentials>
+        <i:password>
+            <i:cleartextPassword>deadmentellnotales</i:cleartextPassword>
+        </i:password>
+    </i:credentials>
+</i:user>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<c:account c:oid="9999" xmlns:c="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd"
+xmlns:icc="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/configuration-1.xsd"
+xmlns:ics="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd"
+xmlns:dj="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2">
+    <c:name>jbond</c:name>
+    <c:resourceRef oid="ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2"/>
+    <c:objectClass>dj:Account</c:objectClass>
+    <c:attributes>
+        <ics:__UID__>uid=ahoi,ou=People,dc=forgerock,dc=org</ics:__UID__>
+    </c:attributes>
+</c:account>

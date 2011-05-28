@@ -1,0 +1,1 @@
+"bin/db-cleanup.cmd" && "bin/db-setup.cmd" && "bin/run-integration-tests.cmd" && "bin/db-cleanup.cmd"

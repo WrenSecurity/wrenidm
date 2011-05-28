@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ice="http://www.icesoft.com/icefaces/component"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+
+    <composite:interface />
+
+    <composite:implementation>
+        #{lang.messages['app.themecolor']}:
+            <ice:commandLink value="#{lang.messages['app.themecolor.gray']}"
+                             style="margin-right: 10px;" actionListener="#{preferencesBean.grayTheme}"
+                             immediate="true" />
+            <ice:commandLink value="#{lang.messages['app.themecolor.blue']}"
+                             style="margin-right: 10px;" actionListener="#{preferencesBean.blueTheme}"
+                             immediate="true"/>
+            #{lang.messages['app.menuposition']}:
+            <ice:commandLink value="#{lang.messages['app.menuposition.left']}" style="margin-right: 10px;"
+                             action="#{preferencesBean.leftMenu}" immediate="true" />
+            <ice:commandLink value="#{lang.messages['app.menuposition.right']}" style="margin-right: 10px;"
+                             action="#{preferencesBean.rightMenu}" immediate="true" />
+    </composite:implementation>
+</html>

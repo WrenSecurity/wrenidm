@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<user xmlns="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd">
+    <name>chivas</name>
+    <extension/>
+    <fullName>Chivas Regal</fullName>
+    <givenName>Chivas</givenName>
+    <familyName>Regal</familyName>
+    <eMailAddress>chivas@regal.com</eMailAddress>
+    <account>
+        <resourceRef oid="a1a1a1a1-76e0-48e2-86d6-3d4f02d3e1a2" type="ResourceType"/>
+    </account>
+</user> 

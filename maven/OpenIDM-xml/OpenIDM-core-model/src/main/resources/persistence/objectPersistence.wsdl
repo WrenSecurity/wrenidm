@@ -1,0 +1,666 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="objectPersistence"
+    targetNamespace="http://openidm.forgerock.com/xml/ns/objectPersistence/wsdl/1#"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="http://openidm.forgerock.com/xml/ns/objectPersistence/wsdl/1#"
+    xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype">
+
+    <documentation>
+        Object Persistence Service Interface.
+
+        DEPRECATED
+
+        This interface is DEPRECATED and should not be user. It was deprecated
+        even before it was implemented. Now, that's real agility!
+
+        This service provides persistence for generic objects. It does not
+        understand what it is storing, it only undestands that the objects
+        have identifiers and generic attributes. The object structure is based
+        on XML schema, but it is also governed by conventions that are difficult
+        to express in XML schema.
+
+        Stored objects consists of identifier and name (see definition below),
+        URI-formatted object type and a set of generic attributes. The
+        attributes are represented as first-level XML tags (elements) of the
+        object XML representation. The QName (namespace and local name) of the
+        element holding the attribute is considered to be an attribute name.
+
+        The following XML snippet is an example of the object (omitting
+        namespace definitions):
+
+<![CDATA[
+        <object oid="d3adm3a4" name="foobar"
+                objectType="http://foo.com/xsd#BarType">
+
+              <idm:fullName>Foo Bar</idm:fullName>
+              <idm:givenName>Foo</idm:givenName>
+              <idm:familyName>Bar</idm:familyName>
+              <foo:geekName>F00 B4r</foo:geekName>
+              <org:guild>Societus Geekus Europeus</org:guild>
+              <org:guild>Basset User Group</org:guild>
+              <pet:pet species="dog" breed="basset" name="Doggie"/>
+              <pet:pet species="mouse" breed="logitech" name="Mousee"/>
+              <com:shoppingPreferences>
+                  <com:tShirt size="XXL" color="#000000"/>
+                  <com:tie preference="no thanks"/>
+              </com:shoppingPreferences>
+              
+        </object>
+]]>
+
+        The above example describes an object with identifier "d3adm3a4", name
+        "foobar" and type defined by URI "http://foo.com/xsd#BarType". The
+        object has 7 attributes:
+        
+        Standard attributes "fullName", "givenName" and "familyName" in namespace
+        defined by "idm" prefix. These are single-valued string attributes.
+        
+        Attribute "geekName" in namespace defined by "foo" prefix. This is also
+        single-valued string attribute, but it does not come with the standard
+        IDM schema. This is a way how to extend the system. The following
+        attributes are also non-standard (and fictional) extensions.
+        
+        Multi-valued non-standard attribute "guild". It is a string attribute
+        with multiple values. Multiple values are repsented by providing
+        multiple instances of XML elements in the document.
+        Such attributes are typically used for roles, groups, etc.
+        
+        Complex attribute "pet". This attribute defines is defined by
+        complex XML type, using XML attributes to represent structured data.
+        It is also multi-valued attribute.
+        
+        Complex attribute "shoppingPreferences". This attibute is using complex
+        XML type to form a structure of XML elemenets to represent data. This is
+        a single-valued attribute.
+
+        The implementation may store the attributes in any suitable way and it
+        is not required to check any schema. However, the implementation MAY
+        be able to check schema of the objects, e.g. to check for mandatory
+        and allowed attributes and attribute types. This may
+        be either explicit (e.g. implementation chceking against provided XML
+        schema) or implicit, conforming to the constraints of underlying storage
+        (e.g. LDAP schema enforced by underlying directory server). One way or
+        another, the implementation may fail to store the objects that violate
+        the schema. The method how the schemas are "loaded" to the
+        implementation are not defined by this interface. And this intrface
+        even cannot "reveal" the schema to ist users (at least not now).
+        Therefore clients of this interface must be prepared to handle schema
+        violation faults.
+
+        The implementation is not required to index the data or provide ony
+        other optimizations. This depends on the specific implementation, its
+        configuration and the underlying storage system. Qualitative constraints
+        (such as performance) are NOT defined by this interface definition.
+
+        QName-URI mapping:
+
+        For the purpose of this interface and its implementations, URIs and
+        QNames are considered equivalent. This is required by WWW architecture
+        and also helps avoid some drawbacks and bugs in ESB implementations.
+
+        The QNames are mapped to URIs by concatenating namespace URI and a local
+        name. If URI does not end with slash (/) or hash (#) character, slash is
+        concatenated to the URI before adding the local name. The URI-QName
+        mapping is the reverse process.
+
+        TODO: Atomicity, consistency
+
+        TODO: security constraints
+
+        TODO: Faults
+
+        TODO: inherently thread-safe
+
+        TODO: note about distributed storage systems and weak/eventual consistency
+
+        TODO: seach operation
+        * only required to work with strings (xsd:string)
+        * support for additional data types may be provided
+
+        Notes:
+        The definition of this interface is somehow "fuzzy" at places. E.g.
+        allowing schema-aware implementation but not mandating it, recommending
+        to remove duplicates, but tolerating them, etc. The reason for this is
+        to have better fit to the underlying storage mechanisms and therefore
+        more efficient and simpler implementation. It may complicate the clients
+        if the code needs to be generic and fit each and every implementation of
+        this interface. However, such code will be quite rare. Most of the code
+        will be developed to work on a specific storage (e.g. Oracle DB or LDAP)
+        and therefore can be made slightly implementation-specific. Changing the
+        storage in a running IDM system is extremely unlikely.
+
+    </documentation>
+
+    <types>
+
+        <xsd:schema targetNamespace="http://openidm.forgerock.com/schema/wsdl/objectPersistence/1#">
+
+            <xsd:complexType name="PersistentObjectType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                Generic persistent object.
+                Defines basic properties that each object must have to be
+                persisted (identifier, name).
+
+                All first-level sub-elements of this object are considered to
+                be attributes. QName of the element that contains attribute
+                value is considered to be the name of the attribute.
+
+                This interface does not constrain which
+                attributes are allowed for a specific object type (schema
+                enforcement), but the implementation might do it.
+
+                Single-value attributes must appear as a none or one instance of
+                the XML element holding the value.
+
+                Multi-value attributes must appear as none or more instances of
+                the XML element. Multi-valued attributes are regarded as
+                unordered sets. Duplicate values are allowed, but duplicates
+                should not be preserved by the implementation. The
+                implementation should reduce duplicate values to a single value
+                if it is possible and efficient.
+
+                If an element for a specific attribute does not appear in the
+                object it means that attribute value is undefined (attribute
+                does not exists). This is a different state as compared to
+                passing an empty XML element. Empty XML element means that
+                the attribute exists, but has an empty (null) value.
+                Implementations must be able to handle undefined (non-existent)
+                attributes, but may NOT be able to handle empty (null) values.
+                The use of empty (null) values is DISCOURADGED.
+
+                It is not mandated by this interface how to pass ordered lists
+                and multi-value attributes with duplicates. However it is
+                recommended to use single value attributes with appropriate
+                complex XML data structures to hold such data.
+
+                The oid, name and objectType are attributes of this object
+                instead of elements. This was made especially for the purpose
+                to avoid Unique Particle Attribution (UPA) problem of XML
+                schema. However, these attributes may appear as elements in some
+                operations (modify). In such case the elements and attributes
+                must be considered equivalent. It is illegal to use the element
+                form for the attributes if the operation allows to use
+                attributes.
+                    </xsd:documentation>
+                </xsd:annotation>
+
+                <xsd:sequence>
+                    <xsd:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+
+                <xsd:attribute name="oid" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                        System-wide immutable identifier for the object.
+                        Will be probably quite long and not human-readable.
+                        Should not be displayed to user. It has no meaning
+                        outside of IDM system and should not be directly
+                        passed to any third-party systems.
+
+                        This identifier must be unique in the entire system.
+
+                        This attribute is immutable. It cannot be changed.
+                        Any operation attempting to change this identifier must
+                        fail.
+
+                        The OID should be unique in both time and space. That
+                        means that OIDs must be unique in the whole system in
+                        any moment and should not be re-used. If an object is
+                        deleted, the OID of that object should not be used by
+                        a new object. The reason is to avoid problems with stale
+                        links pointing to a wrong object and appearing valid.
+                        However, this is not a strict requirement. Some marginal
+                        probability of OID reuse is tolerated. The recommended
+                        practice is to add some randomness to the process of
+                        OID generation.
+
+                        This attribute is NOT (necessarily) ASN.1 OID.
+                        
+                        The attribute is named "oid" meaning object identifier.
+                        It is not named "id" to avoid confusion with xml:id
+                        attribute as it is easy to confuse these two if
+                        namespace prefix is ommited. The confusion with ASN.1
+                        OID id not likely.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+
+                <xsd:attribute name="name" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                        Human-readable, mutable name for the object.
+                        It is also an identifier (login name, group name).
+                        Should be unique in the respective context of
+                        interpretation. E.g. the name of the UserType subtype
+                        should be unique in the whole system. The name of
+                        the AccountType subtype should be unique in the
+                        provisioning target (target system) that it belongs to.
+
+                        This may not be human-readable in a sense to display
+                        to a common end-user. It is indended to be displayed to
+                        IDM system administrator. Therefore it may contain quite
+                        a "ugly" structures such as LDAP DN or URL.
+
+                        Notes:
+
+                        Maybe we can replace this with psoID from SPML? ... if
+                        we align a bit closer with SPML.
+
+                        Or maybe we can add psoID as yet another attribute here?
+                        But that would introduce redundancy in the model, which
+                        is bad.
+
+                        Or maybe we shoudl forget about SPML? But won't that be
+                        re-inventing the wheel?
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+
+                <xsd:attribute name="objectType" type="xsd:anyURI">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                        Type of the stored object.
+                        This attribute contains URI defining the type (class) of
+                        stored object. The URI that maps to a QName of an
+                        object XML element should be used if possible (see QName
+                        mapping above). However this is not mandatory and the
+                        implementation must be able to work with any URI.
+
+                        Object type may be changed, but the possible values may
+                        be constrained by the implementation. E.g. the
+                        implementation may allow to change the object type only
+                        to the subtype or supertype, or it may fail if the
+                        attributes of the object does not conform to the schema
+                        constraints defined for the new type.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+
+                <xsd:attribute name="version" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            TODO
+
+                            Type of the version attribute is string, not integer
+                            to provide flexibility for various versioning
+                            schemes in implementation (e.g. ETags). The type
+                            really does not matter, the only things that matters
+                            is if the version is the same or different.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:attribute>
+
+            </xsd:complexType>
+
+            <xsd:element name="name" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Element version of "name" attribute of
+                        PersistentObjectType. For use in some operations
+                        (e.g. modify). Do not use if the attribute version of
+                        "name" is legal.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+
+            <xsd:element name="objectType" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Element version of "objectType" attribute of
+                        PersistentObjectType. For use in some operations
+                        (e.g. modify). Do not use if the attribute version of
+                        "objectType" is legal.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+
+            <xsd:complexType name="PersistentObjectContainerType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Container object for PersistentObjectType.
+
+                        This would not be necessary in an ideal world. It is
+                        here only to work around some OpenESB bugs/features.
+                        The OpenESB is changing the name (and therefore also
+                        namespace) of the top-level element of each message
+                        part, but it is not adding the namespace prefix
+                        to attributes. Therefore object attributes does not
+                        work. Wrapping it in cotainer object like this one works
+                        around the problem.
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element name="object" type="tns:PersistentObjectType"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:complexType name="ObjectChangeType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Description of changes applied to a single object.
+                        This XML type describes changes to object attributes.
+                        It describes which attributes are changing, how they
+                        are changing and what are the new values.
+
+                        The change model is always relative with respect to the
+                        object. Each attribute may be changed independently of
+                        other attributes. If there is no information about
+                        attribure change for a specific attribute, it is assumed
+                        that such attribute is left unchanged. Therefore
+                        omiting an attribute from the change list will leave it
+                        unmodified and will NOT erase the attribute.
+
+                        All attribute changes contained in this object must be
+                        applied atomically. Either all of the changes are
+                        applied or none of the changes must be applied and a
+                        fault must be indicated.
+
+                        Notes:
+                        Should this go to some kind of common schema?
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element name="oid" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                OID of the object to modify.
+                                
+                                Due to consistency reasons this should rather be
+                                an attribute. But it is an element because of
+                                OpenESB bug with attributes in message parts and
+                                we want to avoid wrapping this object into a
+                                container.
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element name="change" type="tns:ChangeType" minOccurs="1" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:complexType name="ChangeType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Description of change applied to a single attribute.
+
+                        This XML type defines the type of attribute change and
+                        a set of values for the attribute. The values are
+                        interpreted according to the change type (see detailed
+                        description for changeType attribute).
+
+                        Notes:
+                        Should this go to some kind of common schema?
+                    </xsd:documentation>
+                </xsd:annotation>
+
+                <xsd:sequence>
+                    <xsd:any namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+
+                <xsd:attribute name="changeType">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Definition of attribute change type. The value of
+                            this attribute defines how the arguments in the body
+                            of this element are interpreted.
+
+                            There is no special change type for removing the
+                            whole attribute. This can be realized by either
+                            replacing existing attribute values with an empty
+                            set of values (empty body of this element) using a
+                            "replace" change type or by deleting all attribute
+                            values using a "delete" change type.
+                        </xsd:documentation>
+                    </xsd:annotation>
+
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+
+                            <xsd:enumeration value="add">
+                                <xsd:annotation>
+                                    <xsd:documentation>
+                                      Add new values to the existing attribute
+                                      values. This operation essetialy does
+                                      union of existing attribute values and
+                                      attribute values specified in the element
+                                      body.
+                                      If there are duplicates after the
+                                      addition, the implementation should reduce
+                                      them to a single occurences. However, if
+                                      the implementation is not be able to do
+                                      that efficiently, duplicates may be
+                                      preserved.
+                                      It is defined for both single- and
+                                      multi-valued attributes, but it may fail
+                                      if it attempts to add a value to a
+                                      single-valued attribute that already has
+                                      a value.
+                                      (This is "may" instead of "must" because
+                                      implementation may not be schema-aware and
+                                      therefore may not be able to distinguish
+                                      between single- and multi-valued
+                                      attributes)
+                                    </xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:enumeration>
+
+                            <xsd:enumeration value="replace">
+                                <xsd:annotation>
+                                    <xsd:documentation>
+                                      Eeplace all values to the existing
+                                      attribute with new values.
+                                      This operation discards all values of
+                                      existing attribute (if there were any) and
+                                      replaces them with the values specified in
+                                      the element body.
+                                      It is defined for both single- and
+                                      multi-valued attributes, but it may fail
+                                      if it attempts to add multiple values to a
+                                      single-valued attribute that already has
+                                      a value.
+                                      (This is "may" instead of "must" because
+                                      implementation may not be schema-aware and
+                                      therefore may not be able to distinguish
+                                      between single- and multi-valued
+                                      attributes)
+                                    </xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:enumeration>
+
+                            <xsd:enumeration value="delete">
+                                <xsd:annotation>
+                                    <xsd:documentation>
+                                      Removevalues from the existing attribute
+                                      values. This operation essetialy
+                                      substracts attribute values specified in
+                                      the element body from existing attribute
+                                      values.
+
+                                      Removing a value that is not present in
+                                      existing attribute values should not fail,
+                                      it should silently do nothing.
+
+                                      It is defined for both single- and
+                                      multi-valued attributes.
+                                    </xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:enumeration>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+
+                </xsd:attribute>
+
+            </xsd:complexType>
+
+        </xsd:schema>
+
+    </types>
+
+    <message name="lookupRequest">
+        <part name="oid" type="xsd:string">
+            <documentation>
+                Object identifier (OID) of the object to retrieve.
+            </documentation>
+        </part>
+    </message>
+    <message name="lookupResponse">
+        <part name="objectContainer" type="tns:PersistentObjectContainerType">
+            <documentation>
+                Retrieded complete persistent object wrapped in a container.
+            </documentation>
+        </part>
+        <part name="result" type="xsd:string">
+            <documentation>
+                TODO
+                This has to be replaced with a better response type.
+            </documentation>
+        </part>
+    </message>
+
+    <message name="addRequest">
+        <part name="objectContainer" type="tns:PersistentObjectContainerType">
+            <documentation>
+                Specifies the object to be created in the storage.
+            </documentation>
+        </part>
+    </message>
+    <message name="addResponse">
+        <part name="result" type="xsd:string">
+            <documentation>
+                This has to be replaced with a better response type.
+            </documentation>
+        </part>
+    </message>
+
+    <message name="modifyRequest">
+        <part name="objectChange" type="tns:ObjectChangeType">
+            <documentation>
+                Description of object (relative) changes.
+            </documentation>
+        </part>
+    </message>
+    <message name="modifyResponse">
+        <part name="result" type="xsd:string">
+            <documentation>
+                This has to be replaced with a better response type.
+            </documentation>
+        </part>
+    </message>
+
+    <message name="deleteRequest">
+        <part name="oid" type="xsd:string">
+            <documentation>
+                OID of object to delete.
+            </documentation>
+        </part>
+    </message>
+    <message name="deleteResponse">
+        <part name="result" type="xsd:string">
+            <documentation>
+                This has to be replaced with a better response type.
+            </documentation>
+        </part>
+    </message>
+
+    <portType name="objectPersistencePortType">
+
+        <operation name="lookup">
+            <documentation>
+                Retrieving complete object identified by oid.
+
+                This is not a search operation. It is a retrieval by a primary
+                identifier (primary key). It should be efficient and fast.
+                It must return a single matching object or a fault.
+
+                Idempotent operation. It may be retried many times with the same
+                result (as long as the object is unchanged) and without any
+                side effects.
+
+                TODO: better description.
+            </documentation>
+            <input name="lookupInput" message="tns:lookupRequest"/>
+            <output name="lookupOutput" message="tns:lookupResponse"/>
+        </operation>
+
+        <operation name="add">
+            <documentation>
+                Add new object to the storage. Complete object specificication
+                must be provided as an argument.
+
+                This operation must fail if object with the same OID already
+                exists in the storage.
+
+                This operation must be atomic. It must either create the object
+                or do nothing and fail. The object cannot be left in "partially
+                created" state. If two or more add operations are executed in
+                parallel using the same oid, one of them must succeed and the
+                others must fail.
+                No actor in the system must be able to observe any intermediate
+                state of the operation.
+
+                The operation may fail if the object to be created does not
+                comform to the underlying schema of the storage system or the
+                schema enforced by the implementation.
+            </documentation>
+            <input name="addInput" message="tns:addRequest"/>
+            <output name="addOutput" message="tns:addResponse"/>
+        </operation>
+
+        <operation name="modify">
+            <documentation>
+                Modify existing object in the storage. Description of (relative)
+                changes to the object is provided as an argument.
+
+                This operation must fail if the object with specific OID does
+                not exists in the storage.
+
+                This operation must be atomic. Either all of the specified
+                changes are applied or none of them (and the operation fails).
+                No actor in the system must be able to observe any intermediate
+                state of the operation.
+
+                If two or more modify operations are executed in parallel, the
+                operations should be merged. In case that the operations are in
+                conflict (e.g. one operation adding a value and the other
+                removing the same value), the result is not deterministic.
+
+                The operation may fail if the modified object does not
+                comform to the underlying schema of the storage system or the
+                schema enforced by the implementation.
+                
+                TODO: optimistic locking
+            </documentation>
+            <input name="modifyInput" message="tns:modifyRequest"/>
+            <output name="modifyOutput" message="tns:modifyResponse"/>
+        </operation>
+
+        <operation name="delete">
+            <documentation>
+                Deleting existing object in the storage, identified by OID.
+
+                This operation must fail if the object with specific OID does
+                not exists in the storage.
+
+                This operation must be atomic. Either the object is deleted
+                completelly or it is left unmodified (and the operation fails).
+                It must not leave the object in "partially deleted" state. No
+                actor in the system must be able to observe any intermediate
+                state of the operation.
+            </documentation>
+            <input name="deleteInput" message="tns:deleteRequest"/>
+            <output name="deleteOutput" message="tns:deleteResponse"/>
+        </operation>
+
+    </portType>
+
+    <plnk:partnerLinkType name="objectPersistence">
+        <!-- A partner link type is automatically generated when a new port type is added. Partner link types are used by BPEL processes. 
+In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.-->
+        <plnk:role name="objectPersistencePortTypeRole" portType="tns:objectPersistencePortType"/>
+    </plnk:partnerLinkType>
+    
+</definitions>
+

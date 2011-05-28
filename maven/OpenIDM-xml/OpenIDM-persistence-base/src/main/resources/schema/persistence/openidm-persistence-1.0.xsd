@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema targetNamespace="http://openidm.forgerock.org/schema/persistence"
+    xmlns="http://openidm.forgerock.org/schema/persistence"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"    
+    elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0" jaxb:version="2.0">
+
+
+    <!--xs:annotation>
+        <xs:appinfo>
+            <jaxb:schemaBindings>
+                <jaxb:package name="org.forgerock.openidm.xml.persistence">
+                    <jaxb:javadoc><![CDATA[<body>Package level documentation for generated package org.forgerock.openidm.xml.persistence.</body>]]>
+                    </jaxb:javadoc>
+                </jaxb:package>
+            </jaxb:schemaBindings>
+        </xs:appinfo>
+    </xs:annotation-->
+
+    <xs:attributeGroup name="PersistentObjectAttributes">
+        <xs:attribute name="id" type="xs:string" use="optional"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="displayName" type="xs:string" use="optional"/>
+        <xs:attribute name="lock" type="xs:string" use="optional"/>
+        <xs:attribute name="creator" type="xs:string" use="optional"/>
+        <xs:attribute name="createDate" type="xs:long" use="optional"/>
+        <xs:attribute name="lastModDate" type="xs:long" use="optional"/>
+        <xs:attribute name="protected" type="xs:boolean" use="optional"/>
+        <xs:attribute name="protectedFromDelete" type="xs:boolean" use="optional"/>
+        <xs:attribute name="hidden" type="xs:boolean" use="optional"/>
+        <xs:attribute name="counter" type="xs:long" use="optional"/>
+        <xs:attribute name="primaryObjectClass" type="xs:string" use="optional"/>
+        <xs:attribute name="subtype" type="xs:string" use="optional"/>
+        <xs:attribute name="authType" type="xs:string" use="optional"/>
+        <xs:attribute name="lastModifier" type="xs:string" use="optional"/>
+    </xs:attributeGroup>
+    <xs:complexType name="PersistentObjectType" abstract="true">
+        <xs:attributeGroup ref="PersistentObjectAttributes"/>
+    </xs:complexType>
+    <xs:element name="PersistentObject" type="PersistentObjectType" abstract="true">
+        <xs:annotation>
+            <xs:documentation>Parent of all Persistent Object</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+</xs:schema>

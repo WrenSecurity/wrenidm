@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://localhost:8080/modelService/ModelService?wsdl" uri="wsdl/modelWrapperServices.wsdl"/>
+    <system systemId="http://localhost:8080/passwordService/PasswordService?wsdl" uri="wsdl/passwordWrapperServices.wsdl"/>
+    <rewriteSystem systemIdStartString="http://openidm.forgerock.com/xml/" rewritePrefix="wsdl/xml/"/>
+    <nextCatalog catalog="catalog.xml"/>
+</catalog>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>OpenIDM-parent</artifactId>
+        <groupId>com.forgerock.openidm</groupId>
+        <version>1.7-SNAPSHOT</version>
+        <relativePath>../OpenIDM-parent</relativePath>
+    </parent>
+    <groupId>com.forgerock.openidm</groupId>
+    <artifactId>OpenIDM-api</artifactId>
+    <version>1.7-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>OpenIDM API</name>
+    <description>The Common project became dependent on other projects there so we need a now project to specify at the lowest level the interfaces. There for this is the API project. Do not add any OpenIDM dependency to it, keep it simple.</description>
+    <url>http://www.forgerock.com/openidm.html</url>
+    <organization>
+        <name>ForgeRock</name>
+        <url>http://www.forgerock.com</url>
+    </organization>
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>com.springsource.slf4j.api</artifactId>
+        </dependency>
+    </dependencies>
+</project>
+

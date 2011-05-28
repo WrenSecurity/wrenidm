@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+Copyright (c) 2010 ForgeRock Inc. All Rights Reserved
+
+The contents of this file are subject to the terms
+of the Common Development and Distribution License
+(the License). You may not use this file except in
+compliance with the License.
+
+You can obtain a copy of the License at
+http://www.opensource.org/licenses/cddl1.php or
+OpenIDM/legal/CDDLv1.0.txt
+See the License for the specific language governing
+permission and limitations under the License.
+
+When distributing Covered Code, include this CDDL
+Header Notice in each file and include the License file
+at OpenIDM/legal/CDDLv1.0.txt.
+If applicable, add the following below the CDDL Header,
+with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted 2010 [name of copyright owner]"
+
+Author: Radovan Semancik
+
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://openidm.forgerock.com/xml/ns/public/common/value-filter-1.xsd"
+    xmlns:tns="http://openidm.forgerock.com/xml/ns/public/common/value-filter-1.xsd"
+    elementFormDefault="qualified">
+
+    <xsd:annotation>
+        <xsd:documentation>
+            Schema that describes value filters.
+
+            TODO
+        </xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:element name="patternFilter">
+        <xsd:annotation>
+            <xsd:documentation>
+                Value filter that works with patterns, replacing pattern matches
+                with static values
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:replace" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="replace">
+        <xsd:annotation>
+            <xsd:documentation>
+                Definition of a pattern replacement.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="pattern" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            PCRE pattern to match (using Java flavor of PCRE)
+                            Every occurence of this pattern will be replaced.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="replacement" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Pattern occurences will be replaced with the value
+                            of this element.
+                        </xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    
+</xsd:schema>

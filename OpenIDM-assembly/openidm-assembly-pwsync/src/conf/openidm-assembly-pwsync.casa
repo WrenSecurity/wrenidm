@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<casa xmlns="http://java.sun.com/xml/ns/casa" xmlns:ns1="http://openidm.forgerock.com/xml/ns/public/model/staging-1.wsdl" xmlns:ns2="http://openidm.forgerock.com/xml/ns/public/provisioning/password-1.wsdl" xmlns:ns3="http://openidm.forgerock.com/xml/ns/public/model/password-1.wsdl" xmlns:ns4="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" xmlns:ns5="http://openidm.forgerock.com/xml/ns/public/provisioning/resource-object-change-listener-1.wsdl" xmlns:xlink="http://www.w3.org/2000/xlink">
+    <endpoints>
+        <endpoint endpoint-name="stagingPortWebappClient" interface-name="ns1:stagingPortType" name="endpoint1" service-name="ns1:stagingService"/>
+        <endpoint endpoint-name="passwordSyncPort" interface-name="ns2:passwordSyncPortType" name="endpoint2" service-name="ns2:passwordSyncService"/>
+        <endpoint endpoint-name="passwordPortServicesClient" interface-name="ns3:passwordPortType" name="endpoint3" service-name="ns3:passwordService"/>
+        <endpoint endpoint-name="javaee_stagingPort" interface-name="ns1:stagingPortType" name="endpoint4" service-name="ns1:stagingService"/>
+        <endpoint endpoint-name="javaee_modelPortStagingClient" interface-name="ns4:modelPortType" name="endpoint5" service-name="ns4:modelService"/>
+        <endpoint endpoint-name="javaee_modelPortWebappClient" interface-name="ns4:modelPortType" name="endpoint6" service-name="ns4:modelService"/>
+        <endpoint endpoint-name="javaee_stagingPortWebappClient" interface-name="ns1:stagingPortType" name="endpoint7" service-name="ns1:stagingService"/>
+        <endpoint endpoint-name="javaee_passwordSyncPort" interface-name="ns2:passwordSyncPortType" name="endpoint8" service-name="ns2:passwordSyncService"/>
+        <endpoint endpoint-name="javaee_passwordPortServicesClient" interface-name="ns3:passwordPortType" name="endpoint9" service-name="ns3:passwordService"/>
+        <endpoint endpoint-name="javaee_modelPortServicesClient" interface-name="ns4:modelPortType" name="endpoint10" service-name="ns4:modelService"/>
+        <endpoint endpoint-name="javaee_modelPort" interface-name="ns4:modelPortType" name="endpoint11" service-name="ns4:modelService"/>
+        <endpoint endpoint-name="javaee_resourceObjectChangeListenerPort" interface-name="ns5:resourceObjectChangeListenerPortType" name="endpoint12" service-name="ns5:resourceObjectChangeListenerService"/>
+        <endpoint endpoint-name="javaee_passwordPort" interface-name="ns3:passwordPortType" name="endpoint13" service-name="ns3:passwordService"/>
+    </endpoints>
+    <service-units>
+        <service-engine-service-unit artifacts-zip="openidm-staging.jar" component-name="sun-javaee-engine" defined="true" description="Represents this Service Unit" internal="true" name="openidm-assembly-pwsync-openidm-staging" unit-name="openidm-staging" unknown="false" x="128" y="393">
+            <provides endpoint="endpoint4"/>
+            <consumes endpoint="endpoint5"/>
+        </service-engine-service-unit>
+        <service-engine-service-unit artifacts-zip="openidm-webapp.war" component-name="sun-javaee-engine" defined="true" description="Represents this Service Unit" internal="true" name="openidm-assembly-pwsync-openidm-webapp" unit-name="openidm-webapp" unknown="false" x="126" y="530">
+            <consumes endpoint="endpoint6"/>
+            <consumes endpoint="endpoint7"/>
+        </service-engine-service-unit>
+        <service-engine-service-unit artifacts-zip="openidm-services.war" component-name="sun-javaee-engine" defined="true" description="Represents this Service Unit" internal="true" name="openidm-assembly-pwsync-openidm-services" unit-name="openidm-services" unknown="false" x="119" y="97">
+            <provides endpoint="endpoint8"/>
+            <consumes endpoint="endpoint9"/>
+            <consumes endpoint="endpoint10"/>
+        </service-engine-service-unit>
+        <service-engine-service-unit artifacts-zip="openidm-model.jar" component-name="sun-javaee-engine" defined="true" description="Represents this Service Unit" internal="true" name="openidm-assembly-pwsync-openidm-model" unit-name="openidm-model" unknown="false" x="132" y="256">
+            <provides endpoint="endpoint11"/>
+            <provides endpoint="endpoint12"/>
+            <provides endpoint="endpoint13"/>
+        </service-engine-service-unit>
+        <binding-component-service-unit artifacts-zip="sun-http-binding.jar" component-name="sun-http-binding" description="Represents this Service Unit" name="openidm-assembly-pwsync-sun-http-binding" unit-name="sun-http-binding">
+            <ports>
+                <port state="deleted" x="67" y="37">
+                    <link xlink:href="../jbiServiceUnits/openidm-services/WEB-INF/wsdl/passwordSync.wsdl#xpointer(/definitions/service[@name='passwordSyncService']/port[@name='passwordSyncPort'])" xlink:type="simple"/>
+                    <consumes endpoint="endpoint2"/>
+                    <provides endpoint="endpoint2"/>
+                </port>
+                <port x="0" y="-1">
+                    <link xlink:href="../jbiServiceUnits/openidm-services/WEB-INF/wsdl/passwordWrapperServices.wsdl#xpointer(/definitions/service[@name='passwordService']/port[@name='passwordPortServicesClient'])" xlink:type="simple"/>
+                    <consumes endpoint="endpoint3"/>
+                    <provides endpoint="endpoint3"/>
+                </port>
+                <port state="deleted" x="67" y="37">
+                    <link xlink:href="../jbiServiceUnits/openidm-webapp/WEB-INF/wsdl/stagingWrapperWebapp.wsdl#xpointer(/definitions/service[@name='stagingService']/port[@name='stagingPortWebappClient'])" xlink:type="simple"/>
+                    <consumes endpoint="endpoint1"/>
+                    <provides endpoint="endpoint1"/>
+                </port>
+            </ports>
+        </binding-component-service-unit>
+    </service-units>
+    <connections>
+        <connection consumer="endpoint3" provider="endpoint13" state="unchanged"/>
+        <connection consumer="endpoint9" provider="endpoint13" state="unchanged"/>
+        <connection consumer="endpoint6" provider="endpoint11" state="new"/>
+        <connection consumer="endpoint7" provider="endpoint4" state="new"/>
+        <connection consumer="endpoint5" provider="endpoint11" state="new"/>
+        <connection consumer="endpoint10" provider="endpoint11" state="new"/>
+        <connection consumer="endpoint7" provider="endpoint1" state="deleted"/>
+        <connection consumer="endpoint2" provider="endpoint8" state="deleted"/>
+    </connections>
+    <porttypes>
+        <link xlink:href="../jbiServiceUnits/openidm-model/META-INF/wsdl/xml/ns/public/model/model-1.wsdl#xpointer(/definitions/portType[@name='modelPortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-model/META-INF/wsdl/xml/ns/public/model/password-1.wsdl#xpointer(/definitions/portType[@name='passwordPortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-model/META-INF/wsdl/xml/ns/public/provisioning/provisioning-1.wsdl#xpointer(/definitions/portType[@name='provisioningPortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-model/META-INF/wsdl/xml/ns/public/provisioning/resource-object-change-listener-1.wsdl#xpointer(/definitions/portType[@name='resourceObjectChangeListenerPortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-model/META-INF/wsdl/xml/ns/public/repository/repository-1.wsdl#xpointer(/definitions/portType[@name='repositoryPortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-services/WEB-INF/wsdl/passwordSync.wsdl#xpointer(/definitions/portType[@name='passwordSyncPortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-services/WEB-INF/wsdl/xml/ns/public/model/model-1.wsdl#xpointer(/definitions/portType[@name='modelPortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-services/WEB-INF/wsdl/xml/ns/public/model/password-1.wsdl#xpointer(/definitions/portType[@name='passwordPortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-staging/META-INF/wsdl/xml/ns/public/model/model-1.wsdl#xpointer(/definitions/portType[@name='modelPortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-staging/META-INF/wsdl/xml/ns/public/model/staging-1.wsdl#xpointer(/definitions/portType[@name='stagingPortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-webapp/WEB-INF/wsdl/xml/ns/public/model/model-1.wsdl#xpointer(/definitions/portType[@name='modelPortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-webapp/WEB-INF/wsdl/xml/ns/public/model/staging-1.wsdl#xpointer(/definitions/portType[@name='stagingPortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-webapp/WEB-INF/wsdl/xml/ns/public/repository/repository-1.wsdl#xpointer(/definitions/portType[@name='repositoryPortType'])" xlink:type="simple"/>
+    </porttypes>
+    <bindings>
+        <link xlink:href="../jbiServiceUnits/openidm-model/META-INF/wsdl/xml/ns/public/model/model-1.wsdl#xpointer(/definitions/binding[@name='modelBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-model/META-INF/wsdl/xml/ns/public/model/password-1.wsdl#xpointer(/definitions/binding[@name='passwordBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-model/META-INF/wsdl/xml/ns/public/provisioning/provisioning-1.wsdl#xpointer(/definitions/binding[@name='provisioningBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-model/META-INF/wsdl/xml/ns/public/provisioning/resource-object-change-listener-1.wsdl#xpointer(/definitions/binding[@name='resourceObjectChangeListenerBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-model/META-INF/wsdl/xml/ns/public/repository/repository-1.wsdl#xpointer(/definitions/binding[@name='repositoryBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-services/WEB-INF/wsdl/passwordSync.wsdl#xpointer(/definitions/binding[@name='passwordSyncBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-services/WEB-INF/wsdl/xml/ns/public/model/model-1.wsdl#xpointer(/definitions/binding[@name='modelBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-services/WEB-INF/wsdl/xml/ns/public/model/password-1.wsdl#xpointer(/definitions/binding[@name='passwordBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-staging/META-INF/wsdl/xml/ns/public/model/model-1.wsdl#xpointer(/definitions/binding[@name='modelBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-staging/META-INF/wsdl/xml/ns/public/model/staging-1.wsdl#xpointer(/definitions/binding[@name='stagingBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-webapp/WEB-INF/wsdl/xml/ns/public/model/model-1.wsdl#xpointer(/definitions/binding[@name='modelBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-webapp/WEB-INF/wsdl/xml/ns/public/model/staging-1.wsdl#xpointer(/definitions/binding[@name='stagingBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-webapp/WEB-INF/wsdl/xml/ns/public/repository/repository-1.wsdl#xpointer(/definitions/binding[@name='repositoryBinding'])" xlink:type="simple"/>
+    </bindings>
+    <services>
+        <link xlink:href="../jbiServiceUnits/openidm-model/META-INF/wsdl/provisioningWrapperModel.wsdl#xpointer(/definitions/service[@name='provisioningService'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-model/META-INF/wsdl/repositoryWrapperModel.wsdl#xpointer(/definitions/service[@name='repositoryService'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-model/META-INF/wsdl/xml/ns/private/model/modelWrapper.wsdl#xpointer(/definitions/service[@name='modelService'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-services/WEB-INF/wsdl/modelWrapperServices.wsdl#xpointer(/definitions/service[@name='modelService'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-services/WEB-INF/wsdl/passwordSync.wsdl#xpointer(/definitions/service[@name='passwordSyncService'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-services/WEB-INF/wsdl/passwordWrapperServices.wsdl#xpointer(/definitions/service[@name='passwordService'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-staging/META-INF/wsdl/modelWrapperStaging.wsdl#xpointer(/definitions/service[@name='modelService'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-staging/META-INF/wsdl/xml/ns/private/model/stagingWrapper.wsdl#xpointer(/definitions/service[@name='stagingService'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-webapp/WEB-INF/wsdl/modelWrapperWebapp.wsdl#xpointer(/definitions/service[@name='modelService'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-webapp/WEB-INF/wsdl/repositoryWrapperWebapp.wsdl#xpointer(/definitions/service[@name='repositoryService'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/openidm-webapp/WEB-INF/wsdl/stagingWrapperWebapp.wsdl#xpointer(/definitions/service[@name='stagingService'])" xlink:type="simple"/>
+    </services>
+    <regions>
+        <region name="WSDL Endpoints" width="150"/>
+        <region name="JBI Modules" width="500"/>
+        <region name="External Modules" width="200"/>
+    </regions>
+</casa>

@@ -1,0 +1,43 @@
+[13/Dec/2010:15:09:03 +0100] CONNECT conn=0 from=127.0.0.1:44031 to=127.0.0.1:14444 protocol=LDAPS
+[13/Dec/2010:15:09:04 +0100] BIND REQ conn=0 op=0 msgID=1 type=SIMPLE dn="cn=Directory Manager"
+[13/Dec/2010:15:09:04 +0100] BIND RES conn=0 op=0 msgID=1 result=0 authDN="cn=Directory Manager,cn=Root DNs,cn=config" etime=33
+[13/Dec/2010:15:09:04 +0100] DISCONNECT conn=0 reason="Client Disconnect"
+[13/Dec/2010:15:09:37 +0100] CONNECT conn=1 from=127.0.0.1:53983 to=127.0.0.1:14444 protocol=LDAPS
+[13/Dec/2010:15:09:37 +0100] BIND REQ conn=1 op=0 msgID=1 type=SIMPLE dn="cn=admin2,cn=Administrators,cn=admin data"
+[13/Dec/2010:15:09:37 +0100] BIND RES conn=1 op=0 msgID=1 result=49 authFailureID=196826 authFailureReason="Unable to bind to the Directory Server as user cn=admin2,cn=Administrators,cn=admin data because no such user exists in the server" etime=1
+[13/Dec/2010:15:09:37 +0100] DISCONNECT conn=1 reason="Client Disconnect"
+[13/Dec/2010:15:09:37 +0100] CONNECT conn=2 from=127.0.0.1:53984 to=127.0.0.1:14444 protocol=LDAPS
+[13/Dec/2010:15:09:37 +0100] BIND REQ conn=2 op=0 msgID=1 type=SIMPLE dn="cn=Directory Manager"
+[13/Dec/2010:15:09:37 +0100] BIND RES conn=2 op=0 msgID=1 result=0 authDN="cn=Directory Manager,cn=Root DNs,cn=config" etime=2
+[13/Dec/2010:15:09:37 +0100] SEARCH REQ conn=2 op=1 msgID=2 base="cn=config" scope=baseObject filter="(objectclass=*)" attrs="1.1"
+[13/Dec/2010:15:09:37 +0100] SEARCH RES conn=2 op=1 msgID=2 result=0 nentries=1 etime=4
+[13/Dec/2010:15:09:37 +0100] CONNECT conn=3 from=127.0.0.1:53985 to=127.0.0.1:14444 protocol=LDAPS
+[13/Dec/2010:15:09:37 +0100] BIND REQ conn=3 op=0 msgID=1 type=SIMPLE dn="cn=admin2,cn=Administrators,cn=admin data"
+[13/Dec/2010:15:09:37 +0100] BIND RES conn=3 op=0 msgID=1 result=49 authFailureID=196826 authFailureReason="Unable to bind to the Directory Server as user cn=admin2,cn=Administrators,cn=admin data because no such user exists in the server" etime=4
+[13/Dec/2010:15:09:37 +0100] DISCONNECT conn=3 reason="Client Disconnect"
+[13/Dec/2010:15:09:37 +0100] UNBIND REQ conn=2 op=2 msgID=3
+[13/Dec/2010:15:09:37 +0100] DISCONNECT conn=2 reason="Client Unbind"
+[13/Dec/2010:15:13:18 +0100] CONNECT conn=4 from=127.0.0.1:35534 to=127.0.0.1:10389 protocol=LDAP
+[13/Dec/2010:15:13:18 +0100] BIND REQ conn=4 op=0 msgID=1 type=SIMPLE dn="cn=directory manager"
+[13/Dec/2010:15:13:18 +0100] BIND RES conn=4 op=0 msgID=1 result=0 authDN="cn=Directory Manager,cn=Root DNs,cn=config" etime=1
+[13/Dec/2010:15:13:18 +0100] SEARCH REQ conn=4 op=1 msgID=2 base="dc=forgerock,dc=com" scope=baseObject filter="(objectclass=*)" attrs="1.1"
+[13/Dec/2010:15:13:18 +0100] SEARCH RES conn=4 op=1 msgID=2 result=32 message="The entry dc=forgerock,dc=com specified as the search base does not exist in the Directory Server" nentries=0 etime=0
+[13/Dec/2010:15:13:18 +0100] SEARCH REQ conn=4 op=2 msgID=3 base="" scope=baseObject filter="(objectClass=*)" attrs="subschemaSubentry"
+[13/Dec/2010:15:13:18 +0100] SEARCH RES conn=4 op=2 msgID=3 result=0 nentries=1 etime=4
+[13/Dec/2010:15:13:18 +0100] SEARCH REQ conn=4 op=3 msgID=4 base="cn=schema" scope=baseObject filter="(objectClass=*)" attrs="attributeTypes,objectClasses,matchingRules,ldapSyntaxes,*"
+[13/Dec/2010:15:13:18 +0100] SEARCH RES conn=4 op=3 msgID=4 result=0 nentries=1 etime=37
+[13/Dec/2010:15:13:18 +0100] SEARCH REQ conn=4 op=4 msgID=5 base="dc=forgerock,dc=com" scope=baseObject filter="(objectclass=*)" attrs="1.1"
+[13/Dec/2010:15:13:18 +0100] SEARCH RES conn=4 op=4 msgID=5 result=32 message="The entry dc=forgerock,dc=com specified as the search base does not exist in the Directory Server" nentries=0 etime=0
+[13/Dec/2010:15:13:18 +0100] SEARCH REQ conn=4 op=5 msgID=6 base="" scope=baseObject filter="(objectClass=*)" attrs="namingContexts"
+[13/Dec/2010:15:13:18 +0100] SEARCH RES conn=4 op=5 msgID=6 result=0 nentries=1 etime=1
+[13/Dec/2010:15:13:18 +0100] SEARCH REQ conn=4 op=6 msgID=7 base="dc=forgerock,dc=org" scope=singleLevel filter="(objectclass=*)" attrs="objectclass"
+[13/Dec/2010:15:13:18 +0100] SEARCH RES conn=4 op=6 msgID=7 result=0 nentries=2 etime=6
+[13/Dec/2010:15:13:18 +0100] SEARCH REQ conn=4 op=7 msgID=8 base="dc=forgerock,dc=org" scope=baseObject filter="(objectClass=*)" attrs="ALL"
+[13/Dec/2010:15:13:18 +0100] SEARCH RES conn=4 op=7 msgID=8 result=0 nentries=1 etime=2
+[13/Dec/2010:15:14:01 +0100] CONNECT conn=5 from=127.0.0.1:54047 to=127.0.0.1:14444 protocol=LDAPS
+[13/Dec/2010:15:14:01 +0100] BIND REQ conn=5 op=0 msgID=1 type=SIMPLE dn="cn=Directory Manager"
+[13/Dec/2010:15:14:01 +0100] BIND RES conn=5 op=0 msgID=1 result=0 authDN="cn=Directory Manager,cn=Root DNs,cn=config" etime=2
+[13/Dec/2010:15:14:01 +0100] ADD REQ conn=5 op=1 msgID=2 dn="cn=admin2,cn=Administrators,cn=admin data"
+[13/Dec/2010:15:14:01 +0100] ADD RES conn=5 op=1 msgID=2 result=0 etime=3
+[13/Dec/2010:15:14:01 +0100] DISCONNECT conn=5 reason="Client Disconnect"
+[13/Dec/2010:15:14:07 +0100] DISCONNECT conn=4 reason="Server Shutdown" msg="This client connection is being deregistered from the associated request handler because the Directory Server is shutting down"

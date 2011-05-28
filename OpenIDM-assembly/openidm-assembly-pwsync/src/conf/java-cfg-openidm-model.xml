@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<javaee-project xmlns="http://java.sun.com/xml/ns/jbi/javaee/config/1/" xmlns:ns0="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" xmlns:ns1="http://model.openidm.forgerock.com/" xmlns:ns2="http://openidm.forgerock.com/xml/ns/public/model/password-1.wsdl" xmlns:ns3="http://openidm.forgerock.com/xml/ns/public/provisioning/resource-object-change-listener-1.wsdl" name="openidm-model">
+    <services>
+        <provides enable-for-javaee-http="false" endpoint-name="javaee_modelPort" interface-name="ns0:modelPortType" service-name="ns0:modelService"/>
+        <provides enable-for-javaee-http="false" endpoint-name="javaee_passwordPort" interface-name="ns1:PasswordService" service-name="ns1:passwordService"/>
+        <provides enable-for-javaee-http="false" endpoint-name="javaee_passwordPort" interface-name="ns2:passwordPortType" service-name="ns1:passwordService"/>
+        <provides enable-for-javaee-http="false" endpoint-name="javaee_resourceObjectChangeListenerPort" interface-name="ns3:resourceObjectChangeListenerPortType" service-name="ns3:resourceObjectChangeListenerService"/>
+        <provides enable-for-javaee-http="false" endpoint-name="javaee_passwordPort" interface-name="ns2:passwordPortType" service-name="ns2:passwordService"/>
+    </services>
+</javaee-project>

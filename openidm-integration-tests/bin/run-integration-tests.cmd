@@ -1,0 +1,1 @@
+java -jar lib/selenium-server.jar -htmlSuite "*firefox" "http://localhost:8080" "./tests/HTMLSuite.html" "./results.html" -log selenium.log -browserSideLog -port 4445

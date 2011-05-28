@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.forgerock.openidm.xml</groupId>
+        <artifactId>OpenIDM-xml</artifactId>
+        <version>1.7-SNAPSHOT</version>
+    </parent>
+    <groupId>com.forgerock.openidm.xml</groupId>
+    <artifactId>OpenIDM-jaxb2-util</artifactId>
+    <version>1.7-SNAPSHOT</version>
+    <name>OpenIDM JAXB2 Utils</name>
+    <description>OpenIDM is an open standards based Identity Management, Provisioning and Compliance solution. Experience shows that the most important features of an identity management product are: high flexibility in Business Process handling and compliance with open standards and interfaces. A highly flexible user interface combined with a very robust workflow engine make OpenIDM ready for any Identity Management project.</description>
+    <url>http://www.forgerock.com/openidm.html</url>
+    <organization>
+        <name>ForgeRock</name>
+        <url>http://www.forgerock.com</url>
+    </organization>
+    <dependencies>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.2.3</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>

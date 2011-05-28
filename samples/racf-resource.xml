@@ -1,0 +1,1144 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<c:objects xmlns:c="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd">
+    <c:resource version="0" oid="a66cfebb-4bcc-44ea-bccf-54a1c7d72fd2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <c:name>RACF-TEST</c:name>
+        <c:type>http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resourceaccessconfiguration-1.xsd</c:type>
+        <c:namespace>http://openidm.forgerock.com/xml/ns/public/resource/instances/a66cfebb-4bcc-44ea-bccf-54a1c7d72fd2</c:namespace>
+        <c:schema>
+            <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+                targetNamespace="http://openidm.forgerock.com/xml/ns/public/resource/instances/a66cfebb-4bcc-44ea-bccf-54a1c7d72fd2"
+                xmlns:c="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd"
+                xmlns:xns0="http://openidm.forgerock.com/xml/ns/public/resource/instances/a66cfebb-4bcc-44ea-bccf-54a1c7d72fd2"
+                xmlns:xns1="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd">
+                <xsd:import namespace="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd"/>
+                <xsd:import namespace="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd"/>
+                <xsd:import namespace="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd"/>
+                <xsd:complexType name="Account">
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <r:identifier xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd" ref="xns1:__UID__"/>
+                            <r:secondaryIdentifier xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd" ref="xns1:__NAME__"/>
+                            <r:nativeObjectClass xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">__ACCOUNT__</r:nativeObjectClass>
+                            <r:accountType default="true" xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd"/>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                    <xsd:complexContent>
+                        <xsd:extension base="r:ResourceObjectClass" xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">
+                            <xsd:sequence>
+                                <xsd:element ref="xns1:__UID__" minOccurs="0">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>__UID__</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element ref="xns1:__NAME__">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <!-- racfid=$(name),profiletype=user,cn=racf
+                                                 racfgroupid=$(group),profiletype=group,cn=racf
+                                                 racfuserid=$(name)+racfgroupid=$(group),profiletype=CONNECT,cn=racf
+                                            -->
+                                            <r:nativeAttributeName>__NAME__</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="RACFDEFAULTGROUP" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfDefaultGroup</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+				<!-- Set to true if you want to RESUME and false to REVOKE the user -->
+                                <xsd:element minOccurs="0" name="fakeEnabled" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>fakeEnabled</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="fakeExpired" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>fakeExpired</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfInstallationData" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfInstallationData</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfDatasetModel" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfDatasetModel</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="RACFOWNER" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOwner</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="RACFPROGRAMMERNAME" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfProgrammerName</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>                                
+                                <xsd:element minOccurs="0" name="racfSecurityLevel" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfSecurityLevel</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfSecurityCategoryList" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfSecurityCategoryList</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfRevokeDate" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfRevokeDate</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfResumeDate" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfResumeDate</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element maxOccurs="unbounded" minOccurs="0" name="RACFLOGONDAYS" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfLogonDays</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="RACFLOGONTIME" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfLogonTime</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfClassName" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfClassName</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfSecurityLabel" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfSecurityLabel</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFDfpDataApplication" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFDfpDataApplication</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFDfpDataClass" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFDfpDataClass</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFDfpManagementClass" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFDfpManagementClass</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFDfpStorageClass" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFDfpStorageClass</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFAccountNumber" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFAccountNumber</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFDefaultCommand" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFDefaultCommand</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFDestination" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFDestination</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFMessageClass" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFMessageClass</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFDefaultLoginProc" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFDefaultLoginProc</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFLogonSize" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFLogonSize</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFMaximumRegionSize" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFMaximumRegionSize</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFDefaultSysoutClass" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFDefaultSysoutClass</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFUserData" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFUserData</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFDefaultUnit" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFDefaultUnit</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFTsoSecurityLabel" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFTsoSecurityLabel</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfPrimaryLanguage" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfPrimaryLanguage</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfSecondaryLanguage" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfSecondaryLanguage</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOperatorIdentification" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOperatorIdentification</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOperatorClass" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOperatorClass</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOperatorPriority" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOperatorPriority</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOperatorReSignon" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOperatorReSignon</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfTerminalTimeout" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfTerminalTimeout</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfStorageKeyword" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfStorageKeyword</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfAuthKeyword" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfAuthKeyword</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfMformKeyword" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfMformKeyword</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfLevelKeyword" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfLevelKeyword</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfMonitorKeyword" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfMonitorKeyword</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfRoutcodeKeyword" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfRoutcodeKeyword</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfLogCommandResponseKeyword" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfLogCommandResponseKeyword</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfMGIDKeyword" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfMGIDKeyword</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfDOMKeyword" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfDOMKeyword</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfKEYKeyword" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfKEYKeyword</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfCMDSYSKeyword" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfCMDSYSKeyword</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfUDKeyword" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfUDKeyword</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfMscopeSystems" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfMscopeSystems</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfAltGroupKeyword" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfAltGroupKeyword</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfAutoKeyword" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfAutoKeyword</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfWorkAttrUserName" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfWorkAttrUserName</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfBuilding" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfBuilding</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfDepartment" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfDepartment</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfRoom" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfRoom</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfAddressLine1" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfAddressLine1</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfAddressLine2" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfAddressLine2</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfAddressLine3" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfAddressLine3</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfAddressLine4" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfAddressLine4</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfWorkAttrAccountNumber" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfWorkAttrAccountNumber</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="RACFOMVSUID" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOmvsUid</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="RACFOMVSHOME" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOmvsHome</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOmvsInitialProgram" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOmvsInitialProgram</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOmvsMaximumCPUTime" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOmvsMaximumCPUTime</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOmvsMaximumAddressSpaceSize" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOmvsMaximumAddressSpaceSize</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOmvsMaximumFilesPerProcess" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOmvsMaximumFilesPerProcess</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOmvsMaximumThreadsPerProcess" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOmvsMaximumThreadsPerProcess</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOmvsMaximumMemoryMapArea" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOmvsMaximumMemoryMapArea</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOmvsMaximumProcessesPerUID" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOmvsMaximumProcessesPerUID</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfNetviewInitialCommand" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfNetviewInitialCommand</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfDefaultConsoleName" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfDefaultConsoleName</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfCTLKeyword" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfCTLKeyword</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfMessageReceiverKeyword" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfMessageReceiverKeyword</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfNetviewOperatorClass" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfNetviewOperatorClass</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfDomains" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfDomains</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfNGMFADMKeyword" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfNGMFADMKeyword</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfDCEUUID" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfDCEUUID</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfDCEPrincipal" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfDCEPrincipal</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfDCEHomeCell" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfDCEHomeCell</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfDCEHomeCellUUID" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfDCEHomeCellUUID</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfDCEAutoLogin" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfDCEAutoLogin</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOvmUid" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOvmUid</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOvmHome" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOvmHome</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOvmInitialProgram" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOvmInitialProgram</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOvmFileSystemRoot" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOvmFileSystemRoot</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfLNotesShortName" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfLNotesShortName</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfNDSUserName" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfNDSUserName</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="krbPrincipalName" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>krbPrincipalName</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="maxTicketAge" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>maxTicketAge</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfEncryptType" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfEncryptType</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfLDAPBindDN" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfLDAPBindDN</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfLDAPBindPw" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfLDAPBindPw</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfLDAPHost" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfLDAPHost</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfSuperiorGroup" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfSuperiorGroup</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfGroupNoTermUAC" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfGroupNoTermUAC</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfGroupUniversal" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfGroupUniversal</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOvmGroupId" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOvmGroupId</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOmvsGroupId" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOmvsGroupId</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfConnectAttributes" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfConnectAttributes</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfConnectGroupAuthority" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfConnectGroupAuthority</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfConnectAuthDate" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfConnectAuthDate</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfConnectCount" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfConnectCount</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element maxOccurs="unbounded" minOccurs="0" name="RACFCONNECTOWNER" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:attributeFlag xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">NOT_UPDATEABLE</r:attributeFlag>
+                                            <r:nativeAttributeName>racfConnectOwner</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfConnectResumeDate" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfConnectResumeDate</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfConnectRevokeDate" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfConnectRevokeDate</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfConnectGroupUACC" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfConnectGroupUACC</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element maxOccurs="unbounded" minOccurs="0" name="RACFATTRIBUTES" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfAttributes</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element maxOccurs="unbounded" minOccurs="0" name="RACFCONNECTGROUPNAME" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:attributeFlag xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">NOT_UPDATEABLE</r:attributeFlag>
+                                            <r:nativeAttributeName>racfConnectGroupName</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfSubGroupName" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfSubGroupName</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfAuthorizationDate" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfAuthorizationDate</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfPasswordInterval" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfPasswordInterval</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfPasswordChangeDate" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfPasswordChangeDate</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfLastAccess" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfLastAccess</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfCurKeyVersion" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfCurKeyVersion</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfSubGroupName" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfSubGroupName</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfGroupUserids" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfGroupUserids</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfid" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfid</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfuserid" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfuserid</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfgroupid" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfgroupid</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element ref="xns1:__PASSWORD__">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:attributeFlag xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">PASSWORD</r:attributeFlag>
+                                            <r:classifiedAttribute xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">
+                                                <r:encryption>HASH</r:encryption>
+                                                <r:classificationLevel>password</r:classificationLevel>
+                                            </r:classifiedAttribute>
+                                            <r:nativeAttributeName>__PASSWORD__</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+
+                                <!--
+                                __PASSWORD_CHANGE_INTERVAL_NAME__
+                                __ENABLE__
+                                __ENABLE_DATE__
+                                __DISABLE_DATE__
+
+                                __ENABLE_NAME__
+                                __ENABLE_DATE_NAME__
+                                __DISABLE_DATE_NAME__
+                                __PASSWORD_EXPIRED__
+                                __LAST_LOGIN_DATE__
+                                __LAST_PASSWORD_CHANGE_DATE__
+
+                                -->
+
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+                <xsd:complexType name="Group">
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <r:identifier xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd" ref="xns1:__NAME__"/>
+                            <r:nativeObjectClass xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">__GROUP__</r:nativeObjectClass>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                    <xsd:complexContent>
+                        <xsd:extension base="r:ResourceObjectClass" xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">
+                            <xsd:sequence>
+                                <xsd:element ref="xns1:__NAME__">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <!-- buildNonupdateAttribute -->
+                                            <r:nativeAttributeName>__NAME__</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="accountId" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <!-- buildReadonlyAttribute -->
+                                            <r:nativeAttributeName>accountId</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+
+                                <xsd:element minOccurs="0" name="racfInstallationData" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfInstallationData</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+
+                                <xsd:element minOccurs="0" name="racfDatasetModel" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfDatasetModel</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="RACFOWNER" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOwner</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfSuperiorGroup" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfSuperiorGroup</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfGroupNoTermUAC" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfGroupNoTermUAC</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfGroupUniversal" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfGroupUniversal</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOvmGroupId" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOvmGroupId</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="racfOmvsGroupId" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>racfOmvsGroupId</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFDfpDataApplication" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFDfpDataApplication</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFDfpDataClass" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFDfpDataClass</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFDfpManagementClass" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFDfpManagementClass</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element minOccurs="0" name="SAFDfpStorageClass" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:nativeAttributeName>SAFDfpStorageClass</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element maxOccurs="unbounded" minOccurs="0" name="racfSubGroupName" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:attributeFlag xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">NOT_UPDATEABLE</r:attributeFlag>
+                                            <r:nativeAttributeName>racfSubGroupName</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element maxOccurs="unbounded" minOccurs="0" name="racfGroupUserids" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <r:attributeFlag xmlns:r="http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd">NOT_UPDATEABLE</r:attributeFlag>
+                                            <r:nativeAttributeName>racfGroupUserids</r:nativeAttributeName>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                            </xsd:sequence>
+                        </xsd:extension>
+                    </xsd:complexContent>
+                </xsd:complexType>
+            </xsd:schema>
+        </c:schema>
+        <c:schemaHandling>
+            <c:accountType>
+                <c:name>Default Account</c:name>
+            </c:accountType>
+        </c:schemaHandling>
+        <c:configuration>
+            <ns2:ConnectorConfiguration xmlns:ns2="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/configuration-1.xsd"
+                xmlns:ns4="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd" 
+                xmlns:c="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd"
+                xmlns:racf="http://openidm.forgerock.com/xml/ns/resource/idconnector/bundle/org.identityconnectors.racf/org.identityconnectors.racf.RacfConnector/1.0.5484">
+                <ns2:ConnectorRef bundleName="org.identityconnectors.racf" bundleVersion="1.0.5484" connectorName="org.identityconnectors.racf.RacfConnector"/>
+                <ns2:BundleProperties>
+                    
+
+                    <racf:hostNameOrIpAddr>127.0.0.1</racf:hostNameOrIpAddr>
+                    <racf:hostPortNumber>389</racf:hostPortNumber>
+                    <racf:suffix>cn=RACF</racf:suffix>
+                    <racf:ldapUserName>racfid=,profiletype=user,cn=RACF</racf:ldapUserName>
+                    <racf:ldapPassword>Passw0rd</racf:ldapPassword>
+                    <racf:useSsl>false</racf:useSsl>
+                    
+
+                    <racf:userObjectClasses>racfUser</racf:userObjectClasses>
+                    <racf:userObjectClasses>racfCicsSegment</racf:userObjectClasses>
+                    <racf:userObjectClasses>racfDCESegment</racf:userObjectClasses>
+                    <racf:userObjectClasses>SAFDfpSegment</racf:userObjectClasses>
+                    <racf:userObjectClasses>racfKerberosInfo</racf:userObjectClasses>
+                    <racf:userObjectClasses>racfLanguageSegment</racf:userObjectClasses>
+                    <racf:userObjectClasses>racfLNotesSegment</racf:userObjectClasses>
+                    <racf:userObjectClasses>racfNDSSegment</racf:userObjectClasses>
+                    <racf:userObjectClasses>racfNetviewSegment</racf:userObjectClasses>
+                    <racf:userObjectClasses>racfUserOmvsSegment</racf:userObjectClasses>
+                    <racf:userObjectClasses>racfOperparmSegment</racf:userObjectClasses>
+                    <racf:userObjectClasses>racfUserOvmSegment</racf:userObjectClasses>
+                    <racf:userObjectClasses>racfProxySegment</racf:userObjectClasses>
+                    <racf:userObjectClasses>SAFTsoSegment</racf:userObjectClasses>
+                    <racf:userObjectClasses>racfWorkAttrSegment</racf:userObjectClasses>
+                    <racf:userQueries>(racfid=*)</racf:userQueries>
+                    <racf:groupObjectClasses>racfGroup</racf:groupObjectClasses>
+                    <racf:groupObjectClasses>racfGroupOvmSegment</racf:groupObjectClasses>
+                    <racf:groupObjectClasses>racfGroupOmvsSegment</racf:groupObjectClasses>
+                    <racf:groupObjectClasses>SAFDfpSegment</racf:groupObjectClasses>
+                    
+                    <!--racf:hostTelnetPortNumber></racf:hostTelnetPortNumber>
+
+                    <racf:activeSyncPasswordDecryptorClass></racf:activeSyncPasswordDecryptorClass>
+                    <racf:activeSyncPrivateKey></racf:activeSyncPrivateKey>
+                    <racf:activeSyncCertificate></racf:activeSyncCertificate>
+                    <racf:activeSyncFilterUseOrSearch></racf:activeSyncFilterUseOrSearch>
+                    <racf:activeSyncFilterChangesBy></racf:activeSyncFilterChangesBy>
+                    <racf:activeSyncResetToToday></racf:activeSyncResetToToday>
+                    <racf:activeSyncRemoveOCFromFilter></racf:activeSyncRemoveOCFromFilter>
+                    <racf:userNames></racf:userNames>
+                    <racf:userNames></racf:userNames>
+                    <racf:passwords>Password</racf:passwords>
+                    <racf:segmentNames>ACCOUNT.RACF</racf:segmentNames>
+                    <racf:segmentNames>ACCOUNT.TSO</racf:segmentNames>
+                    <racf:segmentNames>ACCOUNT.NETVIEW</racf:segmentNames>
+                    <racf:segmentNames>ACCOUNT.CICS</racf:segmentNames>
+                    <racf:segmentNames>ACCOUNT.OMVS</racf:segmentNames>
+                    <racf:segmentNames>ACCOUNT.CATALOG</racf:segmentNames>
+                    <racf:segmentNames>ACCOUNT.OMVS</racf:segmentNames>
+                    <racf:segmentNames>GROUP.RACF</racf:segmentNames>
+                    <racf:connectionClassName></racf:connectionClassName>
+                    <racf:parserFactory></racf:parserFactory>
+                    <racf:reaperMaximumIdleTime>-1</racf:reaperMaximumIdleTime>
+                    <racf:commandTimeout>-1</racf:commandTimeout>
+                    <racf:disconnectScript></racf:disconnectScript>
+                    <racf:connectScript></racf:connectScript>
+                    <racf:connectionProperties></racf:connectionProperties-->
+                </ns2:BundleProperties>
+                <ns2:PoolConfigOption minEvictTimeMillis="120000" minIdle="1" maxIdle="10" maxObjects="10" maxWait="150000"/>
+                <ns2:OperationTimeouts>
+                    <ns2:OperationTimeout name="create" timeout="-1"/>
+                    <ns2:OperationTimeout name="update" timeout="-1"/>
+                    <ns2:OperationTimeout name="delete" timeout="-1"/>
+                    <ns2:OperationTimeout name="test" timeout="-1"/>
+                    <ns2:OperationTimeout name="scriptOnConnector" timeout="-1"/>
+                    <ns2:OperationTimeout name="scriptOnResource" timeout="-1"/>
+                    <ns2:OperationTimeout name="get" timeout="-1"/>
+                    <ns2:OperationTimeout name="authenticate" timeout="-1"/>
+                    <ns2:OperationTimeout name="search" timeout="-1"/>
+                    <ns2:OperationTimeout name="validate" timeout="-1"/>
+                    <ns2:OperationTimeout name="sync" timeout="-1"/>
+                    <ns2:OperationTimeout name="schema" timeout="-1"/>
+                </ns2:OperationTimeouts>
+            </ns2:ConnectorConfiguration>
+        </c:configuration>
+    </c:resource>
+</c:objects>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="" default="default" basedir="." xmlns:web="http://www.netbeans.org/ns/j2ee-ejbjarproject/1">
+    <import file="nbproject/build-impl.xml"/>
+    <target name="init-esb-ide" if="netbeans.home">
+        <property name="esb.netbeans.platform" value="${netbeans.home}"/>
+    </target>
+    <target name="init-esb-cli" unless="netbeans.home">
+        <property file="${basedir}/../platform/private.properties"/>
+        <property name="esb.netbeans.platform" value="${esb.netbeans.home}/platform10"/>
+        <property name="netbeans.user" value="${esb.netbeans.user}"/>
+        <property name="from.commandline" value="true"/>
+    </target>
+    <target name="check-catd-context">
+        <condition property="no.catd.context">
+            <not>
+                <isset property="org.netbeans.modules.compapp.catd.context"/>
+            </not>
+        </condition>
+    </target>
+    <target name="init-catd" if="no.catd.context">
+        <property name="org.netbeans.modules.compapp.catd.context" value=""/>
+    </target>
+    <target name="pre-init" depends="init-esb-ide,init-esb-cli,check-catd-context,init-catd"/>
+    <!--
+        EXECUTION SECTION
+    -->
+
+    <target name="run-jbi-deploy" depends="run-jbi-deploy-cli,run-jbi-deploy-ide"/>
+    <target name="run-jbi-deploy-cli" if="from.commandline" depends="jbi-build">
+        <property name="j2ee.server.instance" value=""/>
+        <loadproperties srcFile="${basedir}/../platform/private.properties"/>
+        <jbi-deploy-service-assembly serviceAssemblyID="${jbi.service-assembly.id}" serviceAssemblyLocation="${basedir}/${dist.jar}" netBeansUserDir="${netbeans.user}" j2eeServerInstance="${j2ee.server.instance}"/>
+    </target>
+    <target name="run-jbi-deploy-ide" unless="from.commandline" depends="jbi-build">
+        <property name="j2ee.server.instance" value=""/>
+        <loadproperties srcFile="${basedir}/nbproject/private/private.properties"/>
+        <jbi-deploy-service-assembly serviceAssemblyID="${jbi.service-assembly.id}" serviceAssemblyLocation="${basedir}/${dist.jar}" netBeansUserDir="${netbeans.user}" j2eeServerInstance="${j2ee.server.instance}"/>
+    </target>
+
+
+
+    <target name="run-jbi-deploy-without-build" depends="run-jbi-deploy-without-build-cli,run-jbi-deploy-without-build-ide"/>
+    <target name="run-jbi-deploy-without-build-cli" if="from.commandline" depends="init,init-deploy">
+        <property name="j2ee.server.instance" value=""/>
+        <loadproperties srcFile="${basedir}/../platform/private.properties"/>
+        <jbi-deploy-service-assembly serviceAssemblyID="${jbi.service-assembly.id}" serviceAssemblyLocation="${basedir}/${dist.jar}" netBeansUserDir="${netbeans.user}" j2eeServerInstance="${j2ee.server.instance}"/>
+    </target>
+    <target name="run-jbi-deploy-without-build-ide" unless="from.commandline" depends="init,init-deploy">
+        <property name="j2ee.server.instance" value=""/>
+        <loadproperties srcFile="${basedir}/nbproject/private/private.properties"/>
+        <jbi-deploy-service-assembly serviceAssemblyID="${jbi.service-assembly.id}" serviceAssemblyLocation="${basedir}/${dist.jar}" netBeansUserDir="${netbeans.user}" j2eeServerInstance="${j2ee.server.instance}"/>
+    </target>
+
+
+
+    <target name="undeploy" depends="undeploy-cli,undeploy-ide"/>
+    <target name="undeploy-cli" if="from.commandline" depends="init">
+        <property name="j2ee.server.instance" value=""/>
+        <loadproperties srcFile="${basedir}/../platform/private.properties"/>
+        <jbi-deploy-service-assembly undeployServiceAssembly="true" serviceAssemblyID="${jbi.service-assembly.id}" serviceAssemblyLocation="${basedir}/${dist.jar}" netBeansUserDir="${netbeans.user}" j2eeServerInstance="${j2ee.server.instance}"/>
+    </target>
+    <target name="undeploy-ide" unless="from.commandline" depends="init">
+        <property name="j2ee.server.instance" value=""/>
+        <loadproperties srcFile="${basedir}/nbproject/private/private.properties"/>
+        <jbi-deploy-service-assembly undeployServiceAssembly="true" serviceAssemblyID="${jbi.service-assembly.id}" serviceAssemblyLocation="${basedir}/${dist.jar}" netBeansUserDir="${netbeans.user}" j2eeServerInstance="${j2ee.server.instance}"/>
+    </target>
+</project>

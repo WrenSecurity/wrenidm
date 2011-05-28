@@ -1,0 +1,10 @@
+<c:user oid="12345678-d34d-b33f-f00d-987987987987" xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xmlns='http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd'
+   xmlns:c='http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd'
+   >
+    <name>johny</name>
+    <fullName>Jan Prvy</fullName>
+    <givenName>Jan</givenName>
+    <familyName>Prvy</familyName>
+    <honorificSuffix>007</honorificSuffix>
+</c:user>

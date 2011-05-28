@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://openidm.forgerock.com/xml/ns/resource/unix/1#"
+    xmlns:tns="http://openidm.forgerock.com/xml/ns/resource/unix/1#"
+    xmlns="http://openidm.forgerock.com/xml/ns/resource/unix/1#"
+    xmlns:r="http://openidm.forgerock.com/xml/ns/resource/1#"
+    elementFormDefault="qualified">
+
+    <xsd:import namespace="http://openidm.forgerock.com/xml/ns/resource/1#"
+                schemaLocation="standard-resource-schema.xsd"/>
+
+    <xsd:annotation>
+        <xsd:documentation>
+            TODO
+    
+        These definitions are to be considered only examples for now.
+
+     These will hopefuly get cleaned up and aligned
+     with existing common terminology and/or connectors.
+
+        </xsd:documentation>
+    </xsd:annotation>
+
+
+    <xsd:element name="gid" type="xsd:string"/>
+    <xsd:element name="uid" type="xsd:string"/>
+    <xsd:element name="name" type="xsd:string"/>
+
+    <xsd:element name="unixAccount" type="UnixAccountObjectClass"/>
+
+    <xsd:complexType name="UnixAccountObjectClass">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <r:identifier ref="uid"/>
+                <r:displayName ref="name"/>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="r:ResourceObjectClass">
+                <xsd:sequence>
+                    <xsd:element ref="uid"/>
+                    <xsd:element ref="name"/>
+                    <xsd:element name="primaryGroup" type="UnixGroupReferenceType"/>
+                    <xsd:element name="secondaryGroup" type="UnixGroupReferenceType" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="unixGroup" type="UnixGroupObjectClass"/>
+
+    <xsd:complexType name="UnixGroupObjectClass">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <r:identifier ref="gid"/>
+                <r:displayName ref="name"/>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="r:ResourceObjectClass">
+                <xsd:sequence>
+                    <xsd:element ref="gid">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <readable/>
+                                <writable/>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element ref="name">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <readable/>
+                                <writable/>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="UnixGroupReferenceType">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <r:resourceObjectReference>
+                    <r:targetObjectClass ref="UnixGroupObjectClass"/>
+                </r:resourceObjectReference>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element ref="gid"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+
+</xsd:schema>
+

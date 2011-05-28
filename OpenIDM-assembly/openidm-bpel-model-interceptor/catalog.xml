@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <nextCatalog catalog="nbproject/private/cache/retriever/catalog.xml"/>
+    <system systemId="openidm-model/contract/xml/ns/public/model/model-1.wsdl" uri="nb-uri:openidm-model#src/conf/xml/ns/public/model/model-1.wsdl"/>   
+</catalog>
+
+
+

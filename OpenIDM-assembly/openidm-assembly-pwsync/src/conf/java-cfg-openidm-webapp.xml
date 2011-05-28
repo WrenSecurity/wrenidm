@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<javaee-project xmlns="http://java.sun.com/xml/ns/jbi/javaee/config/1/" xmlns:ns0="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" xmlns:ns1="http://openidm.forgerock.com/xml/ns/public/model/staging-1.wsdl" xmlns:ns2="http://openidm.forgerock.com/xml/ns/public/model/cycle-management-1.wsdl" name="openidm-webapp">
+    <services>
+        <consumes enable-for-nmr="true" endpoint-name="javaee_modelPortWebappClient" interface-name="ns0:modelPortType" service-name="ns0:modelService"/>
+        <consumes enable-for-nmr="true" endpoint-name="javaee_stagingPortWebappClient" interface-name="ns1:stagingPortType" service-name="ns1:stagingService"/>
+		<consumes enable-for-nmr="true" endpoint-name="javaee_cycleManagementPortWebappClient" interface-name="ns2:cycleManagementPortType" service-name="ns2:cycleManagementService"/>
+    </services>
+</javaee-project>

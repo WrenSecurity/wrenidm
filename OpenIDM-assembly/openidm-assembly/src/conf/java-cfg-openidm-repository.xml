@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<javaee-project xmlns="http://java.sun.com/xml/ns/jbi/javaee/config/1/" xmlns:ns0="http://openidm.forgerock.com/xml/ns/public/repository/repository-1.wsdl" name="openidm-repository">
+    <services>
+        <provides enable-for-javaee-http="true" endpoint-name="javaee_repositoryPort" interface-name="ns0:repositoryPortType" service-name="ns0:repositoryService"/>
+    </services>
+</javaee-project>

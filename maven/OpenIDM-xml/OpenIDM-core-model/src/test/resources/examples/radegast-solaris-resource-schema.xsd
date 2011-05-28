@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://nlight.eu/idm/resources/idconn/radegast" xmlns:tns="http://nlight.eu/idm/resources/idconn/radegast" xmlns:r="http://openidm.forgerock.com/xml/ns/resource/1#" xmlns:idc="http://openidm.forgerock.com/xml/ns/resource/idconnector/1#" elementFormDefault="qualified">
+    <xsd:import namespace="http://openidm.forgerock.com/xml/ns/resource/idconnector/1#" schemaLocation="../provisioning/id-connector-resource-schema.xsd"/>
+
+
+    <xsd:complexType name="shellMiscObjectClass">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <r:identifier ref="idc:uid"/>
+                <r:displayName ref="idc:name"/>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="idc:ObjectClass">
+                <xsd:sequence>
+                    <xsd:element name="shell" type="xsd:string" maxOccurs="unbounded" minOccurs="0" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="GroupObjectClass">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <r:identifier ref="idc:uid"/>
+                <r:displayName ref="idc:name"/>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="idc:ObjectClass">
+                <xsd:sequence>
+                    <xsd:element name="users" type="xsd:string" maxOccurs="unbounded" minOccurs="0" />
+                    <xsd:element name="gid" type="xsd:integer" minOccurs="0" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="AccountObjectClass">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <r:identifier ref="idc:uid"/>
+                <r:displayName ref="idc:name"/>
+                <r:accountType default="true"/>
+                <c:name>Default Account</c:name>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="idc:ObjectClass">
+                <xsd:sequence>
+                    <xsd:element name="expire" type="xsd:string" minOccurs="0" />
+                    <xsd:element name="shell" type="xsd:string" minOccurs="0" />
+                    <xsd:element name="group" type="xsd:string" minOccurs="0" />
+                    <xsd:element name="role" type="xsd:string" maxOccurs="unbounded" minOccurs="0" />
+                    <xsd:element name="authorization" type="xsd:string" maxOccurs="unbounded" minOccurs="0" />
+                    <xsd:element name="secondary_group" type="xsd:string" maxOccurs="unbounded" minOccurs="0" />
+                    <xsd:element name="dir" type="xsd:string" minOccurs="0" />
+                    <xsd:element name="force_change" type="xsd:boolean" minOccurs="0" />
+                    <xsd:element name="max" type="xsd:integer" minOccurs="0" />
+                    <xsd:element name="profile" type="xsd:string" maxOccurs="unbounded" minOccurs="0" />
+                    <xsd:element name="uid" type="xsd:integer" minOccurs="0" />
+                    <xsd:element name="min" type="xsd:integer" minOccurs="0" />
+                    <xsd:element name="comment" type="xsd:string" minOccurs="0" />
+                    <xsd:element name="inactive" type="xsd:integer" minOccurs="0" />
+                    <xsd:element ref="idc:password" minOccurs="0" />
+                    <xsd:element name="time_last_login" type="xsd:string" minOccurs="0" />
+                    <xsd:element name="warn" type="xsd:integer" minOccurs="0" />
+                    <xsd:element name="lock" type="xsd:boolean" minOccurs="0" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+</xsd:schema>

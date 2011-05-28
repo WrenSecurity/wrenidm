@@ -1,0 +1,10 @@
+
+<c:object oid="007" xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+	xmlns='http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd'
+   xmlns:c='http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd'
+   xsi:type="c:UserType">
+    <name>bond</name>
+    <fullName>James Bond 007</fullName>
+    <givenName>James Jr.</givenName>
+    <honorificSuffix>007</honorificSuffix>
+</c:object>

@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="object"
+    targetNamespace="http://openidm.forgerock.com/xml/ns/common/object/wsdl/1#"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="http://openidm.forgerock.com/xml/ns/common/object/wsdl/1#"
+    xmlns:c="http://openidm.forgerock.com/xml/ns/common/1#"
+    xmlns:idm="http://openidm.forgerock.com/xml/ns/identity/1#">
+
+    <documentation>
+        Object Interface
+        
+        Proto-interface for object access and manipulation.
+
+        This interface defines basic operations and data types to manipulate the
+        objects in our system. It is generic, it does not constrain or define
+        object types.
+        This is suposed to be a basic interface for working with objects. Most
+        other WSDL interfaces in the system should be based on this one (import
+        and use it). However, due to the limitations of WSDL, portType
+        defintions needs to be copied&amp;pasted instead of using it directly.
+
+        Schema:
+        Implementation of this interface are not required to check any schema
+        beyond the standard XSD schema used to define data types for this
+        interface definition. However, the implementation MAY be able to check
+        additional schema definitions, e.g. to check for mandatory and allowed
+        properties and property types. This may
+        be either explicit (e.g. implementation chceking against provided XML
+        schema) or implicit, conforming to the constraints of underlying implementation
+        (e.g. LDAP schema enforced by underlying directory server). One way or
+        another, the implementation may fail to store the objects that violate
+        the schema. The procedure how the schemas are "loaded" to the
+        implementation are not defined by this interface. And this interface
+        even cannot "reveal" the schema to ist users (at least not now).
+        Therefore clients of this interface must be prepared to handle schema
+        violation faults.
+
+        Naming conventions:
+        operations should be named as &lt;operation&gt;&lt;objectType&gt; e.g. addUser,
+        modifyAccount, searchObjects. The operations that return single object
+        instance of work on single object should be named in singular
+        (e.g. addUser). The operation that return multiple instances should be
+        named in plural (e.g. listObjects). Operations names should be unified
+        as well:
+        * add, modify, delete - writing to repository, single object, need OID
+        * get - retrieving single object by OID
+        * list - returning all objects, no or fixed search criteria
+        * search - returning subset of objects with flexible search criteria
+
+        Notes:
+        The definition of this interface is somehow "fuzzy" at places. E.g.
+        allowing schema-aware implementation but not mandating it, recommending
+        to remove duplicates, but tolerating them, etc. The reason for this is
+        to have better fit to the underlying implementations (storage mechanisms) and therefore
+        more efficient and simpler implementation. It may complicate the clients
+        if the code needs to be generic and fit each and every implementation of
+        this interface. However, generic code will be quite rare. Most of the custom code
+        will be developed to work on a specific storage (e.g. Oracle DB or LDAP)
+        and therefore can be made slightly implementation-specific. Changing the
+        object storage or provisioning mechanism in a running IDM system is extremely unlikely.
+    </documentation>
+
+    <types>
+        <xsd:schema targetNamespace="http://openidm.forgerock.com/xml/ns/common/object/wsdl/1#">
+            <xsd:import namespace="http://openidm.forgerock.com/xml/ns/common/1#" schemaLocation="common.xsd"/>
+        </xsd:schema>
+    </types>
+
+    <message name="addObjectRequest">
+        <part name="objectContainer" type="c:ObjectContainerType">
+            <documentation>
+                Container with the Objectto be created.
+                OID attribute of the object may be empty.
+            </documentation>
+        </part>
+    </message>
+    <message name="addObjectResponse">
+        <part name="oid" type="xsd:string">
+            <documentation>
+                OID assigned to the created object.
+            </documentation>
+        </part>
+    </message>
+
+    <message name="getObjectRequest">
+        <part name="oid" type="xsd:string"/>
+        <part name="resolve" type="c:PropertyReferenceListType"/>
+    </message>
+    <message name="getObjectResponse">
+        <part name="objectContainer" type="c:ObjectContainerType"/>
+    </message>
+
+    <message name="listObjectsRequest">
+        <part name="objectType" type="xsd:anyURI">
+            <documentation>
+                Object type to list.
+            </documentation>
+        </part>
+    </message>
+    <message name="listObjectsResponse">
+        <part name="objectList" type="c:ObjectListType"/>
+    </message>
+
+    <message name="searchObjectsRequest">
+        <part name="filter" type="c:FilterType">
+            <documentation>
+                Search criteria
+            </documentation>
+        </part>
+    </message>
+    <message name="searchObjectsResponse">
+        <part name="objectList" type="c:ObjectListType"/>
+    </message>
+
+    <message name="modifyObjectRequest">
+        <part name="objectChange" type="c:ObjectChangeType"/>
+    </message>
+    <message name="modifyObjectResponse">
+    </message>
+
+    <message name="deleteObjectRequest">
+        <part name="oid" type="xsd:string"/>
+    </message>
+    <message name="deleteObjectResponse">
+    </message>
+
+    <message name="getPropertyAvailableValuesRequest">
+        <part name="oid" type="xsd:string"/>
+        <part name="properties" type="c:PropertyReferenceListType"/>
+    </message>
+    <message name="getPropertyAvailableValuesResponse">
+        <part name="propertyAvailableValuesList" type="c:PropertyAvailableValuesListType"/>
+    </message>
+
+    <message name="faultMessage">
+        <part name="fault" element="c:fault"/>
+    </message>
+
+    <portType name="idmRepositoryPortType">
+
+        <!-- OBJECT operations -->
+
+        <operation name="addObject">
+            <documentation>
+                Add new object.
+
+                The OID provided in the input message may be empty. In that case
+                the OID will be assigned by the implementation of this method
+                and it will be provided as return value.
+
+                This operation should fail if such object already exists (if
+                object with the provided OID already exists).
+
+                The operation may fail if provided OID is in an unusable format
+                for the storage. Generating own OIDs and providing them to this
+                method is not recommended for normal operation.
+
+                Should be atomic. Should not allow creation of two objects with
+                the same OID (even if created in parallel).
+
+                The operation may fail if the object to be created does not
+                comform to the underlying schema of the storage system or the
+                schema enforced by the implementation.
+
+                Faults:
+                  any SystemFaultType
+                  ObjectAlreadyExistsFaultType
+                  IllegalArgumentFaultType: wrong OID format
+                  SchemaViolationFaultType: provided object violates datastore schema
+            </documentation>
+            <input name="addObjectInput" message="tns:addObjectRequest"/>
+            <output name="addObjectOutput" message="tns:addObjectResponse"/>
+            <fault name="fault" message="tns:faultMessage">
+                <documentation>
+                    This is all wrong. Specific fault types should be there.
+                    But because of Netbeans/JAXWS bug we need to do this ugliness.
+                    Please see the list of fault types in operation documentation.
+                </documentation>
+            </fault>
+        </operation>
+
+        <operation name="getObject">
+            <documentation>
+                    Returns object for provided OID.
+                    Must fail if object with the OID does not exists.
+
+                    Ability to resolve references is an optional feature. If
+                    implemented, it has to be implemented for all object types
+                    supported by the interface.
+                    Refer to the specification sub-interfaces of this interface
+                    to check if it is supported or not.
+
+                    Faults:
+                      any SystemFaultType
+                      IllegalArgumentFaultType: wrong OID format
+                      UnsupportedOperationFaultType: resolving not supported
+                      ObjectNotFoundFaultType: object with specified OID does not exists
+            </documentation>
+            <input name="getObjectInput" message="tns:getObjectRequest"/>
+            <output name="getObjectOutput" message="tns:getObjectResponse"/>
+            <fault name="fault" message="tns:faultMessage">
+                <documentation>
+                    This is all wrong. Specific fault types should be there.
+                    But because of Netbeans/JAXWS bug we need to do this ugliness.
+                    Please see the list of fault types in operation documentation.
+                </documentation>
+            </fault>
+        </operation>
+
+        <operation name="listObjects">
+            <documentation>
+                    Returns all objects of specified type that are available
+                    to the implementation.
+
+                    Returns empty list if object type is correct but there are
+                    no objects of that type.
+
+                    Should fail if object type is wrong.
+
+                    Not very practical, but good for now.
+                    Will be improved later.
+
+                    Faults:
+                      any SystemFaultType
+                      IllegalArgumentFaultType: wrong object type
+            </documentation>
+            <input name="listObjectsInput" message="tns:listObjectsRequest"/>
+            <output name="listObjectsOutput" message="tns:listObjectsResponse"/>
+            <fault name="fault" message="tns:faultMessage">
+                <documentation>
+                    This is all wrong. Specific fault types should be there.
+                    But because of Netbeans/JAXWS bug we need to do this ugliness.
+                    Please see the list of fault types in operation documentation.
+                </documentation>
+            </fault>
+        </operation>
+
+        <operation name="searchObjects">
+            <documentation>
+                    Search for objects. Searches through all
+                    object types. Returns a list of objects that match search
+                    criteria.
+
+                    Returns empty list if object type is correct but there are
+                    no objects of that type.
+
+                    Should fail if object type is wrong. Should fail if unknown property
+                    is specified in the query.
+
+                    Faults:
+                      any SystemFaultType
+                      IllegalArgumentFaultType: wrong object type
+                      SchemaViolationFaultType: unknown property used in search query
+            </documentation>
+            <input name="searchObjectsInput" message="tns:searchObjectsRequest"/>
+            <output name="searchObjectsOutput" message="tns:searchObjectsResponse"/>
+            <fault name="fault" message="tns:faultMessage">
+                <documentation>
+                    This is all wrong. Specific fault types should be there.
+                    But because of Netbeans/JAXWS bug we need to do this ugliness.
+                    Please see the list of fault types in operation documentation.
+                </documentation>
+            </fault>
+        </operation>
+
+        <operation name="modifyObject">
+            <documentation>
+                Modifies object using relative change description.
+                Must fail if user with provided OID does not exists.
+                Must fail if any of the described changes cannot be applied.
+                Should be atomic.
+
+                If two or more modify operations are executed in parallel, the
+                operations should be merged. In case that the operations are in
+                conflict (e.g. one operation adding a value and the other
+                removing the same value), the result is not deterministic.
+
+                The operation may fail if the modified object does not
+                comform to the underlying schema of the storage system or the
+                schema enforced by the implementation.
+
+                TODO: optimistic locking
+
+                Faults:
+                      any SystemFaultType
+                      ObjectNotFoundFaultType: object with specified OID does not exists
+                      IllegalArgumentFaultType: wrong OID format
+                      InapplicableOperationFaultType: decribed change is not applicable
+                      SchemaViolationFaultType: resulting object would violate datastore schema
+            </documentation>
+            <input name="modifyObjectInput" message="tns:modifyObjectRequest"/>
+            <output name="modifyObjectOutput" message="tns:modifyObjectResponse"/>
+            <fault name="fault" message="tns:faultMessage">
+                <documentation>
+                    This is all wrong. Specific fault types should be there.
+                    But because of Netbeans/JAXWS bug we need to do this ugliness.
+                    Please see the list of fault types in operation documentation.
+                </documentation>
+            </fault>
+        </operation>
+
+        <operation name="deleteObject">
+            <documentation>
+                    Deleted object with provided OID.
+                    Must fail if object with specified OID does not exists.
+                    Should be atomic.
+
+                Faults:
+                      any SystemFaultType
+                      ObjectNotFoundFaultType: object with specified OID does not exists
+                      IllegalArgumentFaultType: wrong OID format
+                      ReferentialIntegrityFaultType
+            </documentation>
+            <input name="deleteObjectInput" message="tns:deleteObjectRequest"/>
+            <output name="deleteObjectOutput" message="tns:deleteObjectResponse"/>
+            <fault name="fault" message="tns:faultMessage">
+                <documentation>
+                    This is all wrong. Specific fault types should be there.
+                    But because of Netbeans/JAXWS bug we need to do this ugliness.
+                    Please see the list of fault types in operation documentation.
+                </documentation>
+            </fault>
+        </operation>
+
+        <operation name="getPropertyAvailableValues">
+            <documentation>
+                Returns list of available values for specified properties.
+
+                The returned values can be used as valid values for properties
+                of the specific object. The provided values can be used e.g.
+                for listing them in GUI list boxes, for early validation
+                (pre-validation), displaying help messages, auto-complete, etc.
+
+                In case the list of available values is too big or it is not
+                available, the empty list should be returned, setting the
+                "closed" flag to false.
+
+                This is optional operation. It may not be supported by a specific
+                sub-interface of this interface. Please refer to the specification
+                of the sub-interface. If a sub-interface supports this operation,
+                it has to be supported for all object types and all properties
+                supported by such sub-interface.
+
+                Faults:
+                      any SystemFaultType
+                      UnsupportedOperationFaultType: this optional operation is not supported
+                      UnsupportedObjectTypeFaultType: specified object type is not supported by the interface
+                      ObjectNotFoundFaultType: object with specified OID does not exists
+                      IllegalArgumentFaultType: wrong OID format
+            </documentation>
+            <input name="getPropertyAvailableValuesInput" message="tns:getPropertyAvailableValuesRequest"/>
+            <output name="getPropertyAvailableValuesOutput" message="tns:getPropertyAvailableValuesResponse"/>
+            <fault name="fault" message="tns:faultMessage">
+                <documentation>
+                    This is all wrong. Specific fault types should be there.
+                    But because of Netbeans/JAXWS bug we need to do this ugliness.
+                    Please see the list of fault types in operation documentation.
+                </documentation>
+            </fault>
+        </operation>
+
+    </portType>
+
+</definitions>
+
+

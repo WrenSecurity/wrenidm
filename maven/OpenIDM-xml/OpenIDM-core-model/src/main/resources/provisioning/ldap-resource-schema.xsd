@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://openidm.forgerock.com/xml/ns/resource/ldap/1#"
+    xmlns:tns="http://openidm.forgerock.com/xml/ns/resource/ldap/1#"
+    xmlns="http://openidm.forgerock.com/xml/ns/resource/ldap/1#"
+    xmlns:r="http://openidm.forgerock.com/xml/ns/resource/1#"
+    elementFormDefault="qualified">
+
+    <xsd:import namespace="http://openidm.forgerock.com/xml/ns/resource/1#"
+                schemaLocation="standard-resource-schema.xsd"/>
+
+    <xsd:annotation>
+        <xsd:documentation>
+            TODO
+
+            TODO: missing support for auxiliary object classes
+            idea: These should be supported by composition:
+                TopObjectClass should have special elements that will store
+                attributes from auxiliary object classes
+
+             These definitions are to be considered only examples for now.
+
+     These will hopefuly get cleaned up and aligned
+     with existing common terminology and/or connectors.
+
+        </xsd:documentation>
+    </xsd:annotation>
+
+    <!-- Mapped from LDAP schema: attributeTypes -->
+    <xsd:element name="dn" type="xsd:string"/>
+    <xsd:element name="uid" type="xsd:string"/>
+    <xsd:element name="cn" type="xsd:string"/>
+    <xsd:element name="sn" type="xsd:string"/>
+    <xsd:element name="givenName" type="xsd:string"/>
+
+    <!-- Mapped from LDAP schema: objectClasses -->
+    <xsd:complexType name="InetOrgPersonObjectClass">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <r:identifier ref="dn"/>
+                <r:displayName ref="uid"/>
+                <r:nativeObjectClass>inetOrgPerson</r:nativeObjectClass>
+                <!-- ldapObjeclass is just for information and debugging purpose
+                     may be useful for some tools. The provisionig code should
+                     not need it and should not use it. The type of the object
+                     is defined by its XSD type. -->
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="r:ResourceObjectClass">
+                <xsd:sequence>
+                    <xsd:element ref="dn"/>
+                    <xsd:element ref="uid" maxOccurs="unbounded"/>
+                    <xsd:element ref="cn" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element ref="sn" maxOccurs="unbounded"/>
+                    <xsd:element ref="givenName" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element name="ldapGroup" type="LdapGroupReferenceType" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="GroupOfUniqueNamesObjectClass">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <r:identifier ref="dn"/>
+                <r:displayName ref="cn"/>
+                <r:nativeObjectClass>groupOfUniqueNames</r:nativeObjectClass>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="r:ResourceObjectClass">
+                <xsd:sequence>
+                    <xsd:element ref="dn"/>
+                    <xsd:element ref="cn"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="LdapGroupReferenceType">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <r:resourceObjectReference>
+                    <r:targetObjectClass ref="GroupOfUniqueNamesObjectClass"/>
+                </r:resourceObjectReference>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element ref="dn"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+
+</xsd:schema>
+

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<c:object xmlns:c="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="c:ResourceAccessConfigurationType" oid="acf6bd6d-d3ee-4756-bf94-22c2f5168f63">
+    <c:name>Identity Connector Integration</c:name>
+    <c:namespace>http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resourceaccessconfiguration-1.xsd</c:namespace>
+    <c:schema>
+    </c:schema>
+    <c:schemaHandling/>
+    <c:configuration/>
+</c:object>

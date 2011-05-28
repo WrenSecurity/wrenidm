@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object xsi:type="UserTemplateType" oid="c0c010c0-d34d-b33f-f00d-777111111111" xmlns="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <name>Default User Template</name>
+    <propertyConstruction>
+        <i:property xmlns:c="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd" xmlns:ids="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd" xmlns:ri="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2" xmlns:i="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd">i:fullName</i:property>
+        <valueConstruction default="true">
+            <i:valueExpression xmlns:c="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd" xmlns:ids="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd" xmlns:ri="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2" xmlns:i="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd">
+                    declare namespace i="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd";
+                    concat($i:user/i:givenName,' ',$i:user/i:familyName)
+                </i:valueExpression>
+        </valueConstruction>
+    </propertyConstruction>
+    <accountConstruction>
+        <type>default</type>
+        <ns2:property oid="c0c010c0-d34d-b33f-f00d-333111111112" type="ResourceType" xmlns:ns2="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd"/>
+    </accountConstruction>
+</object>

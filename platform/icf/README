@@ -1,0 +1,30 @@
+This is an updated version 1.0.5754 of ICF LDAP connector.
+Two issues should be fixed here:
+* Delete synchronization event with entryUUID attribute as __UID__
+* Filtering out based on changeInitiatorsName in changelog in addition
+  to modifiersName (which does not work for new and deleted entries)
+
+The version has a "openidm" suffix to it so it will not get confised with
+the original version.
+
+To use this in OpenIDM now, two changes are needed (before build):
+
+Import the connector to the local maven repository:
+
+mvn install:install-file -Dfile=org.identityconnectors.ldap-1.0.5754openidm.jar -DpomFile=org.identityconnectors.ldap-1.0.5754openidm.pom -DcreateChecksum=true
+
+Modify the POM file in OpenIDM-identityconnector-integration by adding the
+following:
+
+                                <artifactItem>
+                                    <groupId>org.identityconnectors</groupId>
+                                    <artifactId>org.identityconnectors.ldap</artifactId>
+                                    <version>1.0.5754openidm</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/classes/META-INF/bundles</outputDirectory>
+                                </artifactItem>
+
+Updated resource file that takes use of this version is in
+samples/opendj-localhost-resource-sync-5754openidm.xml
+

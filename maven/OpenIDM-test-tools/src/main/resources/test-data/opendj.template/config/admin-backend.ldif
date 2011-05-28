@@ -1,0 +1,71 @@
+dn: cn=admin data
+objectClass: top
+objectClass: ds-cfg-branch
+cn: admin data
+
+dn: cn=instance keys,cn=admin data
+objectClass: top
+objectClass: ds-cfg-branch
+cn: instance keys
+
+dn: cn=secret keys,cn=admin data
+objectClass: top
+objectClass: ds-cfg-branch
+cn: secret keys
+
+dn: cn=Administrators,cn=admin data
+objectClass: top
+objectClass: groupofurls
+description: Group of identities which have full access.
+cn: Administrators
+memberURL: ldap:///cn=Administrators,cn=admin data??one?(objectclass=*)
+
+dn: cn=Server Groups,cn=admin data
+objectClass: top
+objectClass: ds-cfg-branch
+cn: Server Groups
+
+dn: cn=all-servers,cn=Server Groups,cn=admin data
+objectClass: groupOfUniqueNames
+objectClass: top
+cn: all-servers
+
+dn: ds-cfg-key-id=AF31A00E4747AF19F449875062514031,cn=instance keys,cn=admin data
+objectClass: top
+objectClass: ds-cfg-instance-key
+ds-cfg-key-id: AF31A00E4747AF19F449875062514031
+ds-cfg-public-key-certificate;binary:: MIIB2TCCAUKgAwIBAgIETQYo/jANBgkqhkiG9w0BAQUFADAxMRswGQYDVQQKExJPcGVuRFMgQ2VydGlmaWNhdGUxEjAQBgNVBAMTCWxvY2FsaG9zdDAeFw0xMDEyMTMxNDA5MDJaFw0zMDEyMDgxNDA5MDJaMDExGzAZBgNVBAoTEk9wZW5EUyBDZXJ0aWZpY2F0ZTESMBAGA1UEAxMJbG9jYWxob3N0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCWBKTwqT63re6IxW819qGl1SWvkcS93rQkT5JK9pafulqisYwDTDmh8rTKOB3gdGN5P5/6cc2pabMpqCyn7+bJRroaMEF8oxNs+6rbaMRt8cH7CktVPLeZhlEJG1UrOPlWYFt40c35livEUdD65Wvq3WCgiSgwVQlD9KnAlZG9hwIDAQABMA0GCSqGSIb3DQEBBQUAA4GBAGSQgEjX4qT1VOmBZ+kAcS/HdmfPIxgfKRR5V18AMI1jIHSeHNAG1VYbwoRrqXquezUZ5Y/JCN6XoeHF5PLrQgt+E8YrZxyyLNOhrGrRZwcGVge+Ql8I2RrugvUSM2tGiZLV900BZ2pQpK7enhbbLUU+lHdUyaHDD5JazYhe5oAX
+creatorsName: cn=Internal Client,cn=Root DNs,cn=config
+createTimestamp: 20101213140903Z
+entryUUID: 5ccde20a-c40f-4aa3-a717-842585c03496
+
+dn: cn=admin2,cn=Administrators,cn=admin data
+objectClass: person
+objectClass: top
+userPassword: {SSHA}pN4afoLggzmwfIdQW99RNyKQXFPyQkNc4o5f8w==
+cn: admin2
+sn: admin
+entryUUID: a0154c75-cfaa-4aad-abd7-89ed748fe45a
+ds-privilege-name: config-read
+ds-privilege-name: subentry-write
+ds-privilege-name: update-schema
+ds-privilege-name: server-restart
+ds-privilege-name: disconnect-client
+ds-privilege-name: unindexed-search
+ds-privilege-name: backend-restore
+ds-privilege-name: cancel-request
+ds-privilege-name: server-shutdown
+ds-privilege-name: bypass-lockdown
+ds-privilege-name: bypass-acl
+ds-privilege-name: modify-acl
+ds-privilege-name: password-reset
+ds-privilege-name: privilege-change
+ds-privilege-name: ldif-export
+ds-privilege-name: config-write
+ds-privilege-name: ldif-import
+ds-privilege-name: backend-backup
+ds-privilege-name: server-lockdown
+pwdChangedTime: 20101213141401.396Z
+creatorsName: cn=Directory Manager,cn=Root DNs,cn=config
+createTimestamp: 20101213141401Z
+

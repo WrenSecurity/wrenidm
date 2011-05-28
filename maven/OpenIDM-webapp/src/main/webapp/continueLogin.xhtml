@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <f:view locale="#{lang.currentLocale}">
+        <h:head>
+            <title>#{mlang.messagessg['login.legend']}</title>
+        </h:head>
+        <h:body>
+            <h:outputStylesheet library="css" name="layout.css"/>
+            <h:outputStylesheet library="css" name="#{preferencesBean.currentColor}.css"/>
+            <h:form>
+                <div id="login">
+                    <h4>#{lang.messages['login.legend']}</h4>
+                    <h:panelGrid columns="2" cellpadding="5px;">
+                        <f:facet name="header">                            
+                            <h:messages errorClass="error" infoClass="info" globalOnly="true" layout="table" />
+                        </f:facet>
+                        <h:outputLabel for="userName" value="#{lang.messages['login.username']}:"/>
+                        <h:panelGroup>
+                            <h:inputText id="userName"
+                                         value="#{loginBean.userName}"
+                                         required="true"
+                                         requiredMessage="#{lang.messages['field.required']}"/>
+                            <h:message  for="userName" errorClass="error"/>
+                        </h:panelGroup>
+                        <h:outputLabel for="password" value="#{lang.messages['login.password']}:" />
+                        <h:panelGroup>
+                            <h:inputSecret id="password"
+                                           value="#{loginBean.password}"
+                                           required="true"
+                                           requiredMessage="#{lang.messages['field.required']}"/>
+                            <h:message for="password" errorClass="error"/>
+                        </h:panelGroup>
+                        <f:facet name="footer">
+                            <h:panelGroup style="display:block; text-align:center;">
+                                <h:commandButton type="submit" id="login" action="#{loginBean.login}" value="#{lang.messages['login.action']}" />
+                                <br/><small>ROLE_USER: user1/user1</small>                                
+                            </h:panelGroup>
+                        </f:facet>
+
+                    </h:panelGrid>
+                </div>
+            </h:form>
+
+        </h:body>
+    </f:view>
+</html>
+

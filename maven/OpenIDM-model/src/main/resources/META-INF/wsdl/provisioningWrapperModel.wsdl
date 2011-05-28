@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="provisioning"
+    targetNamespace="http://openidm.forgerock.com/xml/ns/public/provisioning/provisioning-1.wsdl"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:abs="http://openidm.forgerock.com/xml/ns/public/provisioning/provisioning-1.wsdl"
+    xmlns:tns="http://openidm.forgerock.com/xml/ns/public/provisioning/provisioning-1.wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+    <import namespace="http://openidm.forgerock.com/xml/ns/public/provisioning/provisioning-1.wsdl" location="xml/ns/public/provisioning/provisioning-1.wsdl"/>
+    <service name="provisioningService">
+        <port name="provisioningPortModelClient" binding="abs:provisioningBinding">
+            <!-- http://localhost:${HttpDefaultPort}/provisioningService/ProvisioningService
+            <soap:address location="http://localhost:${HttpDefaultPort}/provisioningService/ProvisioningService"/>
+            <soap:address location="REPLACE_WITH_ACTUAL_URL"/>
+            <soap:address location="http://localhost:8080/provisioningService/ProvisioningService"/-->
+            <soap:address location="http://localhost:${HttpDefaultPort}/provisioningService/provisioningPortModelClient"/>
+        </port>
+    </service>
+</definitions>
+
+

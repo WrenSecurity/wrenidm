@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <Domains/>
+    <Domains_Objects/>
+    <Objects/>
+  
+    <BooleanProperties/>
+    <DateProperties/>
+    <GenericEntities/>
+    <IntegerProperties/>
+    <Objects_Properties/>
+    <StringProperties/>
+    <Users/>
+    <Resources/>
+    <Accounts/>
+    <AccountAttributes/>
+
+</dataset>

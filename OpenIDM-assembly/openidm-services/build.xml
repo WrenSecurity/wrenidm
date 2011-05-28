@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- =================== Build for PROJECT =================== -->
+<project name="openidm-webapp" default="dist" basedir="../../maven/OpenIDM-webapp">
+    <description>Package the Maven Project like an Ant Project</description>
+    <import file="../../maven/OpenIDM-services/build.xml"/>
+
+    <target name="-init-project">
+        <property name="openidm.project.dir" value="../../OpenIDM-assembly/openidm-services"/>
+        <!-- -->
+        <property file="${openidm.project.dir}/nbproject/project.properties"/>
+        <property name="openidm.dist.file" value="${openidm.project.dir}/${dist.war}"/>
+        <dirname file="${openidm.dist.file}" property="dist.jar.dir"/>
+        <condition property="openidm.build.maven">
+            <and>
+                <istrue value="${jar.compress}"/>
+            </and>
+        </condition>
+    </target>
+
+    <target depends="-init-project,package-local-maven-project,download-maven-artifact" description="Build distribution." name="dist"/>
+
+    <target if="openidm.build.maven" name="package-local-maven-project">
+        <antcall target="-maven-package-dist"/>
+    </target>
+
+    <target unless="openidm.build.maven" name="download-maven-artifact">
+        <antcall target="-maven-dependency-dist"/>
+    </target>
+
+    <target if="openidm.build.maven" depends="-init-project,-maven-dist" description="Build distribution." name="-maven-package-dist">
+        <mkdir dir="${dist.jar.dir}"/>
+        <move file="target/OpenIDM-services-1.7-SNAPSHOT.war" tofile="${openidm.dist.file}"/>
+    </target>
+    <target unless="openidm.build.maven" depends="-init-project,-maven-dependency" description="Download distribution." name="-maven-dependency-dist">
+        <copy file="${com.forgerock.openidm:OpenIDM-services:war}" tofile="${openidm.dist.file}"/>
+        <echo message="Artifact file downloaded to ${com.forgerock.openidm:OpenIDM-services:war}"/>
+    </target>
+
+    <target depends="-init-project,-maven-clean,initmaven" description="Clean distribution dir" name="clean">
+        <delete dir="${dist.jar.dir}"/>
+    </target>
+</project>

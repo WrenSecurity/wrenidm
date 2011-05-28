@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Example for account on resource with non-standrd resource schema.
+-->
+
+<objects  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xmlns='http://openidm.forgerock.com/xml/ns/identity/1#'
+   xmlns:c='http://openidm.forgerock.com/xml/ns/common/1#'
+   xmlns:sp="http://southpark.us/schema/"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xsi:schemaLocation='http://www.w3.org/2001/XMLSchema ../standard/XMLSchema.xsd
+   http://openidm.forgerock.com/xml/ns/identity/1# ../repository/identity.xsd
+   http://openidm.forgerock.com/xml/ns/common/1# ../common/common.xsd'>
+
+    <user oid="1010101">
+        <c:name>kenny</c:name>
+        <c:extension/>
+        <fullName>Kenny McCormick</fullName>
+        <givenName>Kenny</givenName>
+        <familyName>McCormick</familyName>
+        <accountRef oid="212121"/>
+    </user>
+
+    <account oid="212121">
+        <c:name>kenny</c:name>
+        <resourceRef oid="2221111"/>
+        <type>sp:AccountType</type>
+        <sp:account objId="kenny">
+            <sp:whatever>They've killed Kenny! Bastards!</sp:whatever>
+        </sp:account>
+    </account>
+    
+    <resource oid="2221111">
+        <c:name>school</c:name>
+        <type>http://southpark.us/schema/School</type>
+        <schema>
+            <xsd:schema targetNamespace="http://southpark.us/schema/">
+
+                <xsd:complexType name="AccountType">
+                    <xsd:sequence>
+                        <xsd:element name="whatever" type="xsd:string"/>
+                    </xsd:sequence>
+                    <xsd:attribute name="objId" type="xsd:string"/>
+                </xsd:complexType>
+                
+            </xsd:schema>
+        </schema>
+    </resource>
+
+</objects>

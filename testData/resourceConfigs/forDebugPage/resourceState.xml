@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object xsi:type="ResourceStateType" oid="f9feff8d-c5a7-4617-bc7f-454f063791f6" version="0" xmlns="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <name>AD-test</name>
+    <resourceRef oid="6e842d90-0cf2-11e0-81e0-0800200c9a66"/>
+    <synchronizationState>
+        <icc:syncToken xsi:type="xsd:string" xmlns:icc="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/configuration-1.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema">57404|57396|False|WinServer2008Stn32.testbed-domain</icc:syncToken>
+    </synchronizationState>
+</object>

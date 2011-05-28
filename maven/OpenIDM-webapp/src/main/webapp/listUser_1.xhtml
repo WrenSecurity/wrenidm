@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<ui:composition template="resources/templates/admin-template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ice="http://www.icesoft.com/icefaces/component"
+                xmlns:prefs="http://java.sun.com/jsf/composite/components/preferences"
+                xmlns:user="http://java.sun.com/jsf/composite/components/user"
+                xmlns:idm="http://openidm.forgerock.com/xml/ns/custom-taglib/">
+
+    <ui:define name="title">#{lang.messages['user.type.list.title']}</ui:define>
+    <ui:define name="content-title">#{lang.messages['user.type.list.title']}</ui:define>
+
+    <ui:define name="admin-content">
+        <ice:panelGroup>
+            <ice:form id="admin-content">
+                <ice:panelGrid>
+                    <ice:panelGroup style="width: 100%; float:right; margin-right:5px;">
+                        <ice:panelGrid columns="3" style="float:right;">
+                            <ice:outputText value="#{msg['user.type.userID']}"/>
+                            <ice:inputText value="#{userTypeController.searchOid}" immediate="true"/>
+                            <idm:button actionListener="#{userTypeController.searchUser}"
+                                        value="#{msg['user.type.search.button']}" id="searchButton"
+                                        img="/resources/images/magnifier.png" />
+                        </ice:panelGrid>
+                    </ice:panelGroup>
+                   
+                    <ice:dataTable id="userTable"
+                                   rows="10"
+                                   value="#{userTypeController.userData}"
+                                   var="user"
+                                   sortColumn="#{userTypeController.sortColumnName}"
+                                   sortAscending="#{userTypeController.ascending}"
+                                   columnClasses="iceDatTblCol1"
+                                   rowClasses="iceDatTblRow1 iceDatTblRow2"
+                                   columnWidths="230px, 100px, 100px, 170px, 100px, 100px, 150px"
+                                   resizable="true"
+                                   >
+                        <ice:column>
+                            <ice:rowSelector id="selected" value="#{user.selected}" selectionListener="#{userTypeController.userSelectionListener}" styleClass="selectedRow"  />
+                            <f:facet name="header">
+                                <ice:commandSortHeader columnName="givenName" arrow="true" actionListener="#{userTypeController.sortItem}">
+                                    <ice:outputText id="userGivenName" value="#{msg['user.type.givenName']}"/>
+                                </ice:commandSortHeader>
+                            </f:facet>
+                            <ice:outputText id="givenName" value="#{user.givenName}"/>
+                        </ice:column>
+                        <ice:column>
+                            <f:facet name="header">
+                                <ice:commandSortHeader columnName="familyName" arrow="true" actionListener="#{userTypeController.sortItem}">
+                                    <ice:outputText id="userFamilyName" value="#{msg['user.type.familyName']}"/>
+                                </ice:commandSortHeader>
+                            </f:facet>
+                            <ice:outputText id="familyName" value="#{user.familyName}"/>
+                        </ice:column>
+                        <ice:column>
+                            <f:facet name="header">
+                                <ice:commandSortHeader columnName="fullName" arrow="true" actionListener="#{userTypeController.sortItem}">
+                                    <ice:outputText id="userFullName" value="#{msg['user.type.fullName']}"/>
+                                </ice:commandSortHeader>
+                            </f:facet>
+                            <ice:outputText  id="fullName" value="#{user.fullName}"/>
+                        </ice:column>
+                        <ice:column>
+                            <f:facet name="header">
+                                <ice:commandSortHeader columnName="name" arrow="true" actionListener="#{userTypeController.sortItem}">
+                                    <ice:outputText id="userName" value="#{msg['user.type.name']}"/>
+                                </ice:commandSortHeader>
+                            </f:facet>
+                            <ice:outputText id="name" value="#{user.name}"/>
+                        </ice:column>
+                    </ice:dataTable>
+                    <ice:panelGroup>
+                        <center>
+                            <ice:dataPaginator for="userTable" paginator="true" paginatorMaxPages="6">
+                                <f:facet name="first">
+                                    <ice:graphicImage url="resources/css/forgerock/css-images/arrow-first.gif"/>
+                                </f:facet>
+                                <f:facet name="last">
+                                    <ice:graphicImage url="resources/css/forgerock/css-images/arrow-last.gif"/>
+                                </f:facet>
+                                <f:facet name="previous">
+                                    <ice:graphicImage url="resources/css/forgerock/css-images/arrow-previous.gif"/>
+                                </f:facet>
+                                <f:facet name="next">
+                                    <ice:graphicImage url="resources/css/forgerock/css-images/arrow-next.gif"/>
+                                </f:facet>
+                            </ice:dataPaginator>
+                        </center>
+                    </ice:panelGroup>
+                </ice:panelGrid>
+            </ice:form>
+        </ice:panelGroup>
+    </ui:define>
+</ui:composition>

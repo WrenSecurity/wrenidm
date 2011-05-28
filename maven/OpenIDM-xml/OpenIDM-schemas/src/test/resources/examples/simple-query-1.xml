@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+Copyright (c) 2010 ForgeRock Inc. All Rights Reserved
+
+The contents of this file are subject to the terms
+of the Common Development and Distribution License
+(the License). You may not use this file except in
+compliance with the License.
+
+You can obtain a copy of the License at
+http://www.opensource.org/licenses/cddl1.php or
+OpenIDM/legal/CDDLv1.0.txt
+See the License for the specific language governing
+permission and limitations under the License.
+
+When distributing Covered Code, include this CDDL
+Header Notice in each file and include the License file
+at OpenIDM/legal/CDDLv1.0.txt.
+If applicable, add the following below the CDDL Header,
+with the fields enclosed by brackets [] replaced by
+your own identifying information:
+"Portions Copyrighted 2010 [name of copyright owner]"
+
+-->
+
+<c:query  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xmlns:c='http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd'
+   xmlns:dj="http://openidm.forgerock.com/xml/ns/samples/localhostOpenDJ"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xsi:schemaLocation='http://www.w3.org/2001/XMLSchema ../standard/XMLSchema.xsd
+   http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd ../../../main/resources/META-INF/wsdl/xml/ns/public/common/common-1.xsd'
+   xmlns:foo="http://foo.com/">
+
+   <!-- Query filter example -->
+
+    <c:and>
+        <c:type uri="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd#AccountShadowType"/>
+        <c:equal>
+            <c:path>c:attributes</c:path>
+            <c:value>
+                <dj:__UID__>cn=foobar,uo=people,dc=nlight,dc=eu</dj:__UID__>
+            </c:value>
+        </c:equal>
+        <c:equal>
+            <c:value>
+                <c:resourceRef oid="1234"/>
+            </c:value>
+        </c:equal>
+    </c:and>
+    
+</c:query>

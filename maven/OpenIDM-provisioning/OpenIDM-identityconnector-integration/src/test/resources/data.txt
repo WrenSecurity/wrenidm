@@ -1,0 +1,3 @@
+uid,name
+1,elek
+2,valaki

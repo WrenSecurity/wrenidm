@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<object xsi:type="UserType" version="1" oid="383af517-2b29-4ab3-9bf1-07e60075e7ec" xmlns="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <name>66666666666hgkjg</name>
+    <fullName>vjhk</fullName>
+    <givenName>hbuj</givenName>
+    <familyName>jvhk</familyName>
+    <accountRef type="account" oid="9154880c-6584-425a-af2e-58f8ca394f32"/>
+</object>

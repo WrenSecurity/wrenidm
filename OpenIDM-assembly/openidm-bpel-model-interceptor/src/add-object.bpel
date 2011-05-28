@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process
+    name="addObject"
+    targetNamespace="http://openidm.forgerock.com/xml/ns/openidm-bpel-model-interceptor/process"
+    xmlns:tns="http://openidm.forgerock.com/xml/ns/openidm-bpel-model-interceptor/process"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+    xmlns:sxt="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Trace" 
+    xmlns:sxed="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Editor"
+    xmlns:sxeh="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/ErrorHandling" xmlns:sxed2="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Editor2" xmlns:ns0="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd">
+    <import namespace="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" location="openidm-model/contract/model.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <partnerLinks>
+        <partnerLink name="invokedModel" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" partnerLinkType="tns:idmModel" partnerRole="ModelPortTypeRole"/>
+        <partnerLink name="implementedModel" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" partnerLinkType="tns:idmModel" myRole="modelPortTypeRole"/>
+    </partnerLinks>
+    <variables>
+        <variable name="invokedAddObjectOut" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" messageType="tns:addObjectResponse"/>
+        <variable name="implementedAddObjectIn" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" messageType="tns:addObjectRequest"/>
+    </variables>
+    <sequence>
+        <receive name="ReceiveAddObject" createInstance="yes" partnerLink="implementedModel" operation="addObject" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" portType="tns:ModelPortType" variable="implementedAddObjectIn">
+            <sxt:trace>
+                <sxt:log level="info" location="onComplete">
+                    <from>concat('[BPEL] addObject IN object: ', $implementedAddObjectIn.objectContainer/ns0:object)</from>
+                </sxt:log>
+            </sxt:trace>
+        </receive>
+        <invoke name="InvokeAddObject" partnerLink="invokedModel" operation="addObject" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" portType="tns:ModelPortType" inputVariable="implementedAddObjectIn" outputVariable="invokedAddObjectOut"/>
+        <reply name="ReplyAddObject" partnerLink="implementedModel" operation="addObject" xmlns:tns="http://openidm.forgerock.com/xml/ns/public/model/model-1.wsdl" portType="tns:ModelPortType" variable="invokedAddObjectOut"/>
+    </sequence>
+</process>
+
+

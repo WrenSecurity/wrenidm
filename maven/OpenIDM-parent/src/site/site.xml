@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Copyright (c) 2010 ForgeRock Inc. All Rights Reserved
+ *
+ * The contents of this file are subject to the terms
+ * of the Common Development and Distribution License
+ * (the License). You may not use this file except in
+ * compliance with the License.
+ *
+ * You can obtain a copy of the License at
+ * http://www.opensource.org/licenses/cddl1.php or
+ * OpenIDM/legal/CDDLv1.0.txt
+ * See the License for the specific language governing
+ * permission and limitations under the License.
+ *
+ * When distributing Covered Code, include this CDDL
+ * Header Notice in each file and include the License file
+ * at OpenIDM/legal/CDDLv1.0.txt.
+ * If applicable, add the following below the CDDL Header,
+ * with the fields enclosed by brackets [] replaced by
+ * your own identifying information:
+ * "Portions Copyrighted 2010 [name of copyright owner]"
+ *
+ * $Id$
+-->
+<project name="OpenIDM">
+  <publishDate position="none"/>
+  <bannerLeft>
+    <alt>OpenIDM</alt>
+    <name>OpenIDM</name>
+    <src>https://wikis.forgerock.org/confluence/download/attachments/4718606/OpenIDM-web-transparent.png?version=1&amp;modificationDate=1269771079000</src>
+    <href>https://wikis.forgerock.org/confluence/display/openidm/Home</href>
+  </bannerLeft>
+  <bannerRight>
+    <alt>OpenIDM</alt>
+    <src>https://wikis.forgerock.org/confluence/plugins/servlet/builder/resource/OPENIDM/OpenIDM-tagline-200x65.png</src>
+    <href>https://wikis.forgerock.org/confluence/display/openidm/Home</href>
+  </bannerRight>
+  <body>
+    <head>
+      <link rel="icon" type="image/png" href="https://wikis.forgerock.org/confluence/plugins/servlet/builder/resource/OPENIDM/OpenIDM-tagline-200x65.png"/>
+    </head>
+    <links>
+      <item name="OpenESB" href="https://wikis.forgerock.org/confluence/display/openesb/Home" />
+      <item name="OpenAM" href="https://wikis.forgerock.org/confluence/display/openam/Home"/>
+      <item name="OpenDJ" href="https://wikis.forgerock.org/confluence/display/opendj/Home"/>
+    </links>
+    <menu name="OpenIDM">
+      <item name="Introduction" href="index.html"/>
+      <item name="Download" href="download.html"/>
+      <item name="Documentation" href="documentation.html"/>
+      <item name="Supported Formats" href="formats.html"/>
+    </menu>
+    <menu ref="reports"/>
+    <!-- ${reports} -->
+  </body>
+</project>

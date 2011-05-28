@@ -1,0 +1,1 @@
+java -jar lib/openidm-db-setup.jar

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  - $Id: applicationContext-security.xml 4074 2010-01-18 18:44:17Z lad $
+  -->
+
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+             http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+
+    <global-method-security secured-annotations="enabled" jsr250-annotations="enabled" />
+
+    <http use-expressions="true" disable-url-rewriting="true">
+        <!--intercept-url pattern="/secure/**" access="isAuthenticated()" />
+        <intercept-url pattern="/userFIX/**" access="isAuthenticated()" />
+        <intercept-url pattern="/adminFIX/**" access="isAuthenticated()" />
+        <intercept-url pattern="/**" access="permitAll" /-->
+
+        <intercept-url pattern="/" access="permitAll"/>
+        <intercept-url pattern="/favicon.ico" access="permitAll"/>
+        <intercept-url pattern="/resources/css/**" access="permitAll"/>
+        <intercept-url pattern="/resources/images/**" access="permitAll"/>
+        <intercept-url pattern="/javax.faces.resource/**" access="permitAll"/>
+        <intercept-url pattern="/login.iface" access="permitAll"/>
+        <!--intercept-url pattern="/static/**" filters="none" /-->
+        <intercept-url pattern="/**" access="isAuthenticated()" />
+
+        <form-login
+            login-processing-url="/j_spring_security_check"
+            login-page="/login.iface"
+            authentication-failure-url="/login.iface" />
+
+        <logout logout-success-url="/login.iface" invalidate-session="true" />
+        
+        <!-- Uncomment to limit the number of sessions a user can have -->
+        <session-management>
+            <concurrency-control max-sessions="1" error-if-maximum-exceeded="false" />
+        </session-management>
+
+    </http>
+
+    <!--My custom auth manager-->
+    <beans:bean id="internalAuthenticationProvider" class="com.forgerock.openidm.web.security.InternalAuthenticationProvider">
+        <beans:property name="loginTimeout">
+            <beans:value type="java.lang.Integer">15</beans:value>
+        </beans:property>
+        <beans:property name="maxFailedLogins">
+            <beans:value type="java.lang.Integer">3</beans:value>
+        </beans:property>
+    </beans:bean>
+
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider ref='internalAuthenticationProvider'/>
+    </authentication-manager>
+
+    <!-- Automatically receives AuthenticationEvent messages -->
+    <beans:bean id="loggerListener" class="org.springframework.security.authentication.event.LoggerListener"/>
+</beans:beans>

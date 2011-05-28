@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<ui:composition template="resources/templates/master-template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ice="http://www.icesoft.com/icefaces/component"
+                xmlns:prefs="http://java.sun.com/jsf/composite/components/preferences"
+                xmlns:user="http://java.sun.com/jsf/composite/components/user"
+
+                >
+
+
+
+    <ui:define name="title">#{lang.messages['user.type.update.title']}</ui:define>
+    <ui:define name="content-title">#{lang.messages['user.update.list.title']}</ui:define>
+
+    <ui:define name="content">
+
+
+        <div id="login">
+
+            <ice:panelGroup>
+                <ice:form id="updateUserForm">
+                    <ice:panelGrid columns="2">
+                        <ice:outputText value="#{msg['user.type.oid']}"/>
+                        <ice:panelGroup>
+                            <ice:inputText id="oid"
+                                           value="#{userTypeController.user.oid}"
+                                           disabled="true"/>
+                        </ice:panelGroup>
+
+                        <ice:outputText value="#{msg['user.type.fullName']}"/>
+                        <ice:panelGroup>
+                            <ice:inputText id="fullName"
+                                           value="#{userTypeController.user.fullName}"/>
+                        </ice:panelGroup>
+                        <ice:outputText value="#{msg['user.type.givenName']}"/>
+                        <ice:panelGroup>
+                            <ice:inputText id="givenName"
+                                           value="#{userTypeController.user.givenName}"/>
+                        </ice:panelGroup>
+                        <ice:outputText value="#{msg['user.type.familyName']}"/>
+                        <ice:panelGroup>
+                            <ice:inputText id="familyName"
+                                           value="#{userTypeController.user.familyName}"/>
+                        </ice:panelGroup>
+
+                        <ice:outputText value="#{msg['user.type.name']}"/>
+                        <ice:panelGroup>
+                            <ice:inputText id="name"
+                                           value="#{userTypeController.user.name}"/>
+                        </ice:panelGroup>
+
+                        <ice:outputText value="#{msg['user.type.version']}"/>
+                        <ice:panelGroup>
+                            <ice:inputText id="version"
+                                           value="#{userTypeController.user.version}"
+                                           disabled="true"/>
+                        </ice:panelGroup>
+
+                        <ice:panelGroup  style="display:block; text-align:center;">
+                            <ice:commandButton id="updateUser" type="submit" value="#{msg['user.type.update.button']}" action="#{userTypeController.updateUser}"/>
+
+                        </ice:panelGroup>
+                        <ice:commandButton id="cancel" type="submit" value="#{msg['user.type.cancel.button']}" action="#{userTypeController.cancelAction}"/>
+                    </ice:panelGrid>
+                </ice:form>
+            </ice:panelGroup>
+        </div>
+    </ui:define>
+
+</ui:composition>
+

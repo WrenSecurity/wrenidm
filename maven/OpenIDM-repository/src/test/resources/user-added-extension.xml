@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<i:user oid="c0c010c0-d34d-b33f-f00d-222222222222" xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xmlns:i='http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd'
+   xmlns:c='http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd'
+   xmlns:piracy='http://openidm.forgerock.com/xml/ns/samples/piracy'>
+    <c:name>jack</c:name>
+    <c:extension>
+        <piracy:ship>Black Pearl</piracy:ship>
+    </c:extension>
+    <i:fullName>Cpt. Jack Sparrow</i:fullName>
+    <i:givenName>Jack</i:givenName>
+    <i:familyName>Sparrow</i:familyName>
+    <i:honorificPrefix>Cpt.</i:honorificPrefix>
+    <i:credentials>
+        <i:password>
+            <i:cleartextPassword>deadmentellnotales</i:cleartextPassword>
+        </i:password>
+    </i:credentials>
+</i:user>

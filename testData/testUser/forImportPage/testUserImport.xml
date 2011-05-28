@@ -1,0 +1,29 @@
+<i:objects  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+   xmlns:i='http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd'
+   xmlns:c='http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd'>
+    <i:user oid="c0c010c0-d34d-b33f-f00d-211111111111">
+        <c:name>beethoven</c:name>
+        <i:fullName>Ludwig van Beethoven</i:fullName>
+        <i:givenName>Ludwig</i:givenName>
+        <i:familyName>Beethoven</i:familyName>
+        <i:honorificPrefix>van</i:honorificPrefix>
+        <i:locality>de</i:locality>
+    </i:user>
+    <i:user oid="c0c010c0-d34d-b33f-f00d-211111111112">
+        <c:name>bruckner</c:name>
+        <i:fullName>Anton Bruckner</i:fullName>
+        <i:givenName>Anton</i:givenName>
+        <i:familyName>Bruckner</i:familyName>
+        <i:honorificPrefix>General Musik Direktor</i:honorificPrefix>
+        <i:locality>at</i:locality>
+    </i:user>
+    <i:user oid="c0c010c0-d34d-b33f-f00d-211111111113">
+        <c:name>grieg</c:name>
+        <i:fullName>Edvard Grieg</i:fullName>
+        <i:givenName>Edvard</i:givenName>
+        <i:familyName>Grieg</i:familyName>
+        <i:honorificPrefix>Dr. Dr. hc.</i:honorificPrefix>
+        <i:locality>no</i:locality>
+    </i:user>
+</i:objects>
+

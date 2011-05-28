@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://openidm.forgerock.com/xml/ns/resource/idconnector/1#"
+    xmlns:tns="http://openidm.forgerock.com/xml/ns/resource/idconnector/1#"
+    xmlns="http://openidm.forgerock.com/xml/ns/resource/idconnector/1#"
+    xmlns:r="http://openidm.forgerock.com/xml/ns/resource/1#"
+    elementFormDefault="qualified">
+
+    <xsd:import namespace="http://openidm.forgerock.com/xml/ns/resource/1#"
+                schemaLocation="standard-resource-schema.xsd"/>
+
+    <xsd:annotation>
+        <xsd:documentation>
+            TODO
+    
+        These definitions are to be considered only examples for now.
+
+     These will hopefuly get cleaned up and aligned
+     with existing common terminology and/or connectors.
+
+        </xsd:documentation>
+    </xsd:annotation>
+
+
+    <xsd:element name="uid" type="xsd:string">
+        <xsd:annotation>
+            <xsd:documentation>
+                UID unique identifier
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="name" type="xsd:string">
+        <xsd:annotation>
+            <xsd:documentation>
+                __NAME__ attribute
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="password" type="xsd:string">
+        <xsd:annotation>
+            <xsd:documentation>
+                __PASSWORD__ attribute
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:complexType name="ObjectClass">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <r:identifier ref="uid"/>
+                <r:displayName ref="name"/>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="r:ResourceObjectClass">
+                <xsd:sequence>
+                    <xsd:element ref="uid"/>
+                    <xsd:element ref="name"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="AccountObjectClass">
+        <xsd:annotation>
+            <xsd:documentation>
+                __ACCOUNT__
+            </xsd:documentation>
+            <xsd:appinfo>
+                <r:identifier ref="uid"/>
+                <r:displayName ref="name"/>
+                <r:nativeObjectClass>__ACCOUNT__</r:nativeObjectClass>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="ObjectClass">
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="account" type="AccountObjectClass"/>
+
+    <xsd:complexType name="GroupObjectClass">
+        <xsd:annotation>
+            <xsd:documentation>
+                __GROUP__
+            </xsd:documentation>
+            <xsd:appinfo>
+                <r:identifier ref="uid"/>
+                <r:displayName ref="name"/>
+                <r:nativeObjectClass>__GROUP__</r:nativeObjectClass>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="ObjectClass">
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:element name="group" type="GroupObjectClass"/>
+
+
+    <xsd:complexType name="ConnectorResourceConfigurationType">
+    <xsd:sequence>
+    	    <xsd:element name="server" type="tns:ConnectorServer" minOccurs="0" maxOccurs="1"></xsd:element>
+    		<xsd:element name="connectorKey" type="tns:ConnectorKey" minOccurs="1" maxOccurs="1"></xsd:element>
+    		<xsd:element name="properties" type="tns:ConfigurationProperties"></xsd:element>
+    	</xsd:sequence>    	
+    </xsd:complexType>
+    
+    <xsd:complexType name="ConnectorKey">
+    	<xsd:sequence>
+    		<xsd:element name="bundleName" type="xsd:string"></xsd:element>
+    		<xsd:element name="bundleVersion" type="xsd:string"></xsd:element>
+    		<xsd:element name="connectorName" type="xsd:string"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ConfigurationProperties">
+    	<xsd:sequence>
+    		<xsd:any></xsd:any>
+    	</xsd:sequence></xsd:complexType>
+
+
+    <xsd:complexType name="ConnectorServer">
+    	<xsd:sequence>
+    		<xsd:element name="host" type="xsd:string"></xsd:element>
+    		<xsd:element name="port" type="xsd:string"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="configuration" type="tns:ConnectorResourceConfigurationType"></xsd:element>
+</xsd:schema>
+

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<c:object  xmlns:c="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd"
+            xmlns:ics="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd"
+            xmlns:dj="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="c:ResourceObjectShadowType">
+    <c:name>LDAP Group</c:name>
+    <c:resourceRef oid="ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2"/>
+    <c:objectClass>dj:Group</c:objectClass>
+    <c:attributes>
+        <ics:__NAME__>cn=Test,ou=People,dc=forgerock,dc=org</ics:__NAME__>
+        <ics:__UID__>cn=Test,ou=People,dc=forgerock,dc=org</ics:__UID__>
+        <!--ics:__NAME__>cn=Test,ou=Groups,dc=forgerock,dc=org</ics:__NAME__>
+        <ics:__UID__>cn=Test,ou=Groups,dc=forgerock,dc=org</ics:__UID__-->
+        <dj:description>Test LDAP Group</dj:description>
+    </c:attributes>
+</c:object>

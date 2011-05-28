@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<c:objectModification xmlns:c="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd"
+xmlns:ics="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd"
+xmlns:dj="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:type="c:ObjectChangeType"
+xsi:schemaLocation="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd file:///home/elek/IDM/trunk/maven/OpenIDM-xml/OpenIDM-schemas/src/main/resources/META-INF/wsdl/xml/ns/public/common/common-1.xsd"
+>
+    <c:oid>dbb0c37d-9ee6-44a4-8d39-016dbce18b4c</c:oid>
+
+    <c:propertyModification modificationType="replace">
+        <c:path xmlns:i="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd">i:attributes</c:path>
+        <c:value>
+            <dj:givenName xmlns:dj="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2">John Doe</dj:givenName>
+        </c:value>
+    </c:propertyModification>
+
+
+</c:objectModification>

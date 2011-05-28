@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="idmRepository" targetNamespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#" xmlns:ns="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+    <import namespace="http://openidm.forgerock.com/xml/ns/provisioning/wsdl/1#" location="../provisioning/provisioning.wsdl" />
+    <import namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#" location="../repository/idmRepository.wsdl" />
+    <binding name="idmRepositoryBinding" type="tns:idmRepositoryPortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="addObject">
+            <soap:operation soapAction="addObject_action"/>
+            <input name="addObjectInput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </input>
+            <output name="addObjectOutput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </output>
+            <fault name="fault">
+                <soap:fault name="fault" use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </fault>
+        </operation>
+        <operation name="getObject">
+            <soap:operation/>
+            <input name="getObjectInput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </input>
+            <output name="getObjectOutput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </output>
+            <fault name="fault">
+                <soap:fault name="fault" use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </fault>
+        </operation>
+        <operation name="listObjects">
+            <soap:operation/>
+            <input name="listObjectsInput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </input>
+            <output name="listObjectsOutput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </output>
+            <fault name="fault">
+                <soap:fault name="fault" use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </fault>
+        </operation>
+
+        <operation name="searchObjects">
+            <soap:operation/>
+            <input name="searchObjectsInput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </input>
+            <output name="searchObjectsOutput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </output>
+            <fault name="fault">
+                <soap:fault name="fault" use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </fault>
+        </operation>
+        <operation name="modifyObject">
+            <soap:operation/>
+            <input name="modifyObjectInput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </input>
+            <output name="modifyObjectOutput">
+
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </output>
+            <fault name="fault">
+                <soap:fault name="fault" use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </fault>
+        </operation>
+        <operation name="deleteObject">
+            <soap:operation/>
+            <input name="deleteObjectInput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </input>
+            <output name="deleteObjectOutput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </output>
+            <fault name="fault">
+                <soap:fault name="fault" use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </fault>
+        </operation>
+
+        <operation name="getPropertyAvailableValues">
+            <soap:operation/>
+            <input name="getPropertyAvailableValuesInput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </input>
+            <output name="getPropertyAvailableValuesOutput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </output>
+            <fault name="fault">
+                <soap:fault name="fault" use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </fault>
+        </operation>
+        <operation name="listAccountShadowOwner">
+            <soap:operation/>
+            <input name="listAccountShadowOwnerInput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </input>
+            <output name="listAccountShadowOwnerOutput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </output>
+            <fault name="fault">
+                <soap:fault name="fault" use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </fault>
+        </operation>
+        <operation name="listResourceObjectShadows">
+            <soap:operation/>
+            <input name="listResourceObjectShadowsInput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </input>
+            <output name="listResourceObjectShadowsOutput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </output>
+            <fault name="fault">
+                <soap:fault name="fault" use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </fault>
+        </operation>
+
+        <operation name="addUser">
+            <soap:operation/>
+            <input name="addUserInput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </input>
+            <output name="addUserOutput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </output>
+            <fault name="fault">
+                <soap:fault name="fault" use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </fault>
+        </operation>
+        <operation name="getUser">
+            <soap:operation/>
+            <input name="getUserInput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </input>
+            <output name="getUserOutput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </output>
+            <fault name="fault">
+                <soap:fault name="fault" use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </fault>
+        </operation>
+        <operation name="listUsers">
+            <soap:operation/>
+            <input name="listUsersInput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </input>
+            <output name="listUsersOutput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </output>
+            <fault name="fault">
+                <soap:fault name="fault" use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </fault>
+        </operation>
+
+        <operation name="modifyUser">
+            <soap:operation/>
+            <input name="modifyUserInput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </input>
+            <output name="modifyUserOutput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </output>
+            <fault name="fault">
+                <soap:fault name="fault" use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </fault>
+        </operation>
+        <operation name="deleteUser">
+            <soap:operation/>
+            <input name="deleteUserInput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </input>
+            <output name="deleteUserOutput">
+                <soap:body use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </output>
+            <fault name="fault">
+                <soap:fault name="fault" use="literal" namespace="http://openidm.forgerock.com/xml/ns/idmRepository/wsdl/1#"/>
+            </fault>
+        </operation>
+    </binding>
+    <service name="idmRepositoryService">
+        <port name="idmRepositoryPort" binding="tns:idmRepositoryBinding">
+            <soap:address location="REPLACE_WITH_ACTUAL_URL"/>
+        </port>
+    </service>
+</definitions>

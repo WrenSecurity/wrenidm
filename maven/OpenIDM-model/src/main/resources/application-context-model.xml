@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:jee="http://www.springframework.org/schema/jee"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:ws= "http://jax-ws.dev.java.net/spring/core"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="
+     http://www.springframework.org/schema/jee
+     http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+     http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+     http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context-3.0.xsd
+     http://www.springframework.org/schema/aop
+     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+     http://jax-ws.dev.java.net/spring/core
+     https://jax-ws.dev.java.net/spring/core.xsd
+     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd"
+     default-lazy-init="false"
+     default-autowire="byName"
+     >
+
+   <!-- enabling annotation driven configuration /-->
+    <context:annotation-config/>
+    <context:component-scan base-package="com.forgerock.openidm"/>
+
+    <bean id="ModelLoggerMXBean" class="com.forgerock.openidm.logging.LoggerMXBeanImpl" lazy-init="false" scope="singleton">
+        <constructor-arg type="java.lang.String" value="Model" />
+        <constructor-arg type="java.lang.String" value="com.forgerock.openidm.model" />
+    </bean>
+
+    <bean id="actionManager" class="com.forgerock.openidm.model.ActionManagerImpl">
+        <property name="actionMapping">
+            <map>
+                <entry key="http://openidm.forgerock.com/xml/ns/public/model/action-1#addUser">
+                    <value type="java.lang.Class">com.forgerock.openidm.model.action.AddUserAction</value>
+                </entry>
+                <entry key="http://openidm.forgerock.com/xml/ns/public/model/action-1#modifyUser">
+                    <value type="java.lang.Class">com.forgerock.openidm.model.action.ModifyUserAction</value>
+                </entry>
+                <entry key="http://openidm.forgerock.com/xml/ns/public/model/action-1#linkAccount">
+                    <value type="java.lang.Class">com.forgerock.openidm.model.action.LinkAccountAction</value>
+                </entry>
+                <entry key="http://openidm.forgerock.com/xml/ns/public/model/action-1#unlinkAccount">
+                    <value type="java.lang.Class">com.forgerock.openidm.model.action.UnlinkAccountAction</value>
+                </entry>
+                <entry key="http://openidm.forgerock.com/xml/ns/public/model/action-1#deleteAccount">
+                    <value type="java.lang.Class">com.forgerock.openidm.model.action.DeleteAccountAction</value>
+                </entry>
+                <entry key="http://openidm.forgerock.com/xml/ns/public/model/action-1#disableAccount">
+                    <value type="java.lang.Class">com.forgerock.openidm.model.action.DisableAccountAction</value>
+                </entry>
+                <entry key="http://openidm.forgerock.com/xml/ns/public/model/action-1#addAccount">
+                    <value type="java.lang.Class">com.forgerock.openidm.model.action.AddAccountAction</value>
+                </entry>
+                <entry key="http://openidm.forgerock.com/xml/ns/public/model/action-1#deleteUser">
+                    <value type="java.lang.Class">com.forgerock.openidm.model.action.DeleteUserAction</value>
+                </entry>
+                <entry key="http://openidm.forgerock.com/xml/ns/public/model/action-1#modifyPassword">
+                    <value type="java.lang.Class">com.forgerock.openidm.model.action.ModifyPasswordAction</value>
+                </entry>
+            </map>
+        </property>
+        <property name="model" >
+            <ref bean="modelService"/>
+        </property>
+        <property name="provisioning" >
+            <ref bean="provisioningService"/>
+        </property>
+        <property name="schemaHandling" >
+            <ref bean="schemaHandling"/>
+        </property>
+
+    </bean>
+
+    <bean id="filterManager" class="com.forgerock.openidm.model.filter.FilterManagerImpl">
+        <property name="filterMapping">
+            <map>
+                <entry key="http://openidm.forgerock.com/xml/ns/public/common/value-filter-1.xsd#emptyFilter">
+                    <value type="java.lang.Class">com.forgerock.openidm.model.filter.EmptyFilter</value>
+                </entry>
+                <entry key="http://openidm.forgerock.com/xml/ns/public/common/value-filter-1.xsd#patternFilter">
+                    <value type="java.lang.Class">com.forgerock.openidm.model.filter.PatternFilter</value>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+</beans>

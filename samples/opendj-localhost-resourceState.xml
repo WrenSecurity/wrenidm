@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<c:objects xmlns:c="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd"
+           xmlns:i="http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <i:resourceState oid="97fa8fd2-0462-42c9-9ca0-e2d317c3d93f">
+        <c:name>Localhost OpenDJ state</c:name>
+        <i:synchronizationState>
+				<c:syncToken xmlns:c="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/configuration-1.xsd">1</c:syncToken>
+	</i:synchronizationState>
+        <i:resourceRef oid="ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2" type="ResourceType"/>
+    </i:resourceState>
+</c:objects>

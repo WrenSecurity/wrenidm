@@ -1,0 +1,159 @@
+# =================================================
+# OpenSSL configuration file
+# =================================================
+
+RANDFILE         = $ENV::SSLDIR/.rnd
+
+[ ca ]
+default_ca       = CA_default
+
+[ CA_default ]
+dir              = $ENV::SSLDIR
+certs            = $dir/certs
+new_certs_dir    = $dir/newcerts
+crl_dir          = $dir/crl
+database         = $dir/index.txt
+private_key      = $dir/private/ca.key
+certificate      = $dir/ca.pem
+serial           = $dir/serial
+crl              = $dir/crl.pem
+RANDFILE         = $dir/private/.rand
+#x509_extensions  = usr_cert              	# The extentions to add to the cert
+default_days     = 365
+default_crl_days = 30
+default_md       = sha1
+preserve         = no
+policy           = policy_anything
+name_opt         = ca_default
+cert_opt         = ca_default
+
+[ policy_anything ]
+countryName             = optional
+stateOrProvinceName     = optional
+localityName            = optional
+organizationName        = optional
+organizationalUnitName  = optional
+commonName              = supplied
+emailAddress            = optional
+
+[ req ]
+default_bits            = 1024
+default_md              = sha1
+default_keyfile         = privkey.pem
+distinguished_name      = req_distinguished_name
+attributes              = req_attributes
+x509_extensions         = v3_ca
+string_mask             = nombstr
+
+[ req_distinguished_name ]
+countryName             		= Country Name (2 letter code)
+countryName_default     		= NO
+countryName_min         		= 2
+countryName_max         		= 2
+stateOrProvinceName     		= State or Province Name (full name)
+stateOrProvinceName_default		= Oslo
+localityName            		= Locality Name (eg, city)
+localityName_default       		= Oslo
+0.organizationName      		= Organization Name (eg, company)
+0.organizationName_default 		= OpenIDM Architecture
+organizationalUnitName  		= Organizational Unit Name (eg, section)
+organizationalUnitName_default	= OpenIDM Service Unit
+commonName              		= Common Name (eg, YOUR name)
+commonName_default              = openidm.forgerock.org
+commonName_max       		   	= 64
+emailAddress            		= Email Address
+emailAddress_default            = openidm@forgerock.org
+emailAddress_max        		= 64
+
+[ req_attributes ]
+challengePassword		= A challenge password
+challengePassword_min   = 4
+challengePassword_max   = 20
+
+unstructuredName        = An optional company name
+
+[ usr_cert ]
+# These extensions are added when 'ca' signs a request.
+
+basicConstraints=CA:FALSE
+
+# Here are some examples of the usage of nsCertType. If it is omitted
+# the certificate can be used for anything *except* object signing.
+
+# This is OK for an SSL server.
+# nsCertType                    = server
+
+# For an object signing certificate this would be used.
+# nsCertType = objsign
+
+# For normal client use this is typical
+# nsCertType = client, email
+
+# and for everything including object signing:
+# nsCertType = client, email, objsign
+
+# This is typical in keyUsage for a client certificate.
+# keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+
+# PKIX recommendations harmless if included in all certificates.
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer:always
+
+# This goes against PKIX guidelines but some CAs do it and some software
+# requires this to avoid interpreting an end user certificate as a CA.
+basicConstraints        = CA:FALSE
+# nsCaRevocationUrl       = https://url-to-exposed-clr-list/crl.pem
+# nsBaseUrl
+# nsRevocationUrl
+# nsRenewalUrl
+# nsCaPolicyUrl
+# nsSslServerName
+
+# This will be displayed in Netscape's comment listbox.
+nsComment                       = "OpenSSL Generated Certificate"
+
+[ ssl_server ]
+basicConstraints        = CA:FALSE
+nsCertType              = server
+keyUsage                = digitalSignature, keyEncipherment
+extendedKeyUsage        = serverAuth, nsSGC, msSGC
+nsComment               = "OpenSSL Certificate for OpenIDM Server"
+
+[ ssl_client ]
+basicConstraints        = CA:FALSE
+nsCertType              = client
+keyUsage                = digitalSignature, keyEncipherment
+extendedKeyUsage        = clientAuth
+nsComment               = "OpenSSL Certificate for OpenIDM Client"
+
+[ v3_req ]
+basicConstraints 		= CA:FALSE
+keyUsage         		= nonRepudiation, digitalSignature, keyEncipherment
+
+[ v3_ca ]
+# PKIX recommendation.
+
+subjectKeyIdentifier=hash
+
+authorityKeyIdentifier=keyid:always,issuer:always
+
+# This is what PKIX recommends but some broken software chokes on critical
+# extensions.
+#basicConstraints = critical,CA:true
+# So we do this instead.
+basicConstraints        = CA:true, pathlen:0
+nsCertType              = sslCA
+keyUsage                = cRLSign, keyCertSign
+extendedKeyUsage        = serverAuth, clientAuth
+nsComment               = "OpenSSL CA Certificate"
+
+[ crl_ext ]
+# CRL extensions.
+# Only issuerAltName and authorityKeyIdentifier make any sense in a CRL.
+
+# issuerAltName=issuer:copy
+authorityKeyIdentifier=keyid:always,issuer:always
+basicConstraints        = CA:FALSE
+keyUsage                = digitalSignature, keyEncipherment
+nsComment               = "OpenSSL generated CRL"
+

@@ -1,0 +1,34 @@
+
+<jxb:bindings version="2.0"
+               xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <jxb:bindings schemaLocation="../resources/schema/persistence/openidm-persistence-1.0.xsd" node="/xs:schema">
+        <jxb:globalBindings
+         fixedAttributeAsConstantProperty="false"
+         collectionType="java.util.Vector"
+         typesafeEnumBase="xs:NCName"
+         choiceContentProperty="false"
+         typesafeEnumMemberName="generateError"
+         enableFailFastCheck="false"
+         generateIsSetMethod="false"
+         underscoreBinding="asCharInWord"/>
+        <jxb:schemaBindings>
+            <jxb:package name="org.forgerock.openidm.xml.persistence">
+                <jxb:javadoc><![CDATA[<body>Package level documentation for generated package org.forgerock.openidm.xml.persistence.</body>]]>
+                </jxb:javadoc>
+            </jxb:package>
+            <jxb:nameXmlTransform>
+                <jxb:elementName suffix="Element"/>
+            </jxb:nameXmlTransform>
+        </jxb:schemaBindings>
+
+
+
+        <jxb:bindings node="//xs:complexType[@name='PersistentObjectType']">
+            <jxb:class>
+                <jxb:javadoc><![CDATA[First line of documentation for a <b>PersistentObjectType</b>.]]>
+                </jxb:javadoc>
+            </jxb:class>
+        </jxb:bindings>
+
+    </jxb:bindings>

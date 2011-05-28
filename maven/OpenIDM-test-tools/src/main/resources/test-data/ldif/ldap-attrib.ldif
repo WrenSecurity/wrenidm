@@ -1,0 +1,53 @@
+dn: dc=forgerock,dc=org
+objectclass: dcObject
+objectclass: organization
+objectclass: top
+o: forgerock
+dc: forgerock
+
+dn: ou=Groups,dc=forgerock,dc=org
+objectClass: organizationalunit
+objectClass: top
+ou: Groups
+
+dn: ou=People,dc=forgerock,dc=org
+objectclass: top
+objectclass: organizationalUnit
+ou: People
+
+dn: uid=jduke,ou=People,dc=forgerock,dc=org
+objectclass: top
+objectclass: uidObject
+objectclass: person
+objectclass: inetOrgPerson
+uid: jduke
+cn: Java Duke
+sn: Duke
+userPassword: theduke
+mail: theduke@somecastle.man
+employeeType:  Active
+employeeNumber: 007
+
+dn: uid=123456,ou=People,dc=forgerock,dc=org
+objectclass: top
+objectclass: uidObject
+objectclass: person
+objectclass: inetOrgPerson
+uid: 123456
+cn: John Smith
+sn: Duke
+userPassword: theduke
+mail: theduke@somecastle.man
+employeeType:  Active
+employeeNumber: 007
+
+dn: uid=jbond,ou=People,dc=forgerock,dc=org
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: top
+cn: James Bond
+givenName: James
+sn: Bond
+uid: jbond
+userPassword:: PasswOrd

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<javaee-project xmlns="http://java.sun.com/xml/ns/jbi/javaee/config/1/" xmlns:ns0="http://openidm.forgerock.com/xml/ns/public/provisioning/provisioning-1.wsdl" xmlns:ns1="http://openidm.forgerock.com/xml/ns/public/repository/repository-1.wsdl" name="openidm-provisioning">
+    <services>
+        <provides enable-for-javaee-http="true" endpoint-name="javaee_provisioningPort" interface-name="ns0:provisioningPortType" service-name="ns0:provisioningService"/>
+        <consumes enable-for-nmr="true" endpoint-name="javaee_repositoryPortProvisioningClient" interface-name="ns1:repositoryPortType" service-name="ns1:repositoryService"/>
+    </services>
+</javaee-project>

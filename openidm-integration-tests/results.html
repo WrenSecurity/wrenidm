@@ -1,0 +1,590 @@
+<html>
+<head><style type='text/css'>
+body, table {
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 12;
+}
+
+table {
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+}
+
+a {
+    text-decoration: none;
+}
+
+.title {
+    font-style: italic;
+}
+
+.selected {
+    background-color: #ffffcc;
+}
+
+.status_done {
+    background-color: #eeffee;
+}
+
+.status_passed {
+    background-color: #ccffcc;
+}
+
+.status_failed {
+    background-color: #ffcccc;
+}
+
+.breakpoint {
+    background-color: #cccccc;
+    border: 1px solid black;
+}
+</style><title>Test suite results</title></head>
+<body>
+<h1>Test suite results </h1>
+
+<table>
+<tr>
+<td>result:</td>
+<td>passed</td>
+</tr>
+<tr>
+<td>totalTime:</td>
+<td>19</td>
+</tr>
+<tr>
+<td>numTestTotal:</td>
+<td>4</td>
+</tr>
+<tr>
+<td>numTestPasses:</td>
+<td>4</td>
+</tr>
+<tr>
+<td>numTestFailures:</td>
+<td>0</td>
+</tr>
+<tr>
+<td>numCommandPasses:</td>
+<td>4</td>
+</tr>
+<tr>
+<td>numCommandFailures:</td>
+<td>0</td>
+</tr>
+<tr>
+<td>numCommandErrors:</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Selenium Version:</td>
+<td>2.0</td>
+</tr>
+<tr>
+<td>Selenium Revision:</td>
+<td>a1</td>
+</tr>
+<tr>
+<td>
+<table id="suiteTable" class="selenium" border="1" cellpadding="1" cellspacing="1"><tbody>
+<tr class="title status_passed"><td><b>Test Suite</b></td></tr>
+<tr class="  status_passed"><td><a href="#testresult0">login-test-case</a></td></tr>
+<tr class="  status_passed"><td><a href="#testresult1">create-user-test-case</a></td></tr>
+<tr class="  status_passed"><td><a href="#testresult2">delete-user-test-case</a></td></tr>
+<tr class="  status_passed"><td><a href="#testresult3">update-user-test-case</a></td></tr>
+</tbody></table>
+</td>
+<td>&nbsp;</td>
+</tr>
+</table><table><tr>
+<td><a name="testresult0">login-test-case.html</a><br/><div>
+<table border="1" cellpadding="1" cellspacing="1">
+<thead>
+<tr class="title status_passed"><td rowspan="1" colspan="3">login-test-case</td></tr>
+</thead><tbody>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>open</td>
+	<td>/idm/login.iface</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>j_idt41:userName</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>j_idt41:userName</td>
+	<td>administrator</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>j_idt41:password</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>j_idt41:password</td>
+	<td>secret</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>j_idt41:j_idt51</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>waitForVisible</td>
+	<td>menu:menu:j_idt41:_t43</td>
+	<td></td>
+</tr>
+<tr class="  status_passed" style="cursor: pointer;">
+	<td>verifyTextPresent</td>
+	<td>Pages</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</div></td>
+<td>&nbsp;</td>
+</tr><tr>
+<td><a name="testresult1">create-user-test-case.html</a><br/><div>
+<table border="1" cellpadding="1" cellspacing="1">
+<thead>
+<tr class="title status_passed"><td rowspan="1" colspan="3">create-user-test-case</td></tr>
+</thead><tbody>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>open</td>
+	<td>/idm/login.iface</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>j_idt41:userName</td>
+	<td>administrator</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>j_idt41:password</td>
+	<td>secret</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>j_idt41:j_idt51</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>waitForVisible</td>
+	<td>menu:menu:j_idt41:_t45</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>menu:menu:j_idt41:_t45</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>waitForVisible</td>
+	<td>listUserForm:addButton</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>listUserForm:addButton</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>waitForVisible</td>
+	<td>createUserForm:givenName</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>createUserForm:givenName</td>
+	<td>janko</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>createUserForm:familyName</td>
+	<td>mrkvicka</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>createUserForm:fullName</td>
+	<td>janko mrkvicka</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>createUserForm:name</td>
+	<td>user</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>createUserForm:createUser</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>waitForVisible</td>
+	<td>listUserForm:userTable</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>listUserForm:userTable:0:fullName</td>
+	<td></td>
+</tr>
+<tr class="  status_passed" style="cursor: pointer;">
+	<td>verifyTextPresent</td>
+	<td>janko mrkvicka</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</div></td>
+<td>&nbsp;</td>
+</tr><tr>
+<td><a name="testresult2">delete-user-test-case.html</a><br/><div>
+<table border="1" cellpadding="1" cellspacing="1">
+<thead>
+<tr class="title status_passed"><td rowspan="1" colspan="3">delete-user-test-case</td></tr>
+</thead><tbody>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>open</td>
+	<td>/idm/login.iface</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>j_idt41:userName</td>
+	<td>administrator</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>j_idt41:password</td>
+	<td>secret</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>j_idt41:j_idt51</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>waitForVisible</td>
+	<td>menu:menu:j_idt41:_t47</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>menu:menu:j_idt41:_t47</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>waitForVisible</td>
+	<td>menuBarForm:menuBar:menuList</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>menuBarForm:menuBar:menuList:out</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>waitForVisible</td>
+	<td>listUserForm:addButton</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>listUserForm:addButton</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>waitForVisible</td>
+	<td>createUserForm:givenName</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>createUserForm:givenName</td>
+	<td>Aaaa</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>createUserForm:givenName</td>
+	<td>Aaaa</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>createUserForm:familyName</td>
+	<td>Aaaa</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>createUserForm:fullName</td>
+	<td>Aaaa Aaaa</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>createUserForm:name</td>
+	<td>aaa</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>createUserForm:createUser</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>menuBarForm:menuBar:j_idt33:out</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>waitForVisible</td>
+	<td>deleteUserForm:userTable</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>deleteUserForm:userTable:0:deleteCheckbox</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>deleteUserForm:deleteUser</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>waitForVisible</td>
+	<td>deleteUserForm:userTable</td>
+	<td></td>
+</tr>
+<tr class="  status_passed" style="cursor: pointer;">
+	<td>verifyTextNotPresent</td>
+	<td>deleteUserForm:userTable</td>
+	<td>Aaaa Aaaa</td>
+</tr>
+
+</tbody></table>
+</div></td>
+<td>&nbsp;</td>
+</tr><tr>
+<td><a name="testresult3">update-user-test-case.html</a><br/><div>
+<table border="1" cellpadding="1" cellspacing="1">
+<thead>
+<tr class="title status_passed"><td rowspan="1" colspan="3">update-user-test-case</td></tr>
+</thead><tbody>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>open</td>
+	<td>/idm/login.iface</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>j_idt41:userName</td>
+	<td>administrator</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>j_idt41:password</td>
+	<td>secret</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>j_idt41:j_idt51</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>waitForVisible</td>
+	<td>menu:menu</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>menu:menu:j_idt41:_t45</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>waitForVisible</td>
+	<td>listUserForm:userTable</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>waitForVisible</td>
+	<td>listUserForm:addButton</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>listUserForm:addButton</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>waitForVisible</td>
+	<td>createUserForm:givenName</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>createUserForm:givenName</td>
+	<td>janko</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>createUserForm:familyName</td>
+	<td>mrkvicka</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>createUserForm:fullName</td>
+	<td>janko mrkvicka</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>createUserForm:name</td>
+	<td>user</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>createUserForm:createUser</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>waitForVisible</td>
+	<td>listUserForm:userTable</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>listUserForm:userTable:0:familyName</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>listUserForm:updateButton</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>waitForVisible</td>
+	<td>updateUserForm</td>
+	<td></td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>updateUserForm:fullName</td>
+	<td>Janicko Mrvicka</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>type</td>
+	<td>updateUserForm:givenName</td>
+	<td>Janicko</td>
+</tr>
+<tr class="  status_done" style="cursor: pointer;">
+	<td>click</td>
+	<td>updateUserForm:updateUser</td>
+	<td></td>
+</tr>
+<tr class="  status_passed" style="cursor: pointer;">
+	<td>verifyTextPresent</td>
+	<td></td>
+	<td>Janicko Mrvicka</td>
+</tr>
+
+</tbody></table>
+</div></td>
+<td>&nbsp;</td>
+</tr></table><pre>
+info: Starting test /selenium-server/tests/login-test-case.html
+info: Executing: |open | /idm/login.iface |  |
+info: onXhrStateChange(): xhr.readyState = 1 method = HEAD time = 1281083471679
+info: onXhrStateChange(): xhr.readyState = 1 method = HEAD time = 1281083471679
+info: onXhrStateChange(): xhr.readyState = 2 method = HEAD time = 1281083473276
+info: onXhrStateChange(): xhr.readyState = 4 method = HEAD time = 1281083473276
+info: Executing: |type | j_idt41:userName |  |
+info: Executing: |type | j_idt41:userName | administrator |
+info: Executing: |type | j_idt41:password |  |
+info: Executing: |type | j_idt41:password | secret |
+info: Executing: |click | j_idt41:j_idt51 |  |
+info: Executing: |waitForVisible | menu:menu:j_idt41:_t43 |  |
+info: Executing: |verifyTextPresent | Pages |  |
+info: Starting test /selenium-server/tests/create-user-test-case.html
+info: Executing: |open | /idm/login.iface |  |
+info: onXhrStateChange(): xhr.readyState = 1 method = HEAD time = 1281083474677
+info: onXhrStateChange(): xhr.readyState = 1 method = HEAD time = 1281083474677
+info: onXhrStateChange(): xhr.readyState = 2 method = HEAD time = 1281083474787
+info: onXhrStateChange(): xhr.readyState = 4 method = HEAD time = 1281083474787
+info: Executing: |type | j_idt41:userName | administrator |
+info: Executing: |type | j_idt41:password | secret |
+info: Executing: |click | j_idt41:j_idt51 |  |
+info: Executing: |waitForVisible | menu:menu:j_idt41:_t45 |  |
+info: Executing: |click | menu:menu:j_idt41:_t45 |  |
+info: Executing: |waitForVisible | listUserForm:addButton |  |
+info: Executing: |click | listUserForm:addButton |  |
+info: Executing: |waitForVisible | createUserForm:givenName |  |
+info: Executing: |type | createUserForm:givenName | janko |
+info: Executing: |type | createUserForm:familyName | mrkvicka |
+info: Executing: |type | createUserForm:fullName | janko mrkvicka |
+info: Executing: |type | createUserForm:name | user |
+info: Executing: |click | createUserForm:createUser |  |
+info: Executing: |waitForVisible | listUserForm:userTable |  |
+info: Executing: |click | listUserForm:userTable:0:fullName |  |
+info: Executing: |verifyTextPresent | janko mrkvicka |  |
+info: Starting test /selenium-server/tests/delete-user-test-case.html
+info: Executing: |open | /idm/login.iface |  |
+info: onXhrStateChange(): xhr.readyState = 1 method = HEAD time = 1281083483995
+info: onXhrStateChange(): xhr.readyState = 1 method = HEAD time = 1281083483995
+info: onXhrStateChange(): xhr.readyState = 2 method = HEAD time = 1281083484087
+info: onXhrStateChange(): xhr.readyState = 4 method = HEAD time = 1281083484088
+info: Executing: |type | j_idt41:userName | administrator |
+info: Executing: |type | j_idt41:password | secret |
+info: Executing: |click | j_idt41:j_idt51 |  |
+info: Executing: |waitForVisible | menu:menu:j_idt41:_t47 |  |
+info: Executing: |click | menu:menu:j_idt41:_t47 |  |
+info: Executing: |waitForVisible | menuBarForm:menuBar:menuList |  |
+info: Executing: |click | menuBarForm:menuBar:menuList:out |  |
+info: Executing: |waitForVisible | listUserForm:addButton |  |
+info: Executing: |click | listUserForm:addButton |  |
+info: Executing: |waitForVisible | createUserForm:givenName |  |
+info: Executing: |type | createUserForm:givenName | Aaaa |
+info: Executing: |type | createUserForm:givenName | Aaaa |
+info: Executing: |type | createUserForm:familyName | Aaaa |
+info: Executing: |type | createUserForm:fullName | Aaaa Aaaa |
+info: Executing: |type | createUserForm:name | aaa |
+info: Executing: |click | createUserForm:createUser |  |
+info: Executing: |click | menuBarForm:menuBar:j_idt33:out |  |
+info: Executing: |waitForVisible | deleteUserForm:userTable |  |
+info: Executing: |click | deleteUserForm:userTable:0:deleteCheckbox |  |
+info: Executing: |click | deleteUserForm:deleteUser |  |
+info: Executing: |waitForVisible | deleteUserForm:userTable |  |
+info: Executing: |verifyTextNotPresent | deleteUserForm:userTable | Aaaa Aaaa |
+info: Starting test /selenium-server/tests/update-user-test-case.html
+info: Executing: |open | /idm/login.iface |  |
+info: onXhrStateChange(): xhr.readyState = 1 method = HEAD time = 1281083488049
+info: onXhrStateChange(): xhr.readyState = 1 method = HEAD time = 1281083488049
+info: onXhrStateChange(): xhr.readyState = 2 method = HEAD time = 1281083488158
+info: onXhrStateChange(): xhr.readyState = 4 method = HEAD time = 1281083488158
+info: Executing: |type | j_idt41:userName | administrator |
+info: Executing: |type | j_idt41:password | secret |
+info: Executing: |click | j_idt41:j_idt51 |  |
+info: Executing: |waitForVisible | menu:menu |  |
+info: Executing: |click | menu:menu:j_idt41:_t45 |  |
+info: Executing: |waitForVisible | listUserForm:userTable |  |
+info: Executing: |waitForVisible | listUserForm:addButton |  |
+info: Executing: |click | listUserForm:addButton |  |
+info: Executing: |waitForVisible | createUserForm:givenName |  |
+info: Executing: |type | createUserForm:givenName | janko |
+info: Executing: |type | createUserForm:familyName | mrkvicka |
+info: Executing: |type | createUserForm:fullName | janko mrkvicka |
+info: Executing: |type | createUserForm:name | user |
+info: Executing: |click | createUserForm:createUser |  |
+info: Executing: |waitForVisible | listUserForm:userTable |  |
+info: Executing: |click | listUserForm:userTable:0:familyName |  |
+info: Executing: |click | listUserForm:updateButton |  |
+info: Executing: |waitForVisible | updateUserForm |  |
+info: Executing: |type | updateUserForm:fullName | Janicko Mrvicka |
+info: Executing: |type | updateUserForm:givenName | Janicko |
+info: Executing: |click | updateUserForm:updateUser |  |
+info: Executing: |verifyTextPresent |  | Janicko Mrvicka |
+</pre></body></html>

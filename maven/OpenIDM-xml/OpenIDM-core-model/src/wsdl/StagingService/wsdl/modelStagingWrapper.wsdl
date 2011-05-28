@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://openidm.forgerock.com/xml/ns/model/staging/1#" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:c="http://openidm.forgerock.com/xml/ns/common/1#" xmlns:idm="http://openidm.forgerock.com/xml/ns/identity/1#" name="modelStaging" targetNamespace="http://openidm.forgerock.com/xml/ns/model/staging/1#">
+<wsdl:import namespace="http://openidm.forgerock.com/xml/ns/model/staging/1#" location="modelStaging.wsdl"/>
+<wsdl:binding name="stagingBinding" type="tns:stagingPortType">
+<soap:binding xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" transport="http://schemas.xmlsoap.org/soap/http" style="rpc"/>
+<wsdl:operation name="createObjectStage">
+<soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="createObjectStage_action"/>
+<wsdl:input name="createObjectStageInput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/model/staging/1#" use="literal"/>
+</wsdl:input>
+<wsdl:output name="createObjectStageOutput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/model/staging/1#" use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getObjectStage">
+<soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="getObjectStage_action"/>
+<wsdl:input name="getObjectStageInput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/model/staging/1#" use="literal"/>
+</wsdl:input>
+<wsdl:output name="getObjectStageOutput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/model/staging/1#" use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="submitObjectStage">
+<soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="submitObjectStage_action"/>
+<wsdl:input name="submitObjectStageInput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/model/staging/1#" use="literal"/>
+</wsdl:input>
+<wsdl:output name="submitObjectStageOutput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/model/staging/1#" use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="addUserStageAccount">
+<soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction="addUserStageAccount_action"/>
+<wsdl:input name="addUserStageAccountInput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/model/staging/1#" use="literal"/>
+</wsdl:input>
+<wsdl:output name="addUserStageAccountOutput">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" namespace="http://openidm.forgerock.com/xml/ns/model/staging/1#" use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="stagingService">
+<wsdl:port name="stagingPort" binding="tns:stagingBinding">
+<soap:address xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" location="REPLACE_WITH_ACTUAL_URL"/>
+</wsdl:port>
+</wsdl:service>
+</definitions>

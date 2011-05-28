@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <properties>
+        <title>OpenIDM</title>
+        <author email="openidm@forgerock.com">ForgeRock</author>
+    </properties>
+    <body>
+        <release version="current" description="Current work version">
+            <action dev="Duke Java" type="add">
+               A new cool feature.
+            </action>
+        </release>
+        <release version="1.0.1" date="2010-10-27" description="Release fix">
+            <action dev="Duke Java" type="add">
+               Added a cool feature.
+            </action>
+            <action dev="Duke Java" type="fix" issue="OPENIDM-XXX">
+               Fixed a nasty bug.
+            </action>
+            <action dev="Duke Java" type="delete">
+               Removed a feature that nobody liked.
+            </action>
+        </release>
+    </body>
+</document>

@@ -1,0 +1,37 @@
+/*------ color and font definition ------*/
+body *,body, *,input{font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;}
+/*h1,h2{font-family: "Comic Sans MS", "Brush Script MT",  cursive;}*/
+
+a{color:blue;}
+.error{color:red;}
+.info{color:green;}
+body{background-color: #ADADAC;}
+
+.list-main{border-bottom: 1px solid #808080;}
+.list-odd-row{background-color: #F6F6F6;}
+.list-odd-row:hover, .list-even-row:hover {background-color: #fff;}
+.list-even-row{background-color: #C7C7C7;}
+.list-header{background-color: #ddd;font-weight: bold;}
+.list-header,.list-odd-row td,.list-even-row td{border-right:1px solid #808080;}
+
+#nav h3{background-color: #808080;color:#fff;}
+#nav ul ul li:hover{background-color:#F6F6F6;}
+#page, #login {
+    margin: 40px auto;width: 80%;
+    font-size:0.8em;    
+    border:15px solid #808080;
+    background-color: #fff;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+    -moz-box-shadow: 10px 10px 20px #000;
+    -webkit-box-shadow: 10px 10px 20px #000;
+    box-shadow: 10px 10px 20px #000;
+    behavior: url(/resources/css/ie-css3.htc);
+}
+
+#top {background-color: #ddd;}
+#container {background-color: #fff;color: #333;}
+#footer {color: #333;background-color: #ddd;}
+#container.nav-left #nav {border-right: 1px solid #808080;}
+#container.nav-right #nav {border-left: 1px solid #808080;}

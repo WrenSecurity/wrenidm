@@ -1,0 +1,12 @@
+ <c:account oid="101"
+   xmlns:c='http://openidm.forgerock.com/xml/ns/public/common/common-1.xsd'
+   xmlns:ics="http://openidm.forgerock.com/xml/ns/public/resource/idconnector/resource-schema-1.xsd"
+   xmlns:tns="http://openidm.forgerock.com/xml/ns/public/resource/instances/ef2bc95b-76e0-48e2-86d6-3d4f02d3e1a2"
+   xmlns:r='http://openidm.forgerock.com/xml/ns/public/resource/resource-schema-1.xsd'>
+        <c:name>Petőfi</c:name>
+        <c:resourceRef oid="444"/>
+        <c:objectClass xmlns:ns1="http://openidm.forgerock.com/xml/ns/default/resource/unix4">tns:Account</c:objectClass>
+        <c:attributes>
+            <ics:__UID__>oidoidoid-heyheyhey</ics:__UID__>
+        </c:attributes>
+ </c:account>

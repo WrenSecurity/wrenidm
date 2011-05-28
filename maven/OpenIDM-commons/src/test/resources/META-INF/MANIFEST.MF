@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Build-Jdk: 1.6.0_20
+Specification-Title: OpenIDM Commons
+Specification-Version: 1.0-SNAPSHOT
+Specification-Vendor: ForgeRock
+Implementation-Title: OpenIDM Commons
+Implementation-Version: 1.0-SNAPSHOT
+Implementation-Vendor-Id: com.forgerock.openidm
+Implementation-Vendor: ForgeRock
+Implementation-Build: 
+Implementation-URL: http://www.forgerock.com/openidm.html
+
