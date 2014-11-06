@@ -1,0 +1,859 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ! CCPL HEADER START
+  !
+  ! This work is licensed under the Creative Commons
+  ! Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+  ! To view a copy of this license, visit
+  ! http://creativecommons.org/licenses/by-nc-nd/3.0/
+  ! or send a letter to Creative Commons, 444 Castro Street,
+  ! Suite 900, Mountain View, California, 94041, USA.
+  !
+  ! You can also obtain a copy of the license at
+  ! legal/CC-BY-NC-ND.txt.
+  ! See the License for the specific language governing permissions
+  ! and limitations under the License.
+  !
+  ! If applicable, add the following below this CCPL HEADER, with the fields
+  ! enclosed by brackets "[]" replaced with your own identifying information:
+  !      Portions Copyright [yyyy] [name of copyright owner]
+  !
+  ! CCPL HEADER END
+  !
+  !      Copyright 2011-2014 ForgeRock AS
+  !    
+-->
+<chapter xml:id='chap-sample'
+ xmlns='http://docbook.org/ns/docbook'
+ version='5.0' xml:lang='en'
+ xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+ xsi:schemaLocation='http://docbook.org/ns/docbook
+ http://docbook.org/xml/5.0/xsd/docbook.xsd'
+ xmlns:xlink='http://www.w3.org/1999/xlink'>
+
+<title>First OpenIDM Sample</title>
+ <indexterm>
+  <primary>Getting started</primary>
+ </indexterm>
+ <indexterm>
+  <primary>Samples</primary>
+  <secondary>Sample 1 - XML file</secondary>
+ </indexterm>
+ <indexterm>
+  <primary>Repository database</primary>
+  <secondary>Evaluation version</secondary>
+ </indexterm>
+
+ <para>This chapter provides an overview of the first sample and how it is
+ configured. To see a listing and an overview of the rest of the samples
+ provided, see the README found in <filename>openidm/samples</filename> and in
+ the chapter <link xlink:href="install-guide#chap-samples"
+ xlink:role="http://docbook.org/xlink/role/olink"><citetitle>More OpenIDM
+ Samples</citetitle></link>.</para>
+
+ <section xml:id="before-you-begin-sample">
+  <title>Before You Begin</title>
+  <para>Install OpenIDM as described in the chapter on <link
+  xlink:href="install-guide#chap-install"
+  xlink:role="http://docbook.org/xlink/role/olink"><citetitle>Installing
+  OpenIDM Services</citetitle></link>.</para>
+
+  <para>OpenIDM comes with an internal noSQL database, OrientDB, for use as
+  the internal repository out of the box. This makes it easy to get started
+  with OpenIDM. OrientDB is not yet supported for production use, however,
+  so use a supported JDBC database when moving to production.</para>
+
+  <para>If you want to query the internal noSQL database, you can download 
+  OrientDB (version <?eval ${orientdbVersion}?>) from <link 
+  xlink:href="http://www.orientechnologies.com/download/" />.
+  You will find the shell console in the <filename>bin</filename> directory. 
+  Start OrientDB console using either <command>console.sh</command> or 
+  <command>console.bat</command>, and then connect to the running OpenIDM with 
+  the <command>connect</command> command.</para>
+
+  <screen>$ cd /path/to/orientdb-community-<?eval ${orientdbVersion}?>/bin
+$ ./console.sh
+OrientDB console v.<?eval ${orientdbVersion}?> (build @BUILD@) www.orientechnologies.com
+Type 'help' to display all the commands supported.
+
+Installing extensions for GREMLIN language v.2.5.0-SNAPSHOT
+
+orientdb&gt; connect remote:localhost/openidm admin admin
+Connecting to database [remote:localhost/openidm] with user 'admin'...OK
+
+orientdb&gt; </screen>
+
+  <variablelist>
+   <para>When you have connected to the database, you might find the following
+   commands useful.</para>
+   <varlistentry>
+    <term><command>info</command></term>
+    <listitem><para>Shows classes and records</para></listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><command>select * from managed_user</command></term>
+    <listitem><para>Shows all users in the OpenIDM repository</para></listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><command>select * from audit_activity</command></term>
+    <listitem><para>Shows all activity audit records</para>
+     <para>This table is created when there is some activity.</para></listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><command>select * from audit_recon</command></term>
+    <listitem><para>Shows all reconciliation audit records</para>
+    <para>This table is created when you run reconciliation.</para></listitem>
+   </varlistentry>
+  </variablelist>
+  
+  <para>
+   You can also use OrientDB Studio to query the default OrientDB repository.
+   After you have installed and started OpenIDM, point your browser to
+   <link xlink:href="http://localhost:2480/" />. The default database is
+   <literal>openidm</literal> and the default user and password are
+   <literal>admin</literal> and <literal>admin</literal>. Click Connect to
+   connect to the repository.
+  </para>
+  <para>
+   To change the default password, use the following POST request on the
+   <literal>repo</literal> endpoint:
+  </para>
+  <screen><userinput>$ curl \
+ --cacert self-signed.crt \
+ --header "X-OpenIDM-Username: openidm-admin" \
+ --header "X-OpenIDM-Password: openidm-admin" \
+ --header "Content-Type: application/json" \
+ --request POST \
+ "https://localhost:8443/openidm/repo?_action=updateDbCredentials&amp;user=admin&amp;password=newPassword"
+   </userinput></screen>
+  <para>
+   You must restart OpenIDM for the change to take effect.
+  </para>
+  <para>
+   This command updates both the repository and the repository configuration file.
+  </para>
+  <para>
+   For more information about OrientDB Studio, see
+   the <link xlink:href="http://code.google.com/p/orient/wiki/OrientDB_Studio">
+   OrientDB Studio documentation</link>.</para>
+ </section>
+
+ <section xml:id="about-the-sample">
+  <title>About the Sample</title>
+
+  <para>OpenIDM connects data objects held in external resources
+  by mapping one object to another. To connect to external resources,
+  OpenIDM uses <link xlink:href="http://openicf.forgerock.org">OpenICF</link>
+  connectors, configured for use with the external resources.</para>
+
+  <para>
+   When objects in one external resource change, OpenIDM determines how the
+   changes affect other objects, and can make the changes as necessary. This
+   sample demonstrates how OpenIDM does this by using
+   <firstterm>reconciliation</firstterm>. OpenIDM reconciliation compares the
+   objects in one object set to mapped objects in another object set.
+   Reconciliation can work in write mode, where OpenIDM writes changes to
+   affected objects, or in report mode, where OpenIDM reports on what changes
+   would be written without making the changes. For a complete explanation of
+   reconciliation and synchronization, see the section on <link
+   xlink:href="integrators-guide#sync-types"
+   xlink:role="http://docbook.org/xlink/role/olink"><citetitle>Types of
+   Synchronization</citetitle></link> in the <citetitle>Integrator's
+   Guide</citetitle>.
+  </para>
+
+  <para>
+   This sample connects to an XML file that holds sample user data. The
+   XML file is configured as the authoritative source. In this sample, users are
+   created in the local repository to show you how you can manage local users
+   through the REST APIs as well as through the OpenIDM UI.
+  </para>
+
+  <para>
+   You can also use OpenIDM without storing managed
+   objects for users in the local repository, instead reconciling and
+   synchronizing objects directly through connectors to external
+   resources.
+  </para>
+
+  <para>Furthermore, this sample involves only one external resource. In
+  practice, you can connect as many resources as needed for your
+  deployment.</para>
+
+  <variablelist xml:id="about-the-sample-configuration">
+   <title>Sample Configuration Files</title>
+   <para>You can find configuration files for the sample under the
+   <filename>openidm/samples/sample1/conf</filename> directory. As you review
+   the sample, keep the following in mind.</para>
+   <orderedlist>
+    <listitem>
+      <para>You must start OpenIDM with the sample configuration 
+      (<command>$ ./startup.sh -p samples/sample1</command>). For more 
+      information, see <xref linkend="sample-running-reconciliation" />.</para>
+    </listitem>
+    <listitem>
+     <para>OpenIDM regularly scans for any scheduler configuration files in the
+     <filename>conf</filename> directory.</para>
+    </listitem>
+    <listitem>
+    <para>OpenIDM's reconciliation service reads the mappings and actions for
+    the source and target users from
+    <filename>conf/sync.json</filename>.</para>
+    </listitem>
+    <listitem>
+    <para>Reconciliation runs, querying all users in the source, and then
+    creating, deleting, or modifying users in the local OpenIDM repository
+    according to the synchronization mappings.</para>
+    </listitem>
+    <listitem>
+    <para>OpenIDM writes all operations to the audit logs in both the internal
+    database and also the flat files in the <filename>openidm/audit</filename>
+    directory.</para>
+    </listitem>
+    <listitem>
+     <para>
+      In some cases, the <filename>conf/authentication.json</filename> file
+      includes a <literal>PASSTHROUGH</literal> authentication module that
+      allows newly created users to log into the UI. For more information,
+      see the Integrator's Guide section on <link xlink:show="new"
+      xlink:role="http://docbook.org/xlink/role/olink"
+      xlink:href="integrators-guide#passthrough-auth">
+      <citetitle>Using Delegated Authentication</citetitle></link>.
+      For OpenIDM ${docTargetVersion}, <literal>PASSTHROUGH</literal> is
+      an alias for <literal>DELEGATED</literal>.
+     </para>
+    </listitem>
+   </orderedlist>
+
+   <para>
+    When you start OpenIDM with the <literal>-p</literal> project variable
+    (<command>./startup.sh -p samples/sample1</command>), the
+    <literal>&amp;{launcher.project.location}</literal> is set to a value of
+    <literal>samples/sample1</literal>. The configuration files use this,
+    as shown in the following sections.
+   </para>
+
+   <para>
+    The following configuration files play important roles in this sample.
+   </para>
+
+   <varlistentry>
+    <term><filename>samples/sample1/conf/provisioner.openicf-xml.json</filename></term>
+    <listitem>
+     <para>This connector configuration file serves as the XML file resource.
+      It is a copy of the file of the same name found in the
+      <filename>samples/provisioners</filename> directory.
+     </para>
+     <para>
+      In this sample, the connector instance acts as the authoritative source
+      for users. In the configuration file you can see that the
+      <literal>xmlFilePath</literal> is set to
+      <filename>&amp;{launcher.project.location}/data/xmlConnectorData.xml</filename>.
+     </para>
+     <para>
+      The <literal>&amp;{launcher.project.location}</literal>, in this case, is
+      <filename>sample/sample1</filename>.</para>
+     <para>For details on the OpenICF connector configuration files see
+     <link xlink:href="integrators-guide#chap-resource-conf"
+     xlink:role="http://docbook.org/xlink/role/olink"
+     ><citetitle>Connecting to External Resources</citetitle></link> in
+     the <citetitle>Integrator's Guide</citetitle>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><filename>samples/sample1/conf/schedule-reconcile_systemXmlAccounts_managedUser.json</filename></term>
+    <listitem>
+     <para>The sample schedule configuration file defines a reconciliation
+     job that, if enabled by setting <literal>"enabled" : true</literal>,
+     starts a reconciliation each minute for the mapping named
+     <literal>systemXmlAccounts_managedUser</literal>. The mapping is defined
+     in the configuration file, <filename>conf/sync.json</filename>.</para>
+     <programlisting language="javascript">{
+    "enabled" : false,
+    "type": "cron",
+    "schedule": "30 0/1 * * * ?",
+    "persisted" : true,
+    "misfirePolicy" : "fireAndProceed",
+    "invokeService": "sync",
+    "invokeContext": {
+        "action": "reconcile",
+        "mapping": "systemXmlfileAccounts_managedUser"
+    }
+}</programlisting>
+
+     <para>For information about the schedule configuration see <link
+     xlink:href="integrators-guide#chap-scheduler-conf"
+     xlink:role="http://docbook.org/xlink/role/olink"
+     ><citetitle>Scheduling Tasks and Events</citetitle></link> in the
+     <citetitle>Integrator's Guide</citetitle>.</para>
+
+     <para>Apart from the scheduled reconciliation run, you can also start 
+     the reconciliation run through the REST interface. The call to the REST 
+     interface is an HTTP POST such as the following.</para>
+     <screen>$ curl \
+ --cacert self-signed.crt \
+ --header "X-OpenIDM-Username: openidm-admin" \
+ --header "X-OpenIDM-Password: openidm-admin" \
+ --header "Content-Type: application/json" \
+ --request POST \
+ "https://localhost:8443/openidm/recon?_action=recon&amp;mapping=systemXmlfileAccounts_managedUser"</screen>
+
+     <note>
+      <para>If you do not want to bother with creating a self-signed certificate
+      as noted in <link xlink:show="new"
+      xlink:href="integrators-guide#rest-over-https"
+      xlink:role="http://docbook.org/xlink/role/olink"><citetitle>Restrict REST
+       Access to the HTTPS Port</citetitle></link>, just substitute a
+      <command>-k</command> or <command>--insecure</command> for
+      <command>--cacert self-signed.crt</command> in the REST call (the
+      <command>curl</command> command).</para>
+     </note>
+     
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><filename>samples/sample1/conf/sync.json</filename></term>
+    <listitem>
+     <para>This sample configuration file defines the configuration for
+     reconciliation and synchronization. The
+     <literal>systemXmlAccounts_managedUser</literal> is the mapping for the 
+     reconciliation. This entry in <filename>conf/sync.json</filename> defines 
+     the synchronization mappings between the XML file connector (source) and 
+     the local repository (target).</para>
+     <programlisting language="javascript">
+{
+    "mappings": [
+        {
+            "name": "systemXmlfileAccounts_managedUser",
+            "source": "system/xmlfile/account",
+            "target": "managed/user",
+            "correlationQuery": {
+                "type": "text/javascript",
+                "source": "var query = {'_queryId' : 'for-userName',
+                    'uid' :  source.name};query;"
+            },
+            "properties": [
+                {
+                    "source": "_id",
+                    "target": "_id"
+                },
+                {
+                    "source": "description",
+                    "target": "description"
+                },
+                {
+                    "source": "firstname",
+                    "target": "givenName"
+                },
+                {
+                    "source": "email",
+                    "target": "mail"
+                },
+                {
+                    "source": "lastname",
+                    "target": "sn"
+                },
+                {
+                    "source": "name",
+                    "target": "userName"
+                },
+                {
+                    "source": "password",
+                    "target": "password"
+                }
+                {
+                    "source" : "mobileTelephoneNumber",
+                    "target" : "telephoneNumber"
+                },
+                {
+                    "source" : "roles",
+                    "transform" : {
+                        "type" : "text/javascript",
+                        "source" : "source.split(',')"
+                    },
+                    "target" : "roles"
+                }           
+            ],
+            "policies": [
+                {
+                    "situation": "CONFIRMED",
+                    "action": "UPDATE"
+                },
+                {
+                    "situation": "FOUND",
+                    "action": "IGNORE"
+                },
+                {
+                    "situation": "ABSENT",
+                    "action": "CREATE"
+                },
+                {
+                    "situation": "AMBIGUOUS",
+                    "action": "IGNORE"
+                },
+                {
+                    "situation": "MISSING",
+                    "action": "IGNORE"
+                },
+                {
+                    "situation": "SOURCE_MISSING",
+                    "action": "IGNORE"
+                },
+                {
+                    "situation": "UNQUALIFIED",
+                    "action": "IGNORE"
+                },
+                {
+                    "situation": "UNASSIGNED",
+                    "action": "IGNORE"
+                }
+            ]
+        }
+    ]
+}</programlisting>
+     <para>Source and target paths that start with <literal>managed</literal>,
+     such as <literal>managed/user</literal>, always refer to objects in the
+     local OpenIDM repository. Paths that start with <literal>system</literal>, 
+     such as <literal>system/xmlfile/account</literal>, refer to connector 
+     objects, in this case the XML file connector.</para>
+
+     <para>For more information about synchronization, reconciliation, and
+      <filename>sync.json</filename>, see <link
+       xlink:href="integrators-guide#chap-synchronization"
+       xlink:role="http://docbook.org/xlink/role/olink"
+       ><citetitle>Configuring Synchronization</citetitle></link> in the
+      <citetitle>Integrator's Guide</citetitle>.</para>
+     <para>For additional examples related to scripting, see the <link
+     xlink:href="integrators-guide#appendix-scripting"
+     xlink:role="http://docbook.org/xlink/role/olink"
+     ><citetitle>Scripting Reference</citetitle></link> appendix in the
+     <citetitle>Integrator's Guide</citetitle>.</para>
+     </listitem>
+   </varlistentry>
+  </variablelist>
+ </section>
+
+ <section xml:id="sample-running-reconciliation">
+  <title>Running Reconciliation</title>
+  
+  <para>Start OpenIDM with the configuration for sample 1.</para>
+  
+  <screen>$ cd /path/to/openidm
+$ ./startup.sh -p samples/sample1
+  </screen>
+  
+  <para>
+   Reconcile the objects in the resources, either by setting
+   <literal>"enabled" : true</literal> in the schedule configuration file
+   (<filename>conf/schedule-reconcile_systemXmlAccounts_managedUser.json</filename>)
+   and then waiting until the scheduled reconciliation happens, or by using the
+   REST interface, as shown in the following example.
+  </para>
+
+  <screen>$ curl \
+ --cacert self-signed.crt \
+ --header "X-OpenIDM-Username: openidm-admin" \
+ --header "X-OpenIDM-Password: openidm-admin" \
+ --header "Content-Type: application/json" \
+ --request POST \
+ "https://localhost:8443/openidm/recon?_action=recon&amp;mapping=systemXmlfileAccounts_managedUser"</screen>
+ 
+ <para>Successful reconciliation returns a reconciliation run ID, similar
+ to the following:</para>
+ 
+ <screen>{"_id":"2d87c817-3d00-4776-a705-7de2c65937d8"}</screen>
+
+  <para>To see what happened, you could look at the CSV format log file,
+  <filename>openidm/audit/recon.csv</filename>. If that file seems difficult
+  to decipher, read the guidance shown in the Integrator's Guide
+  section on <link xlink:show="new"
+  xlink:href="integrators-guide#querying-recon-logs"
+  xlink:role="http://docbook.org/xlink/role/olink"><citetitle>
+  Querying the Reconciliation Audit Log</citetitle></link>.</para>
+
+ </section>
+
+ <section xml:id="sample-viewing-users-logs">
+  <title>Viewing Users and Logs</title>
+
+  <para>
+   After reconciliation, you can use the UI to review configured users.
+   Navigate to the URL where OpenIDM is installed. If it is local, navigate to
+   <literal>https://localhost:8443/openidmui</literal>. Use the OpenIDM user
+   credentials noted, where the default administrative username and password
+   are <literal>openidm-admin</literal>. When you login with these credentials
+   and select users, you should see the result of the reconciliation:
+  </para>
+
+  <mediaobject>
+   <alt>List of users after first reconciliation for sample 1</alt>
+   <imageobject>
+    <imagedata fileref="images/users-recon-sample1.png" format="PNG" />
+   </imageobject>
+  </mediaobject>
+
+  <para>Alternatively, you can use the REST interface to display
+  all users in the local repository. Use a REST client to perform an HTTP 
+  GET on the following URL:
+  <literal>https://localhost:8443/openidm/managed/user?_queryId=query-all-ids</literal>
+  with the headers <literal>"X-OpenIDM-Username: openidm-admin"</literal> and 
+  <literal>"X-OpenIDM-Password: openidm-admin"</literal>.
+  </para>
+
+  <para>OpenIDM returns JSON data. Depending on the browser, you can use a
+   REST client to display the JSON or download it as a file. Alternatively,
+   you can use the following
+   <link xlink:href="http://curl.haxx.se/"><command>curl</command></link>
+   command to get the JSON response.
+  </para>
+
+  <screen>$ <userinput>curl \
+ --cacert self-signed.crt \
+ --header "X-OpenIDM-Username: openidm-admin" \
+ --header "X-OpenIDM-Password: openidm-admin" \
+ --request GET \
+ "https://localhost:8443/openidm/managed/user?_queryId=query-all-ids"
+   </userinput>
+   <computeroutput>{
+  "remainingPagedResults": -1,
+  "pagedResultsCookie": null,
+  "resultCount": 3,
+  "result": [
+    {
+      "_rev": "0",
+      "_id": "scarter"
+    },
+    {
+      "_rev": "0",
+      "_id": "bjensen"
+    },
+    {
+      "_rev"  "0",
+      "_id"  "joe"
+    }
+  ]
+}  </computeroutput>
+</screen>
+
+  <para>
+   If you created user <literal>joe</literal>, as described in the procedure
+   entitled <link xlink:href="integrators-guide#first-steps-with-rest"
+   xlink:show="new" xlink:role="http://docbook.org/xlink/role/olink"><citetitle>To
+   Get Started With the OpenIDM REST Interface</citetitle></link>, you should
+   see the ID for that user somewhere in this list. If you did not include
+   <literal>"_id:joe"</literal> in the command to create user
+   <literal>joe</literal>, you would see a system-generated UUID in the list
+   instead of the specified ID.
+  </para>
+
+  <para>Now try a RESTful GET of user
+  <literal>bjensen</literal> by appending the user ID to the managed user URL 
+  (<literal>https://localhost:8443/openidm/managed/user/</literal>).</para>
+
+  <screen>$ <userinput>curl \
+ --cacert self-signed.crt \
+ --header "X-OpenIDM-Username: openidm-admin" \
+ --header "X-OpenIDM-Password: openidm-admin" \
+ --request GET \
+ "https://localhost:8443/openidm/managed/user/bjensen"</userinput>
+   <computeroutput>
+{
+    "_id" : "bjensen",
+    "_rev" : "1",
+    "mail" : "bjensen@example.com",
+    "sn" : "Jensen",
+    "passwordAttempts" : "0",
+    "lastPasswordAttempt" : "Tue Apr 15 2014 20:58:46 GMT-0800 (GMT-08:00)",
+    "address2" : "",
+    "givenName" : "Barbara",
+    "country" : "",
+    "city" : "",
+    "lastPasswordSet" : "",
+    "postalCode" : "",
+    "description" : "Created By XML1",
+    "accountStatus" : "active",
+    "telephoneNumber" : "1234567",
+    "roles" : [ "openidm-authorized" ],
+    "postalAddress" : "",
+    "stateProvince" : "",
+    "userName" : "bjensen@example.com",
+    "effectiveRoles" : [ "openidm-authorized" ],
+    "effectiveAssignments" : { }
+}</computeroutput>
+</screen>
+
+  <para>In the OrientDB console, connect to the database, and then query the
+  users and audit logs. The following shows edited excerpts from a console
+  session querying OrientDB.</para>
+
+  <para>
+   As defined in the mapping file <filename>conf/sync.json</filename>, the
+   <literal>sn</literal> and <literal>mail</literal> parameters correspond
+   to family name (surname) and email address, respectively.
+  </para>
+
+  <para>To make it easier to view the records, the first
+  query only requests three specific fields.</para>
+
+  <screen>&gt; connect remote:localhost/openidm admin admin
+Connecting to database [remote:localhost/openidm] with user 'admin'...OK
+
+&gt; select sn,mail,description from managed_user
+
+---+---------+--------------------+--------------------+--------------------
+  #| RID     |familyName          |email               |description         
+---+---------+--------------------+--------------------+--------------------
+  0|    #-2:1|smith               |joe@example.com     |My first user
+  1|    #-2:2|Jensen              |bjensen@example.com |Created By XML1
+  2|    #-2:3|Carter              |scarter@example.com |Created By XML1
+---+---------+--------------------+--------------------+--------------------
+
+3 item(s) found. Query executed in 0.0040 sec(s).
+
+&gt; select * from audit_activity
+
+---+---------+-------------+----------+...
+  #| RID     |rev |action  |status    |...
+---+---------+-------------+----------+...
+  0|    #-2:1|0   |CREATE  |SUCCESS   |...
+  1|    #-2:2|0   |CREATE  |SUCCESS   |...
+  2|    #-2:3|0   |CREATE  |SUCCESS   |...
+  3|    #-2:4|0   |CREATE  |SUCCESS   |...
+  ...
+ 18 item(s) found. Query executed in 0.0090 sec(s). 
+
+&gt; select * from audit_recon
+
+----+------+------+-------+---------+---------+---------+...
+#   |@RID  |action|status |exception|entryType|situation|...
+----+------+------+-------+---------+---------+---------+...
+0   |#19:0 |null  |SUCCESS|         |start    |null     |...
+1   |#19:1 |CREATE|SUCCESS|         |         |ABSENT   |...
+2   |#19:2 |CREATE|SUCCESS|         |         |ABSENT   |...
+3   |#19:3 |IGNORE|SUCCESS|         |         |UNASSI...|...
+
+4 item(s) found. Query executed in 0.0070 sec(s).
+</screen>
+
+  <para>This information is also available in the CSV format audit logs located 
+  in the <filename>openidm/audit</filename> directory.</para>
+
+  <screen>$ <userinput>ls /path/to/openidm/audit/</userinput>
+   <computeroutput>
+access.csv activity.csv recon.csv
+   </computeroutput></screen>
+ </section>
+
+ <section xml:id="sample-adding-users-resource">
+  <title>Adding Users in a Resource</title>
+
+  <para>Add a user to the source connector XML data file to see reconciliation
+  in action. During the next reconciliation, OpenIDM finds the new user in the
+  source connector, and creates the user in the local repository. To add the
+  user, copy the following XML into
+  <filename>openidm/samples/sample1/data/xmlConnectorData.xml</filename>.</para>
+
+   <programlisting language="xml">&lt;ri:__ACCOUNT__&gt;
+    &lt;icf:__UID__&gt;tmorris&lt;/icf:__UID__&gt;
+    &lt;icf:__NAME__&gt;tmorris@example.com&lt;/icf:__NAME__&gt;
+    &lt;ri:password&gt;TestPassw0rd#&lt;/ri:password&gt;
+    &lt;ri:firstname&gt;Toni&lt;/ri:firstname&gt;
+    &lt;ri:lastname&gt;Morris&lt;/ri:lastname&gt;
+    &lt;ri:email&gt;tmorris@example.com&lt;/ri:email&gt;
+    &lt;ri:mobileTelephoneNumber&gt;1234567&lt;/ri:mobileTelephoneNumber&gt;
+    &lt;ri:roles&gt;openidm-authorized&lt;/ri:roles&gt;
+    &lt;icf:__DESCRIPTION__&gt;Created By XML1&lt;/icf:__DESCRIPTION__&gt;
+ &lt;/ri:__ACCOUNT__&gt;</programlisting>
+
+  <para>Run reconciliation again, as described in the section on <link
+  linkend="sample-running-reconciliation"><citetitle>Running
+  Reconciliation</citetitle></link>. After reconciliation has run, query the
+  local repository to see the new user appear in the list of all users under
+  <literal>https://localhost:8443/openidm/managed/user?_queryId=query-all-ids</literal>.</para>
+
+  <screen><userinput>
+$ curl \
+ --cacert self-signed.crt \
+ --header "X-OpenIDM-Username: openidm-admin" \
+ --header "X-OpenIDM-Password: openidm-admin" \
+ --request GET \
+ "https://localhost:8443/openidm/managed/user?_queryId=query-all-ids"</userinput>
+<computeroutput>
+{
+   "result": [ {
+      "_id": "bjensen",
+      "_rev": "0"
+   }, {
+      "_id": "scarter",
+      "_rev": "0"
+   }, {
+      "_id": "joe",
+      "_rev": "0"
+   }, {
+      "_id": "tmorris",
+      "_rev": "0"
+   } ],
+   "resultCount": 4,
+   "pagedResultsCookie": null,
+   "remainingPagedResults": -1
+}</computeroutput>
+</screen>
+
+  <para>
+   Also look at the reconciliation audit log,
+   <filename>openidm/audit/recon.csv</filename> to see what took place during
+   reconciliation. This formatted excerpt from the log covers the two
+   reconciliation runs done in this sample.
+  </para>
+
+  <programlisting language="csv" width="110"><?dbfo pgwide="1"?>
+"_id",  "action",...,"reconId","situation","sourceObjectId",                "targetObjectId","timestamp";
+"7e...","CREATE",...,"486...", "ABSENT",   "system/xmlfile/account/bjensen","managed/user/bjensen",...;
+"1a...","CREATE",...,"486...", "ABSENT",   "system/xmlfile/account/scarter","managed/user/scarter",...;
+"47...","IGNORE",...,"486...", "UNQUALIFIED",""            ,...,            "managed/user/joe",...;
+"33...","UPDATE",...,"aa9...", "CONFIRMED","system/xmlfile/account/bjensen","managed/user/bjensen",...;
+"1d...","UPDATE",...,"aa9...", "CONFIRMED","system/xmlfile/account/scarter","managed/user/scarter",...;
+"0e...","CREATE",...,"aa9...", "ABSENT",   "system/xmlfile/account/tmorris","managed/user/tmorris",...;
+"23...","IGNORE",...,"aa9...", "UNQUALIFIED","",...,                        "managed/user/joe",...;
+</programlisting>
+
+  <para>
+   The relevant audit log fields in this example are: action, situation,
+   <literal>sourceObjectId</literal>, and <literal>targetObjectId</literal>.
+   For each object in the source, reconciliation leads to an action on the
+   target.
+  </para>
+
+  <para>In the first reconciliation run (the abbreviated
+  <literal>reconID</literal> is shown as <literal>486...</literal>), the source
+  object does not exist in the target, resulting in an ABSENT situation and an
+  action to CREATE the object in the target. The object created earlier in the
+  target does not exist in the source, and so is IGNORED.</para>
+
+  <para>In the second reconciliation run (the abbreviated
+  <literal>reconID</literal> is shown as <literal>aa9...</literal>), after you
+  added a user to the source XML, OpenIDM performs an UPDATE on the user objects
+  <literal>bjensen</literal> and <literal>scarter</literal> that already exist 
+  in the target, in this case changing the internal ID. OpenIDM performs a CREATE 
+  on the target for the new user (<literal>tmorris</literal>).</para>
+
+  <para>You configure the action that OpenIDM takes based on an object's
+  situation in the configuration file, <filename>conf/sync.json</filename>.
+  For the list of all possible situations and actions, see the <link
+  xlink:href="integrators-guide#chap-synchronization"
+  xlink:role="http://docbook.org/xlink/role/olink"
+  ><citetitle>Configuring Synchronization</citetitle></link> chapter in the
+  <citetitle>Integrator's Guide</citetitle>.</para>
+
+  <para>For details on auditing, see the <link
+  xlink:href="integrators-guide#chap-auditing"
+  xlink:role="http://docbook.org/xlink/role/olink"
+  ><citetitle>Using Audit Logs</citetitle></link> chapter in the
+  <citetitle>Integrator's Guide</citetitle>.</para>
+ </section>
+ 
+ <section xml:id="sample-adding-users-rest">
+  <title>Adding Users Over REST</title>
+
+  <para>
+   You can add users to the local repository over the REST interface. The
+   following example adds a user named James Berg.
+  </para>
+
+  <para>Create <literal>james</literal> (UNIX).</para>
+  <screen>$ <userinput>curl \
+ --cacert self-signed.crt \
+ --header "X-OpenIDM-Username: openidm-admin" \
+ --header "X-OpenIDM-Password: openidm-admin" \
+ --header "Content-Type: application/json" \
+ --request POST \
+ --data '{
+  "_id":"jberg",
+  "userName":"jberg",
+  "sn":"Berg",
+  "givenName":"James",
+  "mail":"jberg@example.com",
+  "telephoneNumber":"5556787",
+  "description":"Created by OpenIDM REST.",
+  "password":"MyPassw0rd"
+ }' \
+ "https://localhost:8443/openidm/managed/user?_action=create"
+   </userinput>
+   <computeroutput>{
+    "mail" : "jberg@example.com",
+    "sn" : "Berg",
+    "passwordAttempts" : "0",
+    "lastPasswordAttempt" : "Tue Apr 15 2014 21:05:12 GMT-0800 (GMT-08:00)",
+    "address2" : "",
+    "givenName" : "James",
+    "effectiveRoles" : [ "openidm-authorized" ],
+    "password" : {
+      "$crypto" : {
+        "type" : "x-simple-encryption",
+        "value" : {
+          "data" : "QYRcIS9FbksBEwyd4dNEpg==",
+          "cipher" : "AES/CBC/PKCS5Padding",
+          "iv" : "R5Kjs6jZZtqCockFCS6BfA==",
+          "key" : "openidm-sym-default"
+        }
+      }
+    },
+    "country" : "",
+    "city" : "",
+    "_rev" : "1",
+    "lastPasswordSet" : "",
+    "postalCode" : "",
+    "_id" : "jberg",
+    "description" : "Created by OpenIDM REST.",
+    "accountStatus" : "active",
+    "telephoneNumber" : "5556787",
+    "roles" : [ "openidm-authorized" ],
+    "effectiveAssignments" : { },
+    "postalAddress" : "",
+    "stateProvince" : "",
+    "userName" : "jberg"
+}</computeroutput>
+   </screen>
+
+  <para>Create <literal>james</literal> (Windows).</para>
+  <screen>C:\&gt; <userinput>curl
+ --cacert self-signed.crt
+ --header "X-OpenIDM-Username: openidm-admin"
+ --header "X-OpenIDM-Password: openidm-admin"
+ --header "Content-Type: application/json"
+ --request POST
+ --data "{
+ \"_id\":\"jberg\",
+ \"userName\":\"jberg\",
+ \"sn\":\"Berg\",
+ \"givenName\":\"James\",
+ \"email\":\"jberg@example.com\",
+ \"telephoneNumber\":\"5556787\",
+ \"description\":\"Created by OpenIDM REST.\",
+ \"password\":\"MyPassw0rd\"
+ }"
+ "https://localhost:8443/openidm/managed/user?_action=create"</userinput>
+</screen>
+
+  <para>The output is essentially identical to that for UNIX.</para>
+
+  <para>OpenIDM creates the new user in the repository. If you configure a
+  mapping to apply changes from the local repository to the XML file connector
+  as a target, OpenIDM then updates the XML file to add the new user.</para>
+
+  <para>
+   You can also add users through the UI, which uses the OpenIDM REST API.
+   When you have logged into the UI as the OpenIDM administrator, the process is
+   straightforward, as shown in the following figure.
+  </para>
+
+  <mediaobject>
+   <alt>Examples of adding a new user</alt>
+   <imageobject>
+    <imagedata fileref="images/sample1-useradd.png" format="PNG" />
+   </imageobject>
+  </mediaobject>
+
+ </section>
+</chapter>
