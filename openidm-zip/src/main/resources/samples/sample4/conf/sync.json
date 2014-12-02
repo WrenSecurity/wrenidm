@@ -1,0 +1,82 @@
+{
+    "mappings" : [
+        {
+            "name" : "csv_xmlfile",
+            "source" : "system/csv/account",
+            "target" : "system/xmlfile/account",
+            "correlationQuery" : {
+                "type" : "text/javascript",
+                "source" : "var qry = { '_queryFilter': 'name eq \"' + source.mail + '\"' }; qry;"
+            },
+            "taskThreads" : 0,
+            "properties" : [
+                {
+                    "source" : "employeeNumber",
+                    "transform" : {
+                        "type" : "text/javascript",
+                        "source" : "(source.substring(0,1) === '6') ? 'openidm-admin,openidm-authorized' : 'openidm-authorized';"
+                    },
+                    "target" : "roles"
+                },
+                {
+                    "source" : "mail",
+                    "target" : "email"
+                },
+                {
+                    "source" : "mail",
+                    "target" : "name"
+                },
+                {
+                    "source" : "password",
+                    "target" : "password"
+                },
+                {
+                    "source" : "lastName",
+                    "target" : "lastname"
+                },
+                {
+                    "source" : "givenName",
+                    "target" : "firstname"
+                },
+                {
+                    "default" : "N/A",
+                    "target" : "mobileTelephoneNumber"
+                }
+            ],
+            "policies" : [
+                {
+                    "situation" : "CONFIRMED",
+                    "action" : "UPDATE"
+                },
+                {
+                    "situation" : "FOUND",
+                    "action" : "UPDATE"
+                },
+                {
+                    "situation" : "ABSENT",
+                    "action" : "CREATE"
+                },
+                {
+                    "situation" : "AMBIGUOUS",
+                    "action" : "EXCEPTION"
+                },
+                {
+                    "situation" : "MISSING",
+                    "action" : "CREATE"
+                },
+                {
+                    "situation" : "SOURCE_MISSING",
+                    "action" : "DELETE"
+                },
+                {
+                    "situation" : "UNQUALIFIED",
+                    "action" : "IGNORE"
+                },
+                {
+                    "situation" : "UNASSIGNED",
+                    "action" : "DELETE"
+                }
+            ]
+        }
+    ]
+}
