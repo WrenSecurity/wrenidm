@@ -1,0 +1,162 @@
+#correlationTitle {
+}
+
+.correlationBody {
+  legend {
+    height: 25px;
+    padding: 5px 5px 0;
+    background-color: #80b7ab;
+    border: 2px solid #5fa595;
+    cursor: pointer;
+    margin-left: 10px;
+    color: white;
+
+    span {
+      margin-right: 10px;
+      width: 200px;
+      display: inline-block;
+      text-overflow: ellipsis;
+    }
+  }
+
+  legend:hover {
+    background-color: lighten(#80b7ab, @button-hover-lightness);
+  }
+
+  fieldset {
+    border: 1px #ddd solid;
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 10px;
+    background-color: white;
+    margin-top: 15px;
+
+    .group-lead {
+      padding-top: 0;
+      margin-top: 15px;
+    }
+
+    .group-body {
+      padding: 10px;
+    }
+  }
+
+  .group-actions-block {
+    margin-top: 15px;
+  }
+
+  .error {
+    text-align: left;
+    padding: 5px 0 0 5px;
+    float: right;
+  }
+
+  #correlationQueryError {
+    width: 878px;
+  }
+
+  #scriptQueryRadio {
+    margin-bottom: 10px;
+  }
+
+  #correlationQueryView {
+    .queryTypeTitle {
+      font-weight: bold;
+      margin: 0 0 0 4px;
+      display: inline;
+      float: none;
+      font-size: inherit;
+      cursor: pointer;
+      vertical-align: middle;
+    }
+
+    input[type="radio"] {
+      cursor: pointer;
+    }
+
+    .queryContainer {
+      margin: 5px 0 15px 21px
+    }
+
+    .saveCorrelationQuery {
+      float: right;
+      margin: 0 0 10px;
+    }
+
+    .expressionTree {
+      .removeBtn {
+        margin-right: 7px;
+        margin-top: 10px;
+        height: 15px;
+      }
+      &>ul{
+        width: 600px;
+        border: 1px solid #ddd;
+        padding: 10px;
+      }
+
+      ul {
+        div.node {
+          margin: 15px 0 15px 20px;
+        }
+
+        li {
+          margin-left: 10px;
+          clear:right;
+          line-height: 30px;
+          position: relative;
+
+          input, select {
+            width: 200px;
+          }
+          button,input[type=button] {
+            width: 26px;
+            line-height: 10px;
+            float: right;
+            font-size: 8px;
+
+            i {
+              margin-left: -2px;
+            }
+
+          }
+          label {
+            padding-left:0;
+          }
+
+          .expressionMenu {
+            width: 100px;
+            z-index: 10;
+            display:none;
+            position: absolute;
+            right: -40px;
+            top: 30px;
+            padding: 5px;
+            cursor: pointer;
+
+            li {
+              margin-left: 0;
+              a {
+                color: #5d6871;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .queryScript {
+
+      .event-hook-piece {
+        label {
+          display: block;
+          margin: 0;
+          padding: 0;
+          float: none;
+          text-align: left;
+          font-size: inherit;
+        }
+      }
+    }
+  }
+}
