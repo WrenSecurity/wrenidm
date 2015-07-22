@@ -26,11 +26,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.forgerock.commons</groupId>
+        <groupId>org.codice.org.forgerock.commons</groupId>
         <artifactId>forgerock-launcher</artifactId>
         <version>1.1.1-SNAPSHOT</version>
     </parent>
-    <groupId>org.forgerock.commons</groupId>
+    <groupId>org.codice.org.forgerock.commons</groupId>
     <artifactId>launcher</artifactId>
     <name>ForgeRock OSGi Launcher Main</name>
     <dependencies>
@@ -41,7 +41,7 @@
             <version>1.1.1</version>
         </dependency>
         <dependency>
-            <groupId>org.forgerock.commons</groupId>
+            <groupId>org.codice.org.forgerock.commons</groupId>
             <artifactId>json-fluent</artifactId>
             <version>1.2.0</version>
         </dependency>
