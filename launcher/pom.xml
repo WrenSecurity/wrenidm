@@ -105,7 +105,7 @@
                             <artifactSet>
                                 <includes>
                                     <include>com.googlecode.json-simple:*</include>
-                                    <include>org.forgerock.commons:*</include>
+                                    <include>org.codice.org.forgerock.commons:*</include>
                                     <include>org.codehaus.plexus:plexus-utils</include>
                                     <include>args4j:args4j</include>
                                 </includes>
