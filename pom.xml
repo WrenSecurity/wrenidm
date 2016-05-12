@@ -43,15 +43,6 @@
             </comments>
             <distribution>repo</distribution>
         </license>
-        <license>
-            <name>CC BY-NC-ND 3.0</name>
-            <url>http://creativecommons.org/licenses/by-nc-nd/3.0/</url>
-            <comments>Creative Commons Attribution-NonCommercial-NoDerivs 3.0
-                Unported. This license applies to the site content, and to the
-                documentation as indicated in the documentation source code.
-            </comments>
-            <distribution>repo</distribution>
-        </license>
     </licenses>
     <scm>
         <connection>scm:git:ssh://git@stash.forgerock.org:7999/openidm/openidm.git</connection>
@@ -59,13 +50,6 @@
         <url>https://stash.forgerock.org/projects/OPENIDM/repos/openidm/browse</url>
       <tag>HEAD</tag>
   </scm>
-    <distributionManagement>
-        <site>
-            <id>forgerock.org</id>
-            <name>ForgeRock Community Server</name>
-            <url>${siteDistributionURL}</url>
-        </site>
-    </distributionManagement>
 
     <!-- NOT ALLOWED: (see FAQ at http://maven.apache.org/guides/mini/guide-central-repository-upload.html ) -->
     <repositories>
@@ -704,7 +688,7 @@
                 <artifactId>pax-web-jetty-bundle</artifactId>
                 <version>${paxweb.version}</version>
             </dependency>
-        
+
             <!-- H2 Database -->
             <dependency>
                 <groupId>com.h2database</groupId>
