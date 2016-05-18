@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Portions copyright 2011-2016 ForgeRock AS.
+ * Portions copyright 2016 Orchitech Solutions, s.r.o.
  */
 package org.forgerock.openidm.sync.impl;
 
@@ -21,7 +22,7 @@ import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.resource.Requests.newQueryRequest;
 import static org.forgerock.json.resource.Requests.newReadRequest;
-import static org.forgerock.json.resource.ResourcePath.*;
+import static org.forgerock.json.resource.ResourcePath.resourcePath;
 import static org.forgerock.json.resource.Responses.newActionResponse;
 import static org.forgerock.json.resource.Responses.newResourceResponse;
 import static org.forgerock.openidm.util.ResourceUtil.notSupported;
@@ -45,30 +46,30 @@ import org.forgerock.audit.events.AuditEvent;
 import org.forgerock.guava.common.base.Function;
 import org.forgerock.guava.common.base.Predicate;
 import org.forgerock.guava.common.collect.FluentIterable;
-import org.forgerock.json.resource.Connection;
-import org.forgerock.json.resource.QueryResourceHandler;
-import org.forgerock.json.resource.ResourcePath;
-import org.forgerock.openidm.router.IDMConnectionFactory;
-import org.forgerock.services.context.Context;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.JsonValueException;
 import org.forgerock.json.resource.ActionRequest;
 import org.forgerock.json.resource.ActionResponse;
 import org.forgerock.json.resource.BadRequestException;
+import org.forgerock.json.resource.Connection;
 import org.forgerock.json.resource.ConnectionFactory;
 import org.forgerock.json.resource.PatchRequest;
+import org.forgerock.json.resource.QueryResourceHandler;
 import org.forgerock.json.resource.ReadRequest;
 import org.forgerock.json.resource.Requests;
 import org.forgerock.json.resource.ResourceException;
+import org.forgerock.json.resource.ResourcePath;
 import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.SingletonResourceProvider;
 import org.forgerock.json.resource.UpdateRequest;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
 import org.forgerock.openidm.quartz.impl.ExecutionException;
 import org.forgerock.openidm.quartz.impl.ScheduledService;
+import org.forgerock.openidm.router.IDMConnectionFactory;
 import org.forgerock.openidm.sync.ReconAction;
 import org.forgerock.script.ScriptRegistry;
+import org.forgerock.services.context.Context;
 import org.forgerock.util.AsyncFunction;
 import org.forgerock.util.promise.Promise;
 import org.forgerock.util.promise.Promises;
@@ -113,9 +114,9 @@ public class SynchronizationService implements SingletonResourceProvider, Schedu
 
     /** Binds the Connection Factory */
     protected void bindConnectionFactory(IDMConnectionFactory connectionFactory) {
-    	this.connectionFactory = connectionFactory;
+        this.connectionFactory = connectionFactory;
     }
-    
+
     public ConnectionFactory getConnectionFactory() {
         return connectionFactory;
     }
@@ -193,7 +194,7 @@ public class SynchronizationService implements SingletonResourceProvider, Schedu
             try {
                 if (exceptionPending == null) {
                     // No failures yet, perform sync
-                    // This operation returns a list which will contain more than one result if 
+                    // This operation returns a list which will contain more than one result if
                     // there are multiple targets to sync the source to
                     mappingResults = action.sync(context, mapping);
                 } else {
@@ -358,10 +359,10 @@ public class SynchronizationService implements SingletonResourceProvider, Schedu
                     throw new BadRequestException("Action" + request.getAction() + " is not supported.");
             }
         } catch (ResourceException e) {
-        	return e.asPromise();
-        } catch (IllegalArgumentException e) { 
-        	// from getActionAsEnum
-        	return new BadRequestException(e.getMessage(), e).asPromise();
+            return e.asPromise();
+        } catch (IllegalArgumentException e) {
+            // from getActionAsEnum
+            return new BadRequestException(e.getMessage(), e).asPromise();
         } finally {
             ObjectSetContext.pop();
         }
@@ -438,6 +439,26 @@ public class SynchronizationService implements SingletonResourceProvider, Schedu
                                         ? resourcePath(target).child(link.get("secondId").asString())
                                         : resourcePath(source).child(link.get("firstId").asString());
 
+                                final List<Object> relatedMappings = FluentIterable.from(mappings)
+                                        .filter(new Predicate<ObjectMapping>() {
+                                            @Override
+                                            public boolean apply(ObjectMapping mapping) {
+                                                return mapping.getName().equals(linkType)
+                                                        || mapping.getLinkTypeName().equals(linkType);
+                                            }
+                                        })
+                                        .transform(new Function<ObjectMapping, Object>() {
+                                            @Override
+                                            public Object apply(ObjectMapping mapping) {
+                                                return object(
+                                                        field("name", mapping.getName()),
+                                                        // the type is how the linkedResourceName relates to the main
+                                                        // resourceName in the context of a particular mapping.
+                                                        field("type", mapping.isSourceObject(resourceContainer, resourceId)? "target" : "source"));
+                                            }
+                                        })
+                                        .toList();
+
                                 // Read the linked resource asynchronously so Promises can be executed in parallel.
                                 return connection.readAsync(context, newReadRequest(linkedResourcePath))
                                         // transform the ResourceResponse into the format this endpoint desires
@@ -455,27 +476,26 @@ public class SynchronizationService implements SingletonResourceProvider, Schedu
                                                                 field("content", linkedResource.getObject()),
                                                                 field("linkQualifier", link.get("linkQualifier").asString()),
                                                                 field("linkType", linkType),
-                                                                field("mappings", FluentIterable.from(mappings)
-                                                                        .filter(new Predicate<ObjectMapping>() {
-                                                                            @Override
-                                                                            public boolean apply(ObjectMapping mapping) {
-                                                                                return mapping.getName().equals(linkType)
-                                                                                        || mapping.getLinkTypeName().equals(linkType);
-                                                                            }
-                                                                        })
-                                                                        .transform(new Function<ObjectMapping, Object>() {
-                                                                            @Override
-                                                                            public Object apply(ObjectMapping mapping) {
-                                                                                return object(
-                                                                                        field("name", mapping.getName()),
-                                                                                        // the type is how the linkedResourceName relates to the main
-                                                                                        // resourceName in the context of a particular mapping.
-                                                                                        field("type", mapping.isSourceObject(resourceContainer, resourceId)? "target" : "source"));
-                                                                            }
-                                                                        })
-                                                                        .toList()))))
+                                                                field("mappings", relatedMappings))))
                                                         .asPromise();
                                             }
+                                        }, new AsyncFunction<ResourceException, ResourceResponse, ResourceException>() {
+                                            @Override
+                                            public Promise<? extends ResourceResponse, ? extends ResourceException> apply(ResourceException error)
+                                                    throws ResourceException {
+                                                return newResourceResponse(
+                                                        linkedResourcePath.get(linkedResourcePath.size() - 1),
+                                                        "N/A",
+                                                        json(object(
+                                                                field("resourceName", linkedResourcePath.toString()),
+                                                                field("content", null),
+                                                                field("error", error.getMessage()),
+                                                                field("linkQualifier", link.get("linkQualifier").asString()),
+                                                                field("linkType", linkType),
+                                                                field("mappings", relatedMappings))))
+                                                        .asPromise();
+                                            }
+
                                         });
                             }
                         })
