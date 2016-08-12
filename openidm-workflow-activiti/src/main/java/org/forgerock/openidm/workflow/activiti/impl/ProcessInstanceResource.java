@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2015 ForgeRock AS.
+ * Portions Copyright 2017 Wren Security
  */
 package org.forgerock.openidm.workflow.activiti.impl;
 
@@ -23,23 +24,29 @@ import static org.forgerock.openidm.util.ResourceUtil.notSupportedOnCollection;
 import static org.forgerock.openidm.util.ResourceUtil.notSupportedOnInstance;
 
 import java.io.InputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.engine.ActivitiObjectNotFoundException;
+import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.bpmn.diagram.ProcessDiagramGenerator;
+import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
+import org.activiti.engine.impl.persistence.entity.HistoricProcessInstanceEntity;
 import org.activiti.engine.impl.persistence.entity.HistoricTaskInstanceEntity;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
-import org.forgerock.services.context.Context;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.apache.commons.lang3.StringUtils;
+import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ActionRequest;
 import org.forgerock.json.resource.ActionResponse;
 import org.forgerock.json.resource.BadRequestException;
@@ -56,26 +63,25 @@ import org.forgerock.json.resource.QueryResponse;
 import org.forgerock.json.resource.ReadRequest;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourceResponse;
-import org.forgerock.services.context.RootContext;
-import org.forgerock.services.context.SecurityContext;
 import org.forgerock.json.resource.SortKey;
 import org.forgerock.json.resource.UpdateRequest;
 import org.forgerock.openidm.workflow.activiti.ActivitiConstants;
-
-import org.activiti.engine.ActivitiObjectNotFoundException;
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.history.HistoricProcessInstanceQuery;
-import org.activiti.engine.impl.identity.Authentication;
-import org.activiti.engine.impl.persistence.entity.HistoricProcessInstanceEntity;
-import org.activiti.engine.runtime.ProcessInstance;
-import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.workflow.activiti.impl.mixin.HistoricProcessInstanceMixIn;
 import org.forgerock.openidm.workflow.activiti.impl.mixin.HistoricTaskInstanceEntityMixIn;
+import org.forgerock.services.context.Context;
+import org.forgerock.services.context.RootContext;
+import org.forgerock.services.context.SecurityContext;
 import org.forgerock.util.Function;
 import org.forgerock.util.encode.Base64;
 import org.forgerock.util.promise.NeverThrowsException;
 import org.forgerock.util.promise.Promise;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
  * Resource implementation of ProcessInstance related Activiti operations
@@ -84,6 +90,7 @@ import org.forgerock.util.promise.Promise;
 public class ProcessInstanceResource implements CollectionResourceProvider {
 
     private final static ObjectMapper mapper;
+    private static final Logger logger = LoggerFactory.getLogger(ProcessInstanceResource.class);
     private final ProcessEngine processEngine;
     private final Function<ProcessEngine, HistoricProcessInstanceQuery, NeverThrowsException> queryFunction;
 
@@ -340,6 +347,18 @@ public class ProcessInstanceResource implements CollectionResourceProvider {
                 case ActivitiConstants.ACTIVITI_STARTUSERID:
                     query.startedBy(param.getValue());
                     break;
+                case ActivitiConstants.ACTIVITI_STARTED_AFTER:
+                    query.startedAfter(parseDate(param.getValue()));
+                    break;
+                case ActivitiConstants.ACTIVITI_STARTED_BEFORE:
+                    query.startedBefore(parseDate(param.getValue()));
+                    break;
+                case ActivitiConstants.ACTIVITI_FINISHED_AFTER:
+                    query.finishedAfter(parseDate(param.getValue()));
+                    break;
+                case ActivitiConstants.ACTIVITI_FINISHED_BEFORE:
+                    query.finishedBefore(parseDate(param.getValue()));
+                    break;
             }
         }
 
@@ -390,6 +409,23 @@ public class ProcessInstanceResource implements CollectionResourceProvider {
             }
         }
 
+    }
+
+    /**
+     * Parse given date string in ISO format into {@link Date} instance.
+     * @param value Date string in ISO format to parse. Can be null.
+     * @return Parsed date instance or null when parsing failed. Can be null.
+     */
+    private Date parseDate(String value) {
+        if (StringUtils.isBlank(value)) {
+            return null;
+        }
+        try {
+            return new DateTime(value).toDate();
+        } catch (IllegalArgumentException e) {
+            logger.warn("Parsing of date string '" + value + "' failed.", e);
+        }
+        return null;
     }
 
     /**
