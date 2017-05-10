@@ -77,7 +77,7 @@ class CollectionRelationshipProvider extends RelationshipProvider implements Col
      * Setup logging for the {@link CollectionRelationshipProvider}.
      */
     private static final Logger logger = LoggerFactory.getLogger(CollectionRelationshipProvider.class);
-    
+
     final static QueryFilterVisitor<QueryFilter<JsonPointer>, Boolean, JsonPointer> VISITOR = new RelationshipQueryFilterVisitor();
 
     private final RequestHandler requestHandler;
@@ -90,14 +90,14 @@ class CollectionRelationshipProvider extends RelationshipProvider implements Col
      * @param activityLogger The audit activity logger to use
      * @param managedObjectSyncService Service to send sync events to
      */
-    public CollectionRelationshipProvider(final ConnectionFactory connectionFactory, final ResourcePath resourcePath, 
+    public CollectionRelationshipProvider(final ConnectionFactory connectionFactory, final ResourcePath resourcePath,
             final SchemaField schemaField, final ActivityLogger activityLogger,
             final ManagedObjectSetService managedObjectSyncService) {
         super(connectionFactory, resourcePath, schemaField, activityLogger,
                 managedObjectSyncService);
 
         final Router router = new Router();
-        router.addRoute(RoutingMode.STARTS_WITH, 
+        router.addRoute(RoutingMode.STARTS_WITH,
                 uriTemplate(String.format("{%s}/%s", PARAM_MANAGED_OBJECT_ID, schemaField.getName())),
                 Resources.newCollection(this));
         this.requestHandler = router;
@@ -176,13 +176,13 @@ class CollectionRelationshipProvider extends RelationshipProvider implements Col
                         }
                     }
 
-                    if (!clearExisting) {
+                    if (clearExisting) {
                         // Call get() so we block until they are deleted.
                         clearNotIn(context, resourceId, relationshipsToKeep).getOrThrowUninterruptibly();
                     }
                 } else {
                     // We didn't get any relations to persist. Clear and return empty array.
-                    if (!clearExisting) {
+                    if (clearExisting) {
                         clear(context, resourceId);
                     }
                     return newResultPromise(results);
@@ -317,7 +317,7 @@ class CollectionRelationshipProvider extends RelationshipProvider implements Col
 
     /** {@inheritDoc} */
     @Override
-    public Promise<QueryResponse, ResourceException> queryCollection(final Context context, final QueryRequest request, 
+    public Promise<QueryResponse, ResourceException> queryCollection(final Context context, final QueryRequest request,
             final QueryResourceHandler handler) {
         try {
             if (request.getQueryExpression() != null) {
@@ -329,12 +329,12 @@ class CollectionRelationshipProvider extends RelationshipProvider implements Col
              * This must be done so field filtering can be handled by CREST externally on the transformed response.
              */
             ResourcePath resourcePath = firstResourcePath(context, request);
-            
+
             final QueryRequest queryRequest = Requests.newQueryRequest(REPO_RESOURCE_PATH);
             final boolean queryAllIds = ServerConstants.QUERY_ALL_IDS.equals(request.getQueryId());
 
             if (request.getQueryId() != null) {
-                if (ServerConstants.QUERY_ALL_IDS.equals(request.getQueryId()) 
+                if (ServerConstants.QUERY_ALL_IDS.equals(request.getQueryId())
                         || "query-all".equals(request.getQueryId())) {
                     // Do nothing, the queryFilter generated below will return all
                 } else if (RELATIONSHIP_QUERY_ID.equals(request.getQueryId())) {
@@ -343,7 +343,7 @@ class CollectionRelationshipProvider extends RelationshipProvider implements Col
                         .setAdditionalParameter(QUERY_FIELD_RESOURCE_PATH, resourcePath.toString())
                         .setAdditionalParameter(QUERY_FIELD_FIELD_NAME, schemaField.getName());
                 } else {
-                    return new BadRequestException("Invalid " + HttpUtils.PARAM_QUERY_ID 
+                    return new BadRequestException("Invalid " + HttpUtils.PARAM_QUERY_ID
                             + ": only query-all and query-all-ids supported").asPromise();
                 }
             }
@@ -356,13 +356,13 @@ class CollectionRelationshipProvider extends RelationshipProvider implements Col
             for (String key : request.getAdditionalParameters().keySet()) {
                 queryRequest.setAdditionalParameter(key, request.getAdditionalParameter(key));
             }
-            
+
             // Check if using a queryId, if not build up the queryFilter
             if (queryRequest.getQueryId() == null) {
                 QueryFilter<JsonPointer> filter;
                 if (schemaField.isReverseRelationship()) {
-                    // Reverse relationship requires a queryFilter that matches both cases where the managed object's 
-                    // resource path and schema field match the firstId/firstPropertyName or the 
+                    // Reverse relationship requires a queryFilter that matches both cases where the managed object's
+                    // resource path and schema field match the firstId/firstPropertyName or the
                     // secondId/secondPropertyName.
                     QueryFilter<JsonPointer> firstFilter = and(
                             equalTo(new JsonPointer(REPO_FIELD_FIRST_ID), resourcePath),
@@ -371,7 +371,7 @@ class CollectionRelationshipProvider extends RelationshipProvider implements Col
                             equalTo(new JsonPointer(REPO_FIELD_SECOND_ID), resourcePath),
                             equalTo(new JsonPointer(REPO_FIELD_SECOND_PROPERTY_NAME), schemaField.getName()));
                     if (request.getQueryFilter() != null) {
-                        // AND the supplied queryFilter to both of the above generated filters and then OR them 
+                        // AND the supplied queryFilter to both of the above generated filters and then OR them
                         filter = or(and(firstFilter, asRelationshipQueryFilter(false, request.getQueryFilter())),
                                 and(secondFilter, asRelationshipQueryFilter(true, request.getQueryFilter())));
                     } else {
@@ -379,7 +379,7 @@ class CollectionRelationshipProvider extends RelationshipProvider implements Col
                         filter = or(firstFilter, secondFilter);
                     }
                 } else {
-                    // A direct relationship requires a queryFilter that matches only the case where the managed 
+                    // A direct relationship requires a queryFilter that matches only the case where the managed
                     // object's resource path and schema field match the firstId/firstPropertyName.
                     filter = and(equalTo(new JsonPointer(REPO_FIELD_FIRST_ID), resourcePath),
                             equalTo(new JsonPointer(REPO_FIELD_FIRST_PROPERTY_NAME), schemaField.getName()));
@@ -390,13 +390,13 @@ class CollectionRelationshipProvider extends RelationshipProvider implements Col
                 }
                 queryRequest.setQueryFilter(filter);
             }
-            
+
             // Issue the query and handle the response
-            final Promise<QueryResponse, ResourceException> response = getConnection().queryAsync(context, queryRequest, 
+            final Promise<QueryResponse, ResourceException> response = getConnection().queryAsync(context, queryRequest,
                     new QueryResourceHandler() {
                 @Override
                 public boolean handleResource(ResourceResponse resource) {
-                    ResourceResponse filteredResourceResponse = 
+                    ResourceResponse filteredResourceResponse =
                             formatResponseNoException(context, request).apply(resource);
                     if (queryAllIds) {
                         // Special case, return just the ids, no expansion
@@ -404,7 +404,7 @@ class CollectionRelationshipProvider extends RelationshipProvider implements Col
                         return handler.handleResource(filteredResourceResponse);
                     }
                     try {
-                        filteredResourceResponse = 
+                        filteredResourceResponse =
                                 expandFields(context, request, filteredResourceResponse).getOrThrow();
                     } catch (Exception e) {
                         logger.error("Error expanding resource: " + e.getMessage(), e);
@@ -412,20 +412,20 @@ class CollectionRelationshipProvider extends RelationshipProvider implements Col
                     return handler.handleResource(filteredResourceResponse);
                 }
             });
-            
+
             if (context.containsContext(ManagedObjectContext.class)) {
-                return response;   
+                return response;
             }
-            
+
             QueryResponse result = response.getOrThrow();
-            
+
             // Get the value of the managed object
             final ResourceResponse value = getManagedObject(context);
-            
+
             // Do activity logging.
-            activityLogger.log(context, request, "query", getManagedObjectPath(context), null, value.getContent(), 
+            activityLogger.log(context, request, "query", getManagedObjectPath(context), null, value.getContent(),
                     Status.SUCCESS);
-            
+
             return newResultPromise(result);
         } catch (ResourceException e) {
             return e.asPromise();
