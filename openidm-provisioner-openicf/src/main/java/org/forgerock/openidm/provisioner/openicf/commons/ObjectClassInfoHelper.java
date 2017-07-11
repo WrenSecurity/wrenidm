@@ -234,7 +234,7 @@ public class ObjectClassInfoHelper {
                 }
             }
             if (newResourceId != null) {
-                fullId = fullId.concat(newResourceId);
+                fullId = fullId.concat(new ResourcePath(newResourceId));
             }
         }
         return urlDecode(fullId.toString());
