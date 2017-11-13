@@ -3,6 +3,7 @@
   ~ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
   ~
   ~ Copyright (c) 2011-2015 ForgeRock AS. All Rights Reserved
+  ~ Portions Copyright 2017 Wren Security.
   ~
   ~ The contents of this file are subject to the terms
   ~ of the Common Development and Distribution License
@@ -24,6 +25,7 @@
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <artifactId>openidm-ui</artifactId>
         <groupId>org.forgerock.openidm</groupId>
@@ -31,8 +33,10 @@
     </parent>
 
     <artifactId>openidm-ui-admin</artifactId>
-    <name>OpenIDM UI Admin</name>
     <packaging>bundle</packaging>
+
+    <name>Wren:IDM - UI - Admin</name>
+    <description>Provides the UI components used by Wren:IDM administrators.</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -62,6 +66,7 @@
             <classifier>min</classifier>
             <type>js</type>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.commons.ui.libs</groupId>
             <artifactId>backgrid-paginator.min</artifactId>
@@ -69,6 +74,7 @@
             <classifier>min</classifier>
             <type>js</type>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.commons.ui.libs</groupId>
             <artifactId>backgrid-filter.min</artifactId>
@@ -76,6 +82,7 @@
             <classifier>min</classifier>
             <type>js</type>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.commons.ui.libs</groupId>
             <artifactId>backbone-relational</artifactId>
@@ -187,12 +194,9 @@
             <version>2.1.10</version>
             <type>js</type>
         </dependency>
-
-
     </dependencies>
 
     <build>
-
         <resources>
             <resource>
                 <directory>${basedir}/src/main/js</directory>
@@ -206,6 +210,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jslint-maven-plugin</artifactId>
+
                 <configuration>
                     <disallowInsecureCharsInRegExp>false</disallowInsecureCharsInRegExp>
                     <excludes>
@@ -213,6 +218,7 @@
                         <exclude>**/libs/i18n/*.js</exclude>
                     </excludes>
                 </configuration>
+
                 <executions>
                     <execution>
                         <phase>prepare-package</phase>
@@ -225,6 +231,7 @@
 
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
+
                 <executions>
                     <execution>
                         <phase>prepare-package</phase>
@@ -238,43 +245,48 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
+
                 <executions>
                     <execution>
-                    <id>unpack</id>
-                    <phase>prepare-package</phase>
-                    <goals>
-                        <goal>unpack</goal>
-                    </goals>
-                    <configuration>
-                        <artifactItems>
-                            <artifactItem>
-                            <groupId>org.forgerock.commons.ui</groupId>
-                            <artifactId>forgerock-ui-commons</artifactId>
-                            <version>${forgerock-ui.version}</version>
-                            <type>zip</type>
-                            <classifier>www</classifier>
-                        </artifactItem>
+                        <id>unpack</id>
+                        <phase>prepare-package</phase>
 
-                        <artifactItem>
-                            <groupId>org.forgerock.openidm</groupId>
-                            <artifactId>openidm-ui-common</artifactId>
-                            <version>${project.version}</version>
-                            <type>zip</type>
-                            <classifier>www</classifier>
-                        </artifactItem>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
 
-                        </artifactItems>
-                    </configuration>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.forgerock.commons.ui</groupId>
+                                    <artifactId>forgerock-ui-commons</artifactId>
+                                    <version>${forgerock-ui.version}</version>
+                                    <type>zip</type>
+                                    <classifier>www</classifier>
+                                </artifactItem>
+
+                                <artifactItem>
+                                    <groupId>org.forgerock.openidm</groupId>
+                                    <artifactId>openidm-ui-common</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>zip</type>
+                                    <classifier>www</classifier>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
                     </execution>
 
                     <execution>
                         <id>unpack-codemirror</id>
                         <phase>prepare-package</phase>
+
                         <goals>
                             <goal>unpack</goal>
                         </goals>
+
                         <configuration>
                             <outputDirectory>${project.build.directory}</outputDirectory>
+
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.forgerock.commons.ui.libs</groupId>
@@ -288,9 +300,11 @@
                     <execution>
                         <id>copy-dependencies-less</id>
                         <phase>prepare-package</phase>
+
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
+
                         <configuration>
                             <includeArtifactIds>less</includeArtifactIds>
                             <includeTypes>js</includeTypes>
@@ -304,9 +318,11 @@
                     <execution>
                         <id>copy-dependencies-r</id>
                         <phase>prepare-package</phase>
+
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
+
                         <configuration>
                             <includeArtifactIds>r</includeArtifactIds>
                             <includeTypes>js</includeTypes>
@@ -316,22 +332,25 @@
                             <overWriteIfNewer>true</overWriteIfNewer>
                         </configuration>
                     </execution>
-
                 </executions>
             </plugin>
 
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+
                 <configuration>
                     <descriptors>
                         <descriptor>src/main/assembly/zip.xml</descriptor>
                     </descriptors>
+
                     <finalName>www</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
+
                 <executions>
                     <execution>
                         <phase>prepare-package</phase>
+
                         <goals>
                             <goal>single</goal>
                         </goals>
@@ -342,6 +361,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
+
                 <executions>
                     <execution>
                         <id>compile-structure-less-to-css</id>
@@ -349,39 +369,38 @@
 
                         <configuration>
                             <target name="compileLess">
-
                                 <java classname="org.mozilla.javascript.tools.shell.Main" fork="true">
                                     <classpath refid="maven.compile.classpath" />
                                     <arg value="${project.build.directory}/less/less-1.5.1-rhino.js" />
                                     <arg value="${project.build.directory}/www/css/structure.less" />
                                     <arg value="${project.build.directory}/www/css/structure.css" />
                                 </java>
-
                             </target>
                         </configuration>
+
                         <goals>
                             <goal>run</goal>
                         </goals>
                     </execution>
+
                     <execution>
                         <id>compile-theme-less-to-css</id>
                         <phase>prepare-package</phase>
 
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+
                         <configuration>
                             <target name="compileLess">
-
                                 <java classname="org.mozilla.javascript.tools.shell.Main" fork="true">
                                     <classpath refid="maven.compile.classpath" />
                                     <arg value="${project.build.directory}/less/less-1.5.1-rhino.js" />
                                     <arg value="${project.build.directory}/www/css/theme.less" />
                                     <arg value="${project.build.directory}/www/css/theme.css" />
                                 </java>
-
                             </target>
                         </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -390,44 +409,49 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
+
                 <executions>
                     <execution>
-                    <id>bundle-manifest</id>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>manifest</goal>
-                    </goals>
+                        <id>bundle-manifest</id>
+                        <phase>package</phase>
+
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
                     </execution>
                 </executions>
+
                 <configuration>
                     <instructions>
                         <Import-Package>*</Import-Package>
-                        <Include-Resource>
-                            default=target/www
-                        </Include-Resource>
+                        <Include-Resource>default=target/www</Include-Resource>
                     </instructions>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 
     <profiles>
         <profile>
             <id>commercial-build</id>
+
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
+
                         <executions>
                             <execution>
                                 <id>js/css optimization</id>
                                 <phase>prepare-package</phase>
 
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+
                                 <configuration>
                                     <target name="optimizeJS">
-
                                         <property name="requirejs.dir" value="${project.build.directory}/optimization" />
 
                                         <java classname="org.mozilla.javascript.tools.shell.Main">
@@ -458,18 +482,13 @@
                                         </java>
 
                                         <move file="${project.build.directory}/www/css/theme_min.css" tofile="${project.build.directory}/www/css/theme.css" />
-
                                     </target>
                                 </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
                             </execution>
                         </executions>
                     </plugin>
                 </plugins>
             </build>
         </profile>
-
     </profiles>
 </project>
