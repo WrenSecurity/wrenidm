@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2011-2015 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,7 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.provisioner.openicf.commons;
 
 import static org.forgerock.json.JsonValue.json;
@@ -103,20 +103,21 @@ public class ObjectClassInfoHelper {
     }
 
     /**
-     * Get the {@link org.identityconnectors.framework.common.objects.ObjectClass} for this Helper.
+     * Get the object class for this Helper.
      *
-     * @return {@link org.identityconnectors.framework.common.objects.ObjectClass} of this Helper
+     * @return The object class.
      */
     public ObjectClass getObjectClass() {
         return objectClass;
     }
 
     /**
-     * Get a read only set of attributes should return by default.
-     * <p/>
-     * If the {@link OperationOptions#OP_ATTRIBUTES_TO_GET} attribute value is null this is the default always.
+     * Get the read-only set of attributes that are returned by default.
+     * <p>
+     * If the {@link OperationOptions#OP_ATTRIBUTES_TO_GET} attribute value is
+     * {@code null}, this is the default always.
      *
-     * @return set of attribute names to get for the object.
+     * @return The set of attribute names to get for the object.
      */
     public Set<String> getAttributesReturnedByDefault() {
         return attributesReturnedByDefault;

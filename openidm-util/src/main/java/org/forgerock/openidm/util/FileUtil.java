@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2012 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,7 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.util;
 
 import java.io.BufferedInputStream;
@@ -44,13 +44,15 @@ public final class FileUtil {
     }
 
     /**
-     * Read large > 5Mb text files to String.
+     * Read large (&gt; 5 MB) text files to String.
      *
-     * @param file
-     *            source file
-     * @return content of the source {@code file}
-     * @throws IOException
-     *             when the source {@code file} can not be read
+     * @param   file
+     *          Source file.
+     *
+     * @return  Content of the source {@code file}.
+     *
+     * @throws  IOException
+     *          If the source {@code file} can not be read
      */
     public final static String readLargeFile(File file) throws IOException {
         FileChannel channel = new FileInputStream(file).getChannel();
@@ -61,13 +63,15 @@ public final class FileUtil {
     }
 
     /**
-     * Read small < 5Mb text files to String.
+     * Read small (&lt; 5 MB) text files to String.
      *
-     * @param file
-     *            source file
-     * @return content of the source {@code file}
-     * @throws IOException
-     *             when the source {@code file} can not be read
+     * @param   file
+     *          Source file.
+     *
+     * @return  Contents of the file.
+     *
+     * @throws  IOException
+     *          If the source {@code file} can not be read.
      */
     public static final String readFile(File file) throws IOException {
         BufferedInputStream in = null;

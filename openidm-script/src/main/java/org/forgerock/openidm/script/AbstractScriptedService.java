@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2013 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,7 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.script;
 
 import java.util.Dictionary;
@@ -110,13 +110,16 @@ public abstract class AbstractScriptedService implements ScriptCustomizer, Scrip
 
     /**
      * Get the {@link ServerConstants#ROUTER_PREFIX} value.
-     * <p/>
+     * <p>
      * If it return null then the {@link ServerConstants#ROUTER_PREFIX} won't be
      * changed in the service registration properties.
      * 
-     * @param factoryPid
-     * @param configuration
-     * @return null or String or String[]
+     * @param   factoryPid
+     *          The OSGi factory PID for the service.
+     * @param   configuration
+     *          The configuration for the service.
+     *
+     * @return  {@code null} or {@code String} or {@code String[]}.
      */
     protected abstract Object getRouterPrefixes(String factoryPid, JsonValue configuration);
 

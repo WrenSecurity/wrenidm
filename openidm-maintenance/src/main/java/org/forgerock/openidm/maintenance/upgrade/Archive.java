@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
 package org.forgerock.openidm.maintenance.upgrade;
 
@@ -25,7 +26,7 @@ import org.forgerock.util.Function;
 /**
  * Abstraction of an upgrade archive
  *
- * TODO Maybe this can be coalesced with the {@link org.forgerock.openidm.patch.Archive}
+ * TODO Maybe this can be coalesced with the {@code org.forgerock.openidm.patch.Archive}
  */
 public interface Archive {
     /**

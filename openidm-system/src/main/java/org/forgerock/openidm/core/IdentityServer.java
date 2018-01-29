@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2011-2013 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,7 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.core;
 
 import java.io.BufferedInputStream;
@@ -96,16 +96,18 @@ public final class IdentityServer implements PropertyAccessor {
     /**
      * Initialise the singleton {@link IdentityServer} instance with the
      * provided {@link PropertyAccessor} instance.
-     * <p/>
+     * <p>
      * This or the {@link #initInstance(IdentityServer)} method can be called
      * only once and then it throws {@link IllegalStateException} if it's called
      * more then once.
      *
-     * @param properties
-     *            the parent {@code PropertyAccessor}
-     * @return new instance of {@link IdentityServer}
-     * @throws IllegalStateException
-     *             when this method called more then once.
+     * @param   properties
+     *          The parent {@code PropertyAccessor}
+     *
+     * @return  New instance of {@link IdentityServer}.
+     *
+     * @throws  IllegalStateException
+     *          when this method called more then once.
      */
     public static IdentityServer initInstance(PropertyAccessor properties) {
         if (INITIALISED.compareAndSet(Boolean.FALSE, Boolean.TRUE)) {
@@ -120,17 +122,19 @@ public final class IdentityServer implements PropertyAccessor {
     /**
      * Initialise the singleton {@link IdentityServer} instance with the
      * provided {@link IdentityServer} instance.
-     * <p/>
+     * <p>
      * This or the {@link #initInstance(PropertyAccessor)} method can be called
      * only once and then it throws {@link IllegalStateException} if it's called
      * more then once.
      *
-     * @param server
-     *            new instance of {@link IdentityServer}
-     * @return same instance as the {@code server} parameter if not {@code null}
-     *         or the current {@link IdentityServer instance}
-     * @throws IllegalStateException
-     *             when this method called more then once.
+     * @param   server
+     *          New instance of {@link IdentityServer}.
+     *
+     * @return  Same instance as the {@code server} parameter if not {@code null}
+     *          or the current {@link IdentityServer instance}.
+     *
+     * @throws  IllegalStateException
+     *          when this method called more then once.
      */
     public static IdentityServer initInstance(IdentityServer server) {
         if (null != server) {
@@ -461,14 +465,14 @@ public final class IdentityServer implements PropertyAccessor {
 
     /**
      * Retrieves the current running mode of Identity Server.
-     * <p/>
+     * <p>
      * Default running mode is the {@code Production}, that prohibit access to
      * some insecure method. Development mode allow access to all method. To
      * enable development mode set the
      * {@link ServerConstants#PROPERTY_DEBUG_ENABLE} system property
      * {@code true}.
      *
-     * @return true if {@code Development} mode is on.
+     * @return True if {@code Development} mode is on.
      */
     public static boolean isDevelopmentProfileEnabled() {
         String debug =

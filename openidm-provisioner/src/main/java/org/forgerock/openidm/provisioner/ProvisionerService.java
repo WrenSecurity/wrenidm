@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2011-2015 ForgeRock AS. All rights reserved.
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -20,10 +21,7 @@
  * with the fields enclosed by brackets [] replaced by
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * $Id$
  */
-
 package org.forgerock.openidm.provisioner;
 
 import org.forgerock.services.context.Context;
@@ -31,7 +29,6 @@ import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ResourceException;
 
 import java.util.Map;
-
 
 /**
  * Minimum behavior for a provisioner used to provision resources to external sources.
@@ -42,48 +39,61 @@ public interface ProvisionerService {
 
     /**
      * Gets the unique {@link SystemIdentifier} of this instance.
-     * <p/>
-     * The service which refers to this service instance can distinguish between multiple instances by this value.
+     * <p>
+     * The service which refers to this service instance can distinguish between multiple instances
+     * by this value.
      *
-     * @return the provisioner's system identifier
+     * @return The provisioner's system identifier.
      */
     SystemIdentifier getSystemIdentifier();
 
     /**
      * Gets a brief stats report about the current status of this service instance.
-     * </p/>
+     * <p>
      * TODO Provide a sample object
      *
-     * @param context the request's Context in case the status report operation needs to perform a router request
-     * @return the provisioner's status
+     * @param   context
+     *          The request's Context in case the status report operation needs to perform a router
+     *          request.
+     *
+     * @return  The provisioner's status.
      */
     Map<String, Object> getStatus(Context context);
     
     /**
      * Tests a configuration for a connector.
-     * @param config the config to test
-     * @return the result of the test.
+     *
+     * @param   config
+     *          The config to test.
+     *
+     * @return  The result of the test.
      */
     Map<String, Object> testConfig(JsonValue config);
 
     /**
-     * Synchronise the changes from the end system for the given {@code objectType}.
-     * <p/>
-     * OpenIDM takes active role in the synchronisation process by asking the end system to get all changed object.
-     * Not all systems are capable to fulfill this kind of request but if the end system is capable then the
-     * implementation sends each change to a new request on the router and when it is finished, it returns
-     * a new <b>stage</b> object.
-     * <p/>
+     * Synchronise changes in the end system for the given {@code objectType}.
+     * <p>
+     * OpenIDM takes an active role in the synchronisation process by asking the end system to get
+     * all of the objects that have changed. Not all systems are capable of fulfilling this kind of
+     * request. If the end system is capable, then the implementation sends each change to a new
+     * request on the router and when it is finished, it returns a new <b>stage</b> object.
+     * <p>
      * The {@code previousStage} object is the previously returned value of this method.
-     * Unhandled exception will result not to update the stage object in repository.
-     * <p/>
-     * All exceptions must be handled to save the the new stage object.
+     * Unhandled exception will result in no updates to the staged object in repository.
+     * <p>
+     * All exceptions must be handled to save the newly-staged object.
      *
-     * @param context the request context associated with the invocation
-     * @param objectType
-     * @param previousStage           The previously returned object. If null then it's the first execution.
-     * @return The new updated stage object. This will be the {@code previousStage} at next call.
-     * @throws ResourceException if a failure occurred during live sync
+     * @param   context
+     *          The request context associated with the invocation
+     * @param   objectType
+     *          The type of object being synchronized.
+     * @param   previousStage
+     *          The previously returned object. If {@code null}, then it's the first execution.
+     *
+     * @return  The new updated stage object. This will be the {@code previousStage} at next call.
+     *
+     * @throws  ResourceException
+     *          If a failure occurs during live sync
      */
     JsonValue liveSynchronize(Context context, String objectType, JsonValue previousStage) throws ResourceException;
 }

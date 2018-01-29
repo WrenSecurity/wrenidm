@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2011-2015 ForgeRock AS. All rights reserved.
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -20,10 +21,7 @@
  * with the fields enclosed by brackets [] replaced by
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * $Id$
  */
-
 package org.forgerock.openidm.provisioner.openicf.impl;
 
 import org.forgerock.json.JsonValue;
@@ -138,12 +136,16 @@ public class OperationHelperImpl implements OperationHelper {
     }
 
     /**
-     * Generate the fully qualified id from unqualified object {@link org.identityconnectors.framework.common.objects.Uid}
-     * <p/>
-     * The result id will be system/{@code [endSystemName]}/{@code [objectType]}/{@code [escapedObjectId]}
+     * Generate the fully qualified id from unqualified object
+     * {@link org.identityconnectors.framework.common.objects.Uid}
+     * <p>
+     * The result id will be
+     * {@code system/[endSystemName]/[objectType]/[escapedObjectId]}
      *
-     * @param uid original un escaped unique identifier of the object
-     * @return
+     * @param   uid
+     *          Original un-escaped unique identifier of the object.
+     *
+     * @return  The fully-qualified ID for the object.
      */
     public URI resolveQualifiedId(Uid uid) {
         if (null != uid) {

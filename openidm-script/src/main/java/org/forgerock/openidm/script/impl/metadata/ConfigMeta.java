@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2013 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,7 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.script.impl.metadata;
 
 import java.util.Collections;
@@ -46,11 +46,8 @@ public class ConfigMeta implements MetaDataProvider {
     /**
      * Setup logging for the {@link ConfigMeta}.
      */
-    final static Logger logger = LoggerFactory.getLogger(ConfigMeta.class);
+    private static final Logger logger = LoggerFactory.getLogger(ConfigMeta.class);
 
-    /**
-     * @inheritDoc
-     */
     public List<JsonPointer> getPropertiesToEncrypt(String pidOrFactory, String instanceAlias,
             JsonValue config) throws WaitForMetaData, NotConfiguration {
         if (ScriptRegistryService.PID.equalsIgnoreCase(pidOrFactory)) {
@@ -60,9 +57,6 @@ public class ConfigMeta implements MetaDataProvider {
         return null;
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public void setCallback(MetaDataProviderCallback callback) {
         // This newBuilder won't be updated

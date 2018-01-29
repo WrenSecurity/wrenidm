@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2011-2015 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,7 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.repo.jdbc.impl.query;
 
 import static org.forgerock.json.JsonValue.json;
@@ -169,12 +169,14 @@ public class TableQueries {
     /**
      * Constructor.
      *
-     * @param tableHandler
-     * @param mainTableName
-     * @param propTableName
-     * @param dbSchemaName
-     * @param maxPropLen Max length of propvalues. Used for trimming values if > 0.
-     * @param resultMapper
+     * @param   tableHandler
+     * @param   mainTableName
+     * @param   propTableName
+     * @param   dbSchemaName
+     * @param   maxPropLen
+     *          Max length of propvalues. Used for trimming values if
+     *          &gt; 0.
+     * @param   resultMapper
      */
     public TableQueries(TableHandler tableHandler, String mainTableName, String propTableName, String dbSchemaName, int maxPropLen,
             QueryResultMapper resultMapper) {

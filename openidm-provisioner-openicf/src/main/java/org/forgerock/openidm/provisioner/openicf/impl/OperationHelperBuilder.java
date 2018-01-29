@@ -20,10 +20,7 @@
  * with the fields enclosed by brackets [] replaced by
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * $Id$
  */
-
 package org.forgerock.openidm.provisioner.openicf.impl;
 
 import org.forgerock.json.JsonValue;

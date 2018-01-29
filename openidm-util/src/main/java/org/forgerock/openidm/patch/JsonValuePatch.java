@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2013-2015 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -208,25 +209,36 @@ public class JsonValuePatch {
     /**
      * Apply a list of PatchOperations.
      *
-     * @param subject the JsonValue to which to apply the patch operation(s).
-     * @return whether the subject was modified.
-     * @throws ResourceException on failure to apply PatchOperation.
+     * @param   subject
+     *          The JsonValue to which the patch operation(s) will be applied.
+     *
+     * @return  Whether or not the subject was modified by the operation(s).
+     *
+     * @throws  BadRequestException
+     *          If the request that was provided is not a valid patch operation.
      */
-    public static boolean apply(JsonValue subject, List<PatchOperation> operations) throws BadRequestException {
+    public static boolean apply(JsonValue subject, List<PatchOperation> operations)
+    throws BadRequestException {
         return apply(subject, operations, DEFAULT_TRANSFORMER);
     }
 
     /**
      * Apply a list of PatchOperations.
      *
-     * @param subject the JsonValue to which to apply the patch operation(s).
-     * @param transformer the value transformer used to compute the value to use for the operation.
-     * @return whether the subject was modified.
-     * @throws ResourceException on failure to apply PatchOperation.
+     * @param   subject
+     *          The JsonValue to which the patch operation(s) will be applied.
+     * @param   transformer
+     *          The value transformer used when computing values to use for the
+     *          operation.
+     *
+     * @return  Whether or not the subject was modified by the operation(s).
+     *
+     * @throws  BadRequestException
+     *          If the request that was provided is not a valid patch operation.
      */
-    public static boolean apply(JsonValue subject, List<PatchOperation> operations, PatchValueTransformer transformer)
-            throws BadRequestException {
-
+    public static boolean apply(JsonValue subject, List<PatchOperation> operations,
+                                PatchValueTransformer transformer)
+    throws BadRequestException {
         boolean isModified = false;
 
         if (operations != null) {

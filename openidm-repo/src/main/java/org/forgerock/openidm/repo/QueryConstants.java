@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2011-2015 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -27,7 +28,6 @@ import org.forgerock.json.resource.http.HttpUtils;
 
 /**
  * Map key constants for Repository Queries
- *
  */
 public final class QueryConstants {
     private QueryConstants() {}
@@ -37,29 +37,34 @@ public final class QueryConstants {
     /**
      * Query input key.
      * 
-     * Query expression key for the query param map to supply a Query expression in-line. 
+     * Query expression key for the query param map to supply a Query
+     * expression in-line.
      *
-     * The alternative is to specify a query identifier for a pre-configured query. 
+     * The alternative is to specify a query identifier for a pre-configured
+     * query.
      * 
-     * The query can contain tokens in the form of ${<param-map-key>} which will 
-     * get substituted from the param map passed to the query.
+     * The query can contain tokens in the form of {@code ${<param-map-key>}}
+     * which will get substituted from the param map passed to the query.
      * 
-     * When both an expression and ID are present, the query expression takes precedent
+     * When both an expression and ID are present, the query expression takes
+     * precedence.
      */
     public final static String QUERY_EXPRESSION = "_queryExpression";
     
     /**
      * Query input key.
      * 
-     * Query identifier for the query param map. The query identifier must match a
-     * configured query. 
+     * Query identifier for the query param map. The query identifier must
+     * match a configured query.
      * 
      * The alternative is to specify a query expression for an in-line query.
      *
-     * The configured query can contain tokens in the form of ${<param-map-key>}
-     * which will get substituted from the param map passed to the query.
+     * The configured query can contain tokens in the form of
+     * {@code ${<param-map-key>}} which will get substituted from the param
+     * map passed to the query.
      * 
-     * When both an expression and ID are present, the query expression takes precedent
+     * When both an expression and ID are present, the query expression takes
+     * precedence.
      */    
     public final static String QUERY_ID = "_queryId";
     
@@ -82,7 +87,8 @@ public final class QueryConstants {
     /**
      * Query output key.
      * 
-     * Key for record results in JSON object model format, value format List<Map<String, Object>>
+     * Key for record results in JSON object model format, value format
+     * {@code List<Map<String, Object>>}.
      */
     public final static String QUERY_RESULT = "result";    
     
@@ -97,7 +103,9 @@ public final class QueryConstants {
     /**
      * Query output key.
      * 
-     * Key for query result meta-data, indicating how long the conversion of the results records took in ms
+     * Key for query result meta-data, indicating how long the conversion of
+     * the results records took in ms.
+     *
      * Value format is Long.
      */
     public final static String STATISTICS_CONVERSION_TIME = "conversion-time-ms";
@@ -108,9 +116,11 @@ public final class QueryConstants {
     /**
      * Query input value for the QUERY_ID input key.
      * 
-     * Querying with this query id results in querying all object IDs for a given ObjectSet.
+     * Querying with this query id results in querying all object IDs for a
+     * given ObjectSet.
      * 
-     * All ObjectSets supporting query must support the query corresponding to this ID
+     * All ObjectSets supporting query must support the query corresponding to
+     * this ID.
      */    
     public final static String QUERY_ALL_IDS = "query-all-ids";
 
