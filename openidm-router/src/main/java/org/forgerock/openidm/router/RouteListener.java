@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2013-2015 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,21 +22,19 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.router;
 
 import org.osgi.framework.ServiceEvent;
 
 import java.util.EventListener;
 
-/**
- * @ThreadSafe
- */
 public interface RouteListener extends EventListener {
     /**
-     * Receives notification that a {@link org.forgerock.http.routing.RouteMatcher} has had a lifecycle change.
+     * Receives notification that a
+     * {@link org.forgerock.services.routing.RouteMatcher} has had a lifecycle
+     * change.
      *
      * @param event The {@code ServiceEvent} object.
      */
-    public void routeChanged(ServiceEvent event);
+    void routeChanged(ServiceEvent event);
 }

@@ -1,19 +1,21 @@
 /*
- * The contents of this file are subject to the terms of the Common Development and
- * Distribution License (the License). You may not use this file except in compliance with the
+ * The contents of this file are subject to the terms of the Common Development
+ * and Distribution License (the License). You may not use this file except in
+ * compliance with the License.
+ *
+ * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License
+ * for the specific language governing permission and limitations under the
  * License.
  *
- * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
- * specific language governing permission and limitations under the License.
- *
- * When distributing Covered Software, include this CDDL Header Notice in each file and include
- * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
- * Header, with the fields enclosed by brackets [] replaced by your own identifying
- * information: "Portions Copyrighted [year] [name of copyright owner]".
+ * When distributing Covered Software, include this CDDL Header Notice in each
+ * file and include the License file at legal/CDDLv1.0.txt. If applicable, add
+ * the following below the CDDL Header, with the fields enclosed by brackets []
+ * replaced by your own identifying information:
+ * "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright © 2012 ForgeRock AS. All rights reserved.
+ * Portions Copyright 2018 Wren Security.
  */
-
 package org.forgerock.openidm.smartevent.core;
 
 import java.text.DecimalFormat;
@@ -39,7 +41,6 @@ import com.lmax.disruptor.dsl.Disruptor;
 /**
  * Event handler for monitoring and statistics Expects a single thread assigned
  * to gather the statistics
- * 
  */
 public class StatisticsHandler implements EventHandler<DisruptorReferringEventEntry>,
         StatisticsHandlerMBean {
@@ -67,7 +68,10 @@ public class StatisticsHandler implements EventHandler<DisruptorReferringEventEn
 
     /**
      * Constructor
-     * @param disruptor an optional reference to the ring buffer from the disruptor library, or null if this library is not used 
+     *
+     * @param   disruptor
+     *          An optional reference to the ring buffer from the disruptor
+     *          library, or null if this library is not used.
      */    
     public StatisticsHandler(Disruptor<DisruptorReferringEventEntry> disruptor) {
 
@@ -126,9 +130,6 @@ public class StatisticsHandler implements EventHandler<DisruptorReferringEventEn
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public Map<String, String> getTotals() {
         Map<String, String> stats = new TreeMap<>();
         for (Map.Entry<String, MonitoringInfo> entry : map.entrySet()) {
@@ -137,9 +138,6 @@ public class StatisticsHandler implements EventHandler<DisruptorReferringEventEn
         return stats;
     }
 
-    /**
-     * @inheritDoc
-     */
     public Map<Long, String> getRecent() {
         // TODO: consider adding history for not yet end()-ed events
         // Present history ordered by start time, with latest start time first
@@ -163,18 +161,12 @@ public class StatisticsHandler implements EventHandler<DisruptorReferringEventEn
         return recent;
     }
 
-    /**
-     * @inheritDoc
-     */
     public void resetAllStatistics() {
         for (MonitoringInfo entry : map.values()) {
             entry.reset();
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public void resetStatistics(String eventName) {
         MonitoringInfo entry = map.get(eventName);
         if (entry != null) {
@@ -186,9 +178,6 @@ public class StatisticsHandler implements EventHandler<DisruptorReferringEventEn
     }
 
     // TODO: move out of statistics
-    /**
-     * @inheritDoc
-     */
     public void setEventsEnabled(String eventName, boolean enabled) {
         Name entry = Name.get(eventName);
         if (entry != null) {
@@ -200,9 +189,6 @@ public class StatisticsHandler implements EventHandler<DisruptorReferringEventEn
     }
 
     // TODO: move out of statistics
-    /**
-     * @inheritDoc
-     */
     public Map<String, Boolean> getEventsEnabledMap() {
         Map<String, Boolean> enabledMap = new TreeMap<String, Boolean>();
         for (Map.Entry<String, Name> entry : Name.getAllNames().entrySet()) {
@@ -212,9 +198,6 @@ public class StatisticsHandler implements EventHandler<DisruptorReferringEventEn
     }
 
     // TODO: move out of statistics
-    /**
-     * @inheritDoc
-     */
     public void setResultHistoryEnabled(String eventName, boolean enabled) {
         Name entry = Name.get(eventName);
         if (entry != null) {
@@ -226,9 +209,6 @@ public class StatisticsHandler implements EventHandler<DisruptorReferringEventEn
     }
 
     // TODO: move out of statistics
-    /**
-     * @inheritDoc
-     */
     public Map<String, Boolean> getResultHistoryEnabledMap() {
         Map<String, Boolean> enabledMap = new TreeMap<String, Boolean>();
         for (Map.Entry<String, Name> entry : Name.getAllNames().entrySet()) {

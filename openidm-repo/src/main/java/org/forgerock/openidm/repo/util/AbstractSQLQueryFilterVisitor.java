@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2015 ForgeRock AS. All rights reserved.
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -30,17 +31,19 @@ import org.forgerock.util.query.QueryFilter;
 import org.forgerock.util.query.QueryFilterVisitor;
 
 /**
- * An abstract {@link QueryFilterVisitor} to produce SQL via an {@link SQLRenderer}.
- * Includes implementation patterns for the standard
- *
+ * An abstract {@link QueryFilterVisitor} to produce SQL via an
+ * {@link SQLRenderer}.
+ * <p>
+ * Includes implementation patterns for the following standard operators:
  * <ul>
- *     <li>&gt;=</li>
- *     <li>&gt;</li>
- *     <li>=</li>
- *     <li>&lt;</li>
- *     <li>&lt;=</li>
+ *   <li>&gt;=</li>
+ *   <li>&gt;</li>
+ *   <li>=</li>
+ *   <li>&lt;</li>
+ *   <li>&lt;=</li>
  * </ul>
- * operators, along with the following implementations for {@link QueryFilter}'s
+ * <p>
+ * Along with the following implementations for {@link QueryFilter}'s
  * <ul>
  *     <li>contains : field LIKE '%value%'</li>
  *     <li>startsWith : field LIKE 'value%'</li>
@@ -48,41 +51,45 @@ import org.forgerock.util.query.QueryFilterVisitor;
  * <p>
  * This implementation does not support extended-match.
  * <p>
- * The implementer is responsible for implementing
+ * The implementer is responsible for implementing the following:
  * <ul>
- *     <li>{@link #visitValueAssertion(Object, String, org.forgerock.json.JsonPointer, Object)} which
- *     handles the value assertions - x operand y for the standard operands</li>
- *     <li>{@link #visitPresentFilter(Object, org.forgerock.json.JsonPointer)} as "field present" can
- *     vary by database implementation (though typically "field IS NOT NULL" is chosen)</li>
- *     <li>@{link #visitBooleanLiteralFilter(Object, boolean)} to express a boolean true or false in whatever
- *     SQL dialect is being used</li>
- *     <li>@{link #visitNotFilter(Object, QueryFilter)} to negate the QueryFilter parameter</li>
- *     <li>@{link #visitAndFilter(Object, List&lt;QueryFilter&gt;, Object)} to dictate how the composite
- *     function AND behaves</li>
- *     <li>@{link #visitOrFilter(Object, List&lt;QueryFilter&gt;, Object)} to dictate how the composite
- *     function OR behaves</li>
+ *     <li>{@link #visitValueAssertion(Object, String, org.forgerock.json.JsonPointer, Object)}
+ *     which handles the value assertions - x operand y for the standard
+ *     operands.</li>
+ *     <li>{@link #visitPresentFilter(Object, org.forgerock.json.JsonPointer)}
+ *     as "field present" can vary by database implementation (though typically
+ *     "field IS NOT NULL" is chosen).</li>
+ *     <li>{@link #visitBooleanLiteralFilter(Object, boolean)} to express a
+ *     boolean true or false in whatever SQL dialect is being used.</li>
+ *     <li>{@link #visitNotFilter(Object, QueryFilter)} to negate the
+ *     QueryFilter parameter.</li>
+ *     <li>{@link #visitAndFilter(Object, List)} to
+ *     dictate how the composite function AND behaves.</li>
+ *     <li>{@link #visitOrFilter(Object, List)} to
+ *     dictate how the composite function OR behaves.</li>
+ * </ul>
  *
  * @param <R> the subclass of SQLRenderer the visitor returns
  * @param <P> the parameter type passed in the visit methods
  */
-public abstract class AbstractSQLQueryFilterVisitor<R extends SQLRenderer<?>, P> implements QueryFilterVisitor<R, P, JsonPointer> {
-
+public abstract class AbstractSQLQueryFilterVisitor<R extends SQLRenderer<?>, P>
+implements QueryFilterVisitor<R, P, JsonPointer> {
     /**
      * A templating method that will generate the actual value assertion.
      * <p>
      * Example:
-     * <pre><blockquote>
+     * <pre>{@code
      *     ?_queryFilter=email+eq+"someone@example.com"
-     * </blockquote></pre>
+     * }</pre>
      * is an QueryFilter stating the value assertion "email" equals "someone@example.com".  The correct SQL for that
      * may vary depending on database variant and schema definition.  This method will be invoked as
-     * <pre><blockquote>
+     * <pre>{@code
      *     return visitValueAssertion(parameters, "=", JsonPointer(/email), "someone@example.com");
-     * </blockquote></pre>
+     * }</pre>
      * A possible implementation for the above example may be
-     * <pre><blockquote>
+     * <pre>{@code
      *     return getDatabaseColumnFor("email") + "=" + ":email";
-     * </blockquote></pre>
+     * }</pre>
      * The parameters argument is implementation-dependent as a way to store placeholder mapping throughout the query-filter visiting.
      *
      * @param parameters storage of parameter-substitutions for the value of the assertion

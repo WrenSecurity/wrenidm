@@ -1,19 +1,21 @@
 /*
- * The contents of this file are subject to the terms of the Common Development and
- * Distribution License (the License). You may not use this file except in compliance with the
+ * The contents of this file are subject to the terms of the Common Development
+ * and Distribution License (the License). You may not use this file except in
+ * compliance with the License.
+ *
+ * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License
+ * for the specific language governing permission and limitations under the
  * License.
  *
- * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
- * specific language governing permission and limitations under the License.
+ * When distributing Covered Software, include this CDDL Header Notice in each
+ * file and include the License file at legal/CDDLv1.0.txt. If applicable, add
+ * the following below the CDDL Header, with the fields enclosed by brackets []
+ * replaced by your own identifying information:
+ * "Portions copyright [year] [name of copyright owner]".
  *
- * When distributing Covered Software, include this CDDL Header Notice in each file and include
- * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
- * Header, with the fields enclosed by brackets [] replaced by your own identifying
- * information: "Portions copyright [year] [name of copyright owner]".
- *
- * Portions copyright 2012-2016 ForgeRock AS.
+ * Copyright 2012-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
-
 package org.forgerock.openidm.scheduler;
 
 import static org.forgerock.http.routing.RoutingMode.STARTS_WITH;
@@ -251,7 +253,7 @@ public class SchedulerService implements RequestHandler {
 
     /**
      * Registers a {@link ScheduleConfigService} and adds the scheduler if the scheduler has been started.
-     * 
+     *
      * @param service the {@link ScheduleConfigService} to register.
      * @throws SchedulerException if unable to get job name
      * @throws ParseException if unable to parse schedule config
@@ -274,7 +276,7 @@ public class SchedulerService implements RequestHandler {
     /**
      * Unregisters a {@link ScheduleConfigService} and deletes the schedule if the scheduler has been started, and
      * if the service deactivation has not occurred as part of the shutdown of an idm node.
-     * 
+     *
      * @param service the {@link ScheduleConfigService} to remove.
      * @param frameworkStopping indicates whether the osgi container is stopping
      */

@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2011-15 ForgeRock AS. All rights reserved.
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -20,10 +21,7 @@
  * with the fields enclosed by brackets [] replaced by
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * $Id$
  */
-
 package org.forgerock.openidm.provisioner;
 
 /**
@@ -36,17 +34,22 @@ public interface SystemIdentifier {
      * Compare this and the {@code other} instance and returns true if both identifies the same
      * {@link ProvisionerService} instance.
      *
-     * @param other
-     * @return
+     * @param   other
+     *          The instance against which this instance is compared.
+     *
+     * @return  {@code true} if this object identifies the same instance as {@code other}; or,
+     *          {@code false} if it does not.
      */
     boolean is(SystemIdentifier other);
 
     /**
-     * Checks the {@code uri} and return true if the {@link ProvisionerService} instance is responsible to handle
-     * the request.
+     * Checks the {@code uri} and return true if the {@link ProvisionerService} instance is
+     * responsible for handling the request.
      *
-     * @param id
-     * @return
+     * @param   uri
+     *          The URI to check.
+     *
+     * @return  If this instance handles the given type of request.
      */
-    boolean is(Id id);
+    boolean is(Id uri);
 }

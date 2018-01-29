@@ -1,7 +1,8 @@
-/**
+/*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2011-2015 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -32,12 +33,12 @@ package org.forgerock.openidm.config.persistence;
  * to process configuration.
  */
 public interface ConfigPersisterMarker {
-    
     /**
-     * Notifies the extension when the system determined that 
-     * all necessary services are ready, and checks if the 
-     * extension itself is ready
-     * @throws an exception if the extension could not initiate
+     * Notifies the extension when the system determined that all necessary
+     * services are ready, and checks if the extension itself is ready.
+     *
+     * @throws  BootstrapFailure
+     *          If the extension could not initialize properly.
      */
     void checkReady() throws BootstrapFailure;
 }

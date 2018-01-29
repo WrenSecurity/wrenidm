@@ -12,9 +12,8 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions copyright 2017 Wren Security
+ * Portions Copyright 2018 Wren Security.
  */
-
 package org.forgerock.openidm.provisioner.openicf.commons;
 
 import static org.forgerock.json.JsonValue.json;
@@ -74,7 +73,7 @@ public class ObjectClassInfoHelper {
     private final static Logger logger = LoggerFactory.getLogger(ObjectClassInfoHelper.class);
 
     private static final String RUN_AS_USER = "runAsUser";
-    
+
     private final ObjectClass objectClass;
     private final String nameAttribute;
     private final Set<AttributeInfoHelper> attributes;
@@ -101,25 +100,26 @@ public class ObjectClassInfoHelper {
             @Override
             public boolean apply(String attribute) {
                 return isRunAsAttr(attribute);
-            }  
+            }
         };
     }
 
     /**
-     * Get the {@link org.identityconnectors.framework.common.objects.ObjectClass} for this Helper.
+     * Get the object class for this Helper.
      *
-     * @return {@link org.identityconnectors.framework.common.objects.ObjectClass} of this Helper
+     * @return The object class.
      */
     public ObjectClass getObjectClass() {
         return objectClass;
     }
 
     /**
-     * Get a read only set of attributes should return by default.
-     * <p/>
-     * If the {@link OperationOptions#OP_ATTRIBUTES_TO_GET} attribute value is null this is the default always.
+     * Get the read-only set of attributes that are returned by default.
+     * <p>
+     * If the {@link OperationOptions#OP_ATTRIBUTES_TO_GET} attribute value is
+     * {@code null}, this is the default always.
      *
-     * @return set of attribute names to get for the object.
+     * @return The set of attribute names to get for the object.
      */
     public Set<String> getAttributesReturnedByDefault() {
         return attributesReturnedByDefault;
@@ -142,7 +142,7 @@ public class ObjectClassInfoHelper {
                     attrsToGet.addAll(attributesReturnedByDefault);
                     continue;
                 }
-                
+
                 for (AttributeInfoHelper attribute : attributes) {
                     if (attribute.getName().equals(field.leaf()) && attribute.getAttributeInfo().isReadable()) {
                         attrsToGet.add(attribute.getAttributeInfo().getName());
@@ -579,8 +579,8 @@ public class ObjectClassInfoHelper {
      *
      * @param attribute the attribute to check
      * @return true if the attribute requires re-authentication
-     */    
+     */
     public boolean isRunAsAttr(String attribute) {
-        return getProperties().get(attribute).isNotNull() && getProperties().get(attribute).get(RUN_AS_USER).defaultTo(false).asBoolean();        
+        return getProperties().get(attribute).isNotNull() && getProperties().get(attribute).get(RUN_AS_USER).defaultTo(false).asBoolean();
     }
 }
