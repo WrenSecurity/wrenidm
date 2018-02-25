@@ -41,8 +41,6 @@
     </description>
 
     <properties>
-        <!-- If we release this project, we need to include the Forgerock binary license -->
-        <include.binary.license>${project.build.directory}</include.binary.license>
         <!-- The SaaS connectors samples must be excluded from the community build -->
         <exclude.google.samples>samples/google-connector/**</exclude.google.samples>
         <exclude.salesforce.samples>samples/salesforce-connector/**</exclude.salesforce.samples>
