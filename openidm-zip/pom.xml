@@ -40,11 +40,6 @@
         Packages all of Wren:IDM up into a single ZIP file package that is ready for distribution.
     </description>
 
-    <properties>
-        <!-- If the binary-licensing profile is activated, we need the ForgeRock license there -->
-        <forgerock.license.output.dir>${project.build.directory}</forgerock.license.output.dir>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.forgerock.openidm</groupId>
