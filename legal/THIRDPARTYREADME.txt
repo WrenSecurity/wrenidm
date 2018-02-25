@@ -1275,19 +1275,19 @@ Copyright: Copyright (c) 2010-2014 Jeremy Ashkenas, DocumentCloud
 Version: backbone-relational-0.9.0-min.js
 Copyright: Copyright (c) 2011-2014 Paul Uithol, http://progressivecompany.nl/
 
-Version: backbone.paginator.min-2.0.2-min.js
+Version: backbone-paginator-2.0.2-min.js
 Copyright: Copyright (c) 2013 Jimmy Yuen Ho Wong and contributors
 
-Version: backgrid-filter.min-0.3.5-min.js
+Version: backgrid-filter-0.3.5-min.js
 Copyright: Copyright (c) 2013 Jimmy Yuen Ho Wong and contributors
 
-Version: backgrid-paginator.min-0.3.5-min.js
+Version: backgrid-paginator-0.3.5-min.js
 Copyright: Copyright (c) 2013 Jimmy Yuen Ho Wong and contributors
 
 Version: backgrid-select-all-0.3.5-min.js
 Copyright: Copyright (c) 2013 Jimmy Yuen Ho Wong and contributors
 
-Version: backgrid.min-0.3.5-min.js
+Version: backgrid-0.3.5-min.js
 Copyright: Copyright (c) 2014 Jimmy Yuen Ho Wong and contributors <wyuenho@gmail.com>
 
 Version: bootstrap-3.3.5-custom.js/.css
