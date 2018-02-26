@@ -325,6 +325,9 @@ define([
             });
 
             this.$el.find(grid_id).append(resourceGrid.render().el);
+            this.$el.find(grid_id).find('> table > thead form').click(function(event) {
+                event.stopPropagation();
+            });
             this.$el.find(pager_id).append(paginator.render().el);
             this.bindDefaultHandlers();
 
