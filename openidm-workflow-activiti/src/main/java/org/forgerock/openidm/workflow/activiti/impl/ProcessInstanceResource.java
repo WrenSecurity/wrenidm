@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2015 ForgeRock AS.
- * Portions copyright 2017 Wren Security
+ * Portions Copyright 2017 Wren Security
  */
 package org.forgerock.openidm.workflow.activiti.impl;
 
