@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Copyright 2017-2018 Wren Security.
  */
 
 package org.forgerock.openidm.servlet.internal;
