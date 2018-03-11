@@ -16,6 +16,7 @@
  * Copyright 2011-2016 ForgeRock AS.
  * Portions Copyright 2018 Wren Security.
  */
+
 package org.forgerock.openidm.provisioner.openicf;
 
 import java.util.List;
@@ -94,9 +95,6 @@ public interface ConnectorInfoProvider {
      * @param   configuration
      *          The configuration from which to initialize the system object
      *          configuration.
-     * @param   validate
-     *          Whether or not to validate the configuration using the connector's
-     *          {@code Test} operation.
      *
      * @return  The system object configuration.
      *

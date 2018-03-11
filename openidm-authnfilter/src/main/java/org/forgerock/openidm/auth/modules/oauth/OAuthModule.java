@@ -12,7 +12,9 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
+
 package org.forgerock.openidm.auth.modules.oauth;
 
 import static org.forgerock.caf.authentication.framework.AuthenticationFramework.LOG;
@@ -185,7 +187,6 @@ public class OAuthModule implements AsyncServerAuthModule {
      * @param messageInfo {@inheritDoc}
      * @param subject {@inheritDoc}
      * @return {@inheritDoc}
-     * @throws AuthException {@inheritDoc}
      */
     @Override
     public Promise<AuthStatus, AuthenticationException> secureResponse(MessageInfoContext messageInfo,
@@ -198,7 +199,6 @@ public class OAuthModule implements AsyncServerAuthModule {
      *
      * @param messageInfo {@inheritDoc}
      * @param subject {@inheritDoc}
-     * @throws AuthException {@inheritDoc}
      */
     @Override
     public Promise<Void, AuthenticationException> cleanSubject(MessageInfoContext messageInfo, Subject subject) {

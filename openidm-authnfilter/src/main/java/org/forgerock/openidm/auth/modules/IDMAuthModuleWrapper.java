@@ -205,7 +205,6 @@ public class IDMAuthModuleWrapper implements AsyncServerAuthModule {
      * @param responseMessagePolicy {@inheritDoc}
      * @param handler {@inheritDoc}
      * @param options {@inheritDoc}
-     * @return {@inheritDoc}
      */
     @Override
     public void initialize(MessagePolicy requestMessagePolicy,MessagePolicy responseMessagePolicy,
