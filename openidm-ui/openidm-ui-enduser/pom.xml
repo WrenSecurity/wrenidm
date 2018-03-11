@@ -81,7 +81,7 @@
 
     <dependency>
       <groupId>org.forgerock.commons.ui.libs</groupId>
-      <artifactId>backgrid.min</artifactId>
+      <artifactId>backgrid</artifactId>
       <version>0.3.5</version>
       <classifier>min</classifier>
       <type>js</type>
@@ -89,7 +89,7 @@
 
     <dependency>
       <groupId>org.forgerock.commons.ui.libs</groupId>
-      <artifactId>backgrid-paginator.min</artifactId>
+      <artifactId>backgrid-paginator</artifactId>
       <version>0.3.5</version>
       <classifier>min</classifier>
       <type>js</type>
@@ -97,8 +97,8 @@
 
     <dependency>
       <groupId>org.forgerock.commons.ui.libs</groupId>
-      <artifactId>backgrid-filter.min</artifactId>
-      <version>0.3.5</version>
+      <artifactId>backgrid-filter</artifactId>
+      <version>0.3.7</version>
       <classifier>min</classifier>
       <type>js</type>
     </dependency>

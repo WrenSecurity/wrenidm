@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
 
 require.config({
@@ -48,9 +49,9 @@ require.config({
         moment: "libs/moment-2.8.1-min",
         contentflow: "libs/contentflow",
         selectize : "libs/selectize-0.12.1-min",
-        "backgrid": "libs/backgrid.min-0.3.5-min",
-        "backgrid-filter": "libs/backgrid-filter.min-0.3.5-min",
-        "backgrid-paginator": "libs/backgrid-paginator.min-0.3.5-min",
+        "backgrid": "libs/backgrid-0.3.5-min",
+        "backgrid-filter": "libs/backgrid-filter-0.3.7-min",
+        "backgrid-paginator": "libs/backgrid-paginator-0.3.5-min",
         faiconpicker: "libs/fontawesome-iconpicker-1.0.0-min",
         d3 : "libs/d3-3.5.5-min",
         dimple : "libs/dimple-2.1.2-min",
