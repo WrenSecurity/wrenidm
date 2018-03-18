@@ -107,7 +107,7 @@
                         </bytecodeInjection>
 
                         <bytecodeInjection>
-                            <expression>${ci.scm.revision}</expression>
+                            <expression>${git.commit.id.abbrev}</expression>
 
                             <targetMembers>
                                 <constant>
@@ -123,7 +123,7 @@
                         </bytecodeInjection>
 
                         <bytecodeInjection>
-                            <expression>${env.BUILD_TAG}</expression>
+                            <expression>${git.closest.tag.name}</expression>
 
                             <targetMembers>
                                 <methodBodyReturn>
@@ -134,7 +134,7 @@
                         </bytecodeInjection>
 
                         <bytecodeInjection>
-                            <expression>${env.GIT_BRANCH}</expression>
+                            <expression>${git.branch}</expression>
 
                             <targetMembers>
                                 <methodBodyReturn>
@@ -157,6 +157,28 @@
                         <Bundle-Activator>org.forgerock.openidm.core.internal.Activator</Bundle-Activator>
                         <Bundle-Category>utility</Bundle-Category>
                     </instructions>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>2.2.4</version>
+
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
+                    <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
                 </configuration>
             </plugin>
         </plugins>
