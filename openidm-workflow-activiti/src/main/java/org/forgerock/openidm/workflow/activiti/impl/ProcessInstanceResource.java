@@ -444,8 +444,9 @@ public class ProcessInstanceResource implements CollectionResourceProvider {
         List<HistoricVariableInstance> variables = processEngine.getHistoryService().
                 createHistoricVariableInstanceQuery().processInstanceId(id).list();
         for (HistoricVariableInstance variable : variables) {
-            if (!ActivitiConstants.OPENIDM_CONTEXT.equals(variable.getVariableName())) {  // Remove useless OPENIDM_CONTEXT
-                result.put(variable.getVariableName(), variable.getValue());
+            String name = variable.getVariableName();
+            if (!ActivitiConstants.OPENIDM_CONTEXT.equals(name)) {  // Remove useless OPENIDM_CONTEXT
+                result.put(name, variable.getValue());
             }
         }
         return result;
