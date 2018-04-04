@@ -35,6 +35,7 @@ import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.impl.pvm.delegate.ActivityBehavior;
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.impl.scripting.Resolver;
 import org.activiti.engine.impl.scripting.ResolverFactory;
 import org.forgerock.json.JsonValue;
@@ -92,18 +93,19 @@ public class OpenIDMResolverFactory implements ResolverFactory {
         try {
             if (variableScope instanceof ExecutionEntity) {
                 ExecutionEntity execution = (ExecutionEntity) variableScope;
+                ActivityImpl activity = execution.getActivity();
                 // Called from ScriptTask
-                if (execution.getActivity() != null && execution.getActivity().getActivityBehavior() instanceof ScriptTaskActivityBehavior) {
+                if (activity != null && activity.getActivityBehavior() instanceof ScriptTaskActivityBehavior) {
                     Class cls = Class.forName("org.activiti.engine.impl.bpmn.behavior.ScriptTaskActivityBehavior");
                     Field languageField = cls.getDeclaredField("language");
                     languageField.setAccessible(true);
-                    language = (String) languageField.get((ScriptTaskActivityBehavior) execution.getActivity().getActivityBehavior());
+                    language = (String) languageField.get((ScriptTaskActivityBehavior) activity.getActivityBehavior());
                 } else {
                     // Called from ExecutionListener
                     String eventName = execution.getEventName();
                     List<ExecutionListener> executionListeners = null;
-                    if (execution.getActivity() != null) {
-                        executionListeners = execution.getActivity().getExecutionListeners(eventName);
+                    if (activity != null) {
+                        executionListeners = activity.getExecutionListeners(eventName);
                     } else if (execution.getEventSource() instanceof ProcessDefinitionEntity) {
                         executionListeners = ((ProcessDefinitionEntity) execution.getEventSource()).getExecutionListeners(eventName);
                     }
