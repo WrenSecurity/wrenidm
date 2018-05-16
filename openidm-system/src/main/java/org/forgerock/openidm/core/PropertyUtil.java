@@ -12,8 +12,8 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
-
 package org.forgerock.openidm.core;
 
 import static org.forgerock.json.JsonValueFunctions.deepTransformBy;
@@ -95,10 +95,15 @@ public class PropertyUtil {
                     });
 
     /**
-     * Tests if the passed in value contains the delimited property, ie &{property} or ${property}
-     * @param value the value to test
-     * @param property the property to look for in the passed value.
-     * @return true if the passed value contains the delimited property.
+     * Tests if the passed in value contains the delimited property, ie {@code &{property}} or
+     * {@code ${property}}.
+     *
+     * @param   value
+     *          The value to test
+     * @param   property
+     *          The property to look for in the passed value.
+     *
+     * @return  true if the passed value contains the delimited property.
      */
     public static boolean containsProperty(String value, String property) {
         return null != value && (value.contains(DELIM_START_AMPERSAND + property + DELIM_STOP)
@@ -116,22 +121,26 @@ public class PropertyUtil {
     }
 
     /**
-     * <p>
      * This method performs property variable substitution on the specified
-     * value. If the specified value contains the syntax
-     * <tt>&{&lt;prop-name&gt;}</tt>, where <tt>&lt;prop-name&gt;</tt> refers to
-     * either a configuration property or a system property, then the
+     * value.
+     * <p>
+     * If the specified value contains the syntax
+     * <tt>&amp;{&lt;prop-name&gt;}</tt>, where <tt>&lt;prop-name&gt;</tt>
+     * refers to either a configuration property or a system property, then the
      * corresponding property value is substituted for the variable placeholder.
      * Multiple variable placeholders may exist in the specified value as well
      * as nested variable placeholders, which are substituted from inner most to
      * outer most. Configuration properties override system properties.
-     * </p>
      *
-     * @param val
-     *            The string on which to perform property substitution.
-     * @param propertyAccessor
-     *            Set of configuration properties.
-     * @return The value of the specified string after property substitution.
+     * @param   val
+     *          The string on which to perform property substitution.
+     * @param   propertyAccessor
+     *          Set of configuration properties.
+     * @param   doEscape
+     *          Whether or not double slashes ({@code \\}) are interpreted as
+     *          escaping the character that follows them.
+     *
+     * @return  The value of the specified string after property substitution.
      **/
     public static Object substVars(String val, final PropertyAccessor propertyAccessor,
             boolean doEscape) {

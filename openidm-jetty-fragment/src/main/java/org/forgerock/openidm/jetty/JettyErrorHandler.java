@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
 
 package org.forgerock.openidm.jetty;
@@ -40,20 +41,20 @@ import org.eclipse.jetty.server.Response;
 public class JettyErrorHandler extends org.eclipse.jetty.server.handler.ErrorHandler {
 
     /**
-     * Handles Jetty errors originating from HTTP requests. Add the following entry to {@code jetty.xml} or directly
-     * to an {@code org.eclipse.jetty.server.Server} instance.
-     * <p>
-     * <pre>
-     * &lt;Configure id="Server" class="org.eclipse.jetty.server.Server">
+     * Handles Jetty errors originating from HTTP requests. Add the following entry to
+     * {@code jetty.xml} or directly to an {@code org.eclipse.jetty.server.Server} instance.
+     *
+     * <pre>{@code
+     * <Configure id="Server" class="org.eclipse.jetty.server.Server">
      *   ...
-     *   &lt;Call name="addBean">
-     *     &lt;Arg>
-     *       &lt;New class="org.forgerock.openidm.jetty.JettyErrorHandler"/>
-     *     &lt;/Arg>
-     *   &lt;/Call>
+     *   <Call name="addBean">
+     *     <Arg>
+     *       <New class="org.forgerock.openidm.jetty.JettyErrorHandler"/>
+     *     </Arg>
+     *   </Call>
      *   ...
-     * &lt;/Configure>
-     * </pre>
+     * </Configure>
+     * }</pre>
      *
      * @param target The target of the request, which is either a URI, name, or {@code null}.
      * @param baseRequest Jetty HTTP request

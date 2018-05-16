@@ -12,8 +12,8 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
-
 package org.forgerock.openidm.provisioner.openicf.commons;
 
 import static org.forgerock.json.JsonValue.json;
@@ -35,6 +35,7 @@ import org.forgerock.json.schema.validator.Constants;
 import org.forgerock.json.schema.validator.exceptions.SchemaException;
 import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.crypto.CryptoService;
+import org.forgerock.util.query.QueryFilterVisitor;
 import org.identityconnectors.common.security.GuardedByteArray;
 import org.identityconnectors.common.security.GuardedString;
 import org.identityconnectors.framework.common.objects.Attribute;
@@ -176,22 +177,48 @@ public class AttributeInfoHelper {
 
     /**
      * Get the Java Class for the {@code type} value in the schema.
-     * <p/>
-     * The Default mapping:
+     * <p>
      * <table>
-     * <tr><td>JSON Type</td><td>Java Type</td></tr>
-     * <tr><td>any</td><td>{@link Object}</td></tr>
-     * <tr><td>boolean</td><td>{@link Boolean}</td></tr>
-     * <tr><td>integer</td><td>{@link Integer}</td></tr>
-     * <tr><td>array</td><td>{@link List}</td></tr>
-     * <tr><td>null</td><td>{@code null}</td></tr>
-     * <tr><td>number</td><td>{@link Number}</td></tr>
-     * <tr><td>object</td><td>{@link Map}</td></tr>
-     * <tr><td>string</td><td>{@link String}</td></tr>
-     * </tr>
+     *   <caption>The Default mapping</caption>
+     *   <tr>
+     *     <td>JSON Type</td>
+     *     <td>Java Type</td>
+     *   </tr>
+     *   <tr>
+     *     <td>any</td>
+     *     <td>{@link Object}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>boolean</td>
+     *     <td>{@link Boolean}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>integer</td>
+     *     <td>{@link Integer}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>array</td>
+     *     <td>{@link List}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>null</td>
+     *     <td>{@code null}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>number</td>
+     *     <td>{@link Number}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>object</td>
+     *     <td>{@link Map}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>string</td>
+     *     <td>{@link String}</td>
+     *   </tr>
      * </table>
      *
-     * @return
+     * @return  The type of this attribute.
      */
     public Class<?> getType() {
         return type;
@@ -227,13 +254,14 @@ public class AttributeInfoHelper {
     }
 
     /**
-     * The {@link org.forgerock.json.resource.QueryFilterVisitor} use this
-     * method to convert the string value to {@link Attribute} use in
+     * The {@link QueryFilterVisitor} uses this method to convert the string
+     * value to a {@link Attribute} value that is used in
      * {@link org.identityconnectors.framework.common.objects.filter.Filter}
      * 
-     * @param source
-     * @return
-     * @throws Exception
+     * @param   source
+     *          The object to convert.
+     *
+     * @return  The attribute that resulted from the conversion.
      */
     public Attribute build(Object source) {
         return build(attributeInfo, source);
@@ -307,14 +335,17 @@ public class AttributeInfoHelper {
     }
 
     /**
+     * @see org.identityconnectors.framework.common.FrameworkUtil#checkOperationOptionType(Class)
+     *
      * @param builder
      * @param value
+     *
      * @throws IOException
      * @throws IllegalArgumentException
-     *             if the type is not on the supported list.
-     * @see {@link org.identityconnectors.framework.common.FrameworkUtil#checkOperationOptionType(Class)}
+     *         If the type is not on the supported list.
      */
-    public void build(OperationOptionsBuilder builder, Object value) throws IOException {
+    public void build(OperationOptionsBuilder builder, Object value)
+    throws IOException {
         if (value == null || (value instanceof JsonValue && !((JsonValue) value).isNull())) {
             return;
         }

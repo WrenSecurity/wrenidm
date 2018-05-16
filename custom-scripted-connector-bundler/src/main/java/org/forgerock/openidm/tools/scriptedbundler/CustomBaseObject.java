@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2015 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,7 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.tools.scriptedbundler;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -29,9 +29,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 /**
- * Base object for configuration -> object tree [de]serialization. This object tree is used by the
- * Handlebars template processor to process templates into output files with variable substitution.
- * It is constructed from a JSON configuration file.
+ * Base object for configuration to object tree [de]serialization. This object
+ * tree is used by the Handlebars template processor to process templates into
+ * output files with variable substitution. It is constructed from a JSON
+ * configuration file.
  */
 public class CustomBaseObject {
     private boolean last = false;  // helper for the templates, no bean accessors

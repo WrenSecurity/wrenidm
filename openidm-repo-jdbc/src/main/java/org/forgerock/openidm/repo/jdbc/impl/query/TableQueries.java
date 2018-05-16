@@ -12,8 +12,8 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
-
 package org.forgerock.openidm.repo.jdbc.impl.query;
 
 import static org.forgerock.json.JsonValue.json;
@@ -149,10 +149,10 @@ public class TableQueries {
 
     /** Main table */
     final String mainTableName;
-    
+
     /** Properties table */
     final String propTableName;
-    
+
     /** Database schema name */
     final String dbSchemaName;
 
@@ -168,12 +168,14 @@ public class TableQueries {
     /**
      * Constructor.
      *
-     * @param tableHandler
-     * @param mainTableName
-     * @param propTableName
-     * @param dbSchemaName
-     * @param maxPropLen Max length of propvalues. Used for trimming values if > 0.
-     * @param resultMapper
+     * @param   tableHandler
+     * @param   mainTableName
+     * @param   propTableName
+     * @param   dbSchemaName
+     * @param   maxPropLen
+     *          Max length of propvalues. Used for trimming values if
+     *          &gt; 0.
+     * @param   resultMapper
      */
     public TableQueries(TableHandler tableHandler, String mainTableName, String propTableName, String dbSchemaName, int maxPropLen,
             ResultSetMapper resultMapper) {

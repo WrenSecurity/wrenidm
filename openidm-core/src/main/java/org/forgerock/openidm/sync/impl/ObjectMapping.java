@@ -1,17 +1,20 @@
 /*
- * The contents of this file are subject to the terms of the Common Development and
- * Distribution License (the License). You may not use this file except in compliance with the
+ * The contents of this file are subject to the terms of the Common Development
+ * and Distribution License (the License). You may not use this file except in
+ * compliance with the License.
+ *
+ * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License
+ * for the specific language governing permission and limitations under the
  * License.
  *
- * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
- * specific language governing permission and limitations under the License.
+ * When distributing Covered Software, include this CDDL Header Notice in each
+ * file and include the License file at legal/CDDLv1.0.txt. If applicable, add
+ * the following below the CDDL Header, with the fields enclosed by brackets []
+ * replaced by your own identifying information:
+ * "Portions copyright [year] [name of copyright owner]".
  *
- * When distributing Covered Software, include this CDDL Header Notice in each file and include
- * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
- * Header, with the fields enclosed by brackets [] replaced by your own identifying
- * information: "Portions copyright [year] [name of copyright owner]".
- *
- * Portions copyright 2011-2016 ForgeRock AS.
+ * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
 package org.forgerock.openidm.sync.impl;
 
@@ -396,7 +399,7 @@ class ObjectMapping {
      * @return sync results of the {@link SyncOperation}
      * @throws SynchronizationException if sync-ing fails.
      */
-    private JsonValue doSourceSync(Context context, String resourceId, JsonValue value, boolean sourceDeleted, 
+    private JsonValue doSourceSync(Context context, String resourceId, JsonValue value, boolean sourceDeleted,
             JsonValue oldValue) throws SynchronizationException {
         JsonValue results = json(array());
         LOGGER.trace("Start source synchronization of {} {}", resourceId, (value == null) ? "without a value" : "with a value");
@@ -524,10 +527,10 @@ class ObjectMapping {
 
     /**
      * Perform the reconciliation action on a pre-assessed job.
-     * <p/>
+     * <p>
      * For the input parameters see {@link SourceSyncOperation#toJsonValue()} or
      * {@link TargetSyncOperation#toJsonValue()}.
-     * <p/>
+     * <p>
      * Script example:
      * <pre>
      *     try {
@@ -741,7 +744,7 @@ class ObjectMapping {
 
                 stats.addDuration(DurationMetric.targetQuery, targetQueryStart);
                 stats.targetQueryEnd();
-            }            
+            }
 
             // Optionally get all links up front as well
             Map<String, Map<String, Link>> allLinks = null;
@@ -777,7 +780,7 @@ class ObjectMapping {
                 if (queryNextPage) {
                     LOGGER.debug("Querying next page of source ids");
                     final long pagedSourceQueryStart = startNanoTime(reconContext);
-                    sourceQueryResult = reconContext.querySourceIter(reconSourceQueryPageSize, 
+                    sourceQueryResult = reconContext.querySourceIter(reconSourceQueryPageSize,
                             sourceQueryResult.getPagingCookie());
                     sourceIter = sourceQueryResult.getIterator();
                     stats.addDuration(DurationMetric.sourceQuery, pagedSourceQueryStart);
@@ -1002,7 +1005,7 @@ class ObjectMapping {
 
     /**
      * Execute a sync engine action explicitly, without going through situation assessment.
-     * 
+     *
      * @param context {@link Context} associated with the current sync.
      * @param sourceObject the source object if applicable to the action
      * @param targetObject the target object if applicable to the action
@@ -1010,7 +1013,7 @@ class ObjectMapping {
      * @param action the explicit action to invoke
      * @param reconId an optional identifier for the recon context if this is done in the context of reconciliation
      */
-    public void explicitOp(Context context, JsonValue sourceObject, JsonValue targetObject, Situation situation, 
+    public void explicitOp(Context context, JsonValue sourceObject, JsonValue targetObject, Situation situation,
             ReconAction action, String reconId) throws SynchronizationException {
         for (String linkQualifier : getLinkQualifiers(sourceObject, null, false, context, null)) {
             ExplicitSyncOperation linkOp = new ExplicitSyncOperation(this, context);

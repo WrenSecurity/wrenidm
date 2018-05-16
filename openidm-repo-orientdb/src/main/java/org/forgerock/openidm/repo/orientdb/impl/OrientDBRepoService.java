@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
 package org.forgerock.openidm.repo.orientdb.impl;
 
@@ -498,36 +499,49 @@ public class OrientDBRepoService implements RequestHandler, RepositoryService, R
     }
 
     /**
-     * Performs the query on the specified object and returns the associated results.
+     * Performs the query on the specified object and returns the associated
+     * results.
      * <p>
-     * Queries are parametric; a set of named parameters is provided as the query criteria.
-     * The query result is a JSON object structure composed of basic Java types.
+     * Queries are parametric; a set of named parameters is provided as the
+     * query criteria. The query result is a JSON object structure composed of
+     * basic Java types.
      *
-     * The returned map is structured as follow:
-     * - The top level map contains meta-data about the query, plus an entry with the actual result records.
-     * - The <code>QueryConstants</code> defines the map keys, including the result records (QUERY_RESULT)
+     * The returned map is structured as follows:
+     * <ul>
+     *   <li>The top level map contains meta-data about the query, plus an entry
+     *       with the actual result records.</li>
+     *   <li>The <code>QueryConstants</code> defines the map keys, including the
+     *       result records (QUERY_RESULT).</li>
+     * </ul>
      *
-     * @param context
-     *            identifies the object to query.
-     * @param request
-     *            the parameters of the query to perform.
-     * @return the query results, which includes meta-data and the result
-     *         records in JSON object structure format.
-     * @throws NotFoundException
-     *             if the specified object could not be found.
-     * @throws BadRequestException
-     *             if the specified params contain invalid arguments, e.g. a
-     *             query id that is not configured, a query expression that is
-     *             invalid, or missing query substitution tokens.
-     * @throws ForbiddenException
-     *             if access to the object or specified query is forbidden.
+     * @param   context
+     *          Identifies the object to query.
+     * @param   request
+     *          The parameters of the query to perform.
+     * @return  A promise containing the query results, which includes meta-data
+     *          and the result records in JSON object structure format. If a
+     *          failure occurs, the promise will wrap an exception of one of the
+     *          following types:
+     *          <dl>
+     *            <dt>{@link NotFoundException}</dt>
+     *            <dd>If the specified object could not be found.</dd>
+     *
+     *            <dt>{@link BadRequestException}</dt>
+     *            <dd>If the specified params contain invalid arguments, e.g. a
+     *                query id that is not configured, a query expression that
+     *                is invalid, or missing query substitution tokens.</dd>
+     *
+     *            <dt>{@link ForbiddenException}</dt>
+     *            <dd>If access to the object or specified query is
+     *                forbidden.</dd>
+     *          </dl>
      */
     @Override
-    public Promise<QueryResponse, ResourceException> handleQuery(final Context context, final QueryRequest request,
-            final QueryResourceHandler handler) {
-
-        // If paged results are requested then decode the cookie in order to determine
-        // the index of the first result to be returned.
+    public Promise<QueryResponse, ResourceException> handleQuery(
+                              final Context context, final QueryRequest request,
+                              final QueryResourceHandler handler) {
+        // If paged results are requested then decode the cookie in order to
+        // determine the index of the first result to be returned.
         final int requestPageSize = request.getPageSize();
 
         // Cookie containing offset of last request

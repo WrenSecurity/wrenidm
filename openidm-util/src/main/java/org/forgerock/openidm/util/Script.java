@@ -11,7 +11,8 @@
  * Header, with the fields enclosed by brackets [] replaced by your own identifying
  * information: "Portions copyright [year] [name of copyright owner]".
  *
- * Portions copyright 2011-2016 ForgeRock AS.
+ * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
 
 package org.forgerock.openidm.util;
@@ -25,8 +26,9 @@ import org.forgerock.script.ScriptEntry;
 import org.forgerock.services.context.Context;
 
 /**
- * This class wraps a {@link ScriptEntry} object representing a script stored in the {@link ScriptRegistry} and 
- * provides a method for executing the script with a given {@link Context} and scope variables. 
+ * This class wraps a {@link ScriptEntry} object representing a script stored in the
+ * {@link org.forgerock.script.ScriptRegistry} and provides a method for executing the script with
+ * a given {@link Context} and scope variables.
  */
 public class Script {
 

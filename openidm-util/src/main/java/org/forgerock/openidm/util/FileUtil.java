@@ -12,8 +12,8 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
-
 package org.forgerock.openidm.util;
 
 import java.io.BufferedInputStream;
@@ -33,13 +33,15 @@ public final class FileUtil {
     }
 
     /**
-     * Read small < 5Mb text files to String.
+     * Read small (&lt; 5 MB) text files to String.
      *
-     * @param file
-     *            source file
-     * @return content of the source {@code file}
-     * @throws IOException
-     *             when the source {@code file} can not be read
+     * @param   file
+     *          Source file.
+     *
+     * @return  Contents of the file.
+     *
+     * @throws  IOException
+     *          If the source {@code file} can not be read.
      */
     public static final String readFile(File file) throws IOException {
         BufferedInputStream in = null;

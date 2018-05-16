@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
 
 require.config({
@@ -29,11 +30,11 @@ require.config({
     paths: {
         i18next: "libs/i18next-1.7.3-min",
         backbone: "libs/backbone-1.1.2-min",
-        "backbone.paginator": "libs/backbone.paginator.min-2.0.2-min",
+        "backbone.paginator": "libs/backbone.paginator-2.0.2-min",
         "backbone-relational": "libs/backbone-relational-0.9.0-min",
-        "backgrid": "libs/backgrid.min-0.3.5-min",
-        "backgrid-filter": "libs/backgrid-filter.min-0.3.5-min",
-        "backgrid-paginator": "libs/backgrid-paginator.min-0.3.5-min",
+        "backgrid": "libs/backgrid-0.3.5-min",
+        "backgrid-filter": "libs/backgrid-filter-0.3.7-min",
+        "backgrid-paginator": "libs/backgrid-paginator-0.3.5-min",
         "backgrid-selectall": "libs/backgrid-select-all-0.3.5-min",
         lodash: "libs/lodash-3.10.1-min",
         js2form: "libs/js2form-2.0-769718a",

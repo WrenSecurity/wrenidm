@@ -1,17 +1,20 @@
 /*
- * The contents of this file are subject to the terms of the Common Development and
- * Distribution License (the License). You may not use this file except in compliance with the
+ * The contents of this file are subject to the terms of the Common Development
+ * and Distribution License (the License). You may not use this file except in
+ * compliance with the License.
+ *
+ * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License
+ * for the specific language governing permission and limitations under the
  * License.
  *
- * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
- * specific language governing permission and limitations under the License.
- *
- * When distributing Covered Software, include this CDDL Header Notice in each file and include
- * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
- * Header, with the fields enclosed by brackets [] replaced by your own identifying
- * information: "Portions copyright [year] [name of copyright owner]".
+ * When distributing Covered Software, include this CDDL Header Notice in each
+ * file and include the License file at legal/CDDLv1.0.txt. If applicable, add
+ * the following below the CDDL Header, with the fields enclosed by brackets []
+ * replaced by your own identifying information:
+ * "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
 package org.forgerock.openidm.shell.impl;
 
@@ -120,38 +123,48 @@ public class UpdateCommand {
     }
 
     /**
-     * Constructs the UpdateCommand with the default StepExecutors for the Update OpenIDM process.
-     * <br/>
+     * Constructs the UpdateCommand with the default StepExecutors for the
+     * Update OpenIDM process.
+     * <p>
      * Default Steps include:
      * <ol>
-     * <li>Lookup the archive data</li>
-     * <li>Accept License</li>
-     * <li>Pause Scheduler</li>
-     * <li>waiting for jobs to complete</li>
-     * <li>Enter maintenance mode.</li>
-     * <li>Install Archive.</li>
-     * <li>Wait for the install to complete.</li>
+     *   <li>Lookup the archive data</li>
+     *   <li>Accept License</li>
+     *   <li>Pause Scheduler</li>
+     *   <li>waiting for jobs to complete</li>
+     *   <li>Enter maintenance mode.</li>
+     *   <li>Install Archive.</li>
+     *   <li>Wait for the install to complete.</li>
      * </ol>
+     *
+     * <p>
      * Recovery Steps include:
      * <ol>
-     * <li>Exit Maintenance mode if needed.</li>
-     * <li>Restart Scheduler if needed.</li>
-     * <li>Force Restart if needed.</li>
+     *   <li>Exit Maintenance mode if needed.</li>
+     *   <li>Restart Scheduler if needed.</li>
+     *   <li>Force Restart if needed.</li>
      * </ol>
      *
+     * <p>
      * Engineering note: To add additional steps:
      * <ol>
-     *     <li>Add the step enum to UpdateStep</li>
-     *     <li>Implement a new StepExecutor</li>
-     *     <li>register the StepExecutor</li>
-     *     <li>insert into the execute sequence or recovery sequence.</li>
+     *   <li>Add the step enum to UpdateStep</li>
+     *   <li>Implement a new StepExecutor</li>
+     *   <li>register the StepExecutor</li>
+     *   <li>insert into the execute sequence or recovery sequence.</li>
      * </ol>
      *
-     * @param session the command line session to possibly log output to, or to get keyboard input.
-     * @param resource the resource provider to execute REST calls to OpenIDM.
-     * @param config the configuration provided by the command line parameters.
+     * @param   session
+     *          The command line session to possibly log output to, or to get
+     *          keyboard input.
+     * @param   resource
+     *          The resource provider to execute REST calls to OpenIDM.
+     * @param   config
+     *          The configuration provided by the command line parameters.
      */
-    public UpdateCommand(CommandSession session, HttpRemoteJsonResource resource, UpdateCommandConfig config) {
+    public UpdateCommand(CommandSession session,
+                         HttpRemoteJsonResource resource,
+                         UpdateCommandConfig config) {
         this.session = session;
         this.resource = resource;
         this.config = config;
@@ -170,22 +183,11 @@ public class UpdateCommand {
         registerStepExecutor(new EnableSchedulerStepExecutor());
         registerStepExecutor(new ForceRestartStepExecutor());
 
-        if (config.isSkipRepoUpdatePreview()) {
-            // Set the sequence of execution for the steps.
-            setExecuteSequence(PREVIEW_ARCHIVE,
-                    ACCEPT_LICENSE,
-                    LIST_REPO_UPDATES,
-                    PAUSING_SCHEDULER,
-                    WAIT_FOR_JOBS_TO_COMPLETE,
-                    ENTER_MAINTENANCE_MODE,
-                    INSTALL_ARCHIVE,
-                    WAIT_FOR_INSTALL_DONE,
-                    MARK_REPO_UPDATES_COMPLETE);
-            // Set the sequence of execution of the recovery steps.
-            setRecoverySequence(EXIT_MAINTENANCE_MODE,
-                    ENABLE_SCHEDULER,
-                    FORCE_RESTART);
-        } else {
+        if (config.isSkipRepoUpdatePreview()) {// Set the sequence of execution for the steps.
+        setExecuteSequence(PREVIEW_ARCHIVE, ACCEPT_LICENSE,LIST_REPO_UPDATES, PAUSING_SCHEDULER, WAIT_FOR_JOBS_TO_COMPLETE,
+                ENTER_MAINTENANCE_MODE, INSTALL_ARCHIVE, WAIT_FOR_INSTALL_DONE,
+MARK_REPO_UPDATES_COMPLETE);        // Set the sequence of execution of the recovery steps.
+        setRecoverySequence(EXIT_MAINTENANCE_MODE, ENABLE_SCHEDULER, FORCE_RESTART);} else {
             setExecuteSequence(PREVIEW_ARCHIVE,
                     ACCEPT_LICENSE,
                     LIST_REPO_UPDATES);

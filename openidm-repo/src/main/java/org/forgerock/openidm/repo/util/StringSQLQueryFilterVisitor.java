@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2014-2015 ForgeRock AS. All rights reserved.
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -34,7 +35,8 @@ import org.forgerock.util.query.QueryFilter;
 import org.forgerock.util.query.QueryFilterVisitor;
 
 /**
- * An abstract {@link QueryFilterVisitor} to produce SQL using an {@link StringSQLRenderer}.
+ * An abstract {@link QueryFilterVisitor} to produce SQL using an
+ * {@link StringSQLRenderer}.
  * Includes patterns for the standard
  *
  * <ul>
@@ -57,43 +59,61 @@ import org.forgerock.util.query.QueryFilterVisitor;
  * <p>
  * This implementation does not support extended-match.
  * <p>
- * The implementer is responsible for implementing {@link #visitValueAssertion(Object, String, org.forgerock.json.JsonPointer, Object)}
- * which handles the value assertions - x operand y for the standard operands.  The implementer is also responsible for
- * implementing {@link #visitPresentFilter(Object, org.forgerock.json.JsonPointer)} as "field present" can vary
- * by database implementation (though typically "field IS NOT NULL" is chosen).
+ * The implementer is responsible for implementing
+ * {@link #visitValueAssertion(Object, String, org.forgerock.json.JsonPointer, Object)}
+ * which handles the value assertions - x operand y for the standard operands.
+ * The implementer is also responsible for implementing
+ * {@link #visitPresentFilter(Object, org.forgerock.json.JsonPointer)} as
+ * "field present" can vary by database implementation (though typically "field
+ * IS NOT NULL" is chosen).
  *
  * @param <P> the parameter type passed in the visit methods
  */
 public abstract class StringSQLQueryFilterVisitor<P> extends AbstractSQLQueryFilterVisitor<StringSQLRenderer, P> {
-
     /**
      * A templating method that will generate the actual value assertion.
      * <p>
      * Example:
-     * <pre><blockquote>
+     * <pre>{@code
      *     ?_queryFilter=email+eq+"someone@example.com"
-     * </blockquote></pre>
-     * is an QueryFilter stating the value assertion "email" equals "someone@example.com".  The correct SQL for that
-     * may vary depending on database variant and schema definition.  This method will be invoked as
-     * <pre><blockquote>
+     * }</pre>
+     * is an QueryFilter stating the value assertion "email" equals
+     * "someone@example.com".  The correct SQL for that may vary depending on
+     * database variant and schema definition.  This method will be invoked as
+     * <pre>{@code
      *     return visitValueAssertion(parameters, "=", JsonPointer(/email), "someone@example.com");
-     * </blockquote></pre>
+     * }</pre>
      * A possible implementation for the above example may be
-     * <pre><blockquote>
+     * <pre>{@code
      *     return getDatabaseColumnFor("email") + "=" + ":email";
-     * </blockquote></pre>
-     * The parameters argument is implementation-dependent as a way to store placeholder mapping throughout the query-filter visiting.
+     * }</pre>
+     * The parameters argument is implementation-dependent as a way to store
+     * placeholder mapping throughout the query-filter visiting.
      *
-     * @param parameters storage of parameter-substitutions for the value of the assertion
-     * @param operand the operand used to compare
-     * @param field the object field as a JsonPointer - implementations need to map this to an appropriate database column
-     * @param valueAssertion the value in the assertion
-     * @return a query expression or clause
+     * @param   parameters
+     *          Storage of parameter-substitutions for the value of the
+     *          assertion.
+     * @param   operand
+     *          The operand used to compare.
+     * @param   field
+     *          The object field as a JsonPointer - implementations need to map
+     *          this to an appropriate database column
+     * @param   valueAssertion
+     *          The value in the assertion
+     *
+     * @return  A query expression or clause.
      */
-    public abstract StringSQLRenderer visitValueAssertion(P parameters, String operand, JsonPointer field, Object valueAssertion);
+    public abstract StringSQLRenderer visitValueAssertion(
+                                      P parameters, String operand,
+                                      JsonPointer field,
+                                      Object valueAssertion);
 
-    public StringSQLRenderer visitCompositeFilter(final P parameters, List<QueryFilter<JsonPointer>> subFilters, String operand) {
-        final String operandDelimiter = new StringBuilder(" ").append(operand).append(" ").toString();
+    public StringSQLRenderer visitCompositeFilter(final P parameters,
+                                                  List<QueryFilter<JsonPointer>> subFilters,
+                                                  String operand) {
+        final String operandDelimiter =
+              new StringBuilder(" ").append(operand).append(" ").toString();
+
         return new StringSQLRenderer("(")
                 .append(StringUtils.join(
                         FluentIterable.from(subFilters)

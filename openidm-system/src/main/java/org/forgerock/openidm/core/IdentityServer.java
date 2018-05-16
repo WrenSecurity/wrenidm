@@ -12,8 +12,8 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
-
 package org.forgerock.openidm.core;
 
 import java.io.BufferedInputStream;
@@ -108,16 +108,18 @@ public final class IdentityServer implements PropertyAccessor {
     /**
      * Initialise the singleton {@link IdentityServer} instance with the
      * provided {@link PropertyAccessor} instance.
-     * <p/>
+     * <p>
      * This or the {@link #initInstance(IdentityServer)} method can be called
      * only once and then it throws {@link IllegalStateException} if it's called
      * more then once.
      *
-     * @param properties
-     *            the parent {@code PropertyAccessor}
-     * @return new instance of {@link IdentityServer}
-     * @throws IllegalStateException
-     *             when this method called more then once.
+     * @param   properties
+     *          The parent {@code PropertyAccessor}
+     *
+     * @return  New instance of {@link IdentityServer}.
+     *
+     * @throws  IllegalStateException
+     *          when this method called more then once.
      */
     public static IdentityServer initInstance(PropertyAccessor properties) {
         if (INITIALISED.compareAndSet(Boolean.FALSE, Boolean.TRUE)) {
@@ -132,17 +134,19 @@ public final class IdentityServer implements PropertyAccessor {
     /**
      * Initialise the singleton {@link IdentityServer} instance with the
      * provided {@link IdentityServer} instance.
-     * <p/>
+     * <p>
      * This or the {@link #initInstance(PropertyAccessor)} method can be called
      * only once and then it throws {@link IllegalStateException} if it's called
      * more then once.
      *
-     * @param server
-     *            new instance of {@link IdentityServer}
-     * @return same instance as the {@code server} parameter if not {@code null}
-     *         or the current {@link IdentityServer instance}
-     * @throws IllegalStateException
-     *             when this method called more then once.
+     * @param   server
+     *          New instance of {@link IdentityServer}.
+     *
+     * @return  Same instance as the {@code server} parameter if not {@code null}
+     *          or the current {@link IdentityServer instance}.
+     *
+     * @throws  IllegalStateException
+     *          when this method called more then once.
      */
     public static IdentityServer initInstance(IdentityServer server) {
         if (null != server) {

@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2012-2015 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,7 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.servletregistration.impl;
 
 import static org.forgerock.json.JsonValueFunctions.listOf;
@@ -122,8 +122,8 @@ public class ServletRegistrationSingleton implements ServletRegistration {
      * {@inheritDoc}
      */
     @SuppressWarnings("rawtypes")
-    public void registerServlet(String alias, Servlet servlet, Dictionary initparams) throws ServletException, NamespaceException {
-        webContainer.registerServlet(alias, servlet, initparams, webContainer.getDefaultSharedHttpContext());
+    public void registerServlet(String alias, Servlet servlet, Dictionary initParams) throws ServletException, NamespaceException {
+        webContainer.registerServlet(alias, servlet, initParams, webContainer.getDefaultSharedHttpContext());
     }
 
     /**

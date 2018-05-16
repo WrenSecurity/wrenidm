@@ -5,6 +5,7 @@
  *
  * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
  * specific language governing permission and limitations under the License.
+ * Portions Copyright 2018 Wren Security.
  *
  * When distributing Covered Software, include this CDDL Header Notice in each file and include
  * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
@@ -78,9 +79,6 @@ public class DB2TableHandler extends GenericTableHandler {
     }
 
     // blatantly copied from OracleTableHandler...
-    /**
-     * @inheritDoc
-     */
     @Override
     public String renderQueryFilter(QueryFilter<JsonPointer> filter, Map<String, Object> replacementTokens, Map<String, Object> params) {
         final int offsetParam = Integer.parseInt((String)params.get(PAGED_RESULTS_OFFSET));
@@ -141,7 +139,7 @@ public class DB2TableHandler extends GenericTableHandler {
 
         return builder.toSQL();
     }
-    
+
     /**
      * Reads an object with for update locking applied
      *

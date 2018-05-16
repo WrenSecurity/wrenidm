@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2011-2015 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -35,35 +36,37 @@ import org.forgerock.json.JsonValue;
  *
  */
 public interface MetaDataProvider {
-
     /**
      * Meta-data describing which configuration properties need to be encrypted
      * for a given configuration.
      *
-     * @param pidOrFactory
-     *            the PID of either the managed service; or for factory
-     *            configuration the PID of the Managed Service Factory
-     * @param instanceAlias
-     *            null for plain managed service, or the subname (alias) for the
-     *            managed factory configuration newBuilder
-     * @param config
-     *            the new configuration that is being set. May or may not
-     *            already have encrypted values.
+     * @param   pidOrFactory
+     *          The PID of either the managed service; or for factory
+     *          configuration the PID of the Managed Service Factory.
+     * @param   instanceAlias
+     *          {@code null} for plain managed service; or, the subname (alias)
+     *          for the managed factory configuration newBuilder
+     * @param   config
+     *          The new configuration that is being set. May or may not already
+     *          have encrypted values.
      *
-     * @return a list of configuration properties (identified by JSON pointers)
-     *         that need to be encrypted if this MetaDataProvider is responsible
-     *         for this configuration. Empty list if none should be encrypted.
-     *         Null if this provider is not responsible for this configuration.
-     * @throws WaitForMetaData
-     *             thrown if this provider knows that the given configuration
-     *             has associated meta-data, but the meta-data is not yet
-     *             available.
-     * @throws NotConfiguration
-     *             throws when the config parameter is not represent a real
-     *             configuration.
+     * @return  A list of configuration properties (identified by JSON
+     *          pointers) that need to be encrypted if this MetaDataProvider is
+     *          responsible for this configuration. Empty list if none should
+     *          be encrypted. {@code null} if this provider is not responsible
+     *          for this configuration.
+     *
+     * @throws  WaitForMetaData
+     *          Thrown if this provider knows that the given configuration has
+     *          associated meta-data, but the meta-data is not yet available.
+     * @throws  NotConfiguration
+     *          Throws when the config parameter is not represent a real
+     *          configuration.
      */
-    List<JsonPointer> getPropertiesToEncrypt(String pidOrFactory, String instanceAlias,
-            JsonValue config) throws WaitForMetaData, NotConfiguration;
+    List<JsonPointer> getPropertiesToEncrypt(String pidOrFactory,
+                                             String instanceAlias,
+                                             JsonValue config)
+    throws WaitForMetaData, NotConfiguration;
 
     /**
      * Sets a callback to be used to refresh/update the configuration
@@ -72,5 +75,5 @@ public interface MetaDataProvider {
      * @param callback
      *            a MetaDataProviderCallback implementation
      */
-    public void setCallback(MetaDataProviderCallback callback);
+    void setCallback(MetaDataProviderCallback callback);
 }
