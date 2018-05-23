@@ -1,17 +1,20 @@
 /*
- * The contents of this file are subject to the terms of the Common Development and
- * Distribution License (the License). You may not use this file except in compliance with the
+ * The contents of this file are subject to the terms of the Common Development
+ * and Distribution License (the License). You may not use this file except in
+ * compliance with the License.
+ *
+ * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License
+ * for the specific language governing permission and limitations under the
  * License.
  *
- * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
- * specific language governing permission and limitations under the License.
- *
- * When distributing Covered Software, include this CDDL Header Notice in each file and include
- * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
- * Header, with the fields enclosed by brackets [] replaced by your own identifying
- * information: "Portions copyright [year] [name of copyright owner]".
+ * When distributing Covered Software, include this CDDL Header Notice in each
+ * file and include the License file at legal/CDDLv1.0.txt. If applicable, add
+ * the following below the CDDL Header, with the fields enclosed by brackets []
+ * replaced by your own identifying information:
+ * "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2015 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
 package org.forgerock.openidm.provisioner.openicf.impl;
 
@@ -111,8 +114,6 @@ import org.slf4j.LoggerFactory;
  * The ConnectorInfoProviderService initiates the the embedded <a
  * href="http://openicf.forgerock.org">OpenICF</a> and makes it available as a
  * service.
- * <p/>
- *
  */
 @Component(name = ConnectorInfoProviderService.PID,
         policy = ConfigurationPolicy.OPTIONAL,
@@ -613,15 +614,15 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
         throw new ServiceUnavailableException("ConnectorFacade can not be initialised");
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public JsonValue createSystemConfiguration(ConnectorReference connectorReference, APIConfiguration configuration,
-            boolean validate) throws ResourceException {
+    public JsonValue createSystemConfiguration(ConnectorReference connectorReference,
+                                               APIConfiguration configuration, boolean validate)
+    throws ResourceException {
         ConnectorFacade facade = connectorFramework.get().newInstance(configuration);
+
         if (null != facade) {
             JsonValue jsonConfiguration = new JsonValue(new LinkedHashMap<String, Object>());
             ConnectorUtil.setConnectorReference(connectorReference, jsonConfiguration);
+
             try {
                 ConnectorUtil.createSystemConfigurationFromAPIConfiguration(configuration,
                         jsonConfiguration, cryptoService);
@@ -633,9 +634,12 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
             if (validate && facade.getSupportedOperations().contains(TestApiOp.class)) {
                 facade.test();
             }
+
             setSchema(facade, jsonConfiguration);
+
             return jsonConfiguration;
         }
+
         throw new UnsupportedOperationException("ConnectorFacade can not be initialised");
     }
 

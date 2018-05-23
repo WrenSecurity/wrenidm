@@ -1,17 +1,20 @@
 /*
- * The contents of this file are subject to the terms of the Common Development and
- * Distribution License (the License). You may not use this file except in compliance with the
- * License.
- *
- * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
- * specific language governing permission and limitations under the License.
- *
- * When distributing Covered Software, include this CDDL Header Notice in each file and include
- * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
- * Header, with the fields enclosed by brackets [] replaced by your own identifying
- * information: "Portions copyright [year] [name of copyright owner]".
- *
+ * The contents of this file are subject to the terms of the Common Development
+ * and Distribution License (the License). You may not use this file except in
+ * compliance with the License.
+ *
+ * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License
+ * for the specific language governing permission and limitations under the
+ * License.
+ *
+ * When distributing Covered Software, include this CDDL Header Notice in each
+ * file and include the License file at legal/CDDLv1.0.txt. If applicable, add
+ * the following below the CDDL Header, with the fields enclosed by brackets []
+ * replaced by your own identifying information:
+ * "Portions copyright [year] [name of copyright owner]".
+ *
  * Copyright 2015 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
 package org.forgerock.openidm.managed;
 
@@ -160,10 +163,11 @@ public abstract class RelationshipProvider {
     }
 
     /**
-     * Returns a Function to format a resource from the repository to that expected by the provider consumer. First
-     * object properties are removed and {@code secondId} (or {@code firstId} if it's a reverse relationship)
+     * Returns a Function to format a resource from the repository to that
+     * expected by the provider consumer. First object properties are removed
+     * and {@code secondId} (or {@code firstId} if it's a reverse relationship)
      * will be converted to {@code _ref}
-     * <p/>
+     * <p>
      * This will convert repo resources in the format of:
      * <pre>
      *     {
@@ -175,7 +179,7 @@ public abstract class RelationshipProvider {
      *         "properties": { ... }
      *     }
      * </pre>
-     * <p/>
+     * <p>
      * To a provider response format of:
      *
      * <pre>
@@ -925,7 +929,7 @@ public abstract class RelationshipProvider {
      * When modifying bidirectional relationships, the objects that refer to the relationship should be sync'd when
      * the request is made.  The direct object will already be sync'd.  Using this class will also sync the
      * referenced object.
-     * <p/>
+     * <p>
      * For example: removing a role from a user via the following command will need to also sync the user linked by
      * the member id.
      * <pre>
@@ -933,7 +937,7 @@ public abstract class RelationshipProvider {
      * -H "Content-Type: application/json" -H "Cache-Control: no-cache"
      * 'http://localhost:8080/openidm/managed/role/sample-role-1/members/4dc21ceb-ef4c-4006-9188-06236f11c0b1'
      * </pre>
-     * <p/>
+     * <p>
      * The steps to perform the request and sync the referenced object is:
      * <ol>
      * <li>Determine the ID of the referenced object on the opposite side of 'this' relationship.</li>
@@ -1095,7 +1099,7 @@ public abstract class RelationshipProvider {
     /**
      * Given a relationship Json this will determine if "this" relationship's reversePropertyName is equal to the
      * relationship's first property.
-     * <p/>
+     * <p>
      * For example: given the reverse property name of "/members" in a role managed object and relationshipJson like
      * below, this would return true.
      * <pre>

@@ -2,6 +2,7 @@
  * DO NOT REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2011-2015 ForgeRock Inc. All rights reserved.
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,7 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.config.enhanced;
 
 import java.util.Dictionary;
@@ -82,7 +82,7 @@ public class JSONEnhancedConfig implements EnhancedConfig {
 
     /**
      * Sets the escaping mode.
-     * <p/>
+     * <p>
      * If {@code true} then this newBuilder processes the escapes {@code \}
      * character in the sting values otherwise it does not handle specially the
      * {@code \} character.
@@ -104,9 +104,6 @@ public class JSONEnhancedConfig implements EnhancedConfig {
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public Map<String, Object> getConfiguration(ComponentContext compContext)
             throws InvalidException, InternalErrorException {
 
@@ -114,40 +111,39 @@ public class JSONEnhancedConfig implements EnhancedConfig {
         return confValue.asMap();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public JsonValue getConfigurationAsJson(ComponentContext compContext) throws InvalidException,
-            InternalErrorException {
-
+    public JsonValue getConfigurationAsJson(ComponentContext compContext)
+    throws InvalidException, InternalErrorException {
         Dictionary dict = null;
+
         if (compContext != null) {
             dict = compContext.getProperties();
         }
-        String servicePid = (String) compContext.getProperties().get(Constants.SERVICE_PID);
 
-        JsonValue conf = getConfiguration(dict, compContext.getBundleContext(), servicePid);
+        String servicePid =
+            (String) compContext.getProperties().get(Constants.SERVICE_PID);
+
+        JsonValue conf =
+            getConfiguration(dict, compContext.getBundleContext(), servicePid);
 
         return conf;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public JsonValue getConfiguration(Dictionary<String, Object> dict, BundleContext context,
-            String servicePid) throws InvalidException, InternalErrorException {
+    public JsonValue getConfiguration(Dictionary<String, Object> dict,
+                                      BundleContext context, String servicePid)
+    throws InvalidException, InternalErrorException {
         return getConfiguration(dict, servicePid, true);
     }
 
     /**
-     * {@see getConfiguration(Dictionary<String, Object>, BundleContext, String)
-     * * }
+     * @see     #getConfiguration(Dictionary, BundleContext, String)}
      *
-     * @param decrypt
-     *            true if any encrypted values should be decrypted in the result
+     * @param   decrypt
+     *          {@code true} if any encrypted values should be decrypted in the
+     *          result.
      */
-    public JsonValue getConfiguration(Dictionary<String, Object> dict, String servicePid,
-            boolean decrypt) throws InvalidException, InternalErrorException {
+    public JsonValue getConfiguration(Dictionary<String, Object> dict,
+                                      String servicePid, boolean decrypt)
+    throws InvalidException, InternalErrorException {
         JsonValue jv = new JsonValue(new LinkedHashMap<String, Object>());
 
         if (dict != null) {

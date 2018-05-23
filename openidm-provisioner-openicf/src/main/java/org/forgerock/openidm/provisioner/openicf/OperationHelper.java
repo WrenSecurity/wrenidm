@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2011-2015 ForgeRock AS. All rights reserved.
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -20,10 +21,7 @@
  * with the fields enclosed by brackets [] replaced by
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * $Id$
  */
-
 package org.forgerock.openidm.provisioner.openicf;
 
 import org.forgerock.json.JsonValue;
@@ -37,7 +35,6 @@ import java.net.URI;
  * @version $Revision$ $Date$
  */
 public interface OperationHelper {
-
     /**
      * Gets the {@link ObjectClass} value of this instance.
      *
@@ -48,12 +45,23 @@ public interface OperationHelper {
     /**
      * Checks the {@code operation} permission before execution.
      *
-     * @param operation
-     * @return if {@code denied} is true and the {@code onDeny} equals
-     *         {@link org.forgerock.openidm.provisioner.openicf.commons.OperationOptionInfoHelper.OnDenyAction#DO_NOTHING}
-     *         returns false else true
-     * @throws ResourceException if {@code denied} is true and the {@code onDeny} equals
-     *                            {@link org.forgerock.openidm.provisioner.openicf.commons.OperationOptionInfoHelper.OnDenyAction#THROW_EXCEPTION}
+     * @param   operation
+     *          The operation being checked for permission.
+     *
+     * @return  Several possible values:
+     *          <dl>
+     *            <dt>{@code true}</dt>
+     *            <dd>If the operation is permitted.</dd>
+     *
+     *            <dt>{@code false}</dt>
+     *            <dd>If the operation is not permitted, and the resource does
+     *                not throw exceptions when operations are not permitted.
+     *            </dd>
+     *            </dl>
+     *
+     * @throws  ResourceException
+     *          If the operation is not permitted and the resource throws
+     *          exceptions when operations are not permitted.
      */
     boolean isOperationPermitted(Class<? extends APIOperation> operation) throws ResourceException;
 
@@ -69,16 +77,8 @@ public interface OperationHelper {
     OperationOptionsBuilder getOperationOptionsBuilder(Class<? extends APIOperation> operation, ConnectorObject connectorObject, JsonValue source) throws Exception;
 
     /**
-     * Resets the {@code _id} attribute in the {@code target} object to the new {@code uid} value.
-     *
-     * @param uid    new id value
-     * @param target
-     */
-//    public void resetUid(Uid uid, JsonValue target);
-
-    /**
      * Generate the fully qualified id from unqualified object {@link Uid}
-     * <p/>
+     * <p>
      * The result id will be system/{@code [endSystemName]}/{@code [objectType]}/{@code [escapedObjectId]}
      *
      * @param uid original un escaped unique identifier of the object
@@ -86,31 +86,11 @@ public interface OperationHelper {
      */
     URI resolveQualifiedId(Uid uid);
 
-
-    /**
-     * @return new instance of {@link ResultsHandler}
-     */
-//    public ResultsHandler getResultsHandler();
-
-//    public List<Map<String, Object>> getQueryResult();
-
-    /**
-     * Build new {@code Filter} instance form the {@code query} and {@code params} values.
-     *
-     * @param query
-     * @param params
-     * @return
-     * @throws Exception
-     */
-//    public Filter build(Map<String, Object> query, Map<String, Object> params) throws Exception;
-
     ConnectorObject build(Class<? extends APIOperation> operation, JsonValue source) throws Exception;
-
-//    public ConnectorObject build(Class<? extends APIOperation> operation, String id, JsonValue source) throws Exception;
 
     /**
      * Build a new Map object from the {@code source} object.
-     * <p/>
+     * <p>
      * This class uses the embedded schema to convert the {@code source}.
      *
      * @param source

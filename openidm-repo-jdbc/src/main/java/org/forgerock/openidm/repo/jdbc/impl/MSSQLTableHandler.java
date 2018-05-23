@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2012-2015 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,7 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.repo.jdbc.impl;
 
 import static org.forgerock.openidm.repo.QueryConstants.PAGED_RESULTS_OFFSET;
@@ -168,9 +168,6 @@ public class MSSQLTableHandler extends GenericTableHandler {
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public String renderQueryFilter(QueryFilter<JsonPointer> filter, Map<String, Object> replacementTokens, Map<String, Object> params) {
         final int offsetParam = Integer.parseInt((String) params.get(PAGED_RESULTS_OFFSET));

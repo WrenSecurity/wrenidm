@@ -1,19 +1,21 @@
 /*
- * The contents of this file are subject to the terms of the Common Development and
- * Distribution License (the License). You may not use this file except in compliance with the
+ * The contents of this file are subject to the terms of the Common Development
+ * and Distribution License (the License). You may not use this file except in
+ * compliance with the License.
+ *
+ * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License
+ * for the specific language governing permission and limitations under the
  * License.
  *
- * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
- * specific language governing permission and limitations under the License.
- *
- * When distributing Covered Software, include this CDDL Header Notice in each file and include
- * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
- * Header, with the fields enclosed by brackets [] replaced by your own identifying
- * information: "Portions copyright [year] [name of copyright owner]".
+ * When distributing Covered Software, include this CDDL Header Notice in each
+ * file and include the License file at legal/CDDLv1.0.txt. If applicable, add
+ * the following below the CDDL Header, with the fields enclosed by brackets []
+ * replaced by your own identifying information:
+ * "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
-
 package org.forgerock.openidm.audit.impl;
 
 import javax.inject.Inject;
@@ -38,25 +40,39 @@ import org.forgerock.util.promise.Promise;
  * @see RouterAuditEventHandler
  */
 public class RepositoryAuditEventHandler extends AuditEventHandlerBase {
-
     private RouterAuditEventHandler routerAuditEventHandler;
 
     /**
      * Constructs the decorated RouterAuditEventHandler.
+     *
+     * @param   configuration
+     *          The configuration for the handler.
+     * @param   eventTopicsMetaData
+     *          Metadata about the events that the handler will process.
+     * @param   connectionFactory
+     *          The factory used for obtaining JSON connections.
      */
     @Inject
     public RepositoryAuditEventHandler(
             final RepositoryAuditEventHandlerConfiguration configuration,
             final EventTopicsMetaData eventTopicsMetaData,
             @Audit final ConnectionFactory connectionFactory) {
-        super(configuration.getName(), eventTopicsMetaData, configuration.getTopics(), configuration.isEnabled());
-        RouterAuditEventHandlerConfiguration routerConfig = new RouterAuditEventHandlerConfiguration();
+        super(
+            configuration.getName(),
+            eventTopicsMetaData,
+            configuration.getTopics(),
+            configuration.isEnabled());
+
+        final RouterAuditEventHandlerConfiguration routerConfig =
+            new RouterAuditEventHandlerConfiguration();
+
         routerConfig.setResourcePath(configuration.getResourcePath());
         routerConfig.setTopics(configuration.getTopics());
         routerConfig.setName(configuration.getName());
         routerConfig.setEnabled(configuration.isEnabled());
+
         this.routerAuditEventHandler =
-                new RouterAuditEventHandler(routerConfig, eventTopicsMetaData, connectionFactory);
+            new RouterAuditEventHandler(routerConfig, eventTopicsMetaData, connectionFactory);
     }
 
     @Override

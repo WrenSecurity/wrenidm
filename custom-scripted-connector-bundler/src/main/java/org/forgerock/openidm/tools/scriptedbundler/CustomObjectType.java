@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2015 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,7 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.tools.scriptedbundler;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ import java.util.List;
  * A single connector configuration objectType, contained in {@link CustomConfiguration}.
  *
  * Given a JSON configuration such as:
- * <pre><blockquote>
+ * <pre>{@code
  *      "objectTypes" : [
  *          {
  *              "name" : "group",
@@ -66,8 +66,9 @@ import java.util.List;
  *              ]
  *          }
  *      ]
- * </blockquote></pre>
- * this object represents a single objectType array element.
+ * }</pre>
+ *
+ * This object represents a single objectType array element.
  */
 public class CustomObjectType extends CustomBaseObject {
 

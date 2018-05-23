@@ -34,10 +34,9 @@ import javax.naming.NamingException;
  * Based on apache aries org/apache/aries/jndi/url/OsgiName.java apache aries
  * org/apache/aries/jndi/url/OsgiNameParser.java
  *
- * <p/>
+ * <p>
  * component 0: osgi:framework, osgi:service, openidm:services, osgi:servicelist
  * component 1: interface component 2: filter
- *
  */
 @SuppressWarnings("serial")
 public class OsgiName extends CompositeName {
@@ -154,7 +153,7 @@ public class OsgiName extends CompositeName {
 
     /**
      * Parse the String representation of a OSGi Object name.
-     * <p/>
+     * <p>
      * Example:
      * {@code osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/openidm)}
      *

@@ -3,6 +3,7 @@
   ~ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
   ~
   ~ Copyright 2011-2015 ForgeRock AS. All Rights Reserved
+  ~ Portions Copyright 2017 Wren Security.
   ~
   ~ The contents of this file are subject to the terms
   ~ of the Common Development and Distribution License
@@ -24,195 +25,80 @@
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.forgerock</groupId>
         <artifactId>forgerock-parent</artifactId>
         <version>2.0.3</version>
     </parent>
+
     <groupId>org.forgerock.openidm</groupId>
     <artifactId>openidm-project</artifactId>
     <version>4.0.0</version>
     <packaging>pom</packaging>
-    <name>OpenIDM project</name>
-    <description>OpenIDM is an open standards based Identity Management, Provisioning and Compliance solution.
+
+    <name>Wren:IDM - Parent</name>
+    <description>Wren:IDM is an open standards based Identity Management, Provisioning and Compliance solution.
         Experience shows that the most important features of an identity management product are: high flexibility in
         Business Process handling and compliance with open standards and interfaces. A highly flexible user interface
-        combined with a very robust workflow engine make OpenIDM ready for any Identity Management project.
+        combined with a very robust workflow engine make Wren:IDM ready for any Identity Management project.
     </description>
-    <inceptionYear>2011</inceptionYear>
-    <url>http://openidm.forgerock.org</url>
+
+    <inceptionYear>2017</inceptionYear>
+    <url>https://github.com/WrenSecurity/WrenIDM</url>
+
     <licenses>
         <license>
             <name>CDDL-1.0</name>
             <url>http://www.opensource.org/licenses/cddl1.php</url>
-            <comments>Common Development and Distribution License (CDDL) 1.0.
-                This license applies to OpenIDM source code as indicated in the
+
+            <comments>
+                Common Development and Distribution License (CDDL) 1.0.
+                This license applies to Wren:IDM source code as indicated in the
                 source code.
             </comments>
-            <distribution>repo</distribution>
-        </license>
-        <license>
-            <name>CC BY-NC-ND 3.0</name>
-            <url>http://creativecommons.org/licenses/by-nc-nd/3.0/</url>
-            <comments>Creative Commons Attribution-NonCommercial-NoDerivs 3.0
-                Unported. This license applies to the site content, and to the
-                documentation as indicated in the documentation source code.
-            </comments>
+
             <distribution>repo</distribution>
         </license>
     </licenses>
+
     <scm>
-        <connection>scm:git:ssh://git@stash.forgerock.org:7999/openidm/openidm.git</connection>
-        <developerConnection>scm:git:ssh://git@stash.forgerock.org:7999/openidm/openidm.git</developerConnection>
-        <url>https://stash.forgerock.org/projects/OPENIDM/repos/openidm/browse</url>
-      <tag>4.0.0</tag>
-  </scm>
-    <distributionManagement>
-        <site>
-            <id>forgerock.org</id>
-            <name>ForgeRock Community Server</name>
-            <url>${siteDistributionURL}</url>
-        </site>
-    </distributionManagement>
+        <url>https://github.com/WrenSecurity/WrenIDM</url>
+        <connection>scm:git:git://github.com/WrenSecurity/WrenIDM.git</connection>
+        <developerConnection>scm:git:git@github.com:WrenSecurity/WrenIDM.git</developerConnection>
+    </scm>
 
-    <!-- NOT ALLOWED: (see FAQ at http://maven.apache.org/guides/mini/guide-central-repository-upload.html ) -->
     <repositories>
+        <!-- Needed to retrieve parent POM -->
         <repository>
-            <id>forgerock-staging-repository</id>
-            <name>ForgeRock Release Repository</name>
-            <url>http://maven.forgerock.org/repo/releases</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>forgerock-snapshots-repository</id>
-            <name>ForgeRock Snapshot Repository</name>
-            <url>http://maven.forgerock.org/repo/snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-        <!--repository>
-            <id>ops4j</id>
-            <name>OPS4J Maven Repository</name>
-            <url>https://oss.sonatype.org/content/repositories/ops4j-releases</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository-->
-        <!-- OrientDB -->
-        <repository>
-            <id>oss.sonatype.org</id>
-            <name>OrientDB Maven2 Repository</name>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <!--repository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-            </snapshots>
-        </repository-->
+            <id>wrensecurity-releases</id>
+            <name>Wren Security Release Repository</name>
+            <url>https://wrensecurity.jfrog.io/wrensecurity/releases</url>
 
-        <!-- Restlet -->
-        <repository>
-            <id>maven-restlet</id>
-            <name>Public online Restlet repository</name>
-            <url>http://maven.restlet.org</url>
-        </repository>
-        <!--<repository>
-            <id>com.springsource.repository.bundles.release</id>
-            <name>SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
-            <url>http://repository.springsource.com/maven/bundles/release</url>
-        </repository>
-        <repository>
-            <id>com.springsource.repository.bundles.external</id>
-            <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
-            <url>http://repository.springsource.com/maven/bundles/external</url>
-        </repository-->
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>jboss-public-repository-group</id>
-            <name>JBoss Public Maven Repository Group</name>
-            <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+
             <releases>
                 <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
             </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
+        </repository>
+    </repositories>
 
     <mailingLists>
         <mailingList>
-            <name>OpenIDM: Technical communications</name>
-            <post>openidm@forgerock.org</post>
-            <subscribe>http://lists.forgerock.org/mailman/listinfo/openidm</subscribe>
-            <unsubscribe>http://lists.forgerock.org/mailman/listinfo/openidm</unsubscribe>
-            <archive>http://lists.forgerock.org/pipermail/openidm/</archive>
-        </mailingList>
-        <mailingList>
-            <name>OpenIDM: Commit Notificatons</name>
-            <post>commitopenidm@forgerock.org</post>
-            <subscribe>http://lists.forgerock.org/mailman/listinfo/commitopenidm</subscribe>
-            <unsubscribe>http://lists.forgerock.org/mailman/listinfo/commitopenidm</unsubscribe>
-            <archive>http://lists.forgerock.org/pipermail/commitopenidm/</archive>
-        </mailingList>
-        <mailingList>
-            <name>OpenIDM: Developers</name>
-            <post>openidm-dev@forgerock.org</post>
-            <subscribe>http://lists.forgerock.org/mailman/listinfo/openidm-dev</subscribe>
-            <unsubscribe>http://lists.forgerock.org/mailman/listinfo/openidm-dev</unsubscribe>
-            <archive>http://lists.forgerock.org/pipermail/openidm-dev/</archive>
-        </mailingList>
-        <mailingList>
-            <name>OpenIDM: Issue Notifications</name>
-            <post>openidm-issues@forgerock.org</post>
-            <subscribe>http://lists.forgerock.org/mailman/listinfo/openidm-issues</subscribe>
-            <unsubscribe>http://lists.forgerock.org/mailman/listinfo/openidm-issues</unsubscribe>
-            <archive>http://lists.forgerock.org/pipermail/openidm-issues/</archive>
+            <name>Wren Security Mailing List</name>
+            <archive>https://groups.google.com/forum/#!forum/wren-security</archive>
+            <subscribe>https://groups.google.com/forum/#!forum/wren-security</subscribe>
+            <unsubscribe>https://groups.google.com/forum/#!forum/wren-security</unsubscribe>
+            <post>wren-security@googlegroups.com</post>
         </mailingList>
     </mailingLists>
 
     <issueManagement>
-        <system>jira</system>
-        <url>https://bugster.forgerock.org/jira/browse/OPENIDM</url>
+        <system>GitHub Issues</system>
+        <url>https://github.com/WrenSecurity/WrenIDM/issues</url>
     </issueManagement>
-
-    <ciManagement>
-        <system>Jenkins</system>
-        <url>http://builds.forgerock.org/job/OpenIDM/</url>
-        <notifiers>
-            <notifier>
-                <type>mail</type>
-                <sendOnError>true</sendOnError>
-                <sendOnFailure>true</sendOnFailure>
-                <sendOnSuccess>false</sendOnSuccess>
-                <sendOnWarning>false</sendOnWarning>
-                <address>openidm-dev@forgerock.org</address>
-            </notifier>
-        </notifiers>
-    </ciManagement>
 
     <properties>
         <!-- Version management -->
@@ -255,10 +141,6 @@
         <openicf.groovyconnector.version>1.4.2.0</openicf.groovyconnector.version>
         <salesforce.api.version>29</salesforce.api.version>
         <provisioner.salesforcemodule.version>2.0.${salesforce.api.version}.2</provisioner.salesforcemodule.version>
-
-        <!-- Site properties -->
-        <siteDistributionURL>scp://community.internal.forgerock.com/var/www/vhosts/openidm.forgerock.org/httpdocs</siteDistributionURL>
-
     </properties>
 
     <modules>
@@ -307,15 +189,18 @@
     <profiles>
         <profile>
             <id>jrebel</id>
+
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.zeroturnaround</groupId>
                         <artifactId>jrebel-maven-plugin</artifactId>
                         <version>1.1.3</version>
+
                         <configuration>
                             <packaging>jar</packaging>
                         </configuration>
+
                         <executions>
                             <execution>
                                 <id>generate-rebel-xml</id>
@@ -326,9 +211,11 @@
                             </execution>
                         </executions>
                     </plugin>
+
                     <plugin>
                         <groupId>org.apache.felix</groupId>
                         <artifactId>maven-bundle-plugin</artifactId>
+
                         <configuration>
                             <instructions>
                                 <Include-Resource>{maven-resources},target/classes/rebel.xml</Include-Resource>
@@ -338,27 +225,33 @@
                 </plugins>
             </build>
         </profile>
+
         <profile>
             <!-- To scan the licenses -->
             <id>generateLicenseReport</id>
+
             <build>
                 <plugins>
                     <plugin>
-                      <groupId>org.codehaus.mojo</groupId>
-                      <artifactId>license-maven-plugin</artifactId>
-                      <version>1.7</version>
-                      <executions>
-                        <execution>
-                          <id>aggregate-add-third-party</id>
-                          <goals>
-                            <goal>aggregate-add-third-party</goal>
-                          </goals>
-                          <configuration>
-                            <useMissingFile>true</useMissingFile>
-                            <fileTemplate>/org/codehaus/mojo/license/third-party-file-groupByLicense.ftl</fileTemplate>
-                            <failIfWarning>true</failIfWarning>
-                            <licenseMerges>
-                              <licenseMerge>Apache 2.0|
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <version>1.7</version>
+
+                        <executions>
+                            <execution>
+                                <id>aggregate-add-third-party</id>
+
+                                <goals>
+                                    <goal>aggregate-add-third-party</goal>
+                                </goals>
+
+                                <configuration>
+                                    <useMissingFile>true</useMissingFile>
+                                    <fileTemplate>/org/codehaus/mojo/license/third-party-file-groupByLicense.ftl</fileTemplate>
+                                    <failIfWarning>true</failIfWarning>
+                                    <licenseMerges>
+                                        <licenseMerge>
+                                            Apache 2.0|
                                             The Apache Software License, Version 2.0|
                                             Apache v2|Apache 2|ASL, version 2|
                                             Apache License, Version 2.0|
@@ -368,28 +261,45 @@
                                             Apache 2.0 license|
                                             Apache License Version 2.0|
                                             Apache Software License - Version 2.0|
-                                            Apache License 2.0</licenseMerge>
-                              <licenseMerge>CDDL 1.0|
-                                            COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0|
+                                            Apache License 2.0
+                                        </licenseMerge>
+
+                                        <licenseMerge>
+                                            CDDL 1.0|
+                                            COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL)
+                                            Version 1.0|
                                             CDDL|
                                             CDDL-1.0|
                                             CDDL 1.0 license|
-                                            Common Development and Distribution License (CDDL) v1.0</licenseMerge>
-                              <licenseMerge>MIT|
+                                            Common Development and Distribution License (CDDL) v1.0
+                                        </licenseMerge>
+
+                                        <licenseMerge>
+                                            MIT|
                                             MIT License|
-                                            The MIT License</licenseMerge>
-                              <licenseMerge>GPL-2.0|
-                                            The GNU General Public License, Version 2</licenseMerge>
-                              <licenseMerge>LGPL license|
+                                            The MIT License
+                                        </licenseMerge>
+
+                                        <licenseMerge>
+                                            GPL-2.0|
+                                            The GNU General Public License, Version 2
+                                        </licenseMerge>
+
+                                        <licenseMerge>
+                                            LGPL license|
                                             GNU Lesser General Public License|
-                                            GNU LESSER GENERAL PUBLIC LICENSE</licenseMerge>
-                              <licenseMerge>LGPL 2.1 license|
+                                            GNU LESSER GENERAL PUBLIC LICENSE
+                                        </licenseMerge>
+
+                                        <licenseMerge>
+                                            LGPL 2.1 license|
                                             LGPL, version 2.1|
-                                            GNU Lesser General Public License, Version 2.1</licenseMerge>
-                            </licenseMerges>
-                          </configuration>
-                        </execution>
-                      </executions>
+                                            GNU Lesser General Public License, Version 2.1
+                                        </licenseMerge>
+                                    </licenseMerges>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
@@ -418,21 +328,25 @@
                 <artifactId>script-common</artifactId>
                 <version>${commons.forgerock-script.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.forgerock.commons</groupId>
                 <artifactId>script-groovy</artifactId>
                 <version>${commons.forgerock-script.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.forgerock.commons</groupId>
                 <artifactId>script-javascript</artifactId>
                 <version>${commons.forgerock-script.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.forgerock.commons</groupId>
                 <artifactId>i18n-slf4j</artifactId>
                 <version>${commons.forgerock-i18n.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.forgerock.commons</groupId>
                 <artifactId>i18n-core</artifactId>
@@ -445,16 +359,19 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>3.4</version>
             </dependency>
+
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>1.8</version>
             </dependency>
+
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>2.4</version>
             </dependency>
+
             <dependency>
                 <groupId>commons-fileupload</groupId>
                 <artifactId>commons-fileupload</artifactId>
@@ -475,52 +392,63 @@
                 <artifactId>org.restlet</artifactId>
                 <version>${restlet.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.restlet.osgi</groupId>
                 <artifactId>org.restlet.ext.jackson</artifactId>
                 <version>${restlet.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.restlet.osgi</groupId>
                 <artifactId>org.restlet.ext.httpclient</artifactId>
                 <version>${restlet.version}</version>
+
                 <exclusions>
                     <exclusion>
                         <groupId>org.apache.httpcomponents</groupId>
                         <artifactId>httpclient</artifactId>
                     </exclusion>
+
                     <exclusion>
                         <groupId>org.apache.httpcomponents</groupId>
                         <artifactId>httpcore</artifactId>
                     </exclusion>
+
                     <exclusion>
                         <groupId>org.apache.httpcomponents</groupId>
                         <artifactId>httpmime</artifactId>
                     </exclusion>
+
                     <exclusion>
                         <groupId>net.jcip</groupId>
                         <artifactId>jcip-annotations</artifactId>
                     </exclusion>
+
                     <exclusion>
                         <groupId>org.apache.james</groupId>
                         <artifactId>apache-mime4j</artifactId>
                     </exclusion>
+
                     <exclusion>
                         <groupId>commons-logging</groupId>
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient-osgi</artifactId>
                 <version>4.4.1</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpcore-osgi</artifactId>
                 <version>4.4.1</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpasyncclient-osgi</artifactId>
@@ -535,6 +463,7 @@
                 <version>4.3.1</version>
                 <scope>provided</scope>
             </dependency>
+
             <!--
                 Compendium 4.3 is not compatible with current SCR
                 org.apache.felix.scr 1.6.x implements SCR 1.1
@@ -580,41 +509,49 @@
                 <artifactId>org.apache.felix.framework</artifactId>
                 <version>4.2.1</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.shell</artifactId>
                 <version>1.4.3</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.shell.tui</artifactId>
                 <version>1.4.1</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole</artifactId>
                 <version>4.2.12</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole.plugins.ds</artifactId>
                 <version>1.0.0</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole.plugins.event</artifactId>
                 <version>1.0.2</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole.plugins.memoryusage</artifactId>
                 <version>1.0.4</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole.plugins.obr</artifactId>
                 <version>1.0.0</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole.plugins.packageadmin</artifactId>
@@ -626,11 +563,13 @@
                 <artifactId>org.apache.felix.configadmin</artifactId>
                 <version>1.8.0</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.log</artifactId>
                 <version>1.0.1</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.fileinstall</artifactId>
@@ -672,16 +611,19 @@
                 <version>1.8.6_1</version>
                 <!--<version>2.1.7_1</version>-->
             </dependency>
+
             <dependency>
                 <groupId>org.apache.servicemix.bundles</groupId>
                 <artifactId>org.apache.servicemix.bundles.rhino</artifactId>
                 <version>1.7R4_1</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.servicemix.bundles</groupId>
                 <artifactId>org.apache.servicemix.bundles.commons-configuration</artifactId>
                 <version>1.9_1</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.servicemix.bundles</groupId>
                 <artifactId>org.apache.servicemix.bundles.javax-inject</artifactId>
@@ -700,11 +642,13 @@
                 <artifactId>pax-web-api</artifactId>
                 <version>${paxweb.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.ops4j.pax.web</groupId>
                 <artifactId>pax-web-extender-whiteboard</artifactId>
                 <version>${paxweb.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.ops4j.pax.web</groupId>
                 <artifactId>pax-web-jetty-bundle</artifactId>
@@ -737,12 +681,14 @@
                 <version>2.0M10</version>
                 <scope>test</scope>
             </dependency>
+
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.11</version>
                 <scope>test</scope>
             </dependency>
+
             <dependency>
                 <groupId>org.codehaus.jstestrunner</groupId>
                 <artifactId>jstestrunner-junit</artifactId>
@@ -755,6 +701,7 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
@@ -777,12 +724,15 @@
                     <groupId>org.forgerock.commons</groupId>
                     <artifactId>i18n-maven-plugin</artifactId>
                     <version>1.4.1</version>
+
                     <executions>
                         <execution>
                             <phase>generate-sources</phase>
+
                             <goals>
                                 <goal>generate-messages</goal>
                             </goals>
+
                             <configuration>
                                 <messageFiles>
                                     <messageFile>com/example/my_tool.properties</messageFile>
@@ -791,6 +741,7 @@
                         </execution>
                     </executions>
                 </plugin>
+
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-scr-plugin</artifactId>
@@ -800,11 +751,13 @@
                         <generateAccessors>false</generateAccessors>
                     </configuration>-->
                 </plugin>
+
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
                     <version>2.4.0</version>
                     <extensions>true</extensions>
+
                     <configuration>
                         <instructions>
                             <Import-Package>${openidm.osgi.import}</Import-Package>
@@ -818,15 +771,19 @@
                         </instructions>
                     </configuration>
                 </plugin>
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
+
                     <configuration>
                         <author>false</author>
+
                         <links>
                             <link>http://docs.oracle.com/javase/6/docs/api</link>
                         </links>
                     </configuration>
+
                     <executions>
                         <execution>
                             <id>attach-javadocs</id>
@@ -848,24 +805,18 @@
                             <pluginExecutions>
                                 <pluginExecution>
                                     <pluginExecutionFilter>
-                                        <groupId>
-                                            org.codehaus.mojo
-                                        </groupId>
-                                        <artifactId>
-                                            js-import-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [1.0.0,)
-                                        </versionRange>
+                                        <groupId>org.codehaus.mojo</groupId>
+                                        <artifactId>js-import-maven-plugin</artifactId>
+                                        <versionRange>[1.0.0,)</versionRange>
+
                                         <goals>
                                             <goal>import-js</goal>
                                             <goal>generate-html</goal>
-                                            <goal>
-                                                test-generate-html
-                                            </goal>
+                                            <goal>test-generate-html</goal>
                                             <goal>test-import-js</goal>
                                         </goals>
                                     </pluginExecutionFilter>
+
                                     <action>
                                         <execute>
                                             <runOnIncremental>true</runOnIncremental>
@@ -874,20 +825,16 @@
                                 </pluginExecution>
                                 <pluginExecution>
                                     <pluginExecutionFilter>
-                                        <groupId>
-                                            org.codehaus.mojo
-                                        </groupId>
-                                        <artifactId>
-                                            jslint-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [1.0.1,)
-                                        </versionRange>
+                                        <groupId>org.codehaus.mojo</groupId>
+                                        <artifactId>jslint-maven-plugin</artifactId>
+                                        <versionRange>[1.0.1,)</versionRange>
+
                                         <goals>
                                             <goal>test-jslint</goal>
                                             <goal>jslint</goal>
                                         </goals>
                                     </pluginExecutionFilter>
+
                                     <action>
                                         <execute>
                                             <runOnIncremental>true</runOnIncremental>
@@ -898,23 +845,28 @@
                         </lifecycleMappingMetadata>
                     </configuration>
                 </plugin>
+
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>jslint-maven-plugin</artifactId>
                     <version>1.0.1</version>
+
                     <configuration>
                         <assumeConsoleAlertEtc>true</assumeConsoleAlertEtc>
                         <strictWhiteSpace>false</strictWhiteSpace>
                     </configuration>
                 </plugin>
+
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>webminifier-maven-plugin</artifactId>
                     <version>1.0.1</version>
+
                     <executions>
                         <execution>
                             <id>default-minify-js</id>
                             <phase>none</phase>
+
                             <goals>
                                 <goal>minify-js</goal>
                             </goals>
@@ -924,12 +876,14 @@
             </plugins>
         </pluginManagement>
     </build>
+
     <reporting>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>2.6</version>
+
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -952,16 +906,19 @@
                     </reportSet>
                 </reportSets>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.9</version>
+
                 <configuration>
                     <author>false</author>
                     <links>
                         <link>http://docs.oracle.com/javase/6/docs/api</link>
                     </links>
                 </configuration>
+
                 <reportSets>
                     <reportSet>
                         <id>default</id>
@@ -969,6 +926,7 @@
                             <report>javadoc</report>
                         </reports>
                     </reportSet>
+
                     <reportSet>
                         <id>aggregate</id>
                         <reports>

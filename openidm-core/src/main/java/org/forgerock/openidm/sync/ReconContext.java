@@ -1,19 +1,21 @@
 /*
- * The contents of this file are subject to the terms of the Common Development and
- * Distribution License (the License). You may not use this file except in compliance with the
- * License.
- *
- * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
- * specific language governing permission and limitations under the License.
- *
- * When distributing Covered Software, include this CDDL Header Notice in each file and include
- * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
- * Header, with the fields enclosed by brackets [] replaced by your own identifying
- * information: "Portions copyright [year] [name of copyright owner]".
- *
+ * The contents of this file are subject to the terms of the Common Development
+ * and Distribution License (the License). You may not use this file except in
+ * compliance with the License.
+ *
+ * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License
+ * for the specific language governing permission and limitations under the
+ * License.
+ *
+ * When distributing Covered Software, include this CDDL Header Notice in each
+ * file and include the License file at legal/CDDLv1.0.txt. If applicable, add
+ * the following below the CDDL Header, with the fields enclosed by brackets []
+ * replaced by your own identifying information:
+ * "Portions copyright [year] [name of copyright owner]".
+ *
  * Copyright 2015 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
-
 package org.forgerock.openidm.sync;
 
 import static org.forgerock.util.Reject.checkNotNull;
@@ -26,7 +28,6 @@ import org.forgerock.services.context.Context;
  * A context to store reconciliation data on the request context chain
  */
 public class ReconContext extends AbstractContext {
-
     /** The name of the Context */
     private static final String CONTEXT_NAME = "recon";
     
@@ -34,10 +35,12 @@ public class ReconContext extends AbstractContext {
     private static final String ATTR_MAPPING = "mapping";
 
     /**
-     * Create a new recon context from an existing (parent) context.
+     * Create a new recon context from an existing (parent) context and mapping.
      *
-     * @param parent the parent server context
-     * @param trigger the trigger source
+     * @param   parent
+     *          The parent server context
+     * @param   mapping
+     *          The mapping associated with the reconciliation.
      */
     public ReconContext(final Context parent, String mapping) {
         super(checkNotNull(parent, "Cannot instantiate ReconContext with null parent Context"), CONTEXT_NAME);

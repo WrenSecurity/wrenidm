@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2015 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,7 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.tools.scriptedbundler;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -32,7 +32,7 @@ import java.util.*;
  * A single connector objectType property, contained in {@link CustomObjectType}.
  *
  * Given a JSON configuration such as:
- * <pre><blockquote>
+ * <pre>{@code
  *      "properties" : [
  *          {
  *              "name" : "name",
@@ -57,7 +57,7 @@ import java.util.*;
  *              ...
  *          }
  *      ]
- * </blockquote></pre>
+ * }</pre>
  * this object represents a single properties array element.
  */
 public class CustomObjectTypeProperty extends CustomBaseObject {

@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright © 2011-2014 ForgeRock AS. All rights reserved.
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -87,9 +88,6 @@ public class DB2TableHandler extends GenericTableHandler {
     }
 
     // blatantly copied from OracleTableHandler...
-    /**
-     * @inheritDoc
-     */
     @Override
     public String renderQueryFilter(QueryFilter<JsonPointer> filter, Map<String, Object> replacementTokens, Map<String, Object> params) {
         final int offsetParam = Integer.parseInt((String)params.get(PAGED_RESULTS_OFFSET));

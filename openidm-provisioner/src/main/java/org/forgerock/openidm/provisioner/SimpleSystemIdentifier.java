@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2011-2015 ForgeRock AS. All rights reserved.
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -20,10 +21,7 @@
  * with the fields enclosed by brackets [] replaced by
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * $Id$
  */
-
 package org.forgerock.openidm.provisioner;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +31,7 @@ import org.forgerock.json.JsonValueException;
 /**
  * SimpleSystemIdentifier class helps to match the id against the name of the
  * system configuration.
- * <p/>
+ * <p>
  * Matching id pattern: system/{@code name}/*
  *
  */

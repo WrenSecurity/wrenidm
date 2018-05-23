@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2011-2013 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,7 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.core;
 
 import java.util.Stack;
@@ -65,22 +65,26 @@ public class PropertyUtil {
     public static final char DELIM_STOP = '}';
 
     /**
-     * <p>
      * This method performs property variable substitution on the specified
-     * value. If the specified value contains the syntax
-     * <tt>&{&lt;prop-name&gt;}</tt>, where <tt>&lt;prop-name&gt;</tt> refers to
-     * either a configuration property or a system property, then the
+     * value.
+     * <p>
+     * If the specified value contains the syntax
+     * <tt>&amp;{&lt;prop-name&gt;}</tt>, where <tt>&lt;prop-name&gt;</tt>
+     * refers to either a configuration property or a system property, then the
      * corresponding property value is substituted for the variable placeholder.
      * Multiple variable placeholders may exist in the specified value as well
      * as nested variable placeholders, which are substituted from inner most to
      * outer most. Configuration properties override system properties.
-     * </p>
      *
-     * @param val
-     *            The string on which to perform property substitution.
-     * @param propertyAccessor
-     *            Set of configuration properties.
-     * @return The value of the specified string after property substitution.
+     * @param   val
+     *          The string on which to perform property substitution.
+     * @param   propertyAccessor
+     *          Set of configuration properties.
+     * @param   doEscape
+     *          Whether or not double slashes ({@code \\}) are interpreted as
+     *          escaping the character that follows them.
+     *
+     * @return  The value of the specified string after property substitution.
      **/
     public static Object substVars(String val, final PropertyAccessor propertyAccessor,
             boolean doEscape) {

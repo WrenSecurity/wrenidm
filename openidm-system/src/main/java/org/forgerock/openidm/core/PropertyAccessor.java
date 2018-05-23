@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2012-2013 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,7 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.core;
 
 /**
@@ -34,19 +34,23 @@ public interface PropertyAccessor {
      * the Framework properties, the system properties are then searched. The
      * method returns {@code null} if the property is not found.
      *
-     * @param key
-     *            The name of the requested property.
-     * @param defaultValue
-     * @param expected
-     * @param <T>
-     *            The type of the expected property.
+     * @param  key
+     *         The name of the requested property.
+     * @param  defaultValue
+     *         The default value to return if the property is not found.
+     * @param  expected
+     *         The class for the expected property.
+     *
+     * @param  <T>
+     *         The type of the expected property.
+     *
      * @return The value of the requested property, or {@code null} if the
      *         property is undefined.
      *
      * @throws SecurityException
-     *             If the caller does not have the appropriate
-     *             {@code PropertyPermission} to read the property, and the Java
-     *             Runtime Environment supports permissions.
+     *         If the caller does not have the appropriate
+     *         {@code PropertyPermission} to read the property, and the Java
+     *         Runtime Environment supports permissions.
      */
     <T> T getProperty(String key, T defaultValue, Class<T> expected);
 }
