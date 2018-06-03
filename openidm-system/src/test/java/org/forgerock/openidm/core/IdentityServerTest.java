@@ -12,10 +12,13 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
+
 package org.forgerock.openidm.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.forgerock.json.JsonValue.array;
 import static org.forgerock.json.JsonValue.field;
 import static org.forgerock.json.JsonValue.json;
@@ -25,8 +28,8 @@ import static org.forgerock.openidm.core.PropertyUtil.propertiesEvaluated;
 import java.io.File;
 import java.net.URLDecoder;
 import java.util.Properties;
-
 import org.forgerock.json.JsonValue;
+import org.forgerock.openidm.core.util.IdentityServerTestUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -37,30 +40,217 @@ public class IdentityServerTest {
 
     private static final String A_SYSTEM_PROPERTY = "A SYSTEM PROPERTY";
     private static final String CONFIG = "CONFIG";
+
     private static final String TEST_PROPERTY_KEY = IdentityServerTest.class.getName();
     private static final String TEST_PROPERTY_KEY_NOT_IN_BOOT = TEST_PROPERTY_KEY + "_NOT_BOOT";
+
+    private static final String FAKE_PROPERTY_KEY = "FAKE_PROPERTY";
+    private static final String FAKE_PROPERTY_VALUE = "FAKE_VALUE";
+
     private static final Properties testProperties = new Properties();
 
     @BeforeClass
     public void setup() throws Exception {
         testProperties.setProperty(TEST_PROPERTY_KEY, CONFIG);
         testProperties.setProperty(TEST_PROPERTY_KEY_NOT_IN_BOOT, CONFIG);
+        testProperties.setProperty(FAKE_PROPERTY_KEY, FAKE_PROPERTY_VALUE);
+
         String bootFile =
                 URLDecoder.decode(IdentityServerTest.class.getResource(
                         "/" + ServerConstants.DEFAULT_BOOT_FILE_LOCATION).getFile(), "UTF-8");
         assertThat(new File(bootFile).canRead()).isTrue();
+
         System.setProperty(ServerConstants.PROPERTY_BOOT_FILE_LOCATION, bootFile);
         IdentityServer.initInstance(new TestPropertyAccessor());
     }
 
+    @Test
+    public void testInitInstanceWithPropertiesWhenNotInitialized() {
+        final IdentityServer instanceBeforeTest = IdentityServerTestUtils.getServerInstance();
+
+        try {
+            ensureServerNotInitialized();
+
+            final IdentityServer returnedInstance =
+                IdentityServer.initInstance(new TestPropertyAccessor());
+
+            assertThat(returnedInstance).isNotNull();
+            assertThat(IdentityServer.getInstance()).isEqualTo(returnedInstance);
+
+            // This value only exists when we are using the test property accessor
+            assertThat(returnedInstance.getProperty(FAKE_PROPERTY_KEY))
+                .isEqualTo(FAKE_PROPERTY_VALUE);
+        }
+        finally {
+            // Reset state for subsequent tests
+            IdentityServerTestUtils.setServerInstance(instanceBeforeTest);
+        }
+    }
+
+    @Test
+    public void testInitInstanceWithPropertiesWhenAlreadyInitialized() {
+        final IdentityServer instanceBeforeTest = IdentityServerTestUtils.getServerInstance();
+
+        try {
+            ensureServerInitialized();
+
+            try {
+                IdentityServer.initInstance(new TestPropertyAccessor());
+
+                fail("Expected an IllegalStateException for attempting to initialize twice");
+            }
+            catch (IllegalStateException expected) {
+                // Expected exception
+            }
+        }
+        finally {
+            // Reset state for subsequent tests
+            IdentityServerTestUtils.setServerInstance(instanceBeforeTest);
+        }
+    }
+
+    @Test
+    public void testInitInstanceWithPropertiesWhenGivenNullAndNotInitialized() {
+        final IdentityServer instanceBeforeTest = IdentityServerTestUtils.getServerInstance();
+
+        try {
+            ensureServerNotInitialized();
+
+            final IdentityServer returnedInstance =
+                IdentityServer.initInstance((PropertyAccessor)null);
+
+            assertThat(returnedInstance).isNotNull();
+            assertThat(IdentityServer.getInstance()).isEqualTo(returnedInstance);
+
+            // This value only exists when we are using the test property accessor
+            assertThat(returnedInstance.getProperty(FAKE_PROPERTY_KEY)).isNull();
+        }
+        finally {
+            // Reset state for subsequent tests
+            IdentityServerTestUtils.setServerInstance(instanceBeforeTest);
+        }
+    }
+
+    @Test
+    public void testInitInstanceWithPropertiesWhenGivenNullAndAlreadyInitialized() {
+        final IdentityServer instanceBeforeTest = IdentityServerTestUtils.getServerInstance();
+
+        try {
+            ensureServerInitialized();
+
+            try {
+                IdentityServer.initInstance((PropertyAccessor)null);
+
+                fail("Expected an IllegalStateException for attempting to initialize twice");
+            }
+            catch (IllegalStateException expected) {
+                // Expected exception
+            }
+        }
+        finally {
+            // Reset state for subsequent tests
+            IdentityServerTestUtils.setServerInstance(instanceBeforeTest);
+        }
+    }
+
+    @Test
+    public void testInitInstanceWithServerWhenNotInitialized() {
+        final IdentityServer instanceBeforeTest = IdentityServerTestUtils.getServerInstance();
+
+        try {
+            ensureServerNotInitialized();
+
+            final IdentityServer newInstance      = IdentityServerTestUtils.createServerInstance();
+            final IdentityServer returnedInstance = IdentityServer.initInstance(newInstance);
+
+            assertThat(returnedInstance).isNotNull();
+            assertThat(newInstance).isEqualTo(returnedInstance);
+            assertThat(IdentityServer.getInstance()).isEqualTo(returnedInstance);
+
+            // This value only exists when we are using the test property accessor
+            assertThat(returnedInstance.getProperty(FAKE_PROPERTY_KEY)).isNull();
+        }
+        finally {
+            // Reset state for subsequent tests
+            IdentityServerTestUtils.setServerInstance(instanceBeforeTest);
+        }
+    }
+
+    @Test
+    public void testInitInstanceWithServerWhenAlreadyInitialized() {
+        final IdentityServer instanceBeforeTest = IdentityServerTestUtils.getServerInstance();
+
+        try {
+            ensureServerInitialized();
+
+            final IdentityServer newInstance = IdentityServerTestUtils.createServerInstance();
+
+            try {
+                IdentityServer.initInstance(newInstance);
+
+                fail("Expected an IllegalStateException for attempting to initialize twice");
+            }
+            catch (IllegalStateException expected) {
+                // Expected exception
+            }
+        }
+        finally {
+            // Reset state for subsequent tests
+            IdentityServerTestUtils.setServerInstance(instanceBeforeTest);
+        }
+    }
+
+    @Test
+    @SuppressWarnings("RedundantCast")
+    public void testInitInstanceWithServerWhenGivenNullAndNotInitialized() {
+        final IdentityServer instanceBeforeTest = IdentityServerTestUtils.getServerInstance();
+
+        try {
+            ensureServerNotInitialized();
+
+            final IdentityServer returnedInstance =
+                IdentityServer.initInstance((IdentityServer)null);
+
+            assertThat(returnedInstance).isNotNull();
+            assertThat(IdentityServer.getInstance()).isEqualTo(returnedInstance);
+
+            // This value only exists when we are using the test property accessor
+            assertThat(returnedInstance.getProperty(FAKE_PROPERTY_KEY)).isNull();
+        }
+        finally {
+            // Reset state for subsequent tests
+            IdentityServerTestUtils.setServerInstance(instanceBeforeTest);
+        }
+    }
+
+    @Test
+    @SuppressWarnings("RedundantCast")
+    public void testInitInstanceWithServerWhenGivenNullAndAlreadyInitialized() {
+        final IdentityServer instanceBeforeTest = IdentityServerTestUtils.getServerInstance();
+
+        try {
+            ensureServerInitialized();
+
+            try {
+                IdentityServer.initInstance((IdentityServer)null);
+
+                fail("Expected an IllegalStateException for attempting to initialize twice");
+            }
+            catch (IllegalStateException expected) {
+                // Expected exception
+            }
+        }
+        finally {
+            // Reset state for subsequent tests
+            IdentityServerTestUtils.setServerInstance(instanceBeforeTest);
+        }
+    }
 
     /**
      * Validates that the System properties will override properties from the boot file.
-     *
-     * @throws Exception on failure.
      */
     @Test
-    public void testSystemOverridesBootProperty() throws Exception {
+    public void testSystemOverridesBootProperty() {
         // Given
         IdentityServer identityServer = IdentityServer.getInstance();
 
@@ -112,6 +302,17 @@ public class IdentityServerTest {
                 .isEqualTo("Array 1 value 'value1'.");
     }
 
+    private void ensureServerNotInitialized() {
+        IdentityServerTestUtils.clearServerInitialization();
+        assertThat(IdentityServerTestUtils.getServerInstance()).isNull();
+    }
+
+    private void ensureServerInitialized() {
+        IdentityServerTestUtils.setServerInstance(
+            IdentityServerTestUtils.createServerInstance());
+
+        assertThat(IdentityServerTestUtils.getServerInstance()).isNotNull();
+    }
 
     private static class TestPropertyAccessor implements PropertyAccessor {
         @Override
