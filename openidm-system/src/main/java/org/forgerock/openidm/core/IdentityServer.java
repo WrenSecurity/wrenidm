@@ -14,6 +14,7 @@
  * Copyright 2011-2016 ForgeRock AS.
  * Portions Copyright 2018 Wren Security.
  */
+
 package org.forgerock.openidm.core;
 
 import java.io.BufferedInputStream;
@@ -30,8 +31,6 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This class defines the core of the Identity Server.
@@ -43,10 +42,7 @@ public final class IdentityServer implements PropertyAccessor {
     /**
      * The singleton Identity Server instance.
      */
-    private static final AtomicReference<IdentityServer> IDENTITY_SERVER =
-            new AtomicReference<>(new IdentityServer(null, null));
-
-    private static final AtomicBoolean INITIALISED = new AtomicBoolean(Boolean.FALSE);
+    private static volatile IdentityServer IDENTITY_SERVER = null;
 
     /**
      * The various defined boot properties.
@@ -89,43 +85,52 @@ public final class IdentityServer implements PropertyAccessor {
      *            configuration, or {@code null} to use an empty set of
      *            properties.
      */
-    private IdentityServer(PropertyAccessor properties, IdentityServer identityServer) {
+    private IdentityServer(PropertyAccessor properties) {
         configProperties = properties;
+
         String bootFileName =
-                getProperty(ServerConstants.PROPERTY_BOOT_FILE_LOCATION,
-                        ServerConstants.DEFAULT_BOOT_FILE_LOCATION);
-        bootFileProperties = loadProps(bootFileName, identityServer);
+            getProperty(
+                ServerConstants.PROPERTY_BOOT_FILE_LOCATION,
+                ServerConstants.DEFAULT_BOOT_FILE_LOCATION);
+
+        bootFileProperties = loadProps(bootFileName);
     }
 
     public static IdentityServer getInstance() {
-        IdentityServer server = IDENTITY_SERVER.get();
-        if (null == server) {
+        if (IDENTITY_SERVER == null) {
             throw new IllegalStateException("IdentityServer has not been initialised");
         }
-        return server;
+        return IDENTITY_SERVER;
     }
 
     /**
      * Initialise the singleton {@link IdentityServer} instance with the
      * provided {@link PropertyAccessor} instance.
      * <p>
-     * This or the {@link #initInstance(IdentityServer)} method can be called
-     * only once and then it throws {@link IllegalStateException} if it's called
-     * more then once.
+     * This and the {@link #initInstance(IdentityServer)} method can be called
+     * only once. Subsequent calls will result in a {@link IllegalStateException}.
      *
      * @param   properties
-     *          The parent {@code PropertyAccessor}
+     *          The parent {@code PropertyAccessor}.
      *
      * @return  New instance of {@link IdentityServer}.
      *
      * @throws  IllegalStateException
-     *          when this method called more then once.
+     *          If this method is called more then once.
      */
-    public static IdentityServer initInstance(PropertyAccessor properties) {
-        if (INITIALISED.compareAndSet(Boolean.FALSE, Boolean.TRUE)) {
-            return IDENTITY_SERVER
-                    .getAndSet(properties instanceof IdentityServer ? (IdentityServer) properties
-                            : new IdentityServer(properties, IDENTITY_SERVER.get()));
+    public static synchronized IdentityServer initInstance(PropertyAccessor properties) {
+        if (IDENTITY_SERVER == null) {
+            final IdentityServer newInstance;
+
+            if (properties instanceof IdentityServer) {
+                newInstance = (IdentityServer)properties;
+            } else {
+                newInstance = new IdentityServer(properties);
+            }
+
+            IDENTITY_SERVER = newInstance;
+
+            return newInstance;
         } else {
             throw new IllegalStateException("IdentityServer has been initialised already");
         }
@@ -133,30 +138,37 @@ public final class IdentityServer implements PropertyAccessor {
 
     /**
      * Initialise the singleton {@link IdentityServer} instance with the
-     * provided {@link IdentityServer} instance.
+     * provided {@link IdentityServer} instance, or the default instance.
      * <p>
-     * This or the {@link #initInstance(PropertyAccessor)} method can be called
-     * only once and then it throws {@link IllegalStateException} if it's called
-     * more then once.
+     * This and the {@link #initInstance(PropertyAccessor)} method can be called
+     * only once. Subsequent calls will result in a {@link IllegalStateException}.
      *
      * @param   server
-     *          New instance of {@link IdentityServer}.
+     *          New instance of {@link IdentityServer}. Can be {@code null} to generate a default
+     *          instance that uses only system properties.
      *
-     * @return  Same instance as the {@code server} parameter if not {@code null}
-     *          or the current {@link IdentityServer instance}.
+     * @return  Same instance as the {@code server} parameter, if not {@code null}; otherwise, the
+     *          new {@link IdentityServer instance}.
      *
      * @throws  IllegalStateException
-     *          when this method called more then once.
+     *          If this method is called more then once.
      */
-    public static IdentityServer initInstance(IdentityServer server) {
-        if (null != server) {
-            if (INITIALISED.compareAndSet(Boolean.FALSE, Boolean.TRUE)) {
-                return IDENTITY_SERVER.getAndSet(server);
+    public static synchronized IdentityServer initInstance(final IdentityServer server) {
+        if (IDENTITY_SERVER == null) {
+            final IdentityServer newInstance;
+
+            if (server != null ) {
+                newInstance = server;
             } else {
-                throw new IllegalStateException("IdentityServer has been initialised already");
+                newInstance = new IdentityServer(null);
             }
+
+            IDENTITY_SERVER = newInstance;
+
+            return newInstance;
+        } else {
+            throw new IllegalStateException("IdentityServer has been initialised already");
         }
-        return IDENTITY_SERVER.get();
     }
 
     /**
@@ -213,9 +225,11 @@ public final class IdentityServer implements PropertyAccessor {
      */
     public String getProperty(String name, String defaultValue, boolean withPropertySubstitution) {
         String result = getProperty(name, defaultValue, String.class);
+
         if (withPropertySubstitution) {
-            result = (String) PropertyUtil.substVars(result, IDENTITY_SERVER.get(), false);
+            result = (String) PropertyUtil.substVars(result, getInstance(), false);
         }
+
         return result;
     }
 
@@ -325,7 +339,7 @@ public final class IdentityServer implements PropertyAccessor {
      *         path.
      */
     public static File getFileForPath(String path) {
-        return getFileForPath(path, IDENTITY_SERVER.get().getServerRoot());
+        return getFileForPath(path, getInstance().getServerRoot());
     }
 
     /**
@@ -339,7 +353,7 @@ public final class IdentityServer implements PropertyAccessor {
      * @return A {@code File} object that corresponds to the specified path.
      */
     public static File getFileForInstallPath(String path) {
-        return getFileForPath(path, IDENTITY_SERVER.get().getInstallLocation());
+        return getFileForPath(path, getInstance().getInstallLocation());
     }
 
     /**
@@ -353,7 +367,7 @@ public final class IdentityServer implements PropertyAccessor {
      * @return A {@code File} object that corresponds to the specified path.
      */
     public static File getFileForProjectPath(String path) {
-        return getFileForPath(path, IDENTITY_SERVER.get().getProjectLocation());
+        return getFileForPath(path, getInstance().getProjectLocation());
     }
 
     /**
@@ -367,7 +381,7 @@ public final class IdentityServer implements PropertyAccessor {
      * @return A {@code File} object that corresponds to the specified path.
      */
     public static File getFileForWorkingPath(String path) {
-        return getFileForPath(path, IDENTITY_SERVER.get().getWorkingLocation());
+        return getFileForPath(path, getInstance().getWorkingLocation());
     }
 
     /**
@@ -504,7 +518,7 @@ public final class IdentityServer implements PropertyAccessor {
      *
      * @return properties in boot properties file, keys in lower case
      */
-    private Map<String, String> loadProps(String bootFileLocation, IdentityServer identityServer) {
+    private Map<String, String> loadProps(String bootFileLocation) {
         File bootFile = IdentityServer.getFileForPath(bootFileLocation, getServerRoot());
         Map<String, String> entries = new HashMap<>();
 
@@ -516,8 +530,6 @@ public final class IdentityServer implements PropertyAccessor {
             // logger.info("No boot properties file detected at {}.",
             // bootFile.getAbsolutePath());
             System.out.println("No boot properties file detected at " + bootFile.getAbsolutePath());
-        } else if (null != identityServer && bootFile.equals(identityServer.bootPropertyFile)) {
-            return identityServer.bootFileProperties;
         } else {
             System.out.println("Using boot properties at " + bootFile.getAbsolutePath());
             bootPropertyFile = bootFile;
