@@ -49,6 +49,9 @@ public final class Main {
     public static void main(String[] args) throws Exception {
         initProcessor();
         CommandSession session = processor.createSession(System.in, System.out, System.err);
+
+        IdentityServer.initInstance(null);
+
         session.put("prompt", "openidm# ");
         session.put("_cwd", IdentityServer.getFileForPath("."));
 
