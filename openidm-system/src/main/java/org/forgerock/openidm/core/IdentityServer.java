@@ -42,7 +42,7 @@ public final class IdentityServer implements PropertyAccessor {
     /**
      * The singleton Identity Server instance.
      */
-    private static volatile IdentityServer IDENTITY_SERVER = null;
+    private static volatile IdentityServer IDENTITY_SERVER;
 
     /**
      * The various defined boot properties.
