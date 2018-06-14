@@ -107,8 +107,7 @@ public final class IdentityServerTestUtils {
      *   If the server was already initialized with a different project or install location than
      *   what has been provided.
      */
-    public static void initInstanceForTest(final String projectLocation,
-                                           final String installLocation)
+    public static void initInstanceForTest(final String projectLocation, final String installLocation)
     throws IllegalStateException {
         System.setProperty(LAUNCHER_PROJECT_LOCATION, projectLocation);
         System.setProperty(LAUNCHER_INSTALL_LOCATION, installLocation);
@@ -123,8 +122,8 @@ public final class IdentityServerTestUtils {
      * file.
      */
     public static void verifyBootPropertiesLoaded() {
-        final File bootPropertyFile =
-            Whitebox.getInternalState(IdentityServer.getInstance(), "bootPropertyFile");
+        final File bootPropertyFile
+            = Whitebox.getInternalState(IdentityServer.getInstance(), "bootPropertyFile");
 
         if ((bootPropertyFile == null) || !bootPropertyFile.canRead()) {
             throw new IllegalStateException(
@@ -176,8 +175,8 @@ public final class IdentityServerTestUtils {
         final IdentityServer instance;
 
         try {
-            instance =
-                Whitebox.invokeConstructor(
+            instance
+                = Whitebox.invokeConstructor(
                     IdentityServer.class,
                     new Class[]  { PropertyAccessor.class },
                     new Object[] { null                   });
@@ -198,7 +197,6 @@ public final class IdentityServerTestUtils {
      * @see #getServerInstance()
      * @see #setServerInstance(IdentityServer)
      */
-    @SuppressWarnings("RedundantCast")
     public static void clearServerInitialization() {
         setServerInstance(null);
     }
@@ -220,8 +218,7 @@ public final class IdentityServerTestUtils {
      *   If the server was already initialized with a different project or install location than
      *   what has been provided.
      */
-    public static void verifyServerInitPaths(final String projectLocation,
-                                              final String installLocation)
+    public static void verifyServerInitPaths(final String projectLocation, final String installLocation)
     throws IllegalStateException {
         final IdentityServer server = IdentityServer.getInstance();
         final String initializedProjectLocation = server.getProjectLocation().getAbsolutePath();

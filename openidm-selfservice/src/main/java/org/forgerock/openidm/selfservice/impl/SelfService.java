@@ -160,8 +160,8 @@ public class SelfService implements IdentityProviderListener {
             synchronized (SelfService.class) {
                 // Double-checked locking pattern
                 if (sharedKeyAlias == null) {
-                    sharedKeyAlias =
-                        IdentityServer
+                    sharedKeyAlias
+                        = IdentityServer
                             .getInstance()
                             .getProperty(SHARED_KEY_PROPERTY, DEFAULT_SHARED_KEY_ALIAS);
                 }
