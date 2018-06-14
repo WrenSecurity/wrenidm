@@ -41,7 +41,7 @@ import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.Responses;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.PropertyAccessor;
-import org.forgerock.openidm.core.util.IdentityServerTestUtils;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.services.TransactionId;
 import org.forgerock.services.context.Context;
 import org.forgerock.services.context.RootContext;
@@ -89,7 +89,6 @@ public class RouterActivityLoggerTest {
         ));
 
     }
-
 
     @Test
     public void testRootActivityLoggerWithBeforeAndAfter() throws Exception {
@@ -203,7 +202,7 @@ public class RouterActivityLoggerTest {
 
     @Test
     public void testRootActivityLoggerWithLogFullObjectsOn() throws Exception {
-        final IdentityServer instanceBeforeTest = IdentityServerTestUtils.getServerInstance();
+        final IdentityServer instanceBeforeTest = IdentityServer.getInstance();
 
         try {
             ConnectionFactory connectionFactory = mock(ConnectionFactory.class);
@@ -244,7 +243,8 @@ public class RouterActivityLoggerTest {
             assertThat(rev).isEqualTo("2");
         } finally {
             // Reset state for subsequent tests
-            IdentityServerTestUtils.setServerInstance(instanceBeforeTest);
+            IdentityServerTestUtils.clearServerInitialization();
+            IdentityServer.initInstance(instanceBeforeTest);
         }
     }
 }

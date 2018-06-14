@@ -31,7 +31,7 @@ import java.util.Set;
 import javax.sql.DataSource;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
-import org.forgerock.openidm.core.util.IdentityServerTestUtils;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.openidm.datasource.DataSourceService;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

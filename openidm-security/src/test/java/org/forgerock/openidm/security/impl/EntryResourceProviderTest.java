@@ -50,7 +50,7 @@ import org.forgerock.json.resource.QueryResponse;
 import org.forgerock.json.resource.Requests;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourceResponse;
-import org.forgerock.openidm.core.util.IdentityServerTestUtils;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.openidm.crypto.CryptoService;
 import org.forgerock.openidm.crypto.KeyRepresentation;
 import org.forgerock.openidm.crypto.factory.CryptoServiceFactory;

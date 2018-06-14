@@ -39,7 +39,7 @@ import java.util.Collections;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.ServerConstants;
-import org.forgerock.openidm.core.util.IdentityServerTestUtils;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.openidm.keystore.KeyStoreDetails;
 import org.forgerock.security.keystore.KeyStoreType;
 import org.forgerock.util.Utils;

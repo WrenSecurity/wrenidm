@@ -32,10 +32,6 @@
         This bundle exposes a simple service for managing JKS certificates and keys.
     </description>
 
-    <properties>
-        <powermock.version>1.7.1</powermock.version>
-    </properties>
-
     <dependencies>
         <!-- Wren:IDM dependencies -->
         <dependency>
@@ -123,20 +119,6 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-testng</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
 

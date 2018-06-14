@@ -14,7 +14,7 @@
  * Copyright 2018 Wren Security.
  */
 
-package org.forgerock.openidm.core.util;
+package org.forgerock.openidm.core;
 
 import static org.forgerock.openidm.core.ServerConstants.LAUNCHER_INSTALL_LOCATION;
 import static org.forgerock.openidm.core.ServerConstants.LAUNCHER_PROJECT_LOCATION;
@@ -23,9 +23,6 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.forgerock.openidm.core.IdentityServer;
-import org.forgerock.openidm.core.PropertyAccessor;
-import org.powermock.reflect.Whitebox;
 
 /**
  * A utility class for tests that depend on the state of
@@ -122,8 +119,7 @@ public final class IdentityServerTestUtils {
      * file.
      */
     public static void verifyBootPropertiesLoaded() {
-        final File bootPropertyFile
-            = Whitebox.getInternalState(IdentityServer.getInstance(), "bootPropertyFile");
+        final File bootPropertyFile = IdentityServer.getInstance().getBootPropertyFile();
 
         if ((bootPropertyFile == null) || !bootPropertyFile.canRead()) {
             throw new IllegalStateException(
@@ -132,39 +128,8 @@ public final class IdentityServerTestUtils {
     }
 
     /**
-     * Uses reflection to obtain the current {@code IdentityServer} instance that is in use at this
-     * exact moment.
-     *
-     * <p>This should only be used to capture the server instance before temporarily manipulating it
-     * in a test. All other use cases should be using {@link IdentityServer#getInstance()}.
-     *
-     * @see #setServerInstance(IdentityServer)
-     *
-     * @return
-     *  The current identity server instance. May be {@code null}, if the server has not yet been
-     *  initialized.
-     */
-    public static IdentityServer getServerInstance() {
-        return Whitebox.getInternalState(IdentityServer.class, IDENTITY_SERVER_FIELD);
-    }
-
-    /**
-     * Uses reflection to set the current {@code IdentityServer} instance to use from this moment
-     * forward.
-     *
-     * <p>This should only be used to temporarily manipulate server instances during a single test.
-     * Be sure to reset the value to its original value at the end of the test! All other use cases
-     * should be using {@link IdentityServer#getInstance()}.
-     *
-     * @see #getServerInstance()
-     */
-    public static void setServerInstance(final IdentityServer server) {
-        Whitebox.setInternalState(IdentityServer.class, IDENTITY_SERVER_FIELD, server);
-    }
-
-    /**
-     * Uses reflection to create a new instance of the {@code IdentityServer} that is initialized
-     * without any properties.
+     * Creates a new instance of the {@code IdentityServer} that is initialized without any
+     * properties.
      *
      * <p>This should only be used by tests that are trying to verify two instances are different.
      *
@@ -172,33 +137,16 @@ public final class IdentityServerTestUtils {
      *   A new identity server instance.
      */
     public static IdentityServer createServerInstance() {
-        final IdentityServer instance;
-
-        try {
-            instance
-                = Whitebox.invokeConstructor(
-                    IdentityServer.class,
-                    new Class[]  { PropertyAccessor.class },
-                    new Object[] { null                   });
-        } catch (Exception ex) {
-            throw new RuntimeException(
-                "Failed to instantiate a IdentityServer instance.", ex);
-        }
-
-        return instance;
+        return new IdentityServer(null);
     }
 
     /**
      * Resets the {@code IdentityServer} to its initial state -- without any server instance.
      *
      * <p>This should only be used to temporarily manipulate server instances during a single test.
-     * Be sure to reset the value to its original value at the end of the test!
-     *
-     * @see #getServerInstance()
-     * @see #setServerInstance(IdentityServer)
      */
     public static void clearServerInitialization() {
-        setServerInstance(null);
+        IdentityServer.clearInstance();
     }
 
     /**

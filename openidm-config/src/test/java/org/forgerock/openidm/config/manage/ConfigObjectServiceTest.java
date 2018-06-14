@@ -77,7 +77,7 @@ import org.forgerock.openidm.config.crypto.ConfigCrypto;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
 import org.forgerock.openidm.config.enhanced.JSONEnhancedConfig;
 import org.forgerock.openidm.core.ServerConstants;
-import org.forgerock.openidm.core.util.IdentityServerTestUtils;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.openidm.metadata.impl.ProviderListener;
 import org.forgerock.openidm.patch.PatchValueTransformer;
 import org.forgerock.openidm.patch.ScriptedPatchValueTransformer;

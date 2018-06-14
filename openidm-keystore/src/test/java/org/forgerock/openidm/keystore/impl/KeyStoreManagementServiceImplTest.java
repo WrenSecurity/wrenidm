@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 import java.security.KeyStore;
 import java.security.Security;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.forgerock.openidm.core.util.IdentityServerTestUtils;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.openidm.keystore.KeyStoreDetails;
 import org.forgerock.openidm.keystore.KeyStoreService;
 import org.forgerock.security.keystore.KeyStoreType;

@@ -68,7 +68,7 @@ import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.Router;
 import org.forgerock.json.resource.UpdateRequest;
 import org.forgerock.openidm.audit.util.NullActivityLogger;
-import org.forgerock.openidm.core.util.IdentityServerTestUtils;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.openidm.crypto.CryptoService;
 import org.forgerock.openidm.crypto.impl.CryptoServiceImpl;
 import org.forgerock.openidm.repo.QueryConstants;

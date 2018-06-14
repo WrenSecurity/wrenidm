@@ -32,7 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orientechnologies.orient.server.plugin.OServerPlugin;
 import java.util.Map;
 import org.forgerock.json.JsonValue;
-import org.forgerock.openidm.core.util.IdentityServerTestUtils;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 

@@ -80,11 +80,10 @@ public final class IdentityServer implements PropertyAccessor {
      * of the provided set of properties.
      *
      * @param properties
-     *            The properties to use when initializing this environment
-     *            configuration, or {@code null} to use an empty set of
-     *            properties.
+     *   The properties to use when initializing this environment configuration, or {@code null} to
+     *   use an empty set of properties.
      */
-    private IdentityServer(PropertyAccessor properties) {
+    /* default */ IdentityServer(PropertyAccessor properties) {
         configProperties = properties;
 
         String bootFileName
@@ -95,30 +94,58 @@ public final class IdentityServer implements PropertyAccessor {
         bootFileProperties = loadProps(bootFileName);
     }
 
+    /**
+     * Get the current {@code IdentityServer} singleton instance.
+     *
+     * <p>The server must have been initialized before this method can be called. Calling it before
+     * the server is initialized yields an {@link IllegalStateException}.
+     *
+     * @see #initInstance(IdentityServer)
+     * @see #initInstance(PropertyAccessor)
+     *
+     * @return
+     *   The current, singleton {@code IdentityServer} instance.
+     *
+     * @throws IllegalStateException
+     *   If the server has not yet been initialized.
+     */
     public static IdentityServer getInstance() {
-        if (IDENTITY_SERVER == null) {
+        if (!isInitialized()) {
             throw new IllegalStateException("IdentityServer has not been initialised");
         }
+
         return IDENTITY_SERVER;
     }
 
     /**
-     * Initialise the singleton {@link IdentityServer} instance with the
+     * Get whether or not the {@code IdentityServer} has been initialized.
+     *
+     * @return
+     *   {@code true} if the server has been initialized; or, {@code false} if it has not been
+     *   initialized.
+     */
+    public static boolean isInitialized() {
+        return (IDENTITY_SERVER != null);
+    }
+
+    /**
+     * Initialize the singleton {@code IdentityServer} instance with the
      * provided {@link PropertyAccessor} instance.
      * <p>
      * This and the {@link #initInstance(IdentityServer)} method can be called
      * only once. Subsequent calls will result in a {@link IllegalStateException}.
      *
-     * @param   properties
-     *          The parent {@code PropertyAccessor}.
+     * @param properties
+     *   The parent {@code PropertyAccessor}.
      *
-     * @return  New instance of {@link IdentityServer}.
+     * @return
+     *   New instance of {@link IdentityServer}.
      *
-     * @throws  IllegalStateException
-     *          If this method is called more then once.
+     * @throws IllegalStateException
+     *   If this method is called more then once.
      */
     public static synchronized IdentityServer initInstance(PropertyAccessor properties) {
-        if (IDENTITY_SERVER == null) {
+        if (!isInitialized()) {
             final IdentityServer newInstance;
 
             if (properties instanceof IdentityServer) {
@@ -136,24 +163,25 @@ public final class IdentityServer implements PropertyAccessor {
     }
 
     /**
-     * Initialise the singleton {@link IdentityServer} instance with the
+     * Initialize the singleton {@code IdentityServer} instance with the
      * provided {@link IdentityServer} instance, or the default instance.
-     * <p>
-     * This and the {@link #initInstance(PropertyAccessor)} method can be called
-     * only once. Subsequent calls will result in a {@link IllegalStateException}.
      *
-     * @param   server
-     *          New instance of {@link IdentityServer}. Can be {@code null} to generate a default
-     *          instance that uses only system properties.
+     * <p>This and the {@link #initInstance(PropertyAccessor)} method can be called only once.
+     * Subsequent calls will result in a {@link IllegalStateException}.
      *
-     * @return  Same instance as the {@code server} parameter, if not {@code null}; otherwise, the
-     *          new {@link IdentityServer instance}.
+     * @param server
+     *   New instance of {@link IdentityServer}. Can be {@code null} to generate a default instance
+     *   that uses only system properties.
      *
-     * @throws  IllegalStateException
-     *          If this method is called more then once.
+     * @return
+     *   Same instance as the {@code server} parameter, if not {@code null}; otherwise, the new
+     *   {@link IdentityServer instance}.
+     *
+     * @throws IllegalStateException
+     *   If this method is called more then once.
      */
     public static synchronized IdentityServer initInstance(final IdentityServer server) {
-        if (IDENTITY_SERVER == null) {
+        if (!isInitialized()) {
             final IdentityServer newInstance;
 
             if (server != null) {
@@ -171,7 +199,19 @@ public final class IdentityServer implements PropertyAccessor {
     }
 
     /**
-     * Retrieves the property value by looking in System properties, boot properties, and then config properties.
+     * Clear the singleton {@code IdentityServer} instance so that the identity server can be
+     * initialized again.
+     *
+     * <p>This method is intended only for use internally by the identity server and tests. There
+     * is typically no good reason to call this method in a production environment.
+     */
+    /* default */ static synchronized void clearInstance() {
+        IDENTITY_SERVER = null;
+    }
+
+    /**
+     * Retrieves the property value by looking in System properties, boot properties, and then
+     * config properties.
      *
      * @param key The name of the requested property.
      * @param defaultValue the value returned if not found in the propertyAccessors.
@@ -183,8 +223,10 @@ public final class IdentityServer implements PropertyAccessor {
     public <T> T getProperty(String key, T defaultValue, Class<T> expected) {
         // First check System properties for our value.
         T value = systemPropertyAccessor.getProperty(key, null, expected);
+
         if (null == value) {
-            // Not found in system properties, now check the boot file, if the property is expected to be a String.
+            // Not found in system properties, now check the boot file, if the property is expected
+            // to be a String.
             boolean expectsString = ((null != expected && expected.isAssignableFrom(String.class))
                     || defaultValue instanceof String);
 
@@ -435,6 +477,16 @@ public final class IdentityServer implements PropertyAccessor {
             // path, serverRoot);
             return new File(rootLocation, path).getAbsoluteFile();
         }
+    }
+
+    /**
+     * Get the file (if any) from which boot properties were loaded.
+     *
+     * @return
+     *   The boot properties file.
+     */
+    public File getBootPropertyFile() {
+        return bootPropertyFile;
     }
 
     public File getInstallLocation() {
