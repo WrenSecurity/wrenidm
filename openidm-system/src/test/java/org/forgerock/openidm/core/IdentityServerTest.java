@@ -71,8 +71,8 @@ public class IdentityServerTest {
         try {
             ensureServerNotInitialized();
 
-            final IdentityServer returnedInstance =
-                IdentityServer.initInstance(new TestPropertyAccessor());
+            final IdentityServer returnedInstance
+                = IdentityServer.initInstance(new TestPropertyAccessor());
 
             assertThat(returnedInstance).isNotNull();
             assertThat(IdentityServer.getInstance()).isEqualTo(returnedInstance);
@@ -116,8 +116,8 @@ public class IdentityServerTest {
         try {
             ensureServerNotInitialized();
 
-            final IdentityServer returnedInstance =
-                IdentityServer.initInstance((PropertyAccessor)null);
+            final IdentityServer returnedInstance
+                = IdentityServer.initInstance((PropertyAccessor)null);
 
             assertThat(returnedInstance).isNotNull();
             assertThat(IdentityServer.getInstance()).isEqualTo(returnedInstance);
@@ -160,7 +160,7 @@ public class IdentityServerTest {
         try {
             ensureServerNotInitialized();
 
-            final IdentityServer newInstance      = IdentityServerTestUtils.createServerInstance();
+            final IdentityServer newInstance = IdentityServerTestUtils.createServerInstance();
             final IdentityServer returnedInstance = IdentityServer.initInstance(newInstance);
 
             assertThat(returnedInstance).isNotNull();
@@ -208,8 +208,8 @@ public class IdentityServerTest {
         try {
             ensureServerNotInitialized();
 
-            final IdentityServer returnedInstance =
-                IdentityServer.initInstance((IdentityServer)null);
+            final IdentityServer returnedInstance
+                = IdentityServer.initInstance((IdentityServer)null);
 
             assertThat(returnedInstance).isNotNull();
             assertThat(IdentityServer.getInstance()).isEqualTo(returnedInstance);

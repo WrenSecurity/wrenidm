@@ -242,8 +242,7 @@ public class RouterActivityLoggerTest {
 
             String rev = capturedAfter.get(ResourceResponse.FIELD_CONTENT_REVISION).asString();
             assertThat(rev).isEqualTo("2");
-        }
-        finally {
+        } finally {
             // Reset state for subsequent tests
             IdentityServerTestUtils.setServerInstance(instanceBeforeTest);
         }

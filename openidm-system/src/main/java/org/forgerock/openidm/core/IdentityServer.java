@@ -38,7 +38,6 @@ import java.util.Properties;
  * @version $Revision$ $Date$
  */
 public final class IdentityServer implements PropertyAccessor {
-
     /**
      * The singleton Identity Server instance.
      */
@@ -88,8 +87,8 @@ public final class IdentityServer implements PropertyAccessor {
     private IdentityServer(PropertyAccessor properties) {
         configProperties = properties;
 
-        String bootFileName =
-            getProperty(
+        String bootFileName
+            = getProperty(
                 ServerConstants.PROPERTY_BOOT_FILE_LOCATION,
                 ServerConstants.DEFAULT_BOOT_FILE_LOCATION);
 
@@ -157,7 +156,7 @@ public final class IdentityServer implements PropertyAccessor {
         if (IDENTITY_SERVER == null) {
             final IdentityServer newInstance;
 
-            if (server != null ) {
+            if (server != null) {
                 newInstance = server;
             } else {
                 newInstance = new IdentityServer(null);
