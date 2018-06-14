@@ -42,8 +42,6 @@
 
     <properties>
         <openidm.osgi.import.defaults>org.eclipse.wst.jsdt.debug.rhino.debugger;resolution:=optional</openidm.osgi.import.defaults>
-
-        <powermock.version>1.7.1</powermock.version>
     </properties>
 
     <dependencies>
@@ -159,20 +157,6 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-testng</artifactId>
-            <version>${powermock.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
 

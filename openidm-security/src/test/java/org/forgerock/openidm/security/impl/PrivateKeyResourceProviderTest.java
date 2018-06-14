@@ -24,7 +24,7 @@ import static org.mockito.Mockito.mock;
 import org.forgerock.json.resource.NotSupportedException;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourceResponse;
-import org.forgerock.openidm.core.util.IdentityServerTestUtils;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.openidm.crypto.impl.CryptoServiceImpl;
 import org.forgerock.openidm.keystore.KeyStoreManagementService;
 import org.forgerock.openidm.keystore.KeyStoreService;

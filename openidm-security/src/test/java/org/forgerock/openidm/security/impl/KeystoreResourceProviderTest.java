@@ -39,7 +39,7 @@ import org.forgerock.json.resource.Requests;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.test.assertj.AssertJActionResponseAssert;
 import org.forgerock.json.test.assertj.AssertJJsonValueAssert;
-import org.forgerock.openidm.core.util.IdentityServerTestUtils;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.openidm.crypto.impl.CryptoServiceImpl;
 import org.forgerock.openidm.keystore.KeyStoreManagementService;
 import org.forgerock.openidm.keystore.KeyStoreService;

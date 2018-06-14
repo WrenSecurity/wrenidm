@@ -36,7 +36,7 @@ import org.assertj.core.api.Assertions;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.ServerConstants;
-import org.forgerock.openidm.core.util.IdentityServerTestUtils;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;

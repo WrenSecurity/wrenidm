@@ -34,7 +34,7 @@ import java.security.Security;
 import java.util.Collections;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.forgerock.openidm.core.IdentityServer;
-import org.forgerock.openidm.core.util.IdentityServerTestUtils;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
