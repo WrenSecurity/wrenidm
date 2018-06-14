@@ -210,7 +210,9 @@ public class KeystoreResourceProviderTest {
     }
 
     private String replaceNewLines(final String string) {
-        return string.replaceAll("\n", "");
+        return string
+            .replaceAll("\r\n", "") // Windows Line Endings
+            .replaceAll("\n", "");  // Linux / Unix Line Endings
     }
 
     private String convertCertToPEM(final byte[] encodedCert) {
