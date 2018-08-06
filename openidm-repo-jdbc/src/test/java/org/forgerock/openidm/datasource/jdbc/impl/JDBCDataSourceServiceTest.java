@@ -12,8 +12,15 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
+
 package org.forgerock.openidm.datasource.jdbc.impl;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.forgerock.json.JsonValue.field;
+import static org.forgerock.json.JsonValue.fieldIfNotNull;
+import static org.forgerock.json.JsonValue.object;
 
 import com.jolbox.bonecp.BoneCPDataSource;
 import com.zaxxer.hikari.HikariDataSource;
@@ -22,22 +29,21 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 import javax.sql.DataSource;
-
-import static org.assertj.core.api.Assertions.assertThat;
 import org.forgerock.json.JsonPointer;
-import static org.forgerock.json.JsonValue.object;
-import static org.forgerock.json.JsonValue.field;
-import static org.forgerock.json.JsonValue.fieldIfNotNull;
-
 import org.forgerock.json.JsonValue;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.openidm.datasource.DataSourceService;
-
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
  * Test of JDBCDataSourceServiceTest
  */
 public class JDBCDataSourceServiceTest {
+    @BeforeClass
+    public void setup() {
+        IdentityServerTestUtils.initInstanceForTest();
+    }
 
     @Test
     public void testHikariDataSource() {

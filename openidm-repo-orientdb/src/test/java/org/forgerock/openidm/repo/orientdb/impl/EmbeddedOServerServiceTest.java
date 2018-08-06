@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright © 2014 ForgeRock AS. All rights reserved.
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,18 +22,26 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
+
 package org.forgerock.openidm.repo.orientdb.impl;
 
+
+import static org.testng.Assert.assertNotNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orientechnologies.orient.server.plugin.OServerPlugin;
 import java.util.Map;
 import org.forgerock.json.JsonValue;
-import org.testng.annotations.*;
-import static org.testng.Assert.*;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
 
 public class EmbeddedOServerServiceTest {
-    
+    @BeforeTest
+    public void setup() {
+        IdentityServerTestUtils.initInstanceForTest();
+    }
+
     @AfterTest
     public void automaticBackupHandlerConfigTest() throws Exception {
         String automaticBackupConfig = "{"

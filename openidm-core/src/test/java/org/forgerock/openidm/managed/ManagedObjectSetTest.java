@@ -12,25 +12,30 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
+
 package org.forgerock.openidm.managed;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.forgerock.json.JsonValue.*;
-import static org.forgerock.json.resource.Requests.*;
-import static org.forgerock.json.resource.Responses.newResourceResponse;
+import static org.forgerock.json.JsonValue.field;
+import static org.forgerock.json.JsonValue.json;
+import static org.forgerock.json.JsonValue.object;
+import static org.forgerock.json.resource.Requests.newActionRequest;
+import static org.forgerock.json.resource.Requests.newCreateRequest;
+import static org.forgerock.json.resource.Requests.newUpdateRequest;
 import static org.forgerock.json.resource.ResourceResponse.FIELD_REVISION;
 import static org.forgerock.json.resource.Resources.newInternalConnectionFactory;
+import static org.forgerock.json.resource.Responses.newResourceResponse;
 import static org.forgerock.json.resource.Router.uriTemplate;
 import static org.forgerock.openidm.managed.ManagedObjectSet.Action.triggerSyncCheck;
 import static org.forgerock.openidm.managed.ManagedObjectSet.CRYPTO_KEY_PTR;
 import static org.forgerock.util.Utils.closeSilently;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -39,31 +44,31 @@ import java.security.KeyStore;
 import java.security.KeyStore.PasswordProtection;
 import java.security.KeyStore.SecretKeyEntry;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.crypto.JsonDecryptFunction;
 import org.forgerock.json.crypto.simple.SimpleDecryptor;
 import org.forgerock.json.crypto.simple.SimpleKeySelector;
 import org.forgerock.json.crypto.simple.SimpleKeyStoreSelector;
-import org.forgerock.json.resource.MemoryBackend;
-import org.forgerock.json.resource.ResourceException;
-import org.forgerock.json.resource.ResourceResponse;
-import org.forgerock.json.resource.Router;
-import org.forgerock.json.resource.UpdateRequest;
 import org.forgerock.json.resource.ActionRequest;
 import org.forgerock.json.resource.ActionResponse;
 import org.forgerock.json.resource.Connection;
+import org.forgerock.json.resource.MemoryBackend;
 import org.forgerock.json.resource.ReadRequest;
+import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourcePath;
+import org.forgerock.json.resource.ResourceResponse;
+import org.forgerock.json.resource.Router;
+import org.forgerock.json.resource.UpdateRequest;
 import org.forgerock.openidm.audit.util.NullActivityLogger;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.openidm.crypto.CryptoService;
 import org.forgerock.openidm.crypto.impl.CryptoServiceImpl;
 import org.forgerock.openidm.repo.QueryConstants;
@@ -78,8 +83,8 @@ import org.forgerock.services.context.Context;
 import org.forgerock.services.context.RootContext;
 import org.forgerock.util.promise.Promise;
 import org.forgerock.util.promise.ResultHandler;
-import org.testng.annotations.Test;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 /**
  * Tests for {@link ManagedObjectSet}
@@ -127,6 +132,8 @@ public class ManagedObjectSetTest {
 
     @BeforeClass
     public void setup() throws Exception {
+        IdentityServerTestUtils.initInstanceForTest();
+
         final Map<String, Object> configuration = new HashMap<>(1);
         configuration.put(getLanguageName(), getConfiguration());
         scriptRegistry = getScriptRegistry(configuration);
