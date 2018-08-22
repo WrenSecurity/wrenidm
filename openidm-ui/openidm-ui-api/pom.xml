@@ -19,11 +19,14 @@
     <parent>
         <artifactId>openidm-ui</artifactId>
         <groupId>org.forgerock.openidm</groupId>
-        <version>5.5.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>openidm-ui-api</artifactId>
-    <name>OpenIDM UI API Explorer</name>
+    <name>Wren:IDM - UI - API Explorer</name>
+    <description>
+        A Swagger-based tool for interacting with most of the endpoints provided with a default IDM installation.
+    </description>
     <packaging>bundle</packaging>
 
     <dependencies>

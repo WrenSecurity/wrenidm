@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2013-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
 
 package org.forgerock.openidm.patch;
@@ -169,25 +170,36 @@ public class JsonValuePatch {
     /**
      * Apply a list of PatchOperations for callers that do not need the facility to execute transform scripts.
      *
-     * @param subject the JsonValue to which to apply the patch operation(s).
-     * @return whether the subject was modified.
-     * @throws ResourceException on failure to apply PatchOperation.
+     * @param   subject
+     *          The JsonValue to which the patch operation(s) will be applied.
+     *
+     * @return  Whether or not the subject was modified by the operation(s).
+     *
+     * @throws  BadRequestException
+     *          If the request that was provided is not a valid patch operation.
      */
-    public static boolean apply(JsonValue subject, List<PatchOperation> operations) throws ResourceException {
+    public static boolean apply(JsonValue subject, List<PatchOperation> operations)
+    throws ResourceException {
         return apply(subject, operations, NullTransformer.NULL_TRANSFORMER);
     }
 
     /**
      * Apply a list of PatchOperations.
      *
-     * @param subject the JsonValue to which to apply the patch operation(s).
-     * @param transformer the value transformer used to compute the value to use for the operation.
-     * @return whether the subject was modified.
-     * @throws ResourceException on failure to apply PatchOperation.
+     * @param   subject
+     *          The JsonValue to which the patch operation(s) will be applied.
+     * @param   transformer
+     *          The value transformer used when computing values to use for the
+     *          operation.
+     *
+     * @return  Whether or not the subject was modified by the operation(s).
+     *
+     * @throws  BadRequestException
+     *          If the request that was provided is not a valid patch operation.
      */
-    public static boolean apply(JsonValue subject, List<PatchOperation> operations, PatchValueTransformer transformer)
-            throws ResourceException {
-
+    public static boolean apply(JsonValue subject, List<PatchOperation> operations,
+                                PatchValueTransformer transformer)
+    throws ResourceException {
         boolean isModified = false;
 
         if (operations != null) {

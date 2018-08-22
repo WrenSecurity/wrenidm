@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
 
 package org.forgerock.openidm.security.impl;
@@ -20,19 +21,15 @@ import static org.forgerock.json.JsonValue.field;
 import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.resource.test.assertj.AssertJActionResponseAssert.assertThat;
-import static org.forgerock.openidm.core.ServerConstants.LAUNCHER_INSTALL_LOCATION;
-import static org.forgerock.openidm.core.ServerConstants.LAUNCHER_PROJECT_LOCATION;
 import static org.forgerock.openidm.security.impl.SecurityTestUtils.createKeyStores;
 import static org.mockito.Mockito.mock;
 
-import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.Security;
 import java.security.cert.Certificate;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.assertj.core.api.Assertions;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.forgerock.json.JsonValue;
@@ -42,7 +39,7 @@ import org.forgerock.json.resource.Requests;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.test.assertj.AssertJActionResponseAssert;
 import org.forgerock.json.test.assertj.AssertJJsonValueAssert;
-import org.forgerock.openidm.core.IdentityServer;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.openidm.crypto.impl.CryptoServiceImpl;
 import org.forgerock.openidm.keystore.KeyStoreManagementService;
 import org.forgerock.openidm.keystore.KeyStoreService;
@@ -65,15 +62,9 @@ public class KeystoreResourceProviderTest {
     @BeforeClass
     public void runInitalSetup() throws Exception {
         Security.addProvider(new BouncyCastleProvider());
-        System.setProperty(LAUNCHER_PROJECT_LOCATION,
-                Paths.get(getClass().getResource("/").toURI()).toFile().getAbsolutePath());
-        System.setProperty(LAUNCHER_INSTALL_LOCATION,
-                Paths.get(getClass().getResource("/").toURI()).toFile().getAbsolutePath());
-        try {
-            IdentityServer.initInstance(null);
-        } catch (final IllegalStateException e) {
-            // tried to reinitialize ignore
-        }
+
+        IdentityServerTestUtils.initInstanceForTest(this.getClass());
+        IdentityServerTestUtils.verifyBootPropertiesLoaded();
     }
 
     @Test
@@ -219,7 +210,9 @@ public class KeystoreResourceProviderTest {
     }
 
     private String replaceNewLines(final String string) {
-        return string.replaceAll("\n", "");
+        return string
+            .replaceAll("\r\n", "") // Windows Line Endings
+            .replaceAll("\n", "");  // Linux / Unix Line Endings
     }
 
     private String convertCertToPEM(final byte[] encodedCert) {

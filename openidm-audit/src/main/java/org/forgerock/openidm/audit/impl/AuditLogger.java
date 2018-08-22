@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2011-2015 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -104,15 +105,23 @@ public interface AuditLogger {
      * The query result is a JSON object structure composed of basic Java types; its overall
      * structure is defined by the implementation.
      *
-     * @param context the {@link Context} for the request
-     * @param request the {@link QueryRequest} object.
-     * @param handler the {@link QueryResourceHandler} object.
-     * @param type the type of audit log entries to query
-     * @param formatted whether to format the results.
-     * @return the query result object.
-     * @throws NotFoundException if the specified object could not be found.
-     * @throws ForbiddenException if access to the object or the specified query is forbidden.
+     * @param   context
+     *          The {@link Context} for the request
+     * @param   request
+     *          The {@link QueryRequest} object.
+     * @param   handler
+     *          The {@link QueryResourceHandler} object.
+     * @param   type
+     *          The type of audit log entries to query
+     * @param   formatted
+     *          Whether to format the results.
+     *
+     * @throws  NotFoundException
+     *          If the specified object could not be found.
+     * @throws  ForbiddenException
+     *          If access to the object or the specified query is forbidden.
      */
-    void query(Context context, QueryRequest request, QueryResourceHandler handler, String type, boolean formatted) throws ResourceException;
+    void query(Context context, QueryRequest request, QueryResourceHandler handler, String type,
+               boolean formatted) throws ResourceException;
 
 }

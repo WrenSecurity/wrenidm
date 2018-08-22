@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2011-2013 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,14 +22,13 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.provisioner.openicf;
 
 import org.identityconnectors.common.StringUtil;
 import org.identityconnectors.framework.api.ConnectorKey;
 
 /**
- * ConnectorReference holds the required {@ConnectorKey} value to
+ * ConnectorReference holds the required {@code ConnectorKey} value to
  * find the correct connector in the
  * {@link org.identityconnectors.framework.api.ConnectorInfoManager}. The
  * {@code getConnectorHost} is the key for the ConnectorInfoManager newBuilder.
@@ -105,8 +105,9 @@ public final class ConnectorReference {
     }
 
     /**
-     * Returns the connectorKey identifier
-     * @return
+     * Returns the key for the connector in this reference.
+     *
+     * @return  The connector key.
      */
     public ConnectorKey getConnectorKey() {
         return connectorKey;

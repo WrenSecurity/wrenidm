@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2011-2013 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,40 +22,37 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.provisioner.openicf.commons;
 
 import org.identityconnectors.framework.api.operations.*;
 
 /**
- * <p>Java class for OperationType.
- * <p/>
- * <p>The following schema fragment specifies the expected content contained within this class.
- * <p/>
- * <pre>
- * &lt;simpleType name="OperationType">
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="create"/>
- *     &lt;enumeration value="update"/>
- *     &lt;enumeration value="delete"/>
- *     &lt;enumeration value="test"/>
- *     &lt;enumeration value="scriptOnConnector"/>
- *     &lt;enumeration value="scriptOnResource"/>
- *     &lt;enumeration value="get"/>
- *     &lt;enumeration value="authenticate"/>
- *     &lt;enumeration value="search"/>
- *     &lt;enumeration value="validate"/>
- *     &lt;enumeration value="sync"/>
- *     &lt;enumeration value="schema"/>
- *   &lt;/restriction>
- * &lt;/simpleType>
- * </pre>
+ * Java class for OperationType.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * <pre>{@code
+ * <simpleType name="OperationType">
+ *   <restriction base="{http://www.w3.org/2001/XMLSchema}string">
+ *     <enumeration value="create"/>
+ *     <enumeration value="update"/>
+ *     <enumeration value="delete"/>
+ *     <enumeration value="test"/>
+ *     <enumeration value="scriptOnConnector"/>
+ *     <enumeration value="scriptOnResource"/>
+ *     <enumeration value="get"/>
+ *     <enumeration value="authenticate"/>
+ *     <enumeration value="search"/>
+ *     <enumeration value="validate"/>
+ *     <enumeration value="sync"/>
+ *     <enumeration value="schema"/>
+ *   </restriction>
+ * </simpleType>
+ * }</pre>
  *
  * @version $Revision$ $Date$
  */
 public enum OperationType {
-
-
     /**
      * CreateApiOp.class
      */

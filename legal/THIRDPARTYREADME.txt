@@ -1275,19 +1275,19 @@ Copyright: Copyright (c) 2010-2014 Jeremy Ashkenas, DocumentCloud
 Version: backbone-relational-0.9.0-min.js
 Copyright: Copyright (c) 2011-2014 Paul Uithol, http://progressivecompany.nl/
 
-Version: backbone.paginator.min-2.0.2-min.js
+Version: backbone-paginator-2.0.2-min.js
 Copyright: Copyright (c) 2013 Jimmy Yuen Ho Wong and contributors
 
-Version: backgrid-filter.min-0.3.5-min.js
+Version: backgrid-filter-0.3.7-min.js
 Copyright: Copyright (c) 2013 Jimmy Yuen Ho Wong and contributors
 
-Version: backgrid-paginator.min-0.3.5-min.js
+Version: backgrid-paginator-0.3.5-min.js
 Copyright: Copyright (c) 2013 Jimmy Yuen Ho Wong and contributors
 
 Version: backgrid-select-all-0.3.5-min.js
 Copyright: Copyright (c) 2013 Jimmy Yuen Ho Wong and contributors
 
-Version: backgrid.min-0.3.5-min.js
+Version: backgrid-0.3.5-min.js
 Copyright: Copyright (c) 2014 Jimmy Yuen Ho Wong and contributors <wyuenho@gmail.com>
 
 Version: bootstrap-3.3.5-custom.js/.css
@@ -1314,7 +1314,7 @@ Copyright: Copyright (c) Tony Tomov tony@trirand.com
 Version: fontawesome-iconpicker-1.0.0-min.js
 Copyright: Copyright (c) 2014 Javier Aguilar @mjolnic
 
-Version: form2js-2.0.js
+Version: form2js-2.0-769718a.js
 Copyright: Copyright (c) 2010 Maxim Vasiliev
 
 Version: handlebars-3.0.3-min.js
@@ -1338,7 +1338,7 @@ Copyright: Copyright (c) 2010 Shawn Chin
 Version: jquery-gentleSelect-0.1.3.1-min.js
 Copyright: Copyright (c) 2010 Shawn Chin
 
-Version: js2form-2.0.js
+Version: js2form-2.0-769718a.js
 Copyright: Copyright (c) 2010 Maxim Vasiliev
 
 Version: moment-2.8.1-min.js

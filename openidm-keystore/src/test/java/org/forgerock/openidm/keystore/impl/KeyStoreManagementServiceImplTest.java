@@ -12,20 +12,18 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
+
 package org.forgerock.openidm.keystore.impl;
 
-import static org.forgerock.openidm.core.ServerConstants.LAUNCHER_INSTALL_LOCATION;
-import static org.forgerock.openidm.core.ServerConstants.LAUNCHER_PROJECT_LOCATION;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.security.Security;
-
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.forgerock.openidm.core.IdentityServer;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.openidm.keystore.KeyStoreDetails;
 import org.forgerock.openidm.keystore.KeyStoreService;
 import org.forgerock.security.keystore.KeyStoreType;
@@ -37,15 +35,7 @@ public class KeyStoreManagementServiceImplTest {
     @BeforeClass
     public void setUp() throws Exception {
         Security.addProvider(new BouncyCastleProvider());
-        System.setProperty(LAUNCHER_PROJECT_LOCATION,
-                Paths.get(getClass().getResource("/").toURI()).toFile().getAbsolutePath());
-        System.setProperty(LAUNCHER_INSTALL_LOCATION,
-                Paths.get(getClass().getResource("/").toURI()).toFile().getAbsolutePath());
-        try {
-            IdentityServer.initInstance(null);
-        } catch (final IllegalStateException e) {
-            // tried to reinitialize ignore
-        }
+        IdentityServerTestUtils.initInstanceForTest(this.getClass());
     }
 
     @Test

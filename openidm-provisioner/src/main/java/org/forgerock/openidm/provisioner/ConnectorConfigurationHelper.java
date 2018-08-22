@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2011-2015 ForgeRock AS. All rights reserved.
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -20,7 +21,6 @@
  * with the fields enclosed by brackets [] replaced by
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
- * $Id$
  */
 package org.forgerock.openidm.provisioner;
 
@@ -56,20 +56,30 @@ public interface ConnectorConfigurationHelper {
     /**
      * Test the given configuration.
      *
+     * @param   params
+     *          The configuration to test.
      *
-     * @param params
-     *            the configuration to test
-     * @throws ResourceException
-     *             when the test fails the {@link ResourceException#getDetail()}
-     *             contains the detailed information.
+     * @return  A map that contains the results of the test. The map includes the following keys:
+     *          <dl>
+     *            <dt>{@code "ok"}</dt><dd>A boolean indicating if the test was successful.</dd>
+     *            <dt>{@code "name"}</dt><dd>The name of the connector.</dd>
+     *            <dt>{@code "error"}</dt><dd>The error from the test, for non-fatal failures.</dd>
+     *            <dt>{@code "reason"}</dt><dd>The reason the test succeeded despite errors.</dd>
+     *          </dl>
+     *
+     * @throws  ResourceException
+     *          When the test fails the {@link ResourceException#getDetail()}
+     *          contains the detailed information.
      */
     Map<String, Object> test(JsonValue params) throws ResourceException;
 
     /**
      * Get available connectors from an installation
      *
-     * @return {@code JsonValue} containing all available connectors
-     * @throws ResourceException
+     * @return  {@code JsonValue} containing all available connectors
+     *
+     * @throws  ResourceException
+     *          If the list of connectors cannot be loaded.
      */
     JsonValue getAvailableConnectors() throws ResourceException;
 
@@ -79,9 +89,13 @@ public interface ConnectorConfigurationHelper {
      * The implementer of this method must ensure proper encryption/decryption
      * of private properties according to the schema definition.
      *
-     * @param params connector configuration
-     * @return core connector configuration
-     * @throws ResourceException
+     * @param   params
+     *          Loaded connector configuration.
+     *
+     * @return  Core connector configuration, with private values decrypted.
+     *
+     * @throws  ResourceException
+     *          If a connector cannot be loaded / is not found.
      */
     JsonValue generateConnectorCoreConfig(JsonValue params) throws ResourceException;
 
@@ -91,9 +105,13 @@ public interface ConnectorConfigurationHelper {
      * The implementer of this method must ensure proper encryption/decryption
      * of private properties according to the schema definition.
      *
-     * @param params connector configuration
-     * @return full connector configuration
-     * @throws ResourceException
+     * @param   params
+     *          Connector configuration.
+     *
+     * @return  Full connector configuration.
+     *
+     * @throws  ResourceException
+     *          If a connector cannot be loaded / is not found.
      */
     JsonValue generateConnectorFullConfig(JsonValue params) throws ResourceException;
 

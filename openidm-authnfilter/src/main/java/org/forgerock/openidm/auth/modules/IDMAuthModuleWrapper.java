@@ -1,19 +1,21 @@
 /*
- * The contents of this file are subject to the terms of the Common Development and
- * Distribution License (the License). You may not use this file except in compliance with the
+ * The contents of this file are subject to the terms of the Common Development
+ * and Distribution License (the License). You may not use this file except in
+ * compliance with the License.
+ *
+ * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License
+ * for the specific language governing permission and limitations under the
  * License.
  *
- * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
- * specific language governing permission and limitations under the License.
- *
- * When distributing Covered Software, include this CDDL Header Notice in each file and include
- * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
- * Header, with the fields enclosed by brackets [] replaced by your own identifying
- * information: "Portions copyright [year] [name of copyright owner]".
+ * When distributing Covered Software, include this CDDL Header Notice in each
+ * file and include the License file at legal/CDDLv1.0.txt. If applicable, add
+ * the following below the CDDL Header, with the fields enclosed by brackets []
+ * replaced by your own identifying information:
+ * "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
-
 package org.forgerock.openidm.auth.modules;
 
 import static javax.security.auth.message.AuthStatus.SEND_FAILURE;
@@ -69,7 +71,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A CAF {@link AsyncServerAuthModule} that is designed to wrap any other AsyncServerAuthModule. This module provides
  * IDM specific authentication processing to the authentication mechanism of underlying auth module.
- * <br/>
+ * <p>
  * This allows IDM to use any common auth module and still benefit from automatic role calculation
  * and augment security context scripts (providing the authentication.json contains the required configuration).
  *
@@ -166,26 +168,43 @@ public class IDMAuthModuleWrapper implements AsyncServerAuthModule {
     }
 
     /**
-     * Initialises the underlying auth module with the provided parameters and constructs an instance
-     * of the RoleCalculator from the authentication configuration.
-     * <br/>
+     * Initialises the underlying auth module with the provided parameters and
+     * constructs an instance of the RoleCalculator from the authentication
+     * configuration.
+     * <p>
      * Required configuration:
-     * <ul>
-     *     <li>connectionFactory - the ConnectionFactory for making an authenticate request on the router</li>
-     *     <li>context - the Context to use when making requests on the router</li>
-     *     <li>queryOnResource - the resource to perform the role calculation query on</li>
-     *     <li>authenticationId - the object attribute that represents the authentication id</li>
-     *     <li>groupMembership - the object attribute representing the group membership</li>
-     *     <li>defaultRoles - the list of default roles</li>
-     *     <li>roleMapping - the mapping between OpenIDM roles and pass-through auth groups</li>
-     *     <li>groupComparison - the method of {@link GroupComparison} to use</li>
-     * </ul>
+     * <dl>
+     *     <dt>connectionFactory<dt>
+     *     <dd>The ConnectionFactory for making an authenticate request on the
+     *     router.</dd>
+     *
+     *     <dt>context</dt>
+     *     <dd>The Context to use when making requests on the router.</dd>
+     *
+     *     <dt>queryOnResource</dt>
+     *     <dd>The resource to perform the role calculation query on.</dd>
+     *
+     *     <dt>authenticationId</dt>
+     *     <dd>The object attribute that represents the authentication id.</dd>
+     *
+     *     <dt>groupMembership</dt>
+     *     <dd>The object attribute representing the group membership.</dd>
+     *
+     *     <dt>defaultRoles</dt>
+     *     <dd>The list of default roles.</dd>
+     *
+     *     <dt>roleMapping</dt>
+     *     <dd>The mapping between OpenIDM roles and pass-through auth
+     *     groups.</dd>
+     *
+     *     <dt>groupComparison</dt>
+     *     <dd>The method of {@link GroupComparison} to use.</dd>
+     * </dl>
      *
      * @param requestMessagePolicy {@inheritDoc}
      * @param responseMessagePolicy {@inheritDoc}
      * @param handler {@inheritDoc}
      * @param options {@inheritDoc}
-     * @return {@inheritDoc}
      */
     @Override
     public void initialize(MessagePolicy requestMessagePolicy,MessagePolicy responseMessagePolicy,

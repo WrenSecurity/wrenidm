@@ -12,8 +12,8 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
-
 
 package org.forgerock.openidm.config.manage;
 
@@ -189,7 +189,8 @@ public class ConfigObjectService implements RequestHandler, ClusterEventListener
     }
 
     @Override
-    public Promise<ResourceResponse, ResourceException>  handleRead(final Context context, final ReadRequest request) {
+    public Promise<ResourceResponse, ResourceException> handleRead(final Context context,
+                                                                   final ReadRequest request) {
         return read(request.getResourcePathObject())
                 .thenAsync(
                         new AsyncFunction<ConfigAuditState, ResourceResponse, ResourceException>() {
@@ -211,15 +212,26 @@ public class ConfigObjectService implements RequestHandler, ClusterEventListener
 
     /**
      * Gets an object from the object set by identifier.
-     * <p/>
-     * The object may contain metadata properties, including object identifier {@code _id},
-     * and object version {@code _rev} to enable optimistic concurrency supported by OpenIDM.
+     * <p>
+     * The object may contain metadata properties, including object identifier
+     * {@code _id}, and object version {@code _rev} to enable optimistic
+     * concurrency supported by OpenIDM.
      *
-     * @param resourcePath the identifier of the resource to retrieve from the object set.
-     * @return promise with the populated state if successful, otherwise exception promises, ie:
-     *    NotFoundException if the specified object could not be found.
-     *    ForbiddenException  if access to the object is forbidden.
-     *    BadRequestException if the passed identifier is invalid
+     * @param   resourcePath
+     *          The identifier of the resource to retrieve from the object set.
+     *
+     * @return  The promise populated with the populated state, if successful;
+     *          otherwise, an exception promise, such as:
+     *          <dl>
+     *            <dt>NotFoundException:</dt>
+     *            <dd>If the specified object could not be found.</dd>
+     *
+     *            <dt>ForbiddenException:</dt>
+     *            <dd>If access to the object is forbidden.</dd>
+     *
+     *            <dt>BadRequestException:</dt>
+     *            <dd>If the passed identifier is invalid.</dd>
+     *          </dl>
      */
     @SuppressWarnings("rawtypes")
     private Promise<ConfigAuditState, ResourceException> read(ResourcePath resourcePath) {
@@ -307,18 +319,34 @@ public class ConfigObjectService implements RequestHandler, ClusterEventListener
 
     /**
      * Creates a new object in the object set.
-     * <p/>
-     * This method sets the {@code _id} property to the assigned identifier for the object,
-     * and the {@code _rev} property to the revised object version (For optimistic concurrency)
+     * <p>
+     * This method sets the {@code _id} property to the assigned identifier for
+     * the object, and the {@code _rev} property to the revised object version
+     * (For optimistic concurrency).
      *
-     * @param resourcePath for multi-instance config, the factory pid to use
-     * @param id the client-generated identifier to use, or {@code null} if server-generated identifier is requested.
-     * @param obj    the contents of the object to create in the object set.
-     *  @return promise with config state populated if successful, otherwise exception promises, ie:
-     *  NotFoundException:           if the specified id could not be resolved.
-     *  ForbiddenException:         if access to the object or object set is forbidden.
-     *  PreconditionFailedException: if an object with the same ID already exists.
-     *  BadRequestException:         if the passed identifier is invalid
+     * @param   resourcePath
+     *          For multi-instance config, the factory PID to use.
+     * @param   id
+     *          The client-generated identifier to use, or {@code null} if
+     *          server-generated identifier is requested.
+     * @param   obj
+     *          The contents of the object to create in the object set.
+     *
+     * @return  The promise populated with the config state, if successful;
+     *          otherwise, an exception promise, such as:
+     *          <dl>
+     *            <dt>NotFoundException:</dt>
+     *            <dd>If the specified id could not be resolved.</dd>
+     *
+     *            <dt>ForbiddenException:</dt>
+     *            <dd>If access to the object or object set is forbidden.</dd>
+     *
+     *            <dt>PreconditionFailedException:</dt>
+     *            <dd>If an object with the same ID already exists.</dd>
+     *
+     *            <dt>BadRequestException:</dt>
+     *            <dd>If the passed identifier is invalid.</dd>
+     *          </dl>
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public Promise<ConfigAuditState, ResourceException> create(ResourcePath resourcePath, String id,
@@ -421,27 +449,46 @@ public class ConfigObjectService implements RequestHandler, ClusterEventListener
 
     /**
      * Updates the specified object in the object set.
-     * <p/>
-     * This implementation requires MVCC and hence enforces that clients state what revision they expect
-     * to be updating
-     * <p/>
-     * If successful, this method updates metadata properties within the passed object,
-     * including: a new {@code _rev} value for the revised object's version
+     * <p>
+     * This implementation requires MVCC and hence enforces that clients state
+     * what revision they expect to be updating.
+     * <p>
+     * If successful, this method updates metadata properties within the passed
+     * object, including: a new {@code _rev} value for the revised object's
+     * version.
      *
-     * @param resourcePath the identifier of the resource to be updated
-     * @param rev    the version of the object to update; or {@code null} if not provided.
-     * @param obj    the contents of the object to put in the object set.
-     * @return promise populated with the config state if successful, otherwise exception promises, ie:
-     *  ConflictException:           if version is required but is {@code null}.
-     *  ForbiddenException:          if access to the object is forbidden.
-     *  NotFoundException:           if the specified object could not be found.
-     *  PreconditionFailedException: if version did not match the existing object in the set.
-     *  BadRequestException:         if the passed identifier is invalid
+     * @param   resourcePath
+     *          The identifier of the resource to be updated
+     * @param   rev
+     *          The version of the object to update; or {@code null} if not
+     *          provided.
+     * @param   obj
+     *          The contents of the object to put in the object set.
+     *
+     * @return  The promise populated with the config state, if successful;
+     *          otherwise, an exception promise, such as:
+     *          <dl>
+     *            <dt>ConflictException:</dt>
+     *            <dd>If version is required but is {@code null}.</dd>
+     *
+     *            <dt>ForbiddenException:</dt>
+     *            <dd>If access to the object is forbidden.</dd>
+     *
+     *            <dt>NotFoundException:</dt>
+     *            <dd>If the specified object could not be found.</dd>
+     *
+     *            <dt>PreconditionFailedException:</dt>
+     *            <dd>If version did not match the existing object in the set.</dd>
+     *
+     *            <dt>BadRequestException:</dt>
+     *            <dd>If the passed identifier is invalid</dd>
+     *          </dl>
      */
     @SuppressWarnings("rawtypes")
     private Promise<ConfigAuditState, ResourceException> update(ResourcePath resourcePath, String rev,
-                                                               JsonValue obj) {
+            JsonValue obj) {
         logger.debug("Invoking update configuration {} {}", resourcePath.toString(), rev);
+
         if (resourcePath.isEmpty()) {
             return new BadRequestException("The passed identifier to update is empty").asPromise();
         }

@@ -21,16 +21,16 @@
  *
  * CDDL HEADER END
  *
- *
  *      Copyright 2006-2010 Sun Microsystems, Inc.
  *      Portions Copyright 2010-2016 ForgeRock AS
+ *      Portions Copyright 2018 Wren Security.
  */
 package org.forgerock.openidm.core;
 
 /**
  * This class defines a set of constants that may be referenced throughout the
  * Identity Server source.
- * <p/>
+ * <p>
  * Based on OpenDJ ServerConstants
  */
 public final class ServerConstants {

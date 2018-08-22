@@ -12,7 +12,9 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
+
 package org.forgerock.openidm.messaging;
 
 import static org.forgerock.guava.common.collect.FluentIterable.from;
@@ -45,26 +47,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The MessagingService manages MessageSubscribers to allow IDM to subscribe to incoming message events.
- * <br/>
- * The 'messaging.json' file configures the list of subscribers.
- * <br/>
- * The enum factory pattern is used in lieu of using reflection to instantiate instances of subscribers and handlers
- * from config.
- * <br/>
- * The SubscriberFactory enum, defined below, represents the possible types of subscribers.  Any new Subscriber
- * implementations will need to be added to this enum.
- * <br/>
- * The HandlerFactory enum, also defined below, represents the possible types of handlers.  Any new Handler
- * implementations will need to be added to this enum.
- * <br/>
- * Each individual instance of a Subscriber is expected to manage a single connection between IDM and the Messaging
- * event channel.  Increase the instanceCount in the configuration to increase message consumption throughput.
- * <br/>
- * Each subscriber has an instance of a message handler.  The handler is expected to process the message and take all
- * actions that the message represents.
- * <br/>
- * Here is a sample config for the MessagingService:
+ * The MessagingService manages MessageSubscribers to allow IDM to subscribe to incoming message
+ * events.
+ *
+ * <p>The 'messaging.json' file configures the list of subscribers.
+ *
+ * <p>The enum factory pattern is used in lieu of using reflection to instantiate instances of
+ * subscribers and handlers from config.
+ *
+ * <p>The SubscriberFactory enum, defined below, represents the possible types of subscribers. Any
+ * new Subscriber implementations will need to be added to this enum.
+ *
+ * <p>The HandlerFactory enum, also defined below, represents the possible types of handlers. Any
+ * new Handler implementations will need to be added to this enum.
+ *
+ * <p>Each individual instance of a Subscriber is expected to manage a single connection between IDM
+ * and the Messaging event channel. Increase the instanceCount in the configuration to increase
+ * message consumption throughput.
+ *
+ * <p>Each subscriber has an instance of a message handler. The handler is expected to process
+ * the message and take all actions that the message represents.
+ *
+ * <p>Here is a sample config for the MessagingService:
  * <pre>
  * {
  *     "subscribers": [

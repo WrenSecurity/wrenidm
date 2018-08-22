@@ -1,19 +1,21 @@
 /*
- * The contents of this file are subject to the terms of the Common Development and
- * Distribution License (the License). You may not use this file except in compliance with the
+ * The contents of this file are subject to the terms of the Common Development
+ * and Distribution License (the License). You may not use this file except in
+ * compliance with the License.
+ *
+ * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License
+ * for the specific language governing permission and limitations under the
  * License.
  *
- * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
- * specific language governing permission and limitations under the License.
- *
- * When distributing Covered Software, include this CDDL Header Notice in each file and include
- * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
- * Header, with the fields enclosed by brackets [] replaced by your own identifying
- * information: "Portions copyright [year] [name of copyright owner]".
+ * When distributing Covered Software, include this CDDL Header Notice in each
+ * file and include the License file at legal/CDDLv1.0.txt. If applicable, add
+ * the following below the CDDL Header, with the fields enclosed by brackets []
+ * replaced by your own identifying information:
+ * "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
-
 package org.forgerock.openidm.audit.impl;
 
 import static org.forgerock.json.resource.Requests.copyOfQueryRequest;
@@ -43,13 +45,20 @@ import org.forgerock.util.promise.Promise;
  * hardcoded to be "repo/audit".
  */
 public class RepositoryAuditEventHandler extends AuditEventHandlerBase {
-    /**
+
+/**
      * Router target resource path.
-     */
-    private final ResourcePath resourcePath;
+     */    private final ResourcePath resourcePath;
 
     /**
      * The DependencyProvider to provide access to the ConnectionFactory.
+     *
+     * @param   configuration
+     *          The configuration for the handler.
+     * @param   eventTopicsMetaData
+     *          Metadata about the events that the handler will process.
+     * @param   connectionFactory
+     *          The factory used for obtaining JSON connections.
      */
     private final ConnectionFactory connectionFactory;
 

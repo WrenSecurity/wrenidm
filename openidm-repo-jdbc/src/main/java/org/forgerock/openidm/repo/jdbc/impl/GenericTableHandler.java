@@ -5,6 +5,7 @@
  *
  * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
  * specific language governing permission and limitations under the License.
+ * Portions Copyright 2018 Wren Security.
  *
  * When distributing Covered Software, include this CDDL Header Notice in each file and include
  * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
@@ -83,7 +84,7 @@ public class GenericTableHandler implements TableHandler {
     final TableQueries queries;
     
     final GenericResultSetMapper genericResultMapper = new GenericResultSetMapper();
-    
+
     Map<QueryDefinition, String> queryMap;
 
     final boolean enableBatching; // Whether to use JDBC statement batching.
@@ -372,17 +373,11 @@ public class GenericTableHandler implements TableHandler {
         return batchingCount;
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public boolean isErrorType(SQLException ex, ErrorType errorType) {
         return sqlExceptionHandler.isErrorType(ex, errorType);
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public boolean isRetryable(SQLException ex, Connection connection) {
         return sqlExceptionHandler.isRetryable(ex, connection);
@@ -586,7 +581,7 @@ public class GenericTableHandler implements TableHandler {
                 existingRev = result.get(Constants.RAW_OBJECT_REV).asString();
             } catch (NotFoundException ex) {
                 throw new NotFoundException("Object does not exist for delete on: " + fullId, ex);
-            } 
+            }
             if (!"*".equals(rev) && !rev.equals(existingRev)) {
                 throw new PreconditionFailedException("Delete rejected as current Object revision " + existingRev + " is different than "
                         + "expected by caller " + rev + ", the object has changed since retrieval.");

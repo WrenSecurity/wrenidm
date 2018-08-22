@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2014-2015 ForgeRock AS
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,8 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
-
 import org.forgerock.json.JsonValue
 import org.identityconnectors.common.Base64
 import org.identityconnectors.common.security.GuardedByteArray
@@ -42,7 +41,7 @@ import org.identityconnectors.framework.common.objects.Name
 class CRESTHelper {
     /**
      * Transform a <code>Collection</code> of {@link org.identityconnectors.framework.common.objects.Attribute} instances into a {@link Map}.
-     * <p/>
+     * <p>
      * The key to each element in the map is the <i>name</i> of an <code>Attribute</code>. The value of each element in
      * the map is the <code>Attribute</code> value checked with <code>ObjectClassInfo</code>.
      *
