@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2015 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,7 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.tools.scriptedbundler;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -34,7 +34,7 @@ import java.util.List;
  * A single connector configuration property, contained in {@link org.forgerock.openidm.tools.scriptedbundler.CustomConfiguration}.
  *
  * The JSON configuration might contain something like the following:
- * <pre><blockquote>
+ * <pre>{@code
  * "providedProperties" : [
  *      {
  *          "name" : "FirstProperty",
@@ -46,7 +46,7 @@ import java.util.List;
  *          "type" : "Float"
  *      }
  *  ]
- * </blockquote></pre>
+ * }</pre>
  *
  * This object represents a single property in the list above.  These properties populate values for the properties
  * defined by default in the connector's base configuration class.  For example, the ScriptedSQLConfiguration class

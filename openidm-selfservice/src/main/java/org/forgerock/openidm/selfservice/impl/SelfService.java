@@ -12,7 +12,9 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
+
 package org.forgerock.openidm.selfservice.impl;
 
 import static org.forgerock.http.handler.HttpClientHandler.OPTION_LOADER;
@@ -99,8 +101,7 @@ public class SelfService implements IdentityProviderListener {
     private static final String DEFAULT_SHARED_KEY_ALIAS = "openidm-selfservice-key";
 
     /** the shared key alias */
-    private static final String SHARED_KEY_ALIAS =
-            IdentityServer.getInstance().getProperty(SHARED_KEY_PROPERTY, DEFAULT_SHARED_KEY_ALIAS);
+    private static volatile String sharedKeyAlias;
 
     /** the registered parent router-path for self-service flows */
     static final String ROUTER_PREFIX = "selfservice";
@@ -144,6 +145,31 @@ public class SelfService implements IdentityProviderListener {
     private ServiceRegistration<RequestHandler> serviceRegistration = null;
     private ComponentContext context;
     private ProgressStageProvider progressStageProvider;
+
+    /**
+     * Get the alias of the key self-service uses for pre-shared key encryption.
+     *
+     * <p>The alias is read from the identity server configuration only once, and then cached
+     * statically.
+     *
+     * @return
+     *   The key alias.
+     */
+    public static String getSharedKeyAlias() {
+        if (sharedKeyAlias == null) {
+            synchronized (SelfService.class) {
+                // Double-checked locking pattern
+                if (sharedKeyAlias == null) {
+                    sharedKeyAlias
+                        = IdentityServer
+                            .getInstance()
+                            .getProperty(SHARED_KEY_PROPERTY, DEFAULT_SHARED_KEY_ALIAS);
+                }
+            }
+        }
+
+        return sharedKeyAlias;
+    }
 
     @Activate
     void activate(ComponentContext context) throws Exception {
@@ -271,7 +297,7 @@ public class SelfService implements IdentityProviderListener {
     private JwtTokenHandler createJwtTokenHandler(final JwtTokenHandlerConfig jwtTokenHandlerConfig) {
         try {
             // pull the shared key in from the keystore
-            final Key key = sharedKeyService.getSharedKey(SHARED_KEY_ALIAS);
+            final Key key = sharedKeyService.getSharedKey(getSharedKeyAlias());
             final String sharedKey = Base64.encode(key.getEncoded());
             final SigningHandler signingHandler = new SigningManager().newHmacSigningHandler(sharedKey.getBytes());
 

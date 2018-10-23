@@ -12,7 +12,9 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
+
 package org.forgerock.openidm.idp.impl;
 
 import static org.forgerock.json.JsonValue.*;
@@ -80,7 +82,7 @@ public class ProviderConfigMapper {
     }
 
     /**
-     * Converts a List of {@Link ProviderConfig} to {@link JsonValue}.
+     * Converts a List of {@link ProviderConfig} to {@link JsonValue}.
      *
      * @param configList of {@link ProviderConfig}
      * @return {@link ProviderConfig} list as a {@link JsonValue}

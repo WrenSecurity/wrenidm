@@ -12,27 +12,34 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
+
 package org.forgerock.openidm.keystore.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.forgerock.openidm.core.IdentityServer.*;
+import static org.forgerock.openidm.core.IdentityServer.CONFIG_CRYPTO_ALIAS;
+import static org.forgerock.openidm.core.IdentityServer.CONFIG_CRYPTO_ALIAS_SELF_SERVICE;
+import static org.forgerock.openidm.core.IdentityServer.KEYSTORE_LOCATION;
+import static org.forgerock.openidm.core.IdentityServer.KEYSTORE_PASSWORD;
+import static org.forgerock.openidm.core.IdentityServer.KEYSTORE_PROVIDER;
+import static org.forgerock.openidm.core.IdentityServer.KEYSTORE_TYPE;
+import static org.forgerock.openidm.core.IdentityServer.TRUSTSTORE_LOCATION;
+import static org.forgerock.openidm.core.IdentityServer.TRUSTSTORE_PASSWORD;
+import static org.forgerock.openidm.core.IdentityServer.TRUSTSTORE_TYPE;
 import static org.forgerock.openidm.core.ServerConstants.JWTSESSION_SIGNING_KEY_ALIAS_PROPERTY;
-import static org.forgerock.openidm.core.ServerConstants.LAUNCHER_INSTALL_LOCATION;
-import static org.forgerock.openidm.core.ServerConstants.LAUNCHER_PROJECT_LOCATION;
 import static org.forgerock.openidm.core.ServerConstants.SELF_SERVICE_CERT_ALIAS;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.security.Security;
 import java.util.Collections;
-
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.ServerConstants;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.openidm.keystore.KeyStoreDetails;
 import org.forgerock.security.keystore.KeyStoreType;
 import org.forgerock.util.Utils;
@@ -44,15 +51,7 @@ public class DefaultKeyStoreInitializerTest {
     @BeforeClass
     public void setUp() throws Exception {
         Security.addProvider(new BouncyCastleProvider());
-        System.setProperty(LAUNCHER_PROJECT_LOCATION,
-                Paths.get(getClass().getResource("/").toURI()).toFile().getAbsolutePath());
-        System.setProperty(LAUNCHER_INSTALL_LOCATION,
-                Paths.get(getClass().getResource("/").toURI()).toFile().getAbsolutePath());
-        try {
-            IdentityServer.initInstance(null);
-        } catch (final IllegalStateException e) {
-            // tried to reinitialize ignore
-        }
+        IdentityServerTestUtils.initInstanceForTest(this.getClass());
     }
 
     @Test

@@ -12,17 +12,19 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
+
 package org.forgerock.openidm.maintenance.upgrade;
 
-import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.array;
 import static org.forgerock.json.JsonValue.field;
+import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.test.assertj.AssertJJsonValueAssert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -30,13 +32,14 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.assertj.core.api.Assertions;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.ServerConstants;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -55,6 +58,11 @@ public class UpdateManagerImplTest {
             new ArrayList<>(Arrays.asList(Paths.get("security/keystore.jceks"),
                     Paths.get("security/realm.properties"),
                     Paths.get("security/truststore")));
+
+    @BeforeClass
+    public void setup() {
+        IdentityServerTestUtils.initInstanceForTest();
+    }
 
     @BeforeMethod
     public void setupListAvailableUpdates() throws Exception {

@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright © 2011 ForgeRock AS. All rights reserved.
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -29,13 +30,8 @@ import org.forgerock.openidm.repo.jdbc.ErrorType;
 
 /**
  * MySQL handling of SQLExceptions
- *
  */
 public class MySQLExceptionHandler extends DefaultSQLExceptionHandler {
-
-    /**
-     * @InheritDoc
-     */
     public boolean isErrorType(SQLException ex, ErrorType errorType) {
         boolean result = XOpenErrorMapping.isErrorType(ex, errorType);
 
@@ -47,5 +43,4 @@ public class MySQLExceptionHandler extends DefaultSQLExceptionHandler {
 
         return result;
     }
-
 }

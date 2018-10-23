@@ -12,25 +12,35 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
+
 package org.forgerock.openidm.config.manage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.forgerock.json.JsonValue.field;
 import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
+import static org.forgerock.json.resource.Requests.newDeleteRequest;
 import static org.forgerock.json.resource.Requests.newQueryRequest;
-import static org.forgerock.json.resource.Requests.*;
+import static org.forgerock.json.resource.Requests.newReadRequest;
+import static org.forgerock.json.resource.Requests.newUpdateRequest;
 import static org.forgerock.json.resource.Responses.newResourceResponse;
 import static org.forgerock.openidm.config.manage.ConfigObjectService.asConfigQueryFilter;
 import static org.forgerock.util.test.assertj.AssertJPromiseAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.*;
+import static org.testng.Assert.fail;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -42,7 +52,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.BadRequestException;
@@ -68,6 +77,7 @@ import org.forgerock.openidm.config.crypto.ConfigCrypto;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
 import org.forgerock.openidm.config.enhanced.JSONEnhancedConfig;
 import org.forgerock.openidm.core.ServerConstants;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.openidm.metadata.impl.ProviderListener;
 import org.forgerock.openidm.patch.PatchValueTransformer;
 import org.forgerock.openidm.patch.ScriptedPatchValueTransformer;
@@ -109,6 +119,8 @@ public class ConfigObjectServiceTest {
     @SuppressWarnings("unchecked")
 	@BeforeTest
     public void beforeTest() throws Exception {
+        IdentityServerTestUtils.initInstanceForTest();
+
         properties = new Hashtable<>();
         properties.put(ComponentConstants.COMPONENT_NAME, getClass().getName());
 

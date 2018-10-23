@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2011-2015 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,7 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.external.email.impl;
 
 import com.sun.mail.util.MailSSLSocketFactory;
@@ -106,8 +106,13 @@ public class EmailClient {
      * subject: The subject
      * body : the message body
      *
-     * @param params a JsonValue containing the from, to, cc, bcc, subject, and body parameters
-     * @throws BadRequestException
+     * @param   params
+     *          A JsonValue containing the {@code from}, {@code to}, {@code cc}, {@code bcc},
+     *          {@code subject}, and {@code body} parameters.
+     *
+     * @throws  BadRequestException
+     *          If the one or more of the {@code from}, {@code to}, {@code cc}, {@code bcc},
+     *          {@code subject}, or {@code body} parameters are missing or improperly formatted.
      */
     public void send(JsonValue params) throws BadRequestException {
         InternetAddress from = null;

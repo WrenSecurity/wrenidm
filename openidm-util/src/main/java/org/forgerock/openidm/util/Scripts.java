@@ -11,8 +11,10 @@
  * Header, with the fields enclosed by brackets [] replaced by your own identifying
  * information: "Portions copyright [year] [name of copyright owner]".
  *
- * Portions copyright 2011-2016 ForgeRock AS.
+ * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
+
 package org.forgerock.openidm.util;
 
 import javax.script.ScriptException;
@@ -22,7 +24,8 @@ import org.forgerock.json.JsonValueException;
 import org.forgerock.script.ScriptRegistry;
 
 /**
- * A singleton utility class that provides static methods for retrieving scripts from the {@link ScriptRegistry}.
+ * A singleton utility class that provides static methods for retrieving scripts from the
+ * {@link ScriptRegistry}.
  */
 public class Scripts {
 
@@ -44,12 +47,18 @@ public class Scripts {
     }
 
     /**
-     * Returns a new {@link Script} object representing a {@link ScriptEntry} from the {@link ScriptRegistry} service 
-     * based on the passed in script configuration.  Returns null if the passed is script configuration is null.
-     * 
-     * @param config a script configuration.
-     * @return a {@link Script} object representing a {@link ScriptEntry} from the {@link ScriptRegistry} service.
-     * @throws JsonValueException
+     * Returns a new {@link Script} object representing a {@link org.forgerock.script.ScriptEntry}
+     * from the {@link ScriptRegistry} service based on the passed in script configuration.
+     *
+     * <p>Returns null if the passed is script configuration is {@code null}.
+     *
+     * @param   config
+     *          a script configuration.
+     *
+     * @return  a {@link Script} object representing a {@link org.forgerock.script.ScriptEntry}
+     *          from the {@link ScriptRegistry} service.
+     *
+     * @throws  JsonValueException
      */
     public static Script newScript(JsonValue config) throws JsonValueException {
         if (config == null || config.isNull()) {

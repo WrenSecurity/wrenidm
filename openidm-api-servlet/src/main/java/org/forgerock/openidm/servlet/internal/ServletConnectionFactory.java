@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Copyright 2017-2018 Wren Security.
  */
 
 package org.forgerock.openidm.servlet.internal;
@@ -330,7 +331,7 @@ public class ServletConnectionFactory implements ConnectionFactory, RouterFilter
                         } finally {
                             measure.end();
                         }
-                    }                    
+                    }
                     @Override
                     public Promise<ActionResponse, ResourceException> actionAsync(
                             Context context, ActionRequest request) {
@@ -367,7 +368,7 @@ public class ServletConnectionFactory implements ConnectionFactory, RouterFilter
                     }
                 };
             }
-            
+
             @Override
             public Promise<Connection, ResourceException> getConnectionAsync() {
                 try {
@@ -376,21 +377,21 @@ public class ServletConnectionFactory implements ConnectionFactory, RouterFilter
                     return e.asPromise();
                 }
             }
-           
+
             /**
              * @param request the router request
              * @return an event name For monitoring purposes
              */
             private Name getRouterEventName(Request request) {
                 RequestType requestType = request.getRequestType();
-                String idContext;
+                String idContext = "";
 
                 // For query and action group statistics by full URI
                 // Create has only the component name in the getResourceName to start with
-                if (RequestType.QUERY.equals(requestType) || RequestType.ACTION.equals(requestType) 
+                if (RequestType.QUERY.equals(requestType) || RequestType.ACTION.equals(requestType)
                         || RequestType.CREATE.equals(requestType)) {
                     idContext = request.getResourcePath();
-                } else {
+                } else if (request.getResourcePathObject().size() > 1) {
                     // For RUD, patch group statistics without the local resource identifier
                     idContext = request.getResourcePathObject()
                             .head(request.getResourcePathObject().size() - 1)
@@ -398,7 +399,7 @@ public class ServletConnectionFactory implements ConnectionFactory, RouterFilter
                 }
 
                 String eventName = EVENT_ROUTER_PREFIX + idContext + "/" + requestType.toString().toLowerCase();
-                
+
                 return Name.get(eventName);
             }
         };

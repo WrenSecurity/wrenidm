@@ -12,28 +12,31 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
+
 package org.forgerock.openidm.security.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.resource.PatchOperation.add;
-import static org.forgerock.json.resource.Requests.*;
-import static org.forgerock.openidm.core.ServerConstants.LAUNCHER_INSTALL_LOCATION;
-import static org.forgerock.openidm.core.ServerConstants.LAUNCHER_PROJECT_LOCATION;
+import static org.forgerock.json.resource.Requests.newActionRequest;
+import static org.forgerock.json.resource.Requests.newCreateRequest;
+import static org.forgerock.json.resource.Requests.newDeleteRequest;
+import static org.forgerock.json.resource.Requests.newPatchRequest;
+import static org.forgerock.json.resource.Requests.newReadRequest;
+import static org.forgerock.json.resource.Requests.newUpdateRequest;
 import static org.forgerock.openidm.security.impl.SecurityTestUtils.createKeyStores;
 import static org.forgerock.openidm.util.CertUtil.generateCertificate;
 import static org.mockito.Mockito.mock;
 
-import java.nio.file.Paths;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.Security;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.forgerock.json.JsonValue;
@@ -47,7 +50,7 @@ import org.forgerock.json.resource.QueryResponse;
 import org.forgerock.json.resource.Requests;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourceResponse;
-import org.forgerock.openidm.core.IdentityServer;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.openidm.crypto.CryptoService;
 import org.forgerock.openidm.crypto.KeyRepresentation;
 import org.forgerock.openidm.crypto.factory.CryptoServiceFactory;
@@ -73,15 +76,9 @@ public class EntryResourceProviderTest {
     @BeforeClass
     public void setUp() throws Exception {
         Security.addProvider(new BouncyCastleProvider());
-        System.setProperty(LAUNCHER_PROJECT_LOCATION,
-                Paths.get(getClass().getResource("/").toURI()).toFile().getAbsolutePath());
-        System.setProperty(LAUNCHER_INSTALL_LOCATION,
-                Paths.get(getClass().getResource("/").toURI()).toFile().getAbsolutePath());
-        try {
-            IdentityServer.initInstance(null);
-        } catch (final IllegalStateException e) {
-            // tried to reinitialize ignore
-        }
+
+        IdentityServerTestUtils.initInstanceForTest(this.getClass());
+        IdentityServerTestUtils.verifyBootPropertiesLoaded();
     }
 
     @Test

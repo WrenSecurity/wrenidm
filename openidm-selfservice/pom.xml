@@ -3,6 +3,7 @@
   ~ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
   ~
   ~ Copyright (c) 2012-2016 ForgeRock AS. All Rights Reserved
+  ~ Portions Copyright 2017-2018 Wren Security.
   ~
   ~ The contents of this file are subject to the terms
   ~ of the Common Development and Distribution License
@@ -24,15 +25,21 @@
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.forgerock.openidm</groupId>
         <artifactId>openidm-project</artifactId>
-        <version>5.5.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
     </parent>
+
     <artifactId>openidm-selfservice</artifactId>
     <packaging>bundle</packaging>
-    <name>OpenIDM Self-Service Bundle</name>
-    <description>Self-service supports common user tasks prior to logging in: registration, password reset, and forgotten password retrieval.</description>
+
+    <name>Wren:IDM - Self-Service Bundle</name>
+    <description>
+        Provides common self-service tasks for users prior to logging in, including: registration,
+        password reset, and forgotten password retrieval.
+    </description>
 
     <dependencies>
         <dependency>
@@ -40,36 +47,44 @@
             <artifactId>openidm-router</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.commons</groupId>
             <artifactId>forgerock-selfservice-core</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.commons</groupId>
             <artifactId>forgerock-selfservice-stages</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.commons</groupId>
             <artifactId>forgerock-selfservice-json</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.commons</groupId>
             <artifactId>json-crypto-core</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.http</groupId>
             <artifactId>chf-client-apache-async</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.openidm</groupId>
             <artifactId>openidm-enhanced-config</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.openidm</groupId>
             <artifactId>openidm-smartevent</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.openidm</groupId>
             <artifactId>openidm-core</artifactId>
@@ -87,6 +102,7 @@
             <artifactId>osgi.core</artifactId>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.cmpn</artifactId>
@@ -106,47 +122,54 @@
             <artifactId>script-javascript</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.commons</groupId>
             <artifactId>forgerock-test-utils</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <scope>test</scope>
         </dependency>
-
-
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-scr-plugin</artifactId>
+
                 <executions>
                     <execution>
                         <id>generate-scr-scrdescriptor</id>
+
                         <goals>
                             <goal>scr</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
+
                 <configuration>
                     <instructions>
                         <DynamicImport-Package>*</DynamicImport-Package>

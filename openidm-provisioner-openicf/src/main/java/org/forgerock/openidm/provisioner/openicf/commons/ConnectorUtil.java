@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2011-2016 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,7 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.provisioner.openicf.commons;
 
 import static org.forgerock.json.JsonValue.json;
@@ -191,57 +191,158 @@ public class ConnectorUtil {
 
     /**
      * Get the Java Class for the {@code type} value in the schema.
-     * <p/>
-     * The Default mapping:
+     *
+     * <p>
      * <table>
-     * <tr><td>any</td><td>{@link Object}</td></tr>
-     * <tr><td>JAVA_TYPE_BIGDECIMAL</td><td>{@link BigDecimal}</td></tr>
-     * <tr><td>JAVA_TYPE_BIGINTEGER</td><td>{@link BigInteger}</td></tr>
-     * <tr><td>JAVA_TYPE_PRIMITIVE_BOOLEAN</td><td>{@link boolean}</td></tr>
-     * <tr><td>boolean</td><td>{@link Boolean}</td></tr>
-     * <tr><td>JAVA_TYPE_BYTE_ARRAY</td><td>{@link byte[]}</td></tr>
-     * <tr><td>JAVA_TYPE_CHAR</td><td>{@link char}</td></tr>
-     * <tr><td>JAVA_TYPE_CHARACTER</td><td>{@link Character}</td></tr>
-     * <tr><td>JAVA_TYPE_DATE</td><td>{@link String}</td></tr>
-     * <tr><td>JAVA_TYPE_PRIMITIVE_DOUBLE</td><td>{@link double}</td></tr>
-     * <tr><td>JAVA_TYPE_DOUBLE</td><td>{@link Double}</td></tr>
-     * <tr><td>JAVA_TYPE_FILE</td><td>{@link File}</td></tr>
-     * <tr><td>JAVA_TYPE_PRIMITIVE_FLOAT</td><td>{@link float}</td></tr>
-     * <tr><td>JAVA_TYPE_FLOAT</td><td>{@link Float}</td></tr>
-     * <tr><td>JAVA_TYPE_GUARDEDBYTEARRAY</td><td>{@link GuardedByteArray}</td></tr>
-     * <tr><td>JAVA_TYPE_GUARDEDSTRING</td><td>{@link GuardedString}</td></tr>
-     * <tr><td>JAVA_TYPE_INT</td><td>{@link int}</td></tr>
-     * <tr><td>integer</td><td>{@link Integer}</td></tr>
-     * <tr><td>array</td><td>{@link List}</td></tr>
-     * <tr><td>JAVA_TYPE_PRIMITIVE_LONG</td><td>{@link long}</td></tr>
-     * <tr><td>JAVA_TYPE_LONG</td><td>{@link Long}</td></tr>
-     * <tr><td>JAVA_TYPE_NAME</td><td>{@link Name}</td></tr>
-     * <tr><td>null</td><td>{@code null}</td></tr>
-     * <tr><td>number</td><td>{@link Number}</td></tr>
-     * <tr><td>object</td><td>{@link Map}</td></tr>
-     * <tr><td>JAVA_TYPE_OBJECTCLASS</td><td>{@link ObjectClass}</td></tr>
-     * <tr><td>JAVA_TYPE_QUALIFIEDUID</td><td>{@link QualifiedUid}</td></tr>
-     * <tr><td>JAVA_TYPE_SCRIPT</td><td>{@link Script}</td></tr>
-     * <tr><td>string</td><td>{@link String}</td></tr>
-     * <tr><td>JAVA_TYPE_UID</td><td>{@link Uid }</td></tr>
-     * <tr><td>JAVA_TYPE_URI</td><td>{@link URI}</td></tr>
+     *   <caption>The Default mapping</caption>
+     *   <tr>
+     *     <td>any</td>
+     *     <td>{@link Object}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_BIGDECIMAL</td>
+     *     <td>{@link BigDecimal}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_BIGINTEGER</td>
+     *     <td>{@link BigInteger}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_PRIMITIVE_BOOLEAN</td>
+     *     <td>{@link boolean}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>boolean</td>
+     *     <td>{@link Boolean}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_BYTE_ARRAY</td>
+     *     <td>{@link byte[]}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_CHAR</td>
+     *     <td>{@link char}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_CHARACTER</td>
+     *     <td>{@link Character}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_DATE</td>
+     *     <td>{@link String}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_PRIMITIVE_DOUBLE</td>
+     *     <td>{@link double}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_DOUBLE</td>
+     *     <td>{@link Double}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_FILE</td>
+     *     <td>{@link File}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_PRIMITIVE_FLOAT</td>
+     *     <td>{@link float}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_FLOAT</td>
+     *     <td>{@link Float}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_GUARDEDBYTEARRAY</td>
+     *     <td>{@link GuardedByteArray}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_GUARDEDSTRING</td>
+     *     <td>{@link GuardedString}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_INT</td>
+     *     <td>{@link int}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>integer</td>
+     *     <td>{@link Integer}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>array</td>
+     *     <td>{@link List}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_PRIMITIVE_LONG</td>
+     *     <td>{@link long}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_LONG</td>
+     *     <td>{@link Long}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_NAME</td>
+     *     <td>{@link Name}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>null</td>
+     *     <td>{@code null}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>number</td>
+     *     <td>{@link Number}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>object</td>
+     *     <td>{@link Map}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_OBJECTCLASS</td>
+     *     <td>{@link ObjectClass}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_QUALIFIEDUID</td>
+     *     <td>{@link QualifiedUid}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_SCRIPT</td>
+     *     <td>{@link Script}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>string</td>
+     *     <td>{@link String}</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_UID</td>
+     *     <td>{@link Uid }</td>
+     *   </tr>
+     *   <tr>
+     *     <td>JAVA_TYPE_URI</td>
+     *     <td>{@link URI}</td>
+     *   </tr>
      * </table>
      *
-     * @param name
-     * @return class if it has mapped to a type or null if not.
+     * @see     #findNameForClass(Class)
+     *
+     * @param   name
+     *          The name of the ICF type for which a Java class is desired.
+     *
+     * @return  Either the desired class, if it has a mapping; or {@code null}
+     *          if one was not found.
      */
     public static Class<?> findClassForName(String name) {
         return typeMap.get(name);
     }
 
     /**
-     * Find the string code of the given {@code clazz}.
-     * <p/>
-     * Encodes the {@link Class} to String code
+     * Find the ICF string constant for the given Java class.
      *
-     * @param clazz
-     * @return
-     * @see #findClassForName(String)
+     * @see     #findClassForName(String)
+     *
+     * @param   clazz
+     *          The class for which an ICF string constant is desired.
+     *
+     * @return  Either the ICF string constant; or, {@code null}, if none is
+     *          mapped for the provided class.
      */
     public static String findNameForClass(Class<?> clazz) {
         for (Map.Entry<String, Class<?>> entry : typeMap.entrySet()) {
@@ -249,16 +350,18 @@ public class ConnectorUtil {
                 return entry.getKey();
             }
         }
+
         return null;
     }
 
     /**
-     * Find the proper target simple class type for the source type.
-     * <p/>
-     * JSON schema has predefined types abd this method maps the {@code clazz} Class to proper representation
+     * Find the JSON object type for the given Java class.
      *
-     * @param clazz
-     * @return
+     * @param   clazz
+     *          The class for which a JSON type is desired.
+     *
+     * @return  Either the JSON type; or, {@code null}, if none is known for the
+     *          provided class.
      */
     public static String findJSONTypeForClass(Class<?> clazz) {
         if ((Integer.class.isAssignableFrom(clazz)) || (int.class == clazz)) {
@@ -276,47 +379,53 @@ public class ConnectorUtil {
         }
     }
 
-
     /**
-     * Convert the {@link ObjectPoolConfiguration} to simple Map.
-     * <p/>
+     * Convert a {@link ObjectPoolConfiguration} to a simple Map.
      *
-     * @param info
-     * @return
+     * @param   info
+     *          The configuration to convert.
+     *
+     * @return  The configuration, represented as a map.
      */
     public static Map<String, Object> getObjectPoolConfiguration(ObjectPoolConfiguration info) {
         Map<String, Object> poolConfigOption = new LinkedHashMap<String, Object>(5);
+
         poolConfigOption.put(OPENICF_MAX_OBJECTS, info.getMaxObjects());
         poolConfigOption.put(OPENICF_MAX_IDLE, info.getMaxIdle());
         poolConfigOption.put(OPENICF_MAX_WAIT, info.getMaxWait());
         poolConfigOption.put(OPENICF_MIN_EVICTABLE_IDLE_TIME_MILLIS, info.getMinEvictableIdleTimeMillis());
         poolConfigOption.put(OPENICF_MIN_IDLE, info.getMinIdle());
+
         return poolConfigOption;
     }
 
-    /**
-     * @param source
-     * @param target
-     * @throws UnsupportedOperationException when the property value can not be converted to String.
-     */
-    public static void configureResultsHandlerConfiguration(JsonValue source, ResultsHandlerConfiguration target) throws JsonValueException {
+    public static void configureResultsHandlerConfiguration(JsonValue source,
+                                                            ResultsHandlerConfiguration target)
+    throws JsonValueException {
         if (!source.get(OPENICF_RESULTSHANDLER_ENABLENORMALIZINGRESULTSHANDLER).isNull()) {
-            target.setEnableNormalizingResultsHandler(source.get(OPENICF_RESULTSHANDLER_ENABLENORMALIZINGRESULTSHANDLER).asBoolean());
+            target.setEnableNormalizingResultsHandler(
+              source.get(OPENICF_RESULTSHANDLER_ENABLENORMALIZINGRESULTSHANDLER).asBoolean());
         }
+
         if (!source.get(OPENICF_RESULTSHANDLER_ENABLEFILTEREDRESULTSHANDLER).isNull()) {
-            target.setEnableFilteredResultsHandler(source.get(OPENICF_RESULTSHANDLER_ENABLEFILTEREDRESULTSHANDLER).asBoolean());
+            target.setEnableFilteredResultsHandler(
+              source.get(OPENICF_RESULTSHANDLER_ENABLEFILTEREDRESULTSHANDLER).asBoolean());
         }
+
         if (!source.get(OPENICF_RESULTSHANDLER_ENABLECASEINSENSITIVEFILTER).isNull()) {
-            target.setEnableCaseInsensitiveFilter(source.get(OPENICF_RESULTSHANDLER_ENABLECASEINSENSITIVEFILTER).asBoolean());
+            target.setEnableCaseInsensitiveFilter(
+              source.get(OPENICF_RESULTSHANDLER_ENABLECASEINSENSITIVEFILTER).asBoolean());
         }
+
         if (!source.get(OPENICF_RESULTSHANDLER_ENABLEATTRIBUTESTOGETSEARCHRESULTSHANDLER).isNull()) {
-            target.setEnableAttributesToGetSearchResultsHandler(source.get(OPENICF_RESULTSHANDLER_ENABLEATTRIBUTESTOGETSEARCHRESULTSHANDLER).asBoolean());
+            target.setEnableAttributesToGetSearchResultsHandler(
+              source.get(OPENICF_RESULTSHANDLER_ENABLEATTRIBUTESTOGETSEARCHRESULTSHANDLER).asBoolean());
         }
     }
 
     /**
      * Convert the {@link ObjectPoolConfiguration} to simple Map.
-     * <p/>
+     * <p>
      *
      * @param info
      * @return
@@ -520,7 +629,7 @@ public class ConnectorUtil {
 
     /**
      * Convert the {@link ConnectorKey} into a Map.
-     * <p/>
+     * <p>
      * The connector key is saved in a JSON object and this method converts it to simple Map.
      *
      * @param info
@@ -536,7 +645,7 @@ public class ConnectorUtil {
 
     /**
      * Create a new {@link ConnectorKey} newBuilder form the {@code configuration} object.
-     * <p/>
+     * <p>
      * The Configuration object MUST contain the three required String properties.
      * <ul>
      * <li>bundleName</li>
@@ -544,12 +653,17 @@ public class ConnectorUtil {
      * <li>connectorName</li>
      * </ul>
      *
-     * @param configuration
-     * @return new newBuilder of {@link ConnectorKey}
-     * @throws IllegalArgumentException when one of the three required parameter is null.
-     * @throws IOException              when the property value can not be converted to String.
+     * @param   configuration
+     *
+     * @return  New {@code newBuilder} of {@link ConnectorKey}.
+     *
+     * @throws  IllegalArgumentException
+     *          When one of the three required parameter is null.
+     * @throws  JsonValueException
+     *          When the property value can not be converted to String.
      */
-    public static ConnectorKey getConnectorKey(JsonValue configuration) throws JsonValueException {
+    public static ConnectorKey getConnectorKey(JsonValue configuration)
+    throws JsonValueException {
         String bundleName = configuration.get(OPENICF_BUNDLENAME).asString();
         String bundleVersion = configuration.get(OPENICF_BUNDLEVERSION).asString();
         String connectorName = configuration.get(OPENICF_CONNECTOR_NAME).asString();
@@ -753,7 +867,7 @@ public class ConnectorUtil {
 
     /**
      * Build a {@link Map} from the given {@link org.identityconnectors.framework.common.objects.AttributeInfo}
-     * <p/>
+     * <p>
      * The result will look like this:
      * {
      * "type"    : "number",
@@ -825,7 +939,7 @@ public class ConnectorUtil {
 
     /**
      * Create a new {@link SyncToken} from the input.
-     * <p/>
+     * <p>
      * The source object:
      * {@code
      * {
@@ -852,7 +966,7 @@ public class ConnectorUtil {
 
     /**
      * Create a new Map from the given {@link SyncToken}.
-     * <p/>
+     * <p>
      * The target object:
      * {@code
      * {
@@ -885,18 +999,17 @@ public class ConnectorUtil {
 
     /**
      * Coerce the {@code source} object to an object of {@code clazz} type.
-     * <p/>
      *
      * @param <T>
      * @param source
      * @param clazz
      * @return
      * @throws NumberFormatException
-     * @throws URISyntaxException
      * @throws UnsupportedOperationException
      */
     @SuppressWarnings("unchecked")
-    public static <T> T coercedTypeCasting(Object source, Class<T> clazz) throws IllegalArgumentException {
+    public static <T> T coercedTypeCasting(Object source, Class<T> clazz)
+    throws IllegalArgumentException {
         if (null == clazz) {
             throw new IllegalArgumentException("Target Class can not be null");
         }

@@ -12,8 +12,8 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
-
 package org.forgerock.openidm.repo.jdbc.impl;
 
 import static org.forgerock.json.resource.Responses.newResourceResponse;
@@ -485,17 +485,11 @@ public class MappedTableHandler implements TableHandler {
     }
 
     // TODO: make common to generic and explicit handlers
-    /**
-     * @inheritDoc
-     */
     public boolean isErrorType(SQLException ex, ErrorType errorType) {
         return sqlExceptionHandler.isErrorType(ex, errorType);
     }
 
     // TODO: make common to generic and explicit handlers
-    /**
-     * InheritDoc
-     */
     public boolean isRetryable(SQLException ex, Connection connection) {
         return sqlExceptionHandler.isRetryable(ex, connection);
     }

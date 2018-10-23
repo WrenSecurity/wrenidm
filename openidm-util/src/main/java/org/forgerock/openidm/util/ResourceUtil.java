@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2013-2016 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -21,7 +22,6 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-
 package org.forgerock.openidm.util;
 
 import static org.forgerock.json.JsonValue.*;
@@ -63,7 +63,7 @@ public class ResourceUtil {
 
     /**
      * Retrieve the {@code UriTemplateVariables} from the context.
-     * <p/>
+     * <p>
      *
      * @param context
      *

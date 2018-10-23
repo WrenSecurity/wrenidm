@@ -12,7 +12,9 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
+
 package org.forgerock.openidm.repo.jdbc.impl;
 
 import java.sql.Connection;
@@ -41,10 +43,6 @@ public class MSSQLExceptionHandler extends DefaultSQLExceptionHandler {
             8651  // Low memory condition
     );
 
-    
-    /**
-     * @inheritDoc
-     */
     @Override
     public boolean isRetryable(SQLException ex, Connection connection) {
         return super.isRetryable(ex, connection) || retryableErrors.contains(ex.getErrorCode());

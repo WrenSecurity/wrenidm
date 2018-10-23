@@ -3,6 +3,7 @@
   ~ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
   ~
   ~ Copyright (c) 2011-2015 ForgeRock AS. All Rights Reserved
+  ~ Portions Copyright 2017-2018 Wren Security.
   ~
   ~ The contents of this file are subject to the terms
   ~ of the Common Development and Distribution License
@@ -22,17 +23,22 @@
   ~ your own identifying information:
   ~ "Portions Copyrighted [year] [name of copyright owner]"
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <artifactId>openidm-ui</artifactId>
     <groupId>org.forgerock.openidm</groupId>
-    <version>5.5.0-SNAPSHOT</version>
+    <version>6.0.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>openidm-ui-common</artifactId>
-  <name>OpenIDM UI Common</name>
   <packaging>pom</packaging>
+
+  <name>Wren:IDM - UI - Common</name>
+  <description>Provides common, reusable UI components used throughout Wren:IDM.</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -40,96 +46,100 @@
 
   <dependencies>
     <dependency>
-        <groupId>org.forgerock.commons.ui.libs</groupId>
-        <artifactId>sinon</artifactId>
-        <version>1.15.4</version>
-        <type>js</type>
+      <groupId>org.forgerock.commons.ui.libs</groupId>
+      <artifactId>sinon</artifactId>
+      <version>1.15.4</version>
+      <type>js</type>
     </dependency>
+
     <dependency>
-        <groupId>org.forgerock.commons.ui.libs</groupId>
-        <artifactId>qunit</artifactId>
-        <version>1.15.0</version>
-        <type>js</type>
+      <groupId>org.forgerock.commons.ui.libs</groupId>
+      <artifactId>qunit</artifactId>
+      <version>1.15.0</version>
+      <type>js</type>
     </dependency>
+
     <dependency>
-        <groupId>org.forgerock.commons.ui.libs</groupId>
-        <artifactId>qunit</artifactId>
-        <version>1.15.0</version>
-        <type>css</type>
+      <groupId>org.forgerock.commons.ui.libs</groupId>
+      <artifactId>qunit</artifactId>
+      <version>1.15.0</version>
+      <type>css</type>
     </dependency>
   </dependencies>
 
+  <build>
+    <resources>
+      <resource>
+        <directory>${basedir}/src/main/js</directory>
+      </resource>
 
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+      </resource>
+    </resources>
 
-      <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>prepare-package</phase>
 
-        <resources>
-          <resource>
-            <directory>${basedir}/src/main/js</directory>
-          </resource>
-          <resource>
-            <directory>${basedir}/src/main/resources</directory>
-          </resource>
-        </resources>
+            <goals>
+              <goal>resources</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
-        <plugins>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+      </plugin>
 
-          <plugin>
-            <artifactId>maven-resources-plugin</artifactId>
-            <executions>
-              <execution>
-                <phase>prepare-package</phase>
-                <goals>
-                  <goal>resources</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
 
-          <plugin>
-            <groupId>com.github.eirslett</groupId>
-            <artifactId>frontend-maven-plugin</artifactId>
-          </plugin>
+        <executions>
+          <execution>
+            <id>copy-test-dependencies</id>
+            <phase>package</phase>
 
-          <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-dependency-plugin</artifactId>
-              <executions>
-                  <execution>
-                      <id>copy-test-dependencies</id>
-                      <phase>package</phase>
-                      <goals>
-                          <goal>copy-dependencies</goal>
-                      </goals>
-                      <configuration>
-                          <outputDirectory>${project.build.directory}/test/libs</outputDirectory>
-                          <includeArtifactIds>sinon,qunit</includeArtifactIds>
-                          <overWriteReleases>false</overWriteReleases>
-                          <overWriteSnapshots>false</overWriteSnapshots>
-                          <overWriteIfNewer>true</overWriteIfNewer>
-                      </configuration>
-                  </execution>
-              </executions>
-          </plugin>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
 
-          <plugin>
-              <artifactId>maven-assembly-plugin</artifactId>
-              <configuration>
-                  <descriptors>
-                      <descriptor>src/main/assembly/zip.xml</descriptor>
-                  </descriptors>
-              </configuration>
-              <executions>
-                  <execution>
-                      <phase>package</phase>
-                      <goals>
-                          <goal>single</goal>
-                      </goals>
-                  </execution>
-              </executions>
-          </plugin>
+            <configuration>
+              <outputDirectory>${project.build.directory}/test/libs</outputDirectory>
+              <includeArtifactIds>sinon,qunit</includeArtifactIds>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
-        </plugins>
-      </build>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
 
+        <configuration>
+          <descriptors>
+            <descriptor>src/main/assembly/zip.xml</descriptor>
+          </descriptors>
+        </configuration>
+
+        <executions>
+          <execution>
+            <phase>package</phase>
+
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

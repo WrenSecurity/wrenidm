@@ -1,17 +1,20 @@
 /*
- * The contents of this file are subject to the terms of the Common Development and
- * Distribution License (the License). You may not use this file except in compliance with the
+ * The contents of this file are subject to the terms of the Common Development
+ * and Distribution License (the License). You may not use this file except in
+ * compliance with the License.
+ *
+ * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License
+ * for the specific language governing permission and limitations under the
  * License.
  *
- * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
- * specific language governing permission and limitations under the License.
- *
- * When distributing Covered Software, include this CDDL Header Notice in each file and include
- * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
- * Header, with the fields enclosed by brackets [] replaced by your own identifying
- * information: "Portions copyright [year] [name of copyright owner]".
+ * When distributing Covered Software, include this CDDL Header Notice in each
+ * file and include the License file at legal/CDDLv1.0.txt. If applicable, add
+ * the following below the CDDL Header, with the fields enclosed by brackets []
+ * replaced by your own identifying information:
+ * "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
 package org.forgerock.openidm.provisioner.openicf.impl;
 
@@ -115,7 +118,6 @@ import org.slf4j.LoggerFactory;
  * The OpenICFProvisionerService is the implementation of
  * {@link CollectionResourceProvider} interface with <a
  * href="http://openicf.forgerock.org">OpenICF</a>.
- * <p/>
  */
 @Component(name = OpenICFProvisionerService.PID,
         policy = ConfigurationPolicy.REQUIRE,
@@ -558,11 +560,13 @@ public class OpenICFProvisionerService implements ProvisionerService, SingletonR
     }
 
     /**
-     * Gets the unique {@link org.forgerock.openidm.provisioner.SystemIdentifier} of this instance.
-     * <p/>
-     * The service which refers to this service instance can distinguish between multiple instances by this value.
+     * Gets the unique {@link org.forgerock.openidm.provisioner.SystemIdentifier}
+     * of this instance.
+     * <p>
+     * The service which refers to this service instance can distinguish between
+     * multiple instances by this value.
      *
-     * @return the system identifier
+     * @return  The unique system identifier.
      */
     public SystemIdentifier getSystemIdentifier() {
         return systemIdentifier;
@@ -573,10 +577,14 @@ public class OpenICFProvisionerService implements ProvisionerService, SingletonR
     }
 
     /**
-     * Gets the fully qualified path name
-     * @param objectClass the object class for the intended resource
-     * @param optionalId ids to append to the fully qualified path
-     * @return the fully qualified path name
+     * Gets the fully qualified path name.
+     *
+     * @param   objectClass
+     *          The object class for the intended resource.
+     * @param   optionalId
+     *          ids to append to the fully qualified path.
+     *
+     * @return  The fully qualified path name.
      */
     String getSource(final String objectClass, final String... optionalId) {
         final StringBuilder sb = new StringBuilder("system")
@@ -750,44 +758,48 @@ public class OpenICFProvisionerService implements ProvisionerService, SingletonR
     /**
      * This newBuilder and this method can not be scheduled. The call MUST go
      * through the {@code org.forgerock.openidm.provisioner}
-     * <p/>
+     * <p>
      * Invoked by the scheduler when the scheduler triggers.
-     * <p/>
+     * <p>
      * Synchronization object: {@code "connectorData" : "syncToken" :
      * "1305555929000", "nativeType" : "JAVA_TYPE_LONG" },
      * "synchronizationStatus" : { "errorStatus" : null, "lastKnownServer" :
      * "localServer", "lastModDate" : "2011-05-16T14:47:58.587Z", "lastModNum" :
      * 668, "lastPollDate" : "2011-05-16T14:47:52.875Z", "lastStartTime" :
      * "2011-05-16T14:29:07.863Z", "progressMessage" : "SUCCEEDED" } }}
-     * <p/>
+     * <p>
      * {@inheritDoc} Synchronize the changes from the end system for the given
      * {@code objectType}.
-     * <p/>
+     * <p>
      * OpenIDM takes active role in the synchronization process by asking the
      * end system to get all changed object. Not all systems are capable to
      * fulfill this kind of request but if the end system is capable then the
      * implementation sends each change to a new request on the router and when
      * it is finished, it returns a new <b>stage</b> object.
-     * <p/>
+     * <p>
      * The {@code previousStage} object is the previously returned value of this
      * method.
      *
-     * @param context the request context associated with the invocation
-     * @param previousStage
-     *            The previously returned object. If null then it's the first
-     *            execution.
-     * @return The new updated stage object. This will be the
-     *         {@code previousStage} at buildNext call.
-     * @throws IllegalArgumentException
-     *             if the value of {@code connectorData} can not be converted to
-     *             {@link SyncToken}.
-     * @throws UnsupportedOperationException
-     *             if the {@link SyncApiOp} operation is not implemented in
-     *             connector.
-     * @throws org.forgerock.json.JsonValueException
-     *             if the {@code previousStage} is not Map.
-     * @see {@link ConnectorUtil#convertToSyncToken(org.forgerock.json.JsonValue)}
-     *      or any exception happed inside the connector.
+     * @see     ConnectorUtil#convertToSyncToken(org.forgerock.json.JsonValue)
+     *          or any exception happed inside the connector.
+     *
+     * @param   context
+     *          The request context associated with the invocation.
+     * @param   previousStage
+     *          The previously returned object. If null then it's the first
+     *          execution.
+     *
+     * @return  The new updated stage object. This will be the
+     *          {@code previousStage} at buildNext call.
+     *
+     * @throws  IllegalArgumentException
+     *          If the value of {@code connectorData} can not be converted to
+     *          {@link SyncToken}.
+     * @throws  UnsupportedOperationException
+     *          If the {@link SyncApiOp} operation is not implemented in
+     *          connector.
+     * @throws  org.forgerock.json.JsonValueException
+     *          If the {@code previousStage} is not Map.
      */
     public JsonValue liveSynchronize(final Context context, final String objectType, final JsonValue previousStage)
             throws ResourceException {
@@ -818,7 +830,7 @@ public class OpenICFProvisionerService implements ProvisionerService, SingletonR
             if (helper.isOperationPermitted(SyncApiOp.class)) {
                 ConnectorFacade connector = getConnectorFacade0(SyncApiOp.class);
                 SyncApiOp operation = (SyncApiOp) connector.getOperation(SyncApiOp.class);
-                
+
                 if (null == token) {
                     token = operation.getLatestSyncToken(helper.getObjectClass());
                     logger.debug("New LatestSyncToken has been fetched. New token is: {}", token);

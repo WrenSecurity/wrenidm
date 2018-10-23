@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright © 2011 ForgeRock AS. All rights reserved.
+ * Portions Copyright 2018 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -20,8 +21,6 @@
  * with the fields enclosed by brackets [] replaced by
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
- *
- * $Id$
  */
 package org.forgerock.openidm.provisioner;
 
@@ -40,12 +39,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Id is a util class to work with the {@code id} property in the
- * {@link org.forgerock.json.resource.JsonResource} interface.
- * <p/>
+ * {@code JsonResource} interface.
+ * <p>
  * A valid ID MAY start with {@code system} and followed by the name of the end
  * system, type of the object. The third token may be the local identifier of
  * the object instance.
- * <p/>
+ * <p>
  * Valid identifiers: {@code
  * system/LDAP/account
  * LDAP/account
@@ -60,7 +59,6 @@ import org.slf4j.LoggerFactory;
  * system/account
  * }
  *
- * @version $Revision$ $Date$
  * @see <a
  *      href="https://svn.forgerock.org/openidm/branches/2.1.x-CREST/openidm-util/src/main/java/org/forgerock/openidm/util/ResourceUtil.java">ResourceUtil.URLParser</a>
  */
@@ -227,12 +225,15 @@ public class Id {
     /**
      * Safely escapes the {@code uid} value
      *
-     * @param uid
-     * @return
-     * @throws IllegalArgumentException
-     *             if the {@code uid} is blank
-     * @throws NullPointerException
-     *             if the {@code uid} is null
+     * @param   uid
+     *          The UID to escape.
+     *
+     * @return  The escaped UID.
+     *
+     * @throws  IllegalArgumentException
+     *          If the {@code uid} is blank
+     * @throws  NullPointerException
+     *          If the {@code uid} is null
      */
     public static String escapeUid(String uid) {
         if (StringUtils.isBlank(uid)) {
@@ -249,12 +250,15 @@ public class Id {
     /**
      * Safely unescapes the {@code uid} value
      *
-     * @param uid
-     * @return
-     * @throws IllegalArgumentException
-     *             if the {@code uid} is blank
-     * @throws NullPointerException
-     *             if the {@code uid} is null
+     * @param   uid
+     *          The UID to un-escape.
+     *
+     * @return  The un-escaped UID.
+     *
+     * @throws  IllegalArgumentException
+     *          If the {@code uid} is blank
+     * @throws  NullPointerException
+     *          If the {@code uid} is null
      */
     public static String unescapeUid(String uid) {
         if (StringUtils.isBlank(uid)) {

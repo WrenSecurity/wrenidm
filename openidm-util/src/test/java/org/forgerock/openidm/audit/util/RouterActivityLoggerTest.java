@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
 
 package org.forgerock.openidm.audit.util;
@@ -40,6 +41,7 @@ import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.Responses;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.PropertyAccessor;
+import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.services.TransactionId;
 import org.forgerock.services.context.Context;
 import org.forgerock.services.context.RootContext;
@@ -65,7 +67,8 @@ public class RouterActivityLoggerTest {
     private JsonValue after;
 
     @BeforeClass
-    public void setup() throws Exception {
+    public void setup() {
+        IdentityServerTestUtils.initInstanceForTest();
 
         context =
                 new TransactionIdContext(
@@ -86,7 +89,6 @@ public class RouterActivityLoggerTest {
         ));
 
     }
-
 
     @Test
     public void testRootActivityLoggerWithBeforeAndAfter() throws Exception {
@@ -200,40 +202,49 @@ public class RouterActivityLoggerTest {
 
     @Test
     public void testRootActivityLoggerWithLogFullObjectsOn() throws Exception {
-        ConnectionFactory connectionFactory = mock(ConnectionFactory.class);
-        Connection connection = mock(Connection.class);
-        when(connectionFactory.getConnection()).thenReturn(connection);
-        when(connection.create(any(Context.class), any(CreateRequest.class))).thenReturn(
-                Responses.newResourceResponse("ba", "1", null));
-        ActionResponse actionResponse = Responses.newActionResponse(json(array("test")));
-        when(connection.action(any(Context.class), any(ActionRequest.class))).thenReturn(actionResponse);
-        ArgumentCaptor<CreateRequest> createRequestArgumentCaptor = ArgumentCaptor.forClass(CreateRequest.class);
+        final IdentityServer instanceBeforeTest = IdentityServer.getInstance();
 
-        // given
-        IdentityServer.initInstance(new PropertyAccessor() {
-            @Override
-            @SuppressWarnings("unchecked")
-            public <T> T getProperty(String key, T defaultValue, Class<T> expected) {
-                if (key.equals(RouterActivityLogger.OPENIDM_AUDIT_LOG_FULL_OBJECTS)) {
-                    return (T) "true";
+        try {
+            ConnectionFactory connectionFactory = mock(ConnectionFactory.class);
+            Connection connection = mock(Connection.class);
+            when(connectionFactory.getConnection()).thenReturn(connection);
+            when(connection.create(any(Context.class), any(CreateRequest.class))).thenReturn(
+                    Responses.newResourceResponse("ba", "1", null));
+            ActionResponse actionResponse = Responses.newActionResponse(json(array("test")));
+            when(connection.action(any(Context.class), any(ActionRequest.class))).thenReturn(actionResponse);
+            ArgumentCaptor<CreateRequest> createRequestArgumentCaptor = ArgumentCaptor.forClass(CreateRequest.class);
+
+            IdentityServerTestUtils.clearServerInitialization();
+
+            // given
+            IdentityServer.initInstance(new PropertyAccessor() {
+                @Override
+                @SuppressWarnings("unchecked")
+                public <T> T getProperty(String key, T defaultValue, Class<T> expected) {
+                    if (key.equals(RouterActivityLogger.OPENIDM_AUDIT_LOG_FULL_OBJECTS)) {
+                        return (T) "true";
+                    }
+                    return defaultValue;
                 }
-                return defaultValue;
-            }
-        });
+            });
 
-        // when
-        RouterActivityLogger activityLogger = new RouterActivityLogger(connectionFactory);
-        activityLogger.log(context, request, TEST_MESSAGE, TEST_OBJECT_ID, before, after, Status.SUCCESS);
+            // when
+            RouterActivityLogger activityLogger = new RouterActivityLogger(connectionFactory);
+            activityLogger.log(context, request, TEST_MESSAGE, TEST_OBJECT_ID, before, after, Status.SUCCESS);
 
-        // then
-        verify(connection).create(any(Context.class), createRequestArgumentCaptor.capture());
+            // then
+            verify(connection).create(any(Context.class), createRequestArgumentCaptor.capture());
 
-        JsonValue content = createRequestArgumentCaptor.getValue().getContent();
+            JsonValue content = createRequestArgumentCaptor.getValue().getContent();
 
-        JsonValue capturedAfter = content.get(OpenIDMActivityAuditEventBuilder.AFTER);
+            JsonValue capturedAfter = content.get(OpenIDMActivityAuditEventBuilder.AFTER);
 
-        String rev = capturedAfter.get(ResourceResponse.FIELD_CONTENT_REVISION).asString();
-        assertThat(rev).isEqualTo("2");
-
+            String rev = capturedAfter.get(ResourceResponse.FIELD_CONTENT_REVISION).asString();
+            assertThat(rev).isEqualTo("2");
+        } finally {
+            // Reset state for subsequent tests
+            IdentityServerTestUtils.clearServerInitialization();
+            IdentityServer.initInstance(instanceBeforeTest);
+        }
     }
 }

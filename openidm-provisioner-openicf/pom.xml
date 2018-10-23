@@ -3,6 +3,7 @@
   ~ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
   ~
   ~ Copyright 2011-2016 ForgeRock AS.
+  ~ Portions Copyright 2017-2018 Wren Security.
   ~
   ~ The contents of this file are subject to the terms
   ~ of the Common Development and Distribution License
@@ -24,51 +25,64 @@
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <artifactId>openidm-project</artifactId>
         <groupId>org.forgerock.openidm</groupId>
-        <version>5.5.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
     </parent>
+
     <artifactId>openidm-provisioner-openicf</artifactId>
     <packaging>bundle</packaging>
-    <name>OpenIDM Provisioner System Bundle - OpenICF</name>
-    <description>This bundle integrates OpenICF under /system</description>
+
+    <name>Wren:IDM - Provisioner System Bundle - Wren:ICF</name>
+    <description>
+        This bundle integrates the Wren Identity Connection Framework under the /system endpoint.
+    </description>
 
     <properties>
         <openidm.osgi.import.before.defaults>!org.testng.annotations,!com_cenqua_clover</openidm.osgi.import.before.defaults>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.forgerock.openidm</groupId>
             <artifactId>openidm-enhanced-config</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.openidm</groupId>
             <artifactId>openidm-provisioner</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.openidm</groupId>
             <artifactId>openidm-smartevent</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.commons</groupId>
             <artifactId>script-common</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.commons</groupId>
             <artifactId>json-schema-core</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.commons.guava</groupId>
             <artifactId>forgerock-guava-collect</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.openicf.framework</groupId>
             <artifactId>connector-framework-server</artifactId>
             <version>${openicf.framework.version}</version>
+
             <exclusions>
                 <exclusion>
                     <groupId>org.forgerock.openicf.framework</groupId>
@@ -76,6 +90,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.openicf.framework</groupId>
             <artifactId>connector-framework</artifactId>
@@ -86,8 +101,10 @@
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.core</artifactId>
+
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.cmpn</artifactId>
@@ -109,62 +126,76 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.openicf.framework</groupId>
             <artifactId>connector-test-common</artifactId>
             <version>${openicf.framework.version}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.openicf.connectors</groupId>
             <artifactId>groovy-connector</artifactId>
             <version>${openicf.groovyconnector.version}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jdbc</artifactId>
             <version>7.0.53</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.commons</groupId>
-            <artifactId>forgerock-test-utils</artifactId>
+            <artifactId>forgerock-test-utils
+            </artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
+
     <build>
         <finalName>${project.artifactId}</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.forgerock.commons</groupId>
                 <artifactId>i18n-maven-plugin</artifactId>
+
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
+
                         <goals>
                             <goal>generate-messages</goal>
                         </goals>
+
                         <configuration>
                             <messageFiles>
                                 <messageFile>org/forgerock/openidm/provisioner/openicf/logger.properties</messageFile>
@@ -173,9 +204,11 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+
                 <configuration>
                     <systemPropertyVariables>
                         <bundles.configuration.location>${project.build.testOutputDirectory}/connectorServer/</bundles.configuration.location>
@@ -184,33 +217,41 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-scr-plugin</artifactId>
+
                 <executions>
                     <execution>
                         <id>generate-scr-scrdescriptor</id>
+
                         <goals>
                             <goal>scr</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
             </plugin>
+
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
+
                 <executions>
                     <!-- Copy bundle JARs -->
                     <execution>
                         <id>copy-connectorbundles</id>
                         <phase>generate-test-sources</phase>
+
                         <goals>
                             <goal>copy</goal>
                         </goals>
+
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
@@ -218,30 +259,37 @@
                                     <artifactId>xml-connector</artifactId>
                                     <version>${openicf.xmlconnector.version}</version>
                                 </artifactItem>
+
                                 <artifactItem>
                                     <groupId>org.forgerock.openicf.connectors</groupId>
                                     <artifactId>csvfile-connector</artifactId>
                                     <version>${openicf.csvconnector.version}</version>
                                 </artifactItem>
+
                                 <artifactItem>
                                     <groupId>org.forgerock.openicf.connectors</groupId>
                                     <artifactId>groovy-connector</artifactId>
                                     <version>${openicf.groovyconnector.version}</version>
                                 </artifactItem>
                             </artifactItems>
+
                             <outputDirectory>
                                 ${project.build.testOutputDirectory}/connectors
                             </outputDirectory>
+
                             <stripVersion>true</stripVersion>
                         </configuration>
                     </execution>
+
                     <!-- Unpack sample scripts -->
                     <execution>
                         <id>unpack-connector-samples</id>
                         <phase>generate-test-sources</phase>
+
                         <goals>
                             <goal>unpack</goal>
                         </goals>
+
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
@@ -252,12 +300,15 @@
                                     <type>zip</type>
                                 </artifactItem>
                             </artifactItems>
+
                             <outputDirectory>
                                 ${project.build.testOutputDirectory}/samples
                             </outputDirectory>
+
                             <outputAbsoluteArtifactFilename>true</outputAbsoluteArtifactFilename>
                         </configuration>
                     </execution>
+
                     <!--execution>
                         <id>copy-connectorServer</id>
                         <phase>generate-test-sources</phase>
@@ -271,11 +322,13 @@
                                     <artifactId>connector-framework</artifactId>
                                     <version>${openicf.framework.version}</version>
                                 </artifactItem>
+
                                 <artifactItem>
                                     <groupId>org.forgerock.openicf.framework</groupId>
                                     <artifactId>connector-framework-internal</artifactId>
                                     <version>${openicf.framework.version}</version>
                                 </artifactItem>
+
                                 <artifactItem>
                                     <groupId>org.codehaus.groovy</groupId>
                                     <artifactId>groovy-all</artifactId>
@@ -288,17 +341,21 @@
                     </execution-->
                 </executions>
             </plugin>
+
             <!-- Remote Connector Server Test -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <version>1.8</version>
+
                 <executions>
                     <execution>
                         <id>reserve-network-port</id>
+
                         <goals>
                             <goal>reserve-network-port</goal>
                         </goals>
+
                         <phase>process-resources</phase>
                         <configuration>
                             <portNames>

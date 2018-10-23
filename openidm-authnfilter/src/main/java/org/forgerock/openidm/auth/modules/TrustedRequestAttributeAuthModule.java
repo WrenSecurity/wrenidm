@@ -12,7 +12,9 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
+
 package org.forgerock.openidm.auth.modules;
 
 import static javax.security.auth.message.AuthStatus.*;
@@ -63,7 +65,6 @@ public class TrustedRequestAttributeAuthModule implements AsyncServerAuthModule 
      * @param responsePolicy {@inheritDoc}
      * @param handler {@inheritDoc}
      * @param options {@inheritDoc}
-     * @return {@inheritDoc}
      */
     @Override
     public void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler handler,

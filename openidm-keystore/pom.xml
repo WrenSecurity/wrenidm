@@ -13,25 +13,27 @@
  ~ information: "Portions copyright [year] [name of copyright owner]".
  ~
  ~ Copyright 2016 ForgeRock AS.
+ ~ Portions Copyright 2017-2018 Wren Security.
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>openidm-project</artifactId>
         <groupId>org.forgerock.openidm</groupId>
-        <version>5.5.0-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>openidm-keystore</artifactId>
     <packaging>bundle</packaging>
-    <name>OpenIDM Keystore</name>
-    <description>This bundle handles interaction and initialization of the OpenIDM keystores</description>
+    <name>Wren:IDM - Keystore</name>
+    <description>This bundle initializes and manages the keystore for sensitive credentials in Wren:IDM.</description>
 
     <dependencies>
         <dependency>
             <groupId>org.forgerock.commons</groupId>
             <artifactId>forgerock-util</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.commons</groupId>
             <artifactId>security</artifactId>
@@ -42,6 +44,7 @@
             <artifactId>openidm-system</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.forgerock.openidm</groupId>
             <artifactId>openidm-util</artifactId>
@@ -54,6 +57,7 @@
             <artifactId>osgi.core</artifactId>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.cmpn</artifactId>
@@ -72,14 +76,24 @@
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.forgerock.openidm</groupId>
+            <artifactId>openidm-system</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -88,6 +102,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-scr-plugin</artifactId>
+
                 <executions>
                     <execution>
                         <id>generate-scr-scrdescriptor</id>
@@ -97,10 +112,12 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
+
                 <configuration>
                     <instructions>
                         <Import-Package>sun.security.pkcs11;resolution:=optional,*</Import-Package>

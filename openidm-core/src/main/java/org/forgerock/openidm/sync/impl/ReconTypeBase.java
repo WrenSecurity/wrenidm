@@ -1,17 +1,20 @@
 /*
- * The contents of this file are subject to the terms of the Common Development and
- * Distribution License (the License). You may not use this file except in compliance with the
+ * The contents of this file are subject to the terms of the Common Development
+ * and Distribution License (the License). You may not use this file except in
+ * compliance with the License.
+ *
+ * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License
+ * for the specific language governing permission and limitations under the
  * License.
  *
- * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
- * specific language governing permission and limitations under the License.
+ * When distributing Covered Software, include this CDDL Header Notice in each
+ * file and include the License file at legal/CDDLv1.0.txt. If applicable, add
+ * the following below the CDDL Header, with the fields enclosed by brackets []
+ * replaced by your own identifying information:
+ * "Portions copyright [year] [name of copyright owner]".
  *
- * When distributing Covered Software, include this CDDL Header Notice in each file and include
- * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
- * Header, with the fields enclosed by brackets [] replaced by your own identifying
- * information: "Portions copyright [year] [name of copyright owner]".
- *
- * Portions copyright 2014-2015 ForgeRock AS.
+ * Copyright 2014-2015 ForgeRock AS.
+ * Portions Copyright 2018 Wren Security.
  */
 package org.forgerock.openidm.sync.impl;
 
@@ -85,7 +88,7 @@ public abstract class ReconTypeBase implements ReconTypeHandler {
     /**
      * A constructor.
      * 
-     * @param reconContext a {@link RconciliationContext} object.
+     * @param reconContext a {@link ReconciliationContext} object.
      * @param defaultRunTargetPhase a boolean indicating if target phase should be run.
      */
     public ReconTypeBase(ReconciliationContext reconContext, boolean defaultRunTargetPhase) {
@@ -194,19 +197,33 @@ public abstract class ReconTypeBase implements ReconTypeHandler {
     }
 
     /**
-     * Execute the specified query
+     * Execute the specified query.
      *
-     * @param objectSet the object set to query
-     * @param query the query parameters
-     * @param collectionToPopulate the collection to populate with results
-     * @param caseSensitive whether the collection should be populated in case
-     * sensitive fashion, or if false it populates as lower case only
-     * @param pageSize the page size if paging
-     * @param pagingCookie the cookie to use if paging, null if first page
-     * @param reconContext the {@link RconciliationContext} object associated with this recon
-     * @param querySide an indicator for which side of a reconciliation (source or target) a query is for
-     * @return a {@link ReconQueryResult} containing the collection of (unqualified) ids
-     * @throws SynchronizationException if retrieving or processing the ids failed
+     * @param   objectSet
+     *          The object set to query.
+     * @param   query
+     *          The query parameters.
+     * @param   collectionToPopulate
+     *          The collection to populate with results.
+     * @param   caseSensitive
+     *          Whether the collection should be populated in case-sensitive
+     *          fashion; or, {@code false} it populates as lower case only.
+     * @param   pageSize
+     *          The page size if paging.
+     * @param   pagingCookie
+     *          The cookie to use if paging; {@code null} for the first page.
+     * @param   reconContext
+     *          The {@link ReconciliationContext} object associated with this
+     *          recon.
+     * @param   querySide
+     *          An indicator for which side of a reconciliation (source or
+     *          target) a query is for.
+     *
+     * @return  A {@link ReconQueryResult} containing the collection of
+     *          (unqualified) ids.
+     *
+     * @throws  SynchronizationException
+     *          If retrieving or processing the ids failed
      */
     protected ReconQueryResult query(final String objectSet, final JsonValue query, final ReconciliationContext reconContext, 
             final Collection<String> collectionToPopulate, final boolean caseSensitive, final QuerySide querySide,
@@ -309,21 +326,12 @@ public abstract class ReconTypeBase implements ReconTypeHandler {
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public abstract ReconQueryResult querySource(int pageSize, String pagingCookie) throws SynchronizationException;
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public abstract ResultIterable queryTarget() throws SynchronizationException;
 
-    /**
-     * @inheritDoc
-     */
     @Override
     public abstract JsonValue getReconParameters();
 }

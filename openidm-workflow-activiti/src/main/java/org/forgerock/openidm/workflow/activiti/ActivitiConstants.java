@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2013-2015 ForgeRock AS.
+ * Portions Copyright 2017 Wren Security
  */
 
 package org.forgerock.openidm.workflow.activiti;
@@ -98,5 +99,9 @@ public class ActivitiConstants {
     public static final String ACTIVITI_UNFINISHED = "unfinished";
     public static final String ACTIVITI_PROCESSFINISHED = "processFinished";
     public static final String ACTIVITI_PROCESSUNFINISHED = "processUnfinished";
+    public static final String ACTIVITI_STARTED_AFTER = "startedAfter";
+    public static final String ACTIVITI_STARTED_BEFORE = "startedBefore";
+    public static final String ACTIVITI_FINISHED_AFTER = "finishedAfter";
+    public static final String ACTIVITI_FINISHED_BEFORE = "finishedBefore";
     public static final JsonPointer ACTIVITI_DIAGRAM = new JsonPointer("/diagram");
 }
