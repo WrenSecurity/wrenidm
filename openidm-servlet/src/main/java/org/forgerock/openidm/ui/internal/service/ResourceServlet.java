@@ -194,8 +194,10 @@ public final class ResourceServlet extends HttpServlet {
      * Clears the servlet, unregistering it with the WebContainer and removing the bundle listener.
      */
     private void clear() {
-        webContainer.unregister(contextRoot);
-        logger.debug("Unregistered UI servlet at {}", contextRoot);
+        if (contextRoot != null) {
+            webContainer.unregister(contextRoot);
+            logger.debug("Unregistered UI servlet at {}", contextRoot);
+        }
     }
     
     private void handle(HttpServletRequest req, HttpServletResponse res, URL url, String resName)
