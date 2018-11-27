@@ -48,8 +48,8 @@ public class SystemPropertyAccessorTest {
         assertThat(testable.getProperty("pirospaprika", "voroshagyma", null)).isEqualTo("voroshagyma");
         assertThat(testable.getProperty("pirospaprika", "voroshagyma", Object.class)).isEqualTo("voroshagyma");
         verifyZeroInteractions(delegate);
-        assertThat(testable.getProperty(null, null, null)).isNull();
-        verify(delegate, times(1)).getProperty(null, null, null);
+        assertThat(testable.getProperty(null, null, Object.class)).isNull();
+        verify(delegate, times(1)).getProperty(null, null, Object.class);
         assertThat(testable.getProperty("testable", 1, null)).isNull();
         verify(delegate, times(1)).getProperty("testable", 1, null);
         assertThat(testable.getProperty("testable", null, Integer.class)).isNull();

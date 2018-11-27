@@ -17,17 +17,20 @@ package org.forgerock.openidm.felix.webconsole;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.forgerock.json.JsonValue.json;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Hashtable;
 
 import org.forgerock.http.util.Json;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.config.enhanced.JSONEnhancedConfig;
 import org.forgerock.openidm.crypto.CryptoService;
+import org.mockito.ArgumentMatchers;
 import org.osgi.service.component.ComponentContext;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -49,7 +52,7 @@ public class WebConsoleSecurityProviderServiceTest {
      * </pre>
      * @return
      */
-    @DataProvider
+    @DataProvider(name = "credentialsData")
     public Object[][] credentials() {
         return new Object[][] {
                 { CORRECT_USERNAME, INCORRECT_PASSWORD, false },
@@ -58,13 +61,12 @@ public class WebConsoleSecurityProviderServiceTest {
         };
     }
 
-
-    @Test
-    public void testAuthenticateWithValidCredentials(final String username, final String password, final boolean valid)
+    @Test(dataProvider = "credentialsData")
+    public void testAuthenticateWithCredentials(String username, String password, boolean valid)
             throws IOException {
         // given
         final WebConsoleSecurityProviderService webConsoleSecurityProviderService =
-                createWebConsoleSecurityProviderService(password);
+                createWebConsoleSecurityProviderService(CORRECT_PASSWORD);
 
         // when
         final Object user = webConsoleSecurityProviderService.authenticate(username, password);
@@ -83,13 +85,14 @@ public class WebConsoleSecurityProviderServiceTest {
                 new WebConsoleSecurityProviderService();
         final JSONEnhancedConfig jsonEnhancedConfig = mock(JSONEnhancedConfig.class);
         final CryptoService cryptoService = mock(CryptoService.class);
+        ComponentContext context = mock(ComponentContext.class);
         when(cryptoService.decryptIfNecessary(any(JsonValue.class))).thenReturn(json(password));
+        when(context.getProperties()).thenReturn(new Hashtable<String, Object>());
+        when(jsonEnhancedConfig.getConfiguration(ArgumentMatchers.<Hashtable<String, Object>>any(), ArgumentMatchers.<String>any(), anyBoolean()))
+                .thenReturn(getConfiguration(FELIX_WEBCONSOLE_JSON_CONFIG));
         webConsoleSecurityProviderService.bindCryptoService(cryptoService);
         webConsoleSecurityProviderService.bindEnhancedConfig(jsonEnhancedConfig);
-
-        when(jsonEnhancedConfig.getConfigurationAsJson(any(ComponentContext.class)))
-                .thenReturn(getConfiguration(FELIX_WEBCONSOLE_JSON_CONFIG));
-        webConsoleSecurityProviderService.activate(mock(ComponentContext.class));
+        webConsoleSecurityProviderService.activate(context);
         return webConsoleSecurityProviderService;
     }
 

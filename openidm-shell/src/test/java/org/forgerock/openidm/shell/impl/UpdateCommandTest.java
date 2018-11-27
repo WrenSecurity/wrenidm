@@ -16,10 +16,37 @@
 package org.forgerock.openidm.shell.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.forgerock.json.JsonValue.*;
-import static org.forgerock.openidm.shell.impl.UpdateCommand.*;
-import static org.forgerock.openidm.shell.impl.UpdateCommand.UpdateStep.*;
-import static org.mockito.Mockito.*;
+import static org.forgerock.json.JsonValue.array;
+import static org.forgerock.json.JsonValue.field;
+import static org.forgerock.json.JsonValue.json;
+import static org.forgerock.json.JsonValue.object;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.MAINTENANCE_ACTION_DISABLE;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.MAINTENANCE_ACTION_ENABLE;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.MAINTENANCE_ROUTE;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.SCHEDULER_ACTION_LIST_JOBS;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.SCHEDULER_ACTION_PAUSE;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.SCHEDULER_ACTION_RESUME_JOBS;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.SCHEDULER_JOB_ROUTE;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.UPDATE_ACTION_AVAIL;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.UPDATE_ACTION_GET_LICENSE;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.UPDATE_ACTION_UPDATE;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.UPDATE_LOG_ROUTE;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.UPDATE_ROUTE;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.UPDATE_STATUS_COMPLETE;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.UPDATE_STATUS_FAILED;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.UpdateStep.ENABLE_SCHEDULER;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.UpdateStep.ENTER_MAINTENANCE_MODE;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.UpdateStep.FORCE_RESTART;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.UpdateStep.INSTALL_ARCHIVE;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.UpdateStep.MARK_REPO_UPDATES_COMPLETE;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.UpdateStep.PAUSING_SCHEDULER;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.UpdateStep.PREVIEW_ARCHIVE;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.UpdateStep.WAIT_FOR_INSTALL_DONE;
+import static org.forgerock.openidm.shell.impl.UpdateCommand.UpdateStep.WAIT_FOR_JOBS_TO_COMPLETE;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.apache.felix.service.command.CommandSession;
 import org.forgerock.json.JsonValue;
@@ -607,7 +634,7 @@ public class UpdateCommandTest {
 
     }
 
-    private static class IsActionMatcher extends ArgumentMatcher<ActionRequest> {
+    private static class IsActionMatcher implements ArgumentMatcher<ActionRequest> {
 
         private final String route;
         private final String action;
@@ -618,7 +645,7 @@ public class UpdateCommandTest {
         }
 
         @Override
-        public boolean matches(Object actionToMatch) {
+        public boolean matches(ActionRequest actionToMatch) {
             if (null == actionToMatch) {
                 return false;
             }
@@ -627,7 +654,7 @@ public class UpdateCommandTest {
         }
     }
 
-    private static class IsRouteMatcher extends ArgumentMatcher<ReadRequest> {
+    private static class IsRouteMatcher implements ArgumentMatcher<ReadRequest> {
         private final String route;
 
         public IsRouteMatcher(String route) {
@@ -635,7 +662,7 @@ public class UpdateCommandTest {
         }
 
         @Override
-        public boolean matches(Object requestToMatch) {
+        public boolean matches(ReadRequest requestToMatch) {
             return (null != requestToMatch && ((ReadRequest) requestToMatch).getResourcePath().startsWith(route));
         }
     }

@@ -16,12 +16,18 @@
 package org.forgerock.openidm.messaging;
 
 import static org.forgerock.json.JsonValue.json;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.anyBoolean;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.matches;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.matches;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Hashtable;
+import java.util.Map;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -34,21 +40,21 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
-import java.util.Hashtable;
-import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.config.enhanced.JSONEnhancedConfig;
 import org.forgerock.script.Script;
 import org.forgerock.script.ScriptEntry;
 import org.forgerock.script.ScriptRegistry;
 import org.forgerock.services.context.Context;
+import org.mockito.ArgumentMatchers;
 import org.osgi.service.component.ComponentContext;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Tests that the MessagingService can be activated with a its config file and that a mocked JMS connection
@@ -76,7 +82,7 @@ public class MessagingServiceTest {
         final Connection connection = mock(Connection.class);
         Session session = mock(Session.class);
         final MessageConsumer messageConsumer = new MockedMessageConsumer();
-        when(session.createConsumer(any(Destination.class), anyString())).thenReturn(messageConsumer);
+        when(session.createConsumer(any(Destination.class), ArgumentMatchers.<String>any())).thenReturn(messageConsumer);
         when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
         when(connectionFactory.createConnection()).thenReturn(connection);
 

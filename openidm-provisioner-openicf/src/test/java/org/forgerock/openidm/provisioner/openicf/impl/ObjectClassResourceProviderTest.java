@@ -16,10 +16,12 @@
 package org.forgerock.openidm.provisioner.openicf.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.forgerock.json.JsonValue.*;
-import static org.forgerock.util.test.assertj.AssertJPromiseAssert.assertThat;
+import static org.forgerock.json.JsonValue.field;
+import static org.forgerock.json.JsonValue.json;
+import static org.forgerock.json.JsonValue.object;
+import static org.forgerock.util.test.assertj.AssertJPromiseAssert.assertThatPromise;
 import static org.identityconnectors.framework.common.objects.ObjectClass.GROUP_NAME;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -31,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.Requests;
 import org.forgerock.json.resource.ResourceException;
@@ -50,6 +51,8 @@ import org.identityconnectors.framework.common.objects.ObjectClass;
 import org.identityconnectors.framework.common.objects.OperationOptions;
 import org.identityconnectors.framework.common.objects.Uid;
 import org.testng.annotations.Test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Tests the {@link ObjectClassResourceProvider} class.
@@ -91,7 +94,7 @@ public class ObjectClassResourceProviderTest {
                         createHttpContext("PUT", httpHeaders),
                         Requests.newCreateRequest("", "fakeId", json(object())));
         // then
-        assertThat(upsertPromise)
+        assertThatPromise(upsertPromise)
                 .isNotNull()
                 .failedWithException()
                 .hasCauseInstanceOf(UnsupportedOperationException.class)
@@ -103,7 +106,7 @@ public class ObjectClassResourceProviderTest {
                 createHttpContext("PUT", httpHeaders),
                 Requests.newCreateRequest("", "fakeId", json(object())));
         // then
-        assertThat(upsertPromise)
+        assertThatPromise(upsertPromise)
                 .isNotNull()
                 .failedWithException()
                 .hasCauseInstanceOf(UnsupportedOperationException.class)
@@ -113,7 +116,7 @@ public class ObjectClassResourceProviderTest {
         Promise<ResourceResponse, ResourceException> createPromise = resourceProvider.handleCreate(new RootContext(),
                 Requests.newCreateRequest("", "fakeId", json(object())));
         // then
-        assertThat(createPromise)
+        assertThatPromise(createPromise)
                 .isNotNull()
                 .failedWithException()
                 .hasCauseInstanceOf(UnsupportedOperationException.class)

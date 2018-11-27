@@ -15,15 +15,21 @@
  */
 package org.forgerock.openidm.managed;
 
-import static org.forgerock.json.JsonValue.*;
+import static org.forgerock.json.JsonValue.array;
+import static org.forgerock.json.JsonValue.field;
+import static org.forgerock.json.JsonValue.json;
+import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.resource.Responses.newResourceResponse;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.Connection;
 import org.forgerock.json.resource.ConnectionFactory;
-import org.forgerock.json.resource.PreconditionFailedException;
 import org.forgerock.json.resource.ReadRequest;
 import org.forgerock.json.resource.ResourcePath;
 import org.forgerock.openidm.audit.util.ActivityLogger;
@@ -32,7 +38,6 @@ import org.forgerock.services.context.Context;
 import org.forgerock.services.context.RootContext;
 import org.mockito.ArgumentMatcher;
 import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
 
 public class CollectionRelationshipProviderTest {
     private static final ResourcePath REFERRING_OBJECT_ID = new ResourcePath("managed/user/foo");
@@ -147,7 +152,8 @@ public class CollectionRelationshipProviderTest {
         }
     }
 
-    private static class IsRouteMatcher extends ArgumentMatcher<ReadRequest> {
+    private static class IsRouteMatcher implements ArgumentMatcher<ReadRequest> {
+
         private final String route;
 
         public IsRouteMatcher(String route) {
@@ -155,7 +161,7 @@ public class CollectionRelationshipProviderTest {
         }
 
         @Override
-        public boolean matches(Object requestToMatch) {
+        public boolean matches(ReadRequest requestToMatch) {
             return (null != requestToMatch && ((ReadRequest) requestToMatch).getResourcePath().startsWith(route));
         }
     }

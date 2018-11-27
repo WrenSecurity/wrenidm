@@ -40,6 +40,7 @@ import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.ReferenceCardinality;
 import org.apache.felix.scr.annotations.ReferencePolicy;
+import org.forgerock.guava.common.base.Optional;
 import org.forgerock.guava.common.collect.FluentIterable;
 import org.forgerock.http.Client;
 import org.forgerock.http.HttpApplicationException;
@@ -49,17 +50,18 @@ import org.forgerock.http.spi.Loader;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.jose.jws.SigningManager;
 import org.forgerock.json.jose.jws.handlers.SigningHandler;
+import org.forgerock.json.jose.tokenhandler.JwtTokenHandler;
 import org.forgerock.json.resource.ConnectionFactory;
 import org.forgerock.json.resource.RequestHandler;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.ServerConstants;
-import org.forgerock.openidm.keystore.SharedKeyService;
 import org.forgerock.openidm.idp.impl.IdentityProviderListener;
 import org.forgerock.openidm.idp.impl.IdentityProviderService;
 import org.forgerock.openidm.idp.impl.IdentityProviderServiceException;
 import org.forgerock.openidm.idp.impl.ProviderConfigMapper;
+import org.forgerock.openidm.keystore.SharedKeyService;
 import org.forgerock.openidm.osgi.ComponentContextUtil;
 import org.forgerock.openidm.selfservice.stage.SocialUserDetailsConfig;
 import org.forgerock.selfservice.core.ProcessStore;
@@ -68,11 +70,10 @@ import org.forgerock.selfservice.core.ProgressStageProvider;
 import org.forgerock.selfservice.core.config.StageConfig;
 import org.forgerock.selfservice.core.config.StageConfigException;
 import org.forgerock.selfservice.core.snapshot.SnapshotTokenConfig;
-import org.forgerock.selfservice.core.snapshot.SnapshotTokenHandler;
 import org.forgerock.selfservice.core.snapshot.SnapshotTokenHandlerFactory;
 import org.forgerock.selfservice.json.JsonAnonymousProcessServiceBuilder;
-import org.forgerock.selfservice.stages.tokenhandlers.JwtTokenHandler;
 import org.forgerock.selfservice.stages.tokenhandlers.JwtTokenHandlerConfig;
+import org.forgerock.tokenhandler.TokenHandler;
 import org.forgerock.util.Options;
 import org.forgerock.util.encode.Base64;
 import org.osgi.framework.ServiceRegistration;
@@ -283,7 +284,7 @@ public class SelfService implements IdentityProviderListener {
     private SnapshotTokenHandlerFactory newTokenHandlerFactory() {
         return new SnapshotTokenHandlerFactory() {
             @Override
-            public SnapshotTokenHandler get(SnapshotTokenConfig snapshotTokenConfig) {
+            public TokenHandler get(SnapshotTokenConfig snapshotTokenConfig) {
                 switch (snapshotTokenConfig.getType()) {
                     case JwtTokenHandlerConfig.TYPE:
                         return createJwtTokenHandler((JwtTokenHandlerConfig) snapshotTokenConfig);
@@ -307,7 +308,7 @@ public class SelfService implements IdentityProviderListener {
                     sharedKeyService.getKeyPair(SELF_SERVICE_CERT_ALIAS),
                     jwtTokenHandlerConfig.getJwsAlgorithm(),
                     signingHandler,
-                    jwtTokenHandlerConfig.getTokenLifeTimeInSeconds());
+                    Optional.of(jwtTokenHandlerConfig.getTokenLifeTimeInSeconds()));
         } catch (Exception e) {
             throw new RuntimeException("Unable to read selfservice shared key or create key pair for encryption", e);
         }

@@ -20,7 +20,7 @@ import static org.forgerock.json.JsonValue.*;
 import static org.forgerock.json.resource.Requests.newActionRequest;
 import static org.forgerock.json.resource.Requests.newReadRequest;
 import static org.forgerock.openidm.auth.AuthenticationService.Action;
-import static org.forgerock.util.test.assertj.AssertJPromiseAssert.assertThat;
+import static org.forgerock.util.test.assertj.AssertJPromiseAssert.assertThatPromise;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -244,7 +244,7 @@ public class AuthenticationServiceTest {
         AttributesContext context = new AttributesContext(new RootContext());
         Promise<ActionResponse, ResourceException> promise =
                 authenticationService.actionInstance(context, newActionRequest("", Action.logout.name()));
-        assertThat(promise).succeeded();
+        assertThatPromise(promise).succeeded();
         assertThat(promise.get().getJsonContent().get("success").asBoolean()).isTrue();
         assertThat(context.getAttributes()).containsEntry(JwtSessionModule.LOGOUT_SESSION_REQUEST_ATTRIBUTE_NAME, true);
     }

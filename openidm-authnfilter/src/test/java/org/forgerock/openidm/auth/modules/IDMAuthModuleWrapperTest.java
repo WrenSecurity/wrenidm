@@ -17,12 +17,20 @@
 package org.forgerock.openidm.auth.modules;
 
 import static org.forgerock.caf.authentication.framework.AuthenticationFramework.ATTRIBUTE_AUTH_CONTEXT;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMapOf;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
+import java.net.URI;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.security.auth.Subject;
@@ -30,7 +38,6 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.message.AuthException;
 import javax.security.auth.message.AuthStatus;
 import javax.security.auth.message.MessagePolicy;
-import java.net.URI;
 
 import org.forgerock.caf.authentication.api.AsyncServerAuthModule;
 import org.forgerock.caf.authentication.api.AuthenticationException;
@@ -44,7 +51,7 @@ import org.forgerock.script.ScriptRegistry;
 import org.forgerock.services.context.ClientContext;
 import org.forgerock.services.context.RootContext;
 import org.forgerock.util.promise.Promises;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -71,8 +78,9 @@ public class IDMAuthModuleWrapperTest {
             authModule.initialize(any(MessagePolicy.class), any(MessagePolicy.class), any(CallbackHandler.class),
                     anyMapOf(String.class, Object.class));
             roleCalculatorFactory = mock(RoleCalculatorFactory.class);
-            when(roleCalculatorFactory.create(anyList(), anyString(), anyString(), anyMap(), Matchers.<MappingRoleCalculator.GroupComparison>anyObject()))
-                    .thenReturn(mock(RoleCalculator.class));
+            when(roleCalculatorFactory.create(ArgumentMatchers.<String>anyList(), ArgumentMatchers.<String>any(), ArgumentMatchers.<String>any(),
+                    ArgumentMatchers.<String, List<String>>anyMap(),
+                    ArgumentMatchers.<MappingRoleCalculator.GroupComparison>any())).thenReturn(mock(RoleCalculator.class));
             scriptExecutor = mock(AugmentationScriptExecutor.class);
             options.put("queryOnResource", "foo/user");
         } catch (Exception e) {
@@ -290,7 +298,7 @@ public class IDMAuthModuleWrapperTest {
         Request request = new Request();
         given(messageInfo.getRequest()).willReturn(request);
 
-        given(authModule.secureResponse(Matchers.<MessageInfoContext>anyObject(), Matchers.<Subject>anyObject()))
+        given(authModule.secureResponse(ArgumentMatchers.<MessageInfoContext>anyObject(), ArgumentMatchers.<Subject>anyObject()))
                 .willReturn(Promises.<AuthStatus, AuthenticationException>newResultPromise(AuthStatus.SEND_SUCCESS));
 
         //When
@@ -317,7 +325,7 @@ public class IDMAuthModuleWrapperTest {
 
         Request request = new Request();
 
-        given(authModule.secureResponse(Matchers.<MessageInfoContext>anyObject(), Matchers.<Subject>anyObject()))
+        given(authModule.secureResponse(ArgumentMatchers.<MessageInfoContext>anyObject(), ArgumentMatchers.<Subject>anyObject()))
                 .willReturn(Promises.<AuthStatus, AuthenticationException>newResultPromise(AuthStatus.SUCCESS));
         given(messageInfo.getRequest()).willReturn(request);
         request.getHeaders().put("X-OpenIDM-NoSession", "true");
@@ -349,7 +357,7 @@ public class IDMAuthModuleWrapperTest {
 
         Request request = new Request();
 
-        given(authModule.secureResponse(Matchers.<MessageInfoContext>anyObject(), Matchers.<Subject>anyObject()))
+        given(authModule.secureResponse(ArgumentMatchers.<MessageInfoContext>anyObject(), ArgumentMatchers.<Subject>anyObject()))
                 .willReturn(Promises.<AuthStatus, AuthenticationException>newResultPromise(AuthStatus.SUCCESS));
         given(messageInfo.getRequest()).willReturn(request);
         request.getHeaders().put("X-OpenIDM-NoSession", null);

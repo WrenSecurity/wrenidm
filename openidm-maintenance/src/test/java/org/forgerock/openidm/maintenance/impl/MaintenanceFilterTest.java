@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.forgerock.json.JsonValue.*;
 import static org.forgerock.json.resource.Requests.newCreateRequest;
 import static org.forgerock.json.resource.Requests.newReadRequest;
-import static org.forgerock.util.test.assertj.AssertJPromiseAssert.assertThat;
+import static org.forgerock.util.test.assertj.AssertJPromiseAssert.assertThatPromise;
 
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.CreateRequest;
@@ -93,10 +93,10 @@ public class MaintenanceFilterTest {
         final CreateRequest request = newCreateRequest(resourcePath, object);
         final Promise<ResourceResponse, ResourceException> promise = filter.filterCreate(context, request, handler);
         if (passRequest) {
-            assertThat(promise).succeeded();
+            assertThatPromise(promise).succeeded();
             assertThat(handler.getRequests()).containsExactly(request);
         } else {
-            assertThat(promise).failedWithException().isInstanceOf(ServiceUnavailableException.class);
+            assertThatPromise(promise).failedWithException().isInstanceOf(ServiceUnavailableException.class);
             assertThat(handler.getRequests()).isEmpty();
         }
     }
@@ -127,7 +127,7 @@ public class MaintenanceFilterTest {
         // first create an object
         final CreateRequest create = newCreateRequest(resourcePath, "1", object);
         Promise<ResourceResponse, ResourceException> promise = filter.filterCreate(root, create, handler);
-        assertThat(promise).succeeded();
+        assertThatPromise(promise).succeeded();
         assertThat(handler.getRequests()).containsExactly(create);
 
         handler.addResource(promise.get());
@@ -136,7 +136,7 @@ public class MaintenanceFilterTest {
         // perform the read
         final ReadRequest request = newReadRequest(resourcePath, "1");
         promise = filter.filterRead(root, request, handler);
-        assertThat(promise).succeeded();
+        assertThatPromise(promise).succeeded();
         assertThat(handler.getRequests()).containsExactly(create, request);
     }
 }
