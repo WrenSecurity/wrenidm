@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions copyright 2018 Wren Security
  */
 
 define([
@@ -241,10 +242,6 @@ define([
                                     "title": "Boolean",
                                     "type": "string",
                                     "displayType" : "Boolean",
-                                    "format": "hidden"
-                                }, {
-                                    "title": "Integer",
-                                    "type": "string",
                                     "format": "hidden"
                                 }, {
                                     "title": "Number",
@@ -685,7 +682,6 @@ define([
             // Copy over advanced properties
             switch (property.type) {
                 case "boolean":
-                case "integer":
                 case "number":
                     if (forArray) {
                         tempProperty.itemType = {

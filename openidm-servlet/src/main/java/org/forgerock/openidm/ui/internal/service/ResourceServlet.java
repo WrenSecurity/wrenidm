@@ -55,6 +55,7 @@ import org.slf4j.LoggerFactory;
  * Based on apache felix org/apache/felix/http/base/internal/service/ResourceServlet.java
  *
  * Changes and additions by
+ * Portions copyright 2017 Wren Security
  */
 @Component(name = "org.forgerock.openidm.ui.context", 
         immediate = true,
@@ -194,8 +195,10 @@ public final class ResourceServlet extends HttpServlet {
      * Clears the servlet, unregistering it with the WebContainer and removing the bundle listener.
      */
     private void clear() {
-        webContainer.unregister(contextRoot);
-        logger.debug("Unregistered UI servlet at {}", contextRoot);
+        if (contextRoot != null) {
+            webContainer.unregister(contextRoot);
+            logger.debug("Unregistered UI servlet at {}", contextRoot);
+        }
     }
     
     private void handle(HttpServletRequest req, HttpServletResponse res, URL url, String resName)
