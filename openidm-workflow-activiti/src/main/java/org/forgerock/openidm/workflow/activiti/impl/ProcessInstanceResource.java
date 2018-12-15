@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.activiti.bpmn.model.BpmnModel;
@@ -37,6 +38,7 @@ import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
+import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.bpmn.diagram.ProcessDiagramGenerator;
 import org.activiti.engine.impl.identity.Authentication;
@@ -214,6 +216,7 @@ public class ProcessInstanceResource implements CollectionResourceProvider {
                     JsonValue value = json(mapper.convertValue(i, Map.class));
                     // TODO OPENIDM-3603 add relationship support
                     value.put(ActivitiConstants.ACTIVITI_PROCESSDEFINITIONRESOURCENAME, getProcessDefName(i));
+                    value.put(ActivitiConstants.ACTIVITI_PROCESSVARIABLES, getProcessVariables(i.getId()));
                     ResourceResponse r = newResourceResponse(i.getId(), null, value);
                     handler.handleResource(r);
                 }
@@ -225,6 +228,7 @@ public class ProcessInstanceResource implements CollectionResourceProvider {
                     JsonValue value = json(mapper.convertValue(processinstance, Map.class));
                     // TODO OPENIDM-3603 add relationship support
                     value.put(ActivitiConstants.ACTIVITI_PROCESSDEFINITIONRESOURCENAME, getProcessDefName(processinstance));
+                    value.put(ActivitiConstants.ACTIVITI_PROCESSVARIABLES, getProcessVariables(processinstance.getId()));
                     handler.handleResource(newResourceResponse(processinstance.getId(), null, value));
                 }
                 return newQueryResponse().asPromise();
@@ -250,7 +254,7 @@ public class ProcessInstanceResource implements CollectionResourceProvider {
                 // TODO OPENIDM-3603 add relationship support
                 content.put(ActivitiConstants.ACTIVITI_PROCESSDEFINITIONRESOURCENAME, getProcessDefName(instance));
                 content.put("tasks", getTasksForProcess(instance.getId()).getObject());
-
+                content.put(ActivitiConstants.ACTIVITI_PROCESSVARIABLES, getProcessVariables(instance.getId()));
                 // diagram support
                 if (request.getFields().contains(ActivitiConstants.ACTIVITI_DIAGRAM)) {
                     final RuntimeService runtimeService = processEngine.getRuntimeService();
@@ -426,6 +430,26 @@ public class ProcessInstanceResource implements CollectionResourceProvider {
             logger.warn("Parsing of date string '" + value + "' failed.", e);
         }
         return null;
+    }
+
+    /**
+     * Get map with process variables for process instance with specified identifier.
+     * {@link ActivitiConstants#OPENIDM_CONTEXT} will not be returned.
+     * @param id Process instance identifier to get variables to. Never null.
+     * @return Map with process variables. Never null.
+     */
+    private Map<String, Object> getProcessVariables(String id) {
+        Map<String, Object> result = new HashMap<>();
+        // Resolve process variables for process instance with specified ID
+        List<HistoricVariableInstance> variables = processEngine.getHistoryService().
+                createHistoricVariableInstanceQuery().processInstanceId(id).list();
+        for (HistoricVariableInstance variable : variables) {
+            String name = variable.getVariableName();
+            if (!ActivitiConstants.OPENIDM_CONTEXT.equals(name)) {  // Remove useless OPENIDM_CONTEXT
+                result.put(name, variable.getValue());
+            }
+        }
+        return result;
     }
 
     /**
