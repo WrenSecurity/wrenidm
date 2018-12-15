@@ -14,7 +14,7 @@ define([
                 ]
             },
             "prop3": {
-                "type": "integer"
+                "type": "boolean"
             },
             "prop4": {
                 "type": [
@@ -32,7 +32,7 @@ define([
                 "nullable": true
             },
             "prop3": {
-                "type": "integer"
+                "type": "boolean"
             },
             "prop4": {
                 "type": "object",
