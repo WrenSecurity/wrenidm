@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2016 ForgeRock AS.
+ * Portions Copyright 2017 Wren Security
  */
 package org.forgerock.openidm.workflow.activiti.impl;
 
@@ -110,7 +111,7 @@ public class TaskInstanceResource implements CollectionResourceProvider {
                 if ("claim".equals(request.getAction())) {
                     taskService.claim(resourceId, request.getContent().expect(Map.class).asMap().get("userId").toString());
                 } else if ("complete".equals(request.getAction())) {
-                    taskService.complete(resourceId, request.getContent().expect(Map.class).asMap());
+                    taskService.complete(resourceId, request.getContent().expect(Map.class).asMap(), true);
                 } else {
                     return new BadRequestException("Unknown action").asPromise();
                 }
