@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2015 ForgeRock AS.
+ * Portions copyright 2017 Wren Security
  */
 package org.forgerock.openidm.workflow.activiti.impl;
 
@@ -31,8 +32,10 @@ import org.activiti.engine.impl.bpmn.parser.FieldDeclaration;
 import org.activiti.engine.impl.context.Context;
 import org.activiti.engine.impl.el.Expression;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
+import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.impl.pvm.delegate.ActivityBehavior;
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.impl.scripting.Resolver;
 import org.activiti.engine.impl.scripting.ResolverFactory;
 import org.forgerock.json.JsonValue;
@@ -89,18 +92,23 @@ public class OpenIDMResolverFactory implements ResolverFactory {
 
         try {
             if (variableScope instanceof ExecutionEntity) {
-                ActivityBehavior activityBehavior = ((ExecutionEntity) variableScope).getActivity().getActivityBehavior();
-                //Called from ScriptTask
-                if (activityBehavior instanceof ScriptTaskActivityBehavior) {
-                    behaviour = (ScriptTaskActivityBehavior) activityBehavior;
-                    Class<?> cls = Class.forName("org.activiti.engine.impl.bpmn.behavior.ScriptTaskActivityBehavior");
+                ExecutionEntity execution = (ExecutionEntity) variableScope;
+                ActivityImpl activity = execution.getActivity();
+                // Called from ScriptTask
+                if (activity != null && activity.getActivityBehavior() instanceof ScriptTaskActivityBehavior) {
+                    Class cls = Class.forName("org.activiti.engine.impl.bpmn.behavior.ScriptTaskActivityBehavior");
                     Field languageField = cls.getDeclaredField("language");
                     languageField.setAccessible(true);
-                    language = (String) languageField.get(behaviour);
+                    language = (String) languageField.get((ScriptTaskActivityBehavior) activity.getActivityBehavior());
                 } else {
-                    //Called from ExecutionListener
-                    String eventName = ((ExecutionEntity) variableScope).getEventName();
-                    List<ExecutionListener> executionListeners = ((ExecutionEntity) variableScope).getActivity().getExecutionListeners(eventName);
+                    // Called from ExecutionListener
+                    String eventName = execution.getEventName();
+                    List<ExecutionListener> executionListeners = null;
+                    if (activity != null) {
+                        executionListeners = activity.getExecutionListeners(eventName);
+                    } else if (execution.getEventSource() instanceof ProcessDefinitionEntity) {
+                        executionListeners = ((ProcessDefinitionEntity) execution.getEventSource()).getExecutionListeners(eventName);
+                    }
                     for (ExecutionListener executionListener : executionListeners) {
                         if (executionListener instanceof ClassDelegate) {
                             String className = ((ClassDelegate) executionListener).getClassName();
@@ -146,7 +154,7 @@ public class OpenIDMResolverFactory implements ResolverFactory {
         bindings = script.getScriptBindings(context, null);
         return new OpenIDMResolver(bindings);
     }
-    
+
     /**
      * Processes a ClassDelegate, fetching the language field of it.
      * @param scope variable scope the function was called from
