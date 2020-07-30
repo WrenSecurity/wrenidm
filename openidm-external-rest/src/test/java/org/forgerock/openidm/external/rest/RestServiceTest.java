@@ -19,12 +19,21 @@ package org.forgerock.openidm.external.rest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.forgerock.http.protocol.Status.NOT_FOUND;
 import static org.forgerock.http.protocol.Status.OK;
-import static org.forgerock.json.JsonValue.*;
+import static org.forgerock.json.JsonValue.field;
+import static org.forgerock.json.JsonValue.json;
+import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.resource.test.assertj.AssertJResourceExceptionAssert.assertThat;
-import static org.forgerock.openidm.external.rest.RestService.*;
+import static org.forgerock.openidm.external.rest.RestService.ARG_AUTHENTICATE;
+import static org.forgerock.openidm.external.rest.RestService.ARG_BASE_64;
+import static org.forgerock.openidm.external.rest.RestService.ARG_BODY;
+import static org.forgerock.openidm.external.rest.RestService.ARG_CONTENT_TYPE;
+import static org.forgerock.openidm.external.rest.RestService.ARG_FORCE_WRAP;
+import static org.forgerock.openidm.external.rest.RestService.ARG_HEADERS;
+import static org.forgerock.openidm.external.rest.RestService.ARG_METHOD;
+import static org.forgerock.openidm.external.rest.RestService.ARG_URL;
 import static org.forgerock.util.promise.Promises.newResultPromise;
-import static org.forgerock.util.test.assertj.AssertJPromiseAssert.assertThat;
-import static org.mockito.Matchers.any;
+import static org.forgerock.util.test.assertj.AssertJPromiseAssert.assertThatPromise;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.fail;
@@ -33,7 +42,6 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Scanner;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.forgerock.guava.common.collect.ImmutableMap;
 import org.forgerock.guava.common.io.ByteStreams;
 import org.forgerock.http.Client;
@@ -51,6 +59,8 @@ import org.forgerock.util.promise.NeverThrowsException;
 import org.forgerock.util.promise.Promise;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class RestServiceTest {
 
@@ -195,7 +205,7 @@ public class RestServiceTest {
 
         // then
         if (expectedCode != null) {
-            assertThat(result).failedWithException();
+            assertThatPromise(result).failedWithException();
             try {
                 result.getOrThrow();
                 fail();

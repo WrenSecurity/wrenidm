@@ -27,9 +27,9 @@ import static org.forgerock.json.resource.Requests.newReadRequest;
 import static org.forgerock.json.resource.Requests.newUpdateRequest;
 import static org.forgerock.json.resource.Responses.newResourceResponse;
 import static org.forgerock.openidm.config.manage.ConfigObjectService.asConfigQueryFilter;
-import static org.forgerock.util.test.assertj.AssertJPromiseAssert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+import static org.forgerock.util.test.assertj.AssertJPromiseAssert.assertThatPromise;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.BadRequestException;
@@ -76,8 +77,8 @@ import org.forgerock.openidm.cluster.ClusterManagementService;
 import org.forgerock.openidm.config.crypto.ConfigCrypto;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
 import org.forgerock.openidm.config.enhanced.JSONEnhancedConfig;
-import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.core.IdentityServerTestUtils;
+import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.metadata.impl.ProviderListener;
 import org.forgerock.openidm.patch.PatchValueTransformer;
 import org.forgerock.openidm.patch.ScriptedPatchValueTransformer;
@@ -107,7 +108,7 @@ import org.testng.annotations.Test;
 public class ConfigObjectServiceTest {
 
     @SuppressWarnings("rawtypes")
-	private Dictionary<String, Object> properties = null;
+    private Dictionary<String, Object> properties = null;
     private ConfigObjectService configObjectService;
 
     private ResourcePath rname;
@@ -117,7 +118,7 @@ public class ConfigObjectServiceTest {
     private ClusterManagementService clusterManagementService;
 
     @SuppressWarnings("unchecked")
-	@BeforeTest
+    @BeforeTest
     public void beforeTest() throws Exception {
         IdentityServerTestUtils.initInstanceForTest();
 
@@ -192,21 +193,21 @@ public class ConfigObjectServiceTest {
         // Config fields
         String configField = "/field1";
         String nonConfigField = "/service__pid";
-        
+
         // QueryFilter Strings
         String queryString1 = configField + " eq \"value1\"";
         String queryString2 = "" + queryString1 + " and " + nonConfigField + " eq \"value2\"";
         String queryString3 = configField + " pr";
         String queryString4 = configField + " lt 1";
         String queryString5 = "true";
-        
+
         // QueryFilters
         QueryFilter<JsonPointer> filter1 = QueryFilters.parse(queryString1);
         QueryFilter<JsonPointer> filter2 = QueryFilters.parse(queryString2);
         QueryFilter<JsonPointer> filter3 = QueryFilters.parse(queryString3);
         QueryFilter<JsonPointer> filter4 = QueryFilters.parse(queryString4);
         QueryFilter<JsonPointer> filter5 = QueryFilters.parse(queryString5);
-        
+
         // Assertions
         assertEquals(asConfigQueryFilter(filter1).toString(), "/jsonconfig/field1 eq \"value1\"");
         assertEquals(asConfigQueryFilter(filter2).toString(),
@@ -215,10 +216,10 @@ public class ConfigObjectServiceTest {
         assertEquals(asConfigQueryFilter(filter4).toString(), "/jsonconfig/field1 lt 1");
         assertEquals(asConfigQueryFilter(filter5).toString(), "true");
     }
-    
+
     @Test(priority=2)
     public void testParsedResourceName() throws Exception {
-        
+
         try {
             configObjectService.getParsedId("");
             fail("Invalid id: ''");
@@ -259,7 +260,7 @@ public class ConfigObjectServiceTest {
     }
 
     @SuppressWarnings("rawtypes")
-	@Test(priority=3)
+    @Test(priority=3)
     public void testCreateNew() throws Exception {
         config.put("property1", "value1");
         config.put("property2", "value2");
@@ -296,7 +297,7 @@ public class ConfigObjectServiceTest {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-	@Test(priority=6)
+    @Test(priority=6)
     public void testUpdate() throws Exception {
         config.put("property1", "newvalue1");
         config.put("property2", "newvalue2");
@@ -377,7 +378,7 @@ public class ConfigObjectServiceTest {
 
         // then
         verify(clusterManagementService, times(2)).sendEvent(any(ClusterEvent.class));
-        assertThat(results).isNotNull().succeeded();
+        assertThatPromise(results).isNotNull().succeeded();
     }
 
 
@@ -431,7 +432,7 @@ public class ConfigObjectServiceTest {
     @SuppressWarnings("rawtypes")
     private class MockConfiguration implements Configuration {
         String pid = "pid";
-		Dictionary<String, Object> dictionary = null;
+        Dictionary<String, Object> dictionary = null;
         Boolean deleted = false;
 
         String bundleLocation = "root";

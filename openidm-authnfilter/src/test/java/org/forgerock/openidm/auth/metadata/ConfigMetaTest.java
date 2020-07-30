@@ -74,7 +74,7 @@ public class ConfigMetaTest {
         assertThat(clientSecretValues).containsExactlyInAnyOrder(clientSecrets);
     }
 
-    @Test
+    @Test(dataProvider = "authModuleConfigs")
     public void testGetPropertiesToEncryptWithUnsupportedPidOrFactory(String resource, String[] clientSecrets)
             throws IOException, WaitForMetaData {
 

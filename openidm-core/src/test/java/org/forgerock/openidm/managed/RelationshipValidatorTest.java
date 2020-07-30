@@ -19,12 +19,17 @@ import static org.forgerock.json.JsonValue.array;
 import static org.forgerock.json.JsonValue.field;
 import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
+
+import java.util.AbstractMap;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Random;
 
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.BadRequestException;
@@ -43,11 +48,6 @@ import org.forgerock.services.context.RootContext;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import java.util.AbstractMap;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Random;
 
 /**
  * Tests {@link RelationshipValidator} and its implementations.
@@ -178,13 +178,13 @@ public class RelationshipValidatorTest {
         relationshipProvider.relationshipValidator.checkForDuplicateRelationshipsInInvocationState(relationshipList);
     }
 
-    @DataProvider(name = "dulicateRelationshipData")
+    @DataProvider(name = "duplicateRelationshipData")
     public Object[][] createDuplicateRelationshipData() {
         return new Object[][] {
                 { "ref1", "grantType1", "temporalConstraint1", "ref1", "grantType1", "temporalConstraint1" },
                 { "ref1", null, null, "ref1", null, null },
                 { "ref1", "grantType1", null, "ref1", "grantType1", null },
-                { "ref1", null, "temporalConstraint1", "ref2", null, "temporalConstraint1" }
+                { "ref1", null, "temporalConstraint1", "ref1", null, "temporalConstraint1" }
         };
     }
 

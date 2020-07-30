@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.forgerock.json.resource.Requests.newQueryRequest;
 import static org.forgerock.json.resource.Requests.newReadRequest;
 import static org.forgerock.json.resource.Responses.newResourceResponse;
-import static org.forgerock.util.test.assertj.AssertJPromiseAssert.assertThat;
+import static org.forgerock.util.test.assertj.AssertJPromiseAssert.assertThatPromise;
 import static org.mockito.Mockito.mock;
 
 import org.forgerock.json.JsonPointer;
@@ -56,25 +56,25 @@ public class UpdateLogServiceImplTest {
 
     @Test
     public void actionIsNotSupported() {
-        assertThat(updateLogService.handleAction(mock(Context.class), mock(ActionRequest.class)))
+        assertThatPromise(updateLogService.handleAction(mock(Context.class), mock(ActionRequest.class)))
                 .failedWithException().isInstanceOf(NotSupportedException.class);
     }
 
     @Test
     public void createIsNotSupported() {
-        assertThat(updateLogService.handleCreate(mock(Context.class), mock(CreateRequest.class)))
+        assertThatPromise(updateLogService.handleCreate(mock(Context.class), mock(CreateRequest.class)))
                 .failedWithException().isInstanceOf(NotSupportedException.class);
     }
 
     @Test
     public void deleteIsNotSupported() {
-        assertThat(updateLogService.handleDelete(mock(Context.class), mock(DeleteRequest.class)))
+        assertThatPromise(updateLogService.handleDelete(mock(Context.class), mock(DeleteRequest.class)))
                 .failedWithException().isInstanceOf(NotSupportedException.class);
     }
 
     @Test
     public void patchIsNotSupported() {
-        assertThat(updateLogService.handlePatch(mock(Context.class), mock(PatchRequest.class)))
+        assertThatPromise(updateLogService.handlePatch(mock(Context.class), mock(PatchRequest.class)))
                 .failedWithException().isInstanceOf(NotSupportedException.class);
     }
 
@@ -95,7 +95,7 @@ public class UpdateLogServiceImplTest {
                         return true;
                     }
                 });
-        assertThat(promise).succeeded();
+        assertThatPromise(promise).succeeded();
         assertThat(handler.getRequests()).hasSize(1);
     }
 
@@ -111,7 +111,7 @@ public class UpdateLogServiceImplTest {
         final ReadRequest request = newReadRequest("1");
         final Promise<ResourceResponse, ResourceException> promise =
                 updateLogService.handleRead(new RootContext(), request);
-        assertThat(promise).succeeded();
+        assertThatPromise(promise).succeeded();
         assertThat(handler.getRequests()).hasSize(1);
     }
 

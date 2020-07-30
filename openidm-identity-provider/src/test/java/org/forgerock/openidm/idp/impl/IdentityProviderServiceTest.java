@@ -18,7 +18,7 @@ package org.forgerock.openidm.idp.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.forgerock.json.JsonValue.*;
 import static org.forgerock.json.resource.Requests.newReadRequest;
-import static org.forgerock.util.test.assertj.AssertJPromiseAssert.assertThat;
+import static org.forgerock.util.test.assertj.AssertJPromiseAssert.assertThatPromise;
 import static org.forgerock.json.test.assertj.AssertJJsonValueAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -87,7 +87,7 @@ public class IdentityProviderServiceTest {
 
         final Promise<ResourceResponse, ResourceException> promise =
                 service.readInstance(new RootContext(), newReadRequest(""));
-        assertThat(promise).succeeded();
+        assertThatPromise(promise).succeeded();
         final JsonValue response = promise.get().getContent();
 
         assertThat(response).hasArray("providers").hasSize(1);

@@ -25,7 +25,7 @@ import static org.forgerock.json.resource.ResourceResponse.FIELD_CONTENT_ID;
 import static org.forgerock.json.resource.ResourceResponse.FIELD_CONTENT_REVISION;
 import static org.forgerock.openidm.audit.impl.RouterAuditEventHandler.EVENT_ID;
 import static org.forgerock.util.query.QueryFilter.*;
-import static org.forgerock.util.test.assertj.AssertJPromiseAssert.assertThat;
+import static org.forgerock.util.test.assertj.AssertJPromiseAssert.assertThatPromise;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -81,7 +81,7 @@ public class RouterAuditEventHandlerTest {
         ));
         Promise<ResourceResponse, ResourceException> createPromise =
                 routerAuditEventHandler.publishEvent(new RootContext(), ACCESS, content);
-        assertThat(createPromise).succeeded();
+        assertThatPromise(createPromise).succeeded();
         ResourceResponse createResponse = createPromise.getOrThrow();
 
         // when
@@ -89,7 +89,7 @@ public class RouterAuditEventHandlerTest {
                 routerAuditEventHandler.readEvent(new RootContext(), ACCESS, TEST_ID);
 
         // then
-        assertThat(promise).succeeded();
+        assertThatPromise(promise).succeeded();
         ResourceResponse readResponse = promise.getOrThrow();
         assertThat(readResponse.getId()).isEqualTo(TEST_ID);
         assertThat(readResponse.getContent().get(FIELD_CONTENT_ID).required().asString())
@@ -109,7 +109,7 @@ public class RouterAuditEventHandlerTest {
         ));
         Promise<ResourceResponse, ResourceException> createPromise =
                 routerAuditEventHandler.publishEvent(new RootContext(), ACCESS, content);
-        assertThat(createPromise).succeeded();
+        assertThatPromise(createPromise).succeeded();
         createPromise.getOrThrow();
 
         // when
@@ -130,7 +130,7 @@ public class RouterAuditEventHandlerTest {
                             }
                         });
         // then
-        assertThat(promise).succeeded();
+        assertThatPromise(promise).succeeded();
         promise.getOrThrow();
         assertThat(responses).hasSize(1);
         assertThat(responses.get(0).getId()).isEqualTo(TEST_ID);
@@ -151,7 +151,7 @@ public class RouterAuditEventHandlerTest {
                 routerAuditEventHandler.publishEvent(new RootContext(), ACCESS, content);
 
         // then
-        assertThat(promise).succeeded();
+        assertThatPromise(promise).succeeded();
         ResourceResponse resource = promise.getOrThrow();
         assertThat(resource).isNotNull();
         assertThat(resource.getContent().isEqualTo(content.put(FIELD_CONTENT_REVISION, "0"))).isTrue();
@@ -169,7 +169,7 @@ public class RouterAuditEventHandlerTest {
                         return true;
                     }
                 });
-        assertThat(queryPromise).succeeded();
+        assertThatPromise(queryPromise).succeeded();
         queryPromise.getOrThrow();
         assertThat(contentRecords).hasSize(1);
         JsonValue dbContent = contentRecords.get(0);
