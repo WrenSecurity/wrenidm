@@ -1,204 +1,94 @@
-# OpenIDM
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/13997406/99670197-73a79b80-2a70-11eb-945d-a421a4d3d6a2.png">
+</p>
 
-OpenIDM enables you to consolidate multiple identity sources for policy and workflow-based management. OpenIDM can 
-consume, transform and feed data to external sources so that you maintain control over the identities of users, 
-devices and other objects.
+# Wren:IDM
 
-OpenIDM provides a modern UI experience that allows you to manage your data without writing a single line of code. The 
-standard RESTful interfaces also offer ultimate flexibility so that you can customize and develop the product to fit the
-requirements of your deployment.
+[![License](https://img.shields.io/badge/license-CDDL-blue.svg)](https://github.com/WrenSecurity/wrenidm/blob/master/LICENSE)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/WrenSecurity)
 
-The project is led by ForgeRock who integrate the [OpenAM][openam_project_page], [OpenIDM][project_page], 
-[OpenDJ][opendj_project_page], [OpenICF][openicf_project_page], and [OpenIG][openig_project_page] open source projects 
-to provide a quality-assured [ForgeRock Identity Platform][identity_platform]. Support, professional services, and 
-training are available for the Identity Platform, providing stability and safety for the management of your digital 
-identities. 
+Wren:IDM is a community‐developed identity management system with a flexible data model, multiple extension points
+and scripting support, including JavaScript and Groovy. It can connect to and manage a wide range of systems through
+the Identity Connector Framework (Wren:ICF).
 
-To find out more about the services ForgeRock provides, visit [www.forgerock.com][commercial_site].
+Wren:IDM is one of the projects in the Wren Security Suite, a community initiative that adopted open‐source projects
+formerly developed by ForgeRock, which has its own roots in Sun Microsystems’ products.
 
-To view the OpenIDM project page, which also contains all of the documentation, visit
- [https://forgerock.org/openidm/][project_page]. 
+Wren:IDM itself is focused on identity management processes and it also provides a powerful framework for implementing
+IAG and a portion of IAM processes as well. Although the project is based on OpenIDM code, it is not affiliated with
+ForgeRock in any way. It is based on the very latest code available under a CDDL license (not‐yet‐released OpenIDM 5.x).
 
-For a great place to start, take a look at the [OpenIDM Getting Started][getting_started_guide].
+The features of Wren:IDM include:
 
-For further help and discussion, visit the [community forums][community_forum].
+  * A complete platform for building IDM and IG solutions using the concepts described below – roles, mappings,
+  synchronizations, workflows, policies, etc.
+  * ICF Connector Servers – services that allow connectors to be run outside of the IDM itself. Useful when a connector
+  needs a specific client environment to talk to the integrated system. Also facilitates security. .NET and Java Connector
+  Servers are available.
+  * Administration GUI – an interface for making changes to data models and configuration using a point‐and‐click
+  interface rather than Wren:IDM's REST interface.
+  * Self‐service GUI – an interface for end‐users to update their profile information, passwords, and preferences.
 
-# Getting the OpenIDM Application
+Both the Administration GUI and Self‐Service GUI are web‐based, single‐page applications that can be turned off in
+deployments that do not desire to use them [[1]](#Bibliogprahy).
 
-You can obtain the OpenIDM Application in one of two ways;
+## Contributions
 
-## Download It 
+[![Contributing Guide](https://img.shields.io/badge/Contributions-guide-green.svg?style=flat)][contribute]
+[![Contributors](https://img.shields.io/github/contributors/WrenSecurity/wrenidm)][contribute]
+[![Pull Requests](https://img.shields.io/github/issues-pr/WrenSecurity/wrenidm)][contribute]
+[![Last commit](https://img.shields.io/github/last-commit/WrenSecurity/Wrenidm.svg)](https://github.com/WrenSecurity/Wrenidm/commits/master)
 
-The easiest way to try OpenIDM is to download the binary file and follow the [Installation Guide][install_guide]. 
+## Getting the Wren:IDM application
 
-You can download either:
+You can get Wren:IDM application in couple of ways:
 
-1. An [enterprise release build][enterprise_builds].
-2. The [nightly build][nightly_builds] which contains the latest features and bug fixes, but may also contain 
-_in progress_ unstable features.
+### Download binary release
 
-## Build The Source Code
+The easiest way to get the Wren:IDM is to download the latest binary [release](https://github.com/WrenSecurity/wrenidm/releases).
+
+### Build the source code
 
 In order to build the project from the command line follow these steps:
 
-### Prepare your Environment
-The environment you need to set up is dependent upon the version of OpenIDM that you want to build. To build OpenIDM you
-will need the following installed on the machine you're going to build on;
+**Prepare your Environment**
 
-Software               | Required Version
----------------------- | ----------------
-Java JDK Version	Maven  | 7 and above (see below)
-Git                    | 1.7.6 and above
-Maven                  | 3.1.0 and above
+Following software is needed to build the project:
 
-ForgeRock does not support the use of Java 9 for running OpenIDM in production, but it is fine for building the code.
+| Software  | Required Version |
+| --------- | -------------    |
+| OpenJDK   | 8 and above      |
+| Git       | 2.0 and above    |
+| Maven     | 3.0 and above    |
 
-You should also set the following environment variables for the majority of versions;
+**Build the source code**
 
-JAVA_HOME - set to the directory in which your SDK is installed  
-MAVEN_OPTS  - When building with Java 7 set this to '-Xmx1g -XX:MaxPermSize=512m'. Java 8 and above does not support 
-MaxPermSize so set this to '-Xmx1g'.
-
-### Getting the Code
-
-The central project repository lives on the ForgeRock Bitbucket Server at 
-[https://stash.forgerock.org/projects/OPENIDM][central_repo].
-
-Mirrors exist elsewhere (for example GitHub) but all contributions to the project are managed by using pull requests 
-to the central repository.
-
-There are two ways to get the code - if you want to run the code unmodified you can clone the central repo (or a 
-reputable mirror):
+All project dependencies are hosted in JFrog repository and managed by Maven, so to build the project simply execute Maven *package* goal.
 
 ```
-git clone https://stash.forgerock.org/scm/openidm/openidm.git
+$ cd $GIT_REPOSITORIES/wrenidm
+$ mvn clean package
 ```
 
-If, however, you are considering contributing bug fixes, enhancements, or modifying the code you should fork the project
- and then clone your private fork, as described below:
+Built binary can be found in `${GIT_REPOSITORIES}/wrenidm/openidm-zip/target/wrenidm-${VERSION}.zip`.
 
-1. Create an account on [BackStage][backstage] - You can use these credentials to create pull requests, report bugs,
- and download the enterprise release builds.
-2. Log in to the Bitbucket Server using your BackStage account credentials. 
-3. Fork the `openidm` project. This will create a fork for you in your own area of Bitbucket Server. Click on your
- profile icon then select 'view profile' to see all your forks. 
-4. Clone your fork to your machine.
+### Docker image
 
-Obtaining the code this way will allow you to create pull requests later. 
+You can also run Wren:IDM in a Docker container. Official Wren:IDM Docker images can be found [here](https://hub.docker.com/r/wrensec/wrenidm).
 
-### Building the Code
+## Documentation
 
-The OpenIDM build process and dependencies are managed by Maven. The first time you build the project, Maven will pull 
-down all the dependencies and Maven plugins required by the build, which can take a significant amount of time. 
-Subsequent builds will be much faster!
+[![Documentation](https://img.shields.io/badge/Documentation-WIP-yellow)](https://github.com/WrenSecurity/Wrenidm)
 
-```
-$ cd $REPO_HOME/openidm
-$ mvn clean install
-```
-
-## Getting Started With OpenIDM
-
-ForgeRock provide a comprehensive set of documents for OpenIDM, including a 
-[getting started guide][getting_started_guide], [installation guide][install_guide] and a tutorial style 
-[samples guide][samples_guide] that leads you through the process of implementing some common OpenIDM use cases:
-
-- [Documentation for enterprise builds][enterprise_docs].
-- [Draft docs for nightly builds and self built code][nightly_docs]
-
-
-
-## Contributing
-
-There are many ways to contribute to the OpenIDM project. You can contribute to the [OpenIDM Docs Project][docs_project], 
-report or [submit bug fixes][issue_tracking], or [contribute extensions][contribute] such as custom authentication 
-modules, authentication scripts, policy scripts, dev ops scripts, and more.
-
-## Versioning
-
-ForgeRock produce an enterprise point release build. These builds use the versioning format X.0.0 (for example 3.0.0, 
-4.0.0) and are produced yearly. These builds are free to use for trials, proof of concept projects and so on. A license
- is required to use these builds in production.
-
-Users with support contracts have access to sustaining releases that contain bug and security fixes. These builds use 
-the versioning format 2.0.x (for example 2.1.1 & 2.1.2). Users with support contracts also get access to 
-quality-assured interim releases, such as the forthcoming OpenIDM 4.5.0. 
-
-## Authors
-
-See the list of [contributors][contributors] who participated in this project.
-
-## License
-
-This project is licensed under the Common Development and Distribution License (CDDL). The following text applies to 
-both this file, and should also be included in all files in the project:
-
-> The contents of this file are subject to the terms of the Common Development and  Distribution License (the License). 
-> You may not use this file except in compliance with the License.  
->   
-> You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the specific language governing 
-> permission and limitations under the License.  
->  
-> When distributing Covered Software, include this CDDL Header Notice in each file and include the License file at 
-> legal/CDDLv1.0.txt. If applicable, add the following below the CDDL Header, with the fields enclosed by brackets [] 
-> replaced by your own identifying information: "Portions copyright [year] [name of copyright owner]".  
->   
-> Copyright 2016 ForgeRock AS.    
-
-## All the Links!
-To save you sifting through the readme looking for 'that link'...
-
-- [ForgeRock's commercial website][commercial_site]
-- [ForgeRock's community website][community_site]
-- [ForgeRock's BackStage server][backstage] 
-- [ForgeRock Identity Platform][identity_platform]
-- [OpenAM Project Page][openam_project_page]
-- [OpenDJ Project Page][opendj_project_page]
-- [OpenIDM Project Page][project_page]
-- [OpenICF Project Page][openicf_project_page]
-- [OpenIG Project Page][openig_project_page]
-- [Community Forums][community_forum]
-- [Getting Started Guide][getting_started_guide]
-- [Install Guide][install_guide]
-- [Samples Guide][samples_guide]
-- [Enterprise Build Downloads][enterprise_builds]
-- [Enterprise Documentation][enterprise_docs]
-- [Nightly Build Downloads][nightly_builds]
-- [Nightly Documentation][nightly_docs]
-- [Central Project Repository][central_repo]
-- [Issue Tracking][issue_tracking]
-- [Contributors][contributors]
-- [Coding Standards][coding_standards]
-- [Contributions][contribute]
-- [How to Buy][how_to_buy]
-
-[commercial_site]: https://www.forgerock.com
-[community_site]: https://www.forgerock.org
-[backstage]: https://backstage.forgerock.com
-[identity_platform]: https://www.forgerock.com/platform/
-[openam_project_page]: https://forgerock.org/openam/
-[opendj_project_page]: https://forgerock.org/opendj/
-[openig_project_page]: https://forgerock.org/openig/
-[project_page]: https://forgerock.org/openidm/
-[openicf_project_page]: https://forgerock.org/openicf/
-[community_forum]: https://forgerock.org/forum/fr-projects/openidm/
-[install_guide]: https://forgerock.org/openidm/doc/bootstrap/install-guide/index.html
-[getting_started_guide]: https://backstage.forgerock.com/#!/docs/openidm/4/getting-started
-[samples_guide]: https://forgerock.org/openidm/doc/bootstrap/samples-guide/index.html
-[enterprise_builds]: https://backstage.forgerock.com/#!/downloads/OpenIDM/OpenIDM%20Enterprise#browse
-[enterprise_docs]: https://backstage.forgerock.com/#!/docs/openidm
-[nightly_builds]: https://forgerock.org/downloads/openidm-builds/
-[nightly_docs]: https://forgerock.org/documentation/openidm/
-[central_repo]: https://stash.forgerock.org/projects/OPENIDM/repos/openidm/browse
-[issue_tracking]: https://bugster.forgerock.org/jira/browse/OPENIDM/?selectedTab=com.atlassian.jira.jira-projects-plugin:summary-panel
-[docs_project]: https://stash.forgerock.org/projects/OPENIDM/repos/openidm-docs/browse
-[contributors]: https://stash.forgerock.org/plugins/servlet/graphs?graph=contributors&projectKey=OPENIDM&repoSlug=openidm&refId=all-branches&type=c&group=weeks
-[coding_standards]: https://wikis.forgerock.org/confluence/display/devcom/Coding+Style+and+Guidelines
-[how_to_buy]: https://www.forgerock.com/platform/how-buy/
-[contribute]: https://forgerock.org/projects/contribute/
+Documentation is still work in progress. Cookbook with few use cases will be ready in couple of weeks.
 
 ## Acknowledgments
 
-* Sun Microsystems.
-* The founders of ForgeRock.
-* The good things in life.
+* Sun Microsystems
+* ForgeRock
+
+## Bibliogprahy
+
+[1] SCHWARTZ, Michael, Maciej MACHULAK. Securing the Perimeter: Deploying Identity and Access Management with Free Open Source Software. Apress, 2018. ISBN 978-1-4842-2601-8.
+
+[contribute]: https://github.com/WrenSecurity/wrensec-docs/wiki/Contributor-Guidelines
