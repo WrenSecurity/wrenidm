@@ -725,7 +725,7 @@
     </dependencies>
 
     <build>
-        <finalName>openidm-${project.version}</finalName>
+        <finalName>wrenidm-${project.version}</finalName>
 
         <plugins>
             <plugin>
