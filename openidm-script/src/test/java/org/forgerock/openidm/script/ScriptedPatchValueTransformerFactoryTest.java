@@ -12,13 +12,23 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 
 package org.forgerock.openidm.script;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.forgerock.json.JsonValue.field;
+import static org.forgerock.json.JsonValue.json;
+import static org.forgerock.json.JsonValue.object;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.PatchOperation;
-import org.forgerock.openidm.script.ScriptExecutor;
 import org.forgerock.openidm.script.impl.ScriptRegistryService;
 import org.forgerock.script.engine.ScriptEngineFactory;
 import org.forgerock.script.javascript.RhinoScriptEngineFactory;
@@ -27,12 +37,6 @@ import org.forgerock.services.context.Context;
 import org.forgerock.services.context.RootContext;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.io.IOException;
-import java.util.*;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.forgerock.json.JsonValue.*;
 
 /**
  * Test ScriptedPatchValueTransformerFactory class.

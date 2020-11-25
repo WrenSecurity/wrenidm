@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2013-2015 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  */
 package org.forgerock.openidm.sync.impl;
 
@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 
 import org.forgerock.json.JsonValue;
-import org.forgerock.json.resource.BadRequestException;
 import org.forgerock.openidm.sync.SynchronizationException;
 
 /**
@@ -37,7 +36,7 @@ public class ReconTypeByQuery extends ReconTypeBase {
      *  Defaulting to run target phase
      */
     static final boolean DEFAULT_RUN_TARGET_PHASE = true;
-    
+
     /**
      * A {@link JsonValue} representing a source query.
      */
@@ -50,7 +49,7 @@ public class ReconTypeByQuery extends ReconTypeBase {
 
     /**
      * A constructor.
-     * 
+     *
      * @param reconContext a {@link ReconciliationContext} object.
      */
     public ReconTypeByQuery(ReconciliationContext reconContext) {
@@ -65,11 +64,11 @@ public class ReconTypeByQuery extends ReconTypeBase {
      */
     @Override
     public ReconQueryResult querySource(int pageSize, String pagingCookie) throws SynchronizationException {
-        return query(sourceQuery.get("resourceName").asString(), 
-                sourceQuery, 
-                reconContext, 
-                Collections.synchronizedSet(new LinkedHashSet<String>()), 
-                true, 
+        return query(sourceQuery.get("resourceName").asString(),
+                sourceQuery,
+                reconContext,
+                Collections.synchronizedSet(new LinkedHashSet<String>()),
+                true,
                 QuerySide.SOURCE,
                 pageSize,
                 pagingCookie);
@@ -81,10 +80,10 @@ public class ReconTypeByQuery extends ReconTypeBase {
     @Override
     public ResultIterable queryTarget() throws SynchronizationException {
         return query(targetQuery.get("resourceName").asString(), targetQuery, reconContext,
-                Collections.synchronizedSet(new LinkedHashSet<String>()), 
+                Collections.synchronizedSet(new LinkedHashSet<String>()),
                 reconContext.getObjectMapping().getLinkType().isTargetCaseSensitive(), QuerySide.TARGET,
                 0, null
-        ).getResultIterable();                
+        ).getResultIterable();
     }
 
     /**

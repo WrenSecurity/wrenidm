@@ -12,10 +12,14 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.maintenance.impl;
 
-import static org.forgerock.json.JsonValue.*;
+import static org.forgerock.json.JsonValue.array;
+import static org.forgerock.json.JsonValue.field;
+import static org.forgerock.json.JsonValue.json;
+import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.resource.Responses.newActionResponse;
 
 import java.nio.file.Files;
@@ -23,55 +27,57 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
-import org.forgerock.json.resource.NotFoundException;
-import org.forgerock.json.resource.Responses;
-import org.forgerock.openidm.maintenance.upgrade.UpdateException;
-import org.forgerock.openidm.maintenance.upgrade.UpdateManager;
-import org.forgerock.openidm.router.IDMConnectionFactory;
-import org.forgerock.services.context.Context;
 import org.forgerock.json.resource.AbstractRequestHandler;
 import org.forgerock.json.resource.ActionRequest;
 import org.forgerock.json.resource.ActionResponse;
 import org.forgerock.json.resource.BadRequestException;
 import org.forgerock.json.resource.InternalServerErrorException;
+import org.forgerock.json.resource.NotFoundException;
 import org.forgerock.json.resource.NotSupportedException;
 import org.forgerock.json.resource.QueryRequest;
 import org.forgerock.json.resource.QueryResourceHandler;
+import org.forgerock.json.resource.RequestHandler;
 import org.forgerock.json.resource.Requests;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourceResponse;
+import org.forgerock.json.resource.Responses;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.ServerConstants;
+import org.forgerock.openidm.maintenance.upgrade.UpdateException;
+import org.forgerock.openidm.maintenance.upgrade.UpdateManager;
+import org.forgerock.openidm.router.IDMConnectionFactory;
+import org.forgerock.services.context.Context;
 import org.forgerock.services.context.SecurityContext;
 import org.forgerock.util.promise.Promise;
 import org.forgerock.util.query.QueryFilter;
-import org.osgi.framework.Constants;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Basis and entry point to initiate the product maintenance and upgrade mechanisms over REST
  */
-@Component(name = UpdateService.PID, policy = ConfigurationPolicy.IGNORE, metatype = true,
-        description = "OpenIDM Product Update Management Service", immediate = true)
-@Service
-@Properties({
-        @Property(name = Constants.SERVICE_VENDOR, value = ServerConstants.SERVER_VENDOR_NAME),
-        @Property(name = Constants.SERVICE_DESCRIPTION, value = "Product Update Management Service"),
-        @Property(name = ServerConstants.ROUTER_PREFIX, value = "/maintenance/update/*")
-})
+@Component(
+        name = UpdateService.PID,
+        configurationPolicy = ConfigurationPolicy.IGNORE,
+//        description = "OpenIDM Product Update Management Service",
+        immediate = true,
+        property = {
+                ServerConstants.ROUTER_PREFIX + "=/maintenance/update/*"
+        },
+        service = RequestHandler.class)
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("Product Update Management Service")
 public class UpdateService extends AbstractRequestHandler {
 
     private final static Logger logger = LoggerFactory.getLogger(UpdateService.class);

@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 
 package org.forgerock.openidm.config.enhanced;
@@ -22,22 +23,21 @@ import static org.forgerock.json.JsonValue.object;
 import java.util.Dictionary;
 import java.util.Map;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.Service;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.JsonValueException;
 import org.forgerock.openidm.core.PropertyUtil;
 import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.crypto.CryptoService;
+import org.forgerock.openidm.osgi.ServiceUtil;
 import org.forgerock.openidm.util.JsonUtil;
 import org.forgerock.util.Reject;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.propertytypes.ServiceDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,15 +45,12 @@ import org.slf4j.LoggerFactory;
  * A service to handle enhanced configuration, including nested lists and maps
  * to represent JSON based structures.
  */
-@Component(name = JSONEnhancedConfig.PID,
-        policy = ConfigurationPolicy.IGNORE,
-        description = "OpenIDM Enhanced Config Service",
+@Component(
+        name = JSONEnhancedConfig.PID,
+        configurationPolicy = ConfigurationPolicy.IGNORE,
         immediate = true,
-        metatype = true)
-@Service
-@Properties(
-        @Property(name = "suppressMetatypeWarning", value = "true")
-)
+        property = Constants.SERVICE_ID + "=" + JSONEnhancedConfig.PID)
+@ServiceDescription("OpenIDM Enhanced Config Service")
 public class JSONEnhancedConfig implements EnhancedConfig {
 
     public static final String PID = "org.forgerock.openidm.config.enhanced";
@@ -79,6 +76,7 @@ public class JSONEnhancedConfig implements EnhancedConfig {
         this.cryptoService = cryptoService;
     }
 
+    @Override
     public String getConfigurationFactoryPid(ComponentContext compContext) {
         Object o = compContext.getProperties().get(ServerConstants.CONFIG_FACTORY_PID);
         if (o instanceof String) {
@@ -93,7 +91,7 @@ public class JSONEnhancedConfig implements EnhancedConfig {
         Reject.ifNull(compContext);
 
         Dictionary<String, Object> dict = compContext.getProperties();
-        String servicePid = (String) dict.get(Constants.SERVICE_PID);
+        String servicePid = ServiceUtil.getServicePid(dict);
 
         return getConfiguration(dict, compContext.getBundleContext(), servicePid);
     }

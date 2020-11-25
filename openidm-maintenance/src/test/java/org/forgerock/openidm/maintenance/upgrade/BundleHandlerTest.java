@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.maintenance.upgrade;
 
@@ -195,7 +196,7 @@ public class BundleHandlerTest {
     @Test
     public void testInstallBundle() throws Exception {
         // create bundle info for installing
-        Bundle bundle = installedBundles.get(bundlePath);
+        Bundle bundle = installedBundles.get(bundlePath.toUri().toString());
 
         // check that the bundle does not exist already in the framework
         assertThat(bundle).isNull();

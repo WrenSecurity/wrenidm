@@ -3,7 +3,7 @@
   ~ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
   ~
   ~ Copyright 2011-2016 ForgeRock AS. All Rights Reserved
-  ~ Portions Copyright 2017-2018 Wren Security.
+  ~ Portions Copyright 2017-2020 Wren Security.
   ~
   ~ The contents of this file are subject to the terms
   ~ of the Common Development and Distribution License
@@ -256,6 +256,21 @@
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.cmpn</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.util.promise</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.util.function</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.util.pushstream</artifactId>
         </dependency>
 
         <dependency>

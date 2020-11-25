@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2013-2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  */
 package org.forgerock.openidm.script;
 
@@ -22,12 +22,6 @@ import java.util.EnumSet;
 import javax.script.Bindings;
 import javax.script.ScriptException;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.forgerock.openidm.core.ServerConstants;
-import org.forgerock.openidm.osgi.ComponentContextUtil;
-import org.forgerock.services.context.Context;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ActionRequest;
 import org.forgerock.json.resource.CreateRequest;
@@ -41,11 +35,14 @@ import org.forgerock.json.resource.RequestHandler;
 import org.forgerock.json.resource.RequestType;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.UpdateRequest;
+import org.forgerock.openidm.core.ServerConstants;
+import org.forgerock.openidm.osgi.ComponentContextUtil;
 import org.forgerock.script.ScriptEntry;
 import org.forgerock.script.ScriptEvent;
 import org.forgerock.script.ScriptListener;
 import org.forgerock.script.ScriptName;
 import org.forgerock.script.ScriptRegistry;
+import org.forgerock.services.context.Context;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
@@ -55,27 +52,14 @@ import org.slf4j.LoggerFactory;
 
 /**
  * An AbstractScriptedService does ...
- * 
+ *
  */
-@Component(componentAbstract = true)
 public abstract class AbstractScriptedService implements ScriptCustomizer, ScriptListener {
 
     /**
      * Setup logging for the {@link AbstractScriptedService}.
      */
     private static final Logger logger = LoggerFactory.getLogger(AbstractScriptedService.class);
-
-    /** Script Registry service. */
-    @Reference(policy = ReferencePolicy.DYNAMIC)
-    private volatile ScriptRegistry scriptRegistry;
-
-    protected void bindScriptRegistry(final ScriptRegistry service) {
-        scriptRegistry = service;
-    }
-
-    protected void unbindScriptRegistry(final ScriptRegistry service) {
-        scriptRegistry = null;
-    }
 
     private ScriptedRequestHandler embeddedHandler = null;
 
@@ -102,6 +86,8 @@ public abstract class AbstractScriptedService implements ScriptCustomizer, Scrip
 
     protected abstract BundleContext getBundleContext();
 
+    protected abstract ScriptRegistry getScriptRegistry();
+
     protected ScriptCustomizer getScriptCustomizer() {
         return this;
     }
@@ -122,7 +108,7 @@ public abstract class AbstractScriptedService implements ScriptCustomizer, Scrip
 
     protected void registerService(final BundleContext context, final JsonValue configuration) {
         try {
-            ScriptEntry scriptEntry = scriptRegistry.takeScript(configuration);
+            ScriptEntry scriptEntry = getScriptRegistry().takeScript(configuration);
             scriptEntry.addScriptListener(this);
             scriptName = scriptEntry.getName();
             embeddedHandler = new ScriptedRequestHandler(scriptEntry, getScriptCustomizer());
@@ -135,9 +121,9 @@ public abstract class AbstractScriptedService implements ScriptCustomizer, Scrip
 
     protected void updateScriptHandler(final JsonValue configuration) {
         try {
-            ScriptEntry scriptEntry = scriptRegistry.takeScript(configuration);
+            ScriptEntry scriptEntry = getScriptRegistry().takeScript(configuration);
             if (null != scriptName) {
-                scriptRegistry.deleteScriptListener(scriptName, this);
+                getScriptRegistry().deleteScriptListener(scriptName, this);
             }
             scriptEntry.addScriptListener(this);
             scriptName = scriptEntry.getName();
@@ -160,7 +146,7 @@ public abstract class AbstractScriptedService implements ScriptCustomizer, Scrip
             selfRegistration = null;
         } finally {
             if (null != scriptName) {
-                scriptRegistry.deleteScriptListener(scriptName, this);
+                getScriptRegistry().deleteScriptListener(scriptName, this);
             }
         }
         logger.info("OpenIDM Info Service component is deactivated.");
@@ -168,6 +154,7 @@ public abstract class AbstractScriptedService implements ScriptCustomizer, Scrip
 
     // ----- Implementation of ScriptListener interface
 
+    @Override
     public void scriptChanged(ScriptEvent event) throws ScriptException {
         if (ScriptEvent.REGISTERED == event.getType()) {
             if (null == selfRegistration) {
@@ -206,6 +193,7 @@ public abstract class AbstractScriptedService implements ScriptCustomizer, Scrip
 
     // ----- Implementation of ScriptCustomizer interface
 
+    @Override
     public void handleAction(final Context context, final ActionRequest request, final Bindings bindings)
             throws ResourceException {
         if (!mask.contains(RequestType.ACTION)) {
@@ -214,6 +202,7 @@ public abstract class AbstractScriptedService implements ScriptCustomizer, Scrip
         handleRequest(context, request, bindings);
     }
 
+    @Override
     public void handleCreate(final Context context, final CreateRequest request, final Bindings bindings)
             throws ResourceException {
         if (!mask.contains(RequestType.CREATE)) {
@@ -222,6 +211,7 @@ public abstract class AbstractScriptedService implements ScriptCustomizer, Scrip
         handleRequest(context, request, bindings);
     }
 
+    @Override
     public void handleDelete(final Context context, final DeleteRequest request, final Bindings bindings)
             throws ResourceException {
         if (!mask.contains(RequestType.DELETE)) {
@@ -230,6 +220,7 @@ public abstract class AbstractScriptedService implements ScriptCustomizer, Scrip
         handleRequest(context, request, bindings);
     }
 
+    @Override
     public void handlePatch(final Context context, final PatchRequest request, final Bindings bindings)
             throws ResourceException {
         if (!mask.contains(RequestType.PATCH)) {
@@ -238,6 +229,7 @@ public abstract class AbstractScriptedService implements ScriptCustomizer, Scrip
         handleRequest(context, request, bindings);
     }
 
+    @Override
     public void handleQuery(final Context context, final QueryRequest request, final Bindings bindings)
             throws ResourceException {
         if (!mask.contains(RequestType.QUERY)) {
@@ -246,6 +238,7 @@ public abstract class AbstractScriptedService implements ScriptCustomizer, Scrip
         handleRequest(context, request, bindings);
     }
 
+    @Override
     public void handleRead(final Context context, final ReadRequest request, final Bindings bindings)
             throws ResourceException {
         if (!mask.contains(RequestType.READ)) {
@@ -254,6 +247,7 @@ public abstract class AbstractScriptedService implements ScriptCustomizer, Scrip
         handleRequest(context, request, bindings);
     }
 
+    @Override
     public void handleUpdate(final Context context, final UpdateRequest request, final Bindings bindings)
             throws ResourceException {
         if (!mask.contains(RequestType.UPDATE)) {

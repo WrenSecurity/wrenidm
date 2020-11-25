@@ -12,26 +12,25 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Portions copyright 2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.sync.impl;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;   
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 
 import org.forgerock.json.JsonValue;
-
-import static org.assertj.core.api.Assertions.assertThat;
 import org.testng.annotations.Test;
 
-import org.forgerock.openidm.sync.impl.ResultIterable;
-
 public class ResultIterableTest {
-    
+
     @Test
     public void testRemoveWithFullObjects() throws Exception {
         int numItems = 6;
@@ -50,18 +49,18 @@ public class ResultIterableTest {
         // all other entries will be removed
         idsAsList = Arrays.asList("Id100", "Id101", "Id102", "Id103", "Id104", "Id105");
         ids = new LinkedHashSet<String>(idsAsList);
-        
+
         // Test removing the above ids
         riNew = riSource.removeNotMatchingEntries(ids);
-        
+
         // riNew should now contain all ids that we wanted to match
         assertThat(riNew.getAllIds()).containsExactlyElementsOf(idsAsList);
-        
+
         // Using full objects the resulting values should be in sync with the ids
         expectedValues = Arrays.asList("Value100", "Value101", "Value102", "Value103", "Value104", "Value105");
         assertThat(getResultIterableValues(riNew)).containsExactlyElementsOf(expectedValues);
-        
-        // Repeat the test a few times with different data 
+
+        // Repeat the test a few times with different data
         riSource = createResultIterable(numItems, true, 200);
         idsAsList = Arrays.asList("Id202", "Id203", "Id205");
         ids = new LinkedHashSet<String>(idsAsList);
@@ -69,7 +68,7 @@ public class ResultIterableTest {
         assertThat(riNew.getAllIds()).containsExactlyElementsOf(idsAsList);
         expectedValues = Arrays.asList("Value202", "Value203", "Value205");
         assertThat(getResultIterableValues(riNew)).containsExactlyElementsOf(expectedValues);
-        
+
         riSource = createResultIterable(numItems, true, 300);
         idsAsList = Arrays.asList("Id301", "Id302", "Id304");
         ids = new LinkedHashSet<String>(idsAsList);
@@ -92,23 +91,23 @@ public class ResultIterableTest {
         // false -> no full objects
         // 500 as start number for ids
         riSource = createResultIterable(numItems, false, 500);
-        
+
         // ids is the list of ids to be matched,
         // all other entries will be removed
         idsAsList = Arrays.asList("Id500", "Id501", "Id502", "Id503", "Id504", "Id505");
         ids = new LinkedHashSet<String>(idsAsList);
-        
+
         // Test removing the above ids
         riNew = riSource.removeNotMatchingEntries(ids);
-                
+
         // riNew should now contain all ids that we wanted to match
         assertThat(riNew.getAllIds()).containsExactlyElementsOf(idsAsList);
-        
+
         // If ResultIterable has no full objects the values should all be null
         expectedValues = Arrays.asList(null, null, null, null, null, null);
         assertThat(getResultIterableValues(riNew)).containsExactlyElementsOf(expectedValues);
-        
-        // Repeat the test a few times with different data 
+
+        // Repeat the test a few times with different data
         riSource = createResultIterable(numItems, false, 600);
         idsAsList = Arrays.asList("Id602", "Id603", "Id605");
         ids = new LinkedHashSet<String>(idsAsList);
@@ -116,7 +115,7 @@ public class ResultIterableTest {
         assertThat(riNew.getAllIds()).containsExactlyElementsOf(idsAsList);
         expectedValues = Arrays.asList(null, null, null);
         assertThat(getResultIterableValues(riNew)).containsExactlyElementsOf(expectedValues);
-        
+
         riSource = createResultIterable(numItems, false, 700);
         idsAsList = Arrays.asList("Id701", "Id702", "Id704");
         ids = new LinkedHashSet<String>(idsAsList);
@@ -133,7 +132,7 @@ public class ResultIterableTest {
         if (fullObject) {
             newObjList = new JsonValue(new LinkedList<>());
         }
-        
+
         for (int i = 0; i < numItems; i++) {
                 newIds.add("Id" + (startId + i));
 
@@ -145,15 +144,15 @@ public class ResultIterableTest {
 
         return new ResultIterable(newIds, newObjList);
     }
-    
+
     Collection<String> getResultIterableValues(ResultIterable ri) {
         ArrayList<String> values = new ArrayList<String>();
         Iterator<ResultEntry> it = ri.iterator();
-        
+
         while (it.hasNext()) {
             ResultEntry re = it.next();
             JsonValue jv = re.getValue();
-            
+
             if (jv == null) {
                 values.add(null);
             }

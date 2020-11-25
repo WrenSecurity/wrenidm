@@ -12,14 +12,15 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Portions copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.sync.impl;
 
 import static org.forgerock.json.JsonValue.field;
 import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyMapOf;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -35,14 +36,14 @@ import java.util.Map;
 
 import javax.script.Bindings;
 
-import org.forgerock.services.context.Context;
-import org.forgerock.services.context.RootContext;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.sync.ReconAction;
 import org.forgerock.openidm.util.Scripts;
 import org.forgerock.script.Script;
 import org.forgerock.script.ScriptEntry;
 import org.forgerock.script.ScriptRegistry;
+import org.forgerock.services.context.Context;
+import org.forgerock.services.context.RootContext;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -59,7 +60,7 @@ public class PolicyTest {
     public void setUp() throws Exception {
         URL config = ObjectMappingTest.class.getResource("/conf/sync.json");
         Assert.assertNotNull(config, "sync configuration is not found");
-        
+
         JsonValue syncConfig = new JsonValue((new ObjectMapper()).readValue(new File(config.toURI()), Map.class));
         mappingConfig = syncConfig.get("mappings").get(0);
 
@@ -74,9 +75,9 @@ public class PolicyTest {
 
         Bindings bindingsMock = mock(Bindings.class);
         when(scriptMock.createBindings()).thenReturn(bindingsMock);
-        doNothing().when(bindingsMock).putAll(anyMapOf(String.class, Object.class));
+        doNothing().when(bindingsMock).putAll(anyMap());
         when(scriptMock.eval(bindingsMock)).thenReturn(ReconAction.IGNORE);
-        
+
     }
 
     @AfterMethod
@@ -86,7 +87,7 @@ public class PolicyTest {
 
     @Test
     public void testGetCondition() throws Exception {
-        
+
         initPolicies();
 
         assertEquals(policies.size(), 8);
@@ -116,7 +117,7 @@ public class PolicyTest {
         assertTrue(getPolicy(Situation.UNASSIGNED).getCondition()
                 .evaluate(json(object(field("linkQualifier", Link.DEFAULT_LINK_QUALIFIER))), new RootContext()));
     }
-    
+
     @Test
     public void testGetSituation() throws Exception {
 
@@ -140,7 +141,7 @@ public class PolicyTest {
         assertEquals(getPolicy(Situation.UNQUALIFIED).getSituation(), Situation.UNQUALIFIED);
 
         assertEquals(getPolicy(Situation.UNASSIGNED).getSituation(), Situation.UNASSIGNED);
-        
+
     }
 
     private void initPolicies() {
@@ -184,68 +185,68 @@ public class PolicyTest {
         LazyObjectAccessor lazyObjectAccessorTargetMock = mock(LazyObjectAccessor.class);
         when(lazyObjectAccessorTargetMock.asMap()).thenReturn(targetMap);
 
-        assertEquals(ReconAction.IGNORE, 
+        assertEquals(ReconAction.IGNORE,
                 getPolicy(Situation.CONFIRMED)
                         .getAction(lazyObjectAccessorSourceMock,
                                 lazyObjectAccessorTargetMock,
                                 syncOperationMock,
-                                Link.DEFAULT_LINK_QUALIFIER, 
+                                Link.DEFAULT_LINK_QUALIFIER,
                                 new RootContext()));
 
-        assertEquals(ReconAction.IGNORE, 
+        assertEquals(ReconAction.IGNORE,
                 getPolicy(Situation.FOUND)
                         .getAction(lazyObjectAccessorSourceMock,
                                 lazyObjectAccessorTargetMock,
                                 syncOperationMock,
-                                Link.DEFAULT_LINK_QUALIFIER, 
+                                Link.DEFAULT_LINK_QUALIFIER,
                                 new RootContext()));
 
-        assertEquals(ReconAction.IGNORE, 
+        assertEquals(ReconAction.IGNORE,
                 getPolicy(Situation.ABSENT)
                         .getAction(lazyObjectAccessorSourceMock,
                                 lazyObjectAccessorTargetMock,
                                 syncOperationMock,
-                                Link.DEFAULT_LINK_QUALIFIER, 
+                                Link.DEFAULT_LINK_QUALIFIER,
                                 new RootContext()));
 
-        assertEquals(ReconAction.IGNORE, 
+        assertEquals(ReconAction.IGNORE,
                 getPolicy(Situation.AMBIGUOUS)
                         .getAction(lazyObjectAccessorSourceMock,
                                 lazyObjectAccessorTargetMock,
                                 syncOperationMock,
-                                Link.DEFAULT_LINK_QUALIFIER, 
+                                Link.DEFAULT_LINK_QUALIFIER,
                                 new RootContext()));
 
-        assertEquals(ReconAction.IGNORE, 
+        assertEquals(ReconAction.IGNORE,
                 getPolicy(Situation.MISSING)
                         .getAction(lazyObjectAccessorSourceMock,
                                 lazyObjectAccessorTargetMock,
                                 syncOperationMock,
-                                Link.DEFAULT_LINK_QUALIFIER, 
+                                Link.DEFAULT_LINK_QUALIFIER,
                                 new RootContext()));
 
-        assertEquals(ReconAction.IGNORE, 
+        assertEquals(ReconAction.IGNORE,
                 getPolicy(Situation.SOURCE_MISSING)
                         .getAction(lazyObjectAccessorSourceMock,
                                 lazyObjectAccessorTargetMock,
                                 syncOperationMock,
-                                Link.DEFAULT_LINK_QUALIFIER, 
+                                Link.DEFAULT_LINK_QUALIFIER,
                                 new RootContext()));
 
-        assertEquals(ReconAction.IGNORE, 
+        assertEquals(ReconAction.IGNORE,
                 getPolicy(Situation.UNQUALIFIED)
                         .getAction(lazyObjectAccessorSourceMock,
                                 lazyObjectAccessorTargetMock,
                                 syncOperationMock,
-                                Link.DEFAULT_LINK_QUALIFIER, 
+                                Link.DEFAULT_LINK_QUALIFIER,
                                 new RootContext()));
 
-        assertEquals(ReconAction.IGNORE, 
+        assertEquals(ReconAction.IGNORE,
                 getPolicy(Situation.UNASSIGNED)
                         .getAction(lazyObjectAccessorSourceMock,
                                 lazyObjectAccessorTargetMock,
                                 syncOperationMock,
-                                Link.DEFAULT_LINK_QUALIFIER, 
+                                Link.DEFAULT_LINK_QUALIFIER,
                                 new RootContext()));
 
 
@@ -254,7 +255,7 @@ public class PolicyTest {
     @Test
     public void testEvaluatePostActionWithPostActionConfigured() throws Exception {
         JsonValue postAction =  null;
-        
+
         for (JsonValue jv : mappingConfig.get("policies").expect(List.class)) {
             String situation = jv.get("situation").asString();
             // capture ABSENT map for testing of postAction
@@ -270,7 +271,7 @@ public class PolicyTest {
             policies.put(situation, l);
             l.add( new Policy(jv));
         }
-        
+
         Policy pAbsent = getPolicy(Situation.ABSENT);
         assertTrue(postAction != null && !postAction.get("postAction").isNull());
 
@@ -285,7 +286,7 @@ public class PolicyTest {
         SyncOperation syncOperationMock = mock(SyncOperation.class);
         when(syncOperationMock.toJsonValue()).thenReturn(json(object()));
 
-        ReconAction absentAction = pAbsent.getAction(lazyObjectAccessorSourceMock, lazyObjectAccessorTargetMock, 
+        ReconAction absentAction = pAbsent.getAction(lazyObjectAccessorSourceMock, lazyObjectAccessorTargetMock,
                 syncOperationMock, Link.DEFAULT_LINK_QUALIFIER, new RootContext());
 
         pAbsent.evaluatePostAction(
@@ -294,7 +295,7 @@ public class PolicyTest {
                     absentAction,
                     true,
                     Link.DEFAULT_LINK_QUALIFIER,
-                    "reconId", 
+                    "reconId",
                     new RootContext());
 
     }

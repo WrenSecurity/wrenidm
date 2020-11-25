@@ -12,15 +12,19 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.provisioner.openicf.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.forgerock.json.JsonValue.*;
+import static org.forgerock.json.JsonValue.array;
+import static org.forgerock.json.JsonValue.field;
+import static org.forgerock.json.JsonValue.json;
+import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.resource.Responses.newActionResponse;
 import static org.forgerock.json.resource.Router.uriTemplate;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -43,12 +47,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.forgerock.json.resource.Request;
-import org.forgerock.openidm.crypto.CryptoService;
-import org.forgerock.openidm.router.IDMConnectionFactoryWrapper;
-import org.forgerock.services.context.Context;
-import org.forgerock.services.context.RootContext;
-import org.forgerock.services.routing.RouteMatcher;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ActionRequest;
@@ -71,12 +69,12 @@ import org.forgerock.json.resource.QueryRequest;
 import org.forgerock.json.resource.QueryResourceHandler;
 import org.forgerock.json.resource.QueryResponse;
 import org.forgerock.json.resource.ReadRequest;
+import org.forgerock.json.resource.Request;
 import org.forgerock.json.resource.Requests;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.Resources;
 import org.forgerock.json.resource.Router;
-import org.forgerock.services.context.SecurityContext;
 import org.forgerock.json.resource.ServiceUnavailableException;
 import org.forgerock.json.resource.SingletonResourceProvider;
 import org.forgerock.json.resource.SortKey;
@@ -86,17 +84,23 @@ import org.forgerock.openidm.audit.util.NullActivityLogger;
 import org.forgerock.openidm.config.enhanced.JSONEnhancedConfig;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.PropertyAccessor;
+import org.forgerock.openidm.crypto.CryptoService;
 import org.forgerock.openidm.provisioner.impl.SystemObjectSetService;
 import org.forgerock.openidm.provisioner.openicf.commons.ConnectorUtil;
 import org.forgerock.openidm.provisioner.openicf.internal.SystemAction;
 import org.forgerock.openidm.provisioner.openicf.syncfailure.NullSyncFailureHandler;
 import org.forgerock.openidm.provisioner.openicf.syncfailure.SyncFailureHandler;
 import org.forgerock.openidm.provisioner.openicf.syncfailure.SyncFailureHandlerFactory;
+import org.forgerock.openidm.router.IDMConnectionFactoryWrapper;
 import org.forgerock.openidm.router.RouteBuilder;
 import org.forgerock.openidm.router.RouteEntry;
 import org.forgerock.openidm.router.RouteService;
 import org.forgerock.openidm.router.RouterRegistry;
 import org.forgerock.openidm.util.FileUtil;
+import org.forgerock.services.context.Context;
+import org.forgerock.services.context.RootContext;
+import org.forgerock.services.context.SecurityContext;
+import org.forgerock.services.routing.RouteMatcher;
 import org.forgerock.util.promise.Promise;
 import org.forgerock.util.query.QueryFilter;
 import org.identityconnectors.common.logging.Log;
@@ -319,8 +323,8 @@ public class OpenICFProvisionerServiceTest implements RouterRegistry, SyncFailur
 
             // Attempt to activate the provisioner service up to 4 times, using ConnectorFacade#test to
             // validate proper initialization.  If the connector info manager is not be initialized, the
-            // test fails because the connector cannot connect to the remote server.  In this test, it 
-            // manifests as a timing issue owing to the flexibility in the provisioner service and the 
+            // test fails because the connector cannot connect to the remote server.  In this test, it
+            // manifests as a timing issue owing to the flexibility in the provisioner service and the
             // connector info provider supporting the ability for the connector server to come and go, as
             // managed by the health check thread (see ConnectorInfoProviderService#initialiseRemoteManager).
             // The test simply executes too fast for the health check thread to complete setup of the
@@ -343,7 +347,7 @@ public class OpenICFProvisionerServiceTest implements RouterRegistry, SyncFailur
                 new SystemObjectSetService() {{
                     bindConnectionFactory(new IDMConnectionFactoryWrapper(Resources.newInternalConnectionFactory(router)));
                     for (Pair<OpenICFProvisionerService, ComponentContext> pair : systems) {
-                        bindProvisionerService(pair.getLeft(),(Map) null);
+                            bindProvisionerService(pair.getLeft(), (Map<String, Object>) null);
                     }
                 }};
 
@@ -745,19 +749,23 @@ public class OpenICFProvisionerServiceTest implements RouterRegistry, SyncFailur
 
         final public ArrayList<ActionRequest> requests = new ArrayList<ActionRequest>();
 
+        @Override
         public Promise<ActionResponse, ResourceException> actionInstance(Context context, ActionRequest request) {
             requests.add(request);
             return newActionResponse(new JsonValue(true)).asPromise();
         }
 
+        @Override
         public Promise<ResourceResponse, ResourceException> patchInstance(Context context, PatchRequest request) {
             return new NotSupportedException().asPromise();
         }
 
+        @Override
         public Promise<ResourceResponse, ResourceException> readInstance(Context context, ReadRequest request) {
             return new NotSupportedException().asPromise();
         }
 
+        @Override
         public Promise<ResourceResponse, ResourceException> updateInstance(Context context, UpdateRequest request) {
             return new NotSupportedException().asPromise();
         }
@@ -878,6 +886,7 @@ public class OpenICFProvisionerServiceTest implements RouterRegistry, SyncFailur
 
                 private int index = 101;
 
+                @Override
                 public boolean handleResource(ResourceResponse resource) {
                     Integer idx = resource.getContent().get("sortKey").asInteger();
                     assertThat(idx < index).isTrue();

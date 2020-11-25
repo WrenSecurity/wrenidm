@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS
+ * Portions Copyright 2020 Wren Security
  */
 
 // TODO: Expose as a set of resource actions.
@@ -25,12 +26,6 @@ import static org.forgerock.json.JsonValueFunctions.identity;
 import java.io.IOException;
 import java.security.Key;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.Service;
 import org.forgerock.json.JsonException;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.JsonValueException;
@@ -55,7 +50,11 @@ import org.forgerock.openidm.keystore.KeyStoreService;
 import org.forgerock.openidm.util.JsonUtil;
 import org.forgerock.util.Function;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.Constants;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,14 +63,9 @@ import org.slf4j.LoggerFactory;
  */
 @Component(
         name = "org.forgerock.openidm.crypto",
-        immediate = true,
-        policy = ConfigurationPolicy.OPTIONAL
-)
-@Service
-@Properties({
-        @Property(name = Constants.SERVICE_DESCRIPTION, value = "OpenIDM cryptography service"),
-        @Property(name = Constants.SERVICE_VENDOR, value = ServerConstants.SERVER_VENDOR_NAME)
-})
+        immediate = true)
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("OpenIDM cryptography service")
 public class CryptoServiceImpl implements CryptoService {
 
     private final static Logger logger = LoggerFactory.getLogger(CryptoServiceImpl.class);
@@ -223,15 +217,15 @@ public class CryptoServiceImpl implements CryptoService {
 
     @Override
     public boolean isHashed(JsonValue value) {
-        return value != null 
-                &&!value.isNull() 
-                && JsonCrypto.isJsonCrypto(value) 
+        return value != null
+                &&!value.isNull()
+                && JsonCrypto.isJsonCrypto(value)
                 && value.get("$crypto").get("value").isDefined("algorithm");
     }
-    
+
     /**
      * Returns a {@link FieldStorageScheme} instance based on the supplied algorithm.
-     * 
+     *
      * @param algorithm a string representing a storage scheme algorithm
      * @return a field storage scheme implementation.
      * @throws JsonCryptoException

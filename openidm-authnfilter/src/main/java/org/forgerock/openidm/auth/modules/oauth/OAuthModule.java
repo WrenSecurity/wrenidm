@@ -12,17 +12,17 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  */
 
 package org.forgerock.openidm.auth.modules.oauth;
 
+import static javax.security.auth.message.AuthStatus.SEND_FAILURE;
+import static javax.security.auth.message.AuthStatus.SEND_SUCCESS;
 import static org.forgerock.caf.authentication.framework.AuthenticationFramework.LOG;
 import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.util.promise.Promises.newExceptionPromise;
 import static org.forgerock.util.promise.Promises.newResultPromise;
-import static javax.security.auth.message.AuthStatus.SEND_FAILURE;
-import static javax.security.auth.message.AuthStatus.SEND_SUCCESS;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -33,7 +33,6 @@ import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
-import javax.security.auth.message.AuthException;
 import javax.security.auth.message.AuthStatus;
 import javax.security.auth.message.MessagePolicy;
 import javax.security.auth.message.callback.CallerPrincipalCallback;

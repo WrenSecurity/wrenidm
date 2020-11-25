@@ -17,7 +17,8 @@
 
 package org.forgerock.openidm.router.impl;
 
-import static org.forgerock.json.JsonValueFunctions.*;
+import static org.forgerock.json.JsonValueFunctions.enumConstant;
+import static org.forgerock.json.JsonValueFunctions.pattern;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -30,15 +31,6 @@ import javax.script.ScriptException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Modified;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.JsonValueException;
@@ -50,15 +42,22 @@ import org.forgerock.json.resource.Request;
 import org.forgerock.json.resource.RequestType;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
 import org.forgerock.openidm.core.ServerConstants;
-import org.forgerock.openidm.router.RouterFilterRegistration;
 import org.forgerock.openidm.filter.ScriptedFilter;
-import org.forgerock.openidm.util.JsonUtil;
+import org.forgerock.openidm.router.RouterFilterRegistration;
 import org.forgerock.script.Script;
 import org.forgerock.script.ScriptEntry;
 import org.forgerock.script.ScriptRegistry;
 import org.forgerock.services.context.Context;
-import org.osgi.framework.Constants;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,12 +65,12 @@ import org.slf4j.LoggerFactory;
  * A config object holder to manage the router configuration, including the list of CREST router {@link Filter}s
  * to be added to the {@link FilterChain} managed by the {@link RouterFilterRegistration} service.
  */
-@Component(name = RouterConfig.PID, policy = ConfigurationPolicy.REQUIRE,
-        configurationFactory = false, immediate = true)
-@Properties({
-    @Property(name = Constants.SERVICE_VENDOR, value = ServerConstants.SERVER_VENDOR_NAME),
-    @Property(name = Constants.SERVICE_DESCRIPTION, value = "OpenIDM Router Config")
-})
+@Component(
+        name = RouterConfig.PID,
+        configurationPolicy = ConfigurationPolicy.REQUIRE,
+        immediate = true)
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("OpenIDM Router Config")
 public class RouterConfig {
 
     static final String PID = "org.forgerock.openidm.router";

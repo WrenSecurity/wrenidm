@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.external;
 
@@ -21,6 +22,8 @@ import org.forgerock.json.resource.ResourceException;
  * A ResourceException that wraps a ResourceException generated externally to IDM, such as an external REST call.
  */
 public class ExternalException extends ResourceException {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Constructs a new exception with the specified exception as the external cause.

@@ -12,6 +12,7 @@
  * information: "Portions Copyrighted [year] [name of copyright owner]".
  *
  * Copyright © 2012 ForgeRock AS. All rights reserved.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.smartevent;
 
@@ -34,24 +35,24 @@ import org.testng.annotations.Test;
 
 /**
  * Testing of smart event publisher
- * 
+ *
  */
 public class PublisherTest {
 
     // Format for information purposes
     final static NumberFormat MILLISEC_FORMAT = new DecimalFormat("###,###,##0.###### ms");
-    
+
     // Smart event names for the tests
     final static Name EVENT_BASIC_TEST = Name.get("openidm/test/basic");
     final static Name EVENT_PERF_SMOKE_TEST = Name.get("openidm/test/performance/smoketest");
 
     MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-    
+
     // Smart event also exposes statistics via JMX
     ObjectName getStatisticsMBean() throws MalformedObjectNameException {
         return new ObjectName(StatisticsHandler.MBEAN_NAME);
     }
-    
+
     @Test(enabled = true)
     public void validateStartEndStatistics() throws Exception {
         Object dummyPayload = new JsonValue("{'test': 'some value'}");
@@ -62,17 +63,17 @@ public class PublisherTest {
         Thread.sleep(100); // Statistics is not necessarily updated in a synchronous fashion
         Object totals = mbs.getAttribute(getStatisticsMBean(), "Totals");
         assertThat(totals).isInstanceOf(Map.class);
-        Object statisticsEntry = ((Map)totals).get(EVENT_BASIC_TEST.asString());
+        Object statisticsEntry = ((Map<?, ?>) totals).get(EVENT_BASIC_TEST.asString());
         assertThat(statisticsEntry).isNotNull()
                 .overridingErrorMessage("Expected a statistic entry for " + EVENT_BASIC_TEST + ", but is null.");
     }
-    
+
     /**
-     * Do a number of start/end measurements after an initial warm up, 
+     * Do a number of start/end measurements after an initial warm up,
      * single threaded
-     * Because of varying test environments the 
+     * Because of varying test environments the
      * failure condition for this basic performance smoke test
-     * is set at a lax level. 
+     * is set at a lax level.
      * Real performance (printed on standard out) should be much higher
     */
     @Test(enabled=true)
@@ -81,7 +82,7 @@ public class PublisherTest {
         int warmup = 100000;
         int iterations = 100000;
         int maxTimeToAllow = 10000; // ms time to allow for this test not to fail
-        
+
         Object dummyPayload = new JsonValue("{'test': 'value'}");
         Object dummyContext1 = "reconID: xyz123";
 
@@ -90,7 +91,7 @@ public class PublisherTest {
             measure.end();
         }
         Thread.sleep(200);
-        
+
         long start = System.currentTimeMillis();
         for (int i = 0; i < iterations; i++) {
             EventEntry measure = Publisher.start(EVENT_PERF_SMOKE_TEST, dummyPayload, dummyContext1);
@@ -102,10 +103,10 @@ public class PublisherTest {
                 + "took " + diff + " milliseconds. "
                 + "Each start/end event took approx: " + MILLISEC_FORMAT.format(diff/(double)iterations)
                 + ". This smoke test allows max " + maxTimeToAllow + " ms ");
-        
+
         assertThat(diff).isLessThan(maxTimeToAllow)
                 .overridingErrorMessage("Performance warning: " + iterations + " did not complete in the expected max "
                         + maxTimeToAllow + " ms");
     }
-    
+
 }

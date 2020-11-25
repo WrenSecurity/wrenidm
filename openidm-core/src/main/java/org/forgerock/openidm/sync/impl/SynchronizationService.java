@@ -22,7 +22,7 @@ import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.resource.Requests.newQueryRequest;
 import static org.forgerock.json.resource.Requests.newReadRequest;
-import static org.forgerock.json.resource.ResourcePath.*;
+import static org.forgerock.json.resource.ResourcePath.resourcePath;
 import static org.forgerock.json.resource.Responses.newActionResponse;
 import static org.forgerock.json.resource.Responses.newResourceResponse;
 import static org.forgerock.openidm.util.ResourceUtil.notSupported;
@@ -32,51 +32,49 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Modified;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
 import org.forgerock.audit.events.AuditEvent;
 import org.forgerock.guava.common.base.Function;
 import org.forgerock.guava.common.base.Predicate;
 import org.forgerock.guava.common.collect.FluentIterable;
-import org.forgerock.json.resource.Connection;
-import org.forgerock.json.resource.QueryResourceHandler;
-import org.forgerock.json.resource.ResourcePath;
-import org.forgerock.openidm.core.ServerConstants;
-import org.forgerock.openidm.router.IDMConnectionFactory;
-import org.forgerock.openidm.sync.SynchronizationException;
-import org.forgerock.services.context.Context;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.JsonValueException;
 import org.forgerock.json.resource.ActionRequest;
 import org.forgerock.json.resource.ActionResponse;
 import org.forgerock.json.resource.BadRequestException;
+import org.forgerock.json.resource.Connection;
 import org.forgerock.json.resource.ConnectionFactory;
 import org.forgerock.json.resource.PatchRequest;
+import org.forgerock.json.resource.QueryResourceHandler;
 import org.forgerock.json.resource.ReadRequest;
 import org.forgerock.json.resource.Requests;
 import org.forgerock.json.resource.ResourceException;
+import org.forgerock.json.resource.ResourcePath;
 import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.SingletonResourceProvider;
 import org.forgerock.json.resource.UpdateRequest;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
+import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.quartz.impl.ExecutionException;
 import org.forgerock.openidm.quartz.impl.ScheduledService;
+import org.forgerock.openidm.router.IDMConnectionFactory;
 import org.forgerock.openidm.sync.ReconAction;
+import org.forgerock.openidm.sync.SynchronizationException;
+import org.forgerock.services.context.Context;
 import org.forgerock.util.AsyncFunction;
 import org.forgerock.util.promise.Promise;
 import org.forgerock.util.promise.Promises;
 import org.forgerock.util.query.QueryFilter;
-import org.osgi.framework.Constants;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,14 +83,16 @@ import org.slf4j.LoggerFactory;
  * and targets listed in the synchronization mappings described by the injected Mappings.
  * Also supports invocation as a {@link ScheduledService}.
  */
-@Component(name = SynchronizationService.PID, policy = ConfigurationPolicy.IGNORE, immediate = true)
-@Properties({
-    @Property(name = Constants.SERVICE_DESCRIPTION, value = "OpenIDM object synchronization service"),
-    @Property(name = Constants.SERVICE_VENDOR, value = "ForgeRock AS"),
-    @Property(name = ServerConstants.ROUTER_PREFIX, value = "/sync/*"),
-    @Property(name = ServerConstants.SCHEDULED_SERVICE_INVOKE_SERVICE, value = "sync")
-})
-@Service
+@Component(
+        name = SynchronizationService.PID,
+        configurationPolicy = ConfigurationPolicy.IGNORE,
+        immediate = true,
+        property = {
+                ServerConstants.ROUTER_PREFIX + "=/sync/*",
+                ServerConstants.SCHEDULED_SERVICE_INVOKE_SERVICE + "=sync"
+        })
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("OpenIDM object synchronization service")
 public class SynchronizationService implements SingletonResourceProvider, ScheduledService {
     public static final String PID = "org.forgerock.openidm.synchronization";
 

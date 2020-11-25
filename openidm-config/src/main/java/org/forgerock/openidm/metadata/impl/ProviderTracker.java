@@ -38,6 +38,7 @@ import org.forgerock.openidm.metadata.MetaDataProvider;
 import org.forgerock.openidm.metadata.MetaDataProviderCallback;
 import org.forgerock.openidm.osgi.ServiceTrackerListener;
 import org.forgerock.openidm.osgi.ServiceTrackerNotifier;
+import org.forgerock.openidm.osgi.ServiceUtil;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
@@ -69,8 +70,8 @@ public class ProviderTracker implements ServiceTrackerListener<MetaDataProvider,
      * Constructor
      * @param context a bundle context to access OSGi
      * @param listener the listener to notify when a provider change was detecte
-     * @param notifyDuringInit whether to notify the listener during the ProviderTracker construction. 
-     * Setting it to false allows to query the providers acquired during init with getProviders, and to process additional 
+     * @param notifyDuringInit whether to notify the listener during the ProviderTracker construction.
+     * Setting it to false allows to query the providers acquired during init with getProviders, and to process additional
      * providers via the listener.
      */
     public ProviderTracker(BundleContext context, ProviderListener listener, boolean notifyDuringInit) {
@@ -81,14 +82,14 @@ public class ProviderTracker implements ServiceTrackerListener<MetaDataProvider,
         // TODO: add bundle listeners to track new installs and remove uninstalls
     }
 
-    private void initBundleProviders(BundleContext context, boolean notifyDuringInit) { 
+    private void initBundleProviders(BundleContext context, boolean notifyDuringInit) {
         Bundle[] bundles = context.getBundles();
         for (Bundle bundle : bundles) {
             if (logger.isTraceEnabled()) {
                 logger.trace("Scanning bundle {} for metadata file", bundle.getBundleId());
             }
             Enumeration<URL> entries = bundle.findEntries("org/forgerock/metadata", "bundle.json", true);
-            try { 
+            try {
                 if (entries != null && entries.hasMoreElements()) {
                     URL entryUrl = entries.nextElement();
                     logger.trace("Found metadata file, load and parse {}", entryUrl);
@@ -135,31 +136,34 @@ public class ProviderTracker implements ServiceTrackerListener<MetaDataProvider,
         return tracker;
     }
 
+    @Override
     public void addedService(ServiceReference<MetaDataProvider> reference, MetaDataProvider service) {
-        String pid = (String) reference.getProperty(Constants.SERVICE_PID);
+        String pid = ServiceUtil.getServicePid(reference.getProperties());
         // Instantiate and set the provider callback
         service.setCallback(new ProviderTrackerCallback(service, pid));
         // Add the provider to the listener
         addProvider(pid, service, true);
     }
 
+    @Override
     public void removedService(ServiceReference<MetaDataProvider> reference, MetaDataProvider service) {
-        String pid = (String) reference.getProperty(Constants.SERVICE_PID);
+        String pid = ServiceUtil.getServicePid(reference.getProperties());
         providers.remove(pid);
     }
 
+    @Override
     public void modifiedService(ServiceReference<MetaDataProvider> reference, MetaDataProvider service) {
-        String pid = (String) reference.getProperty(Constants.SERVICE_PID);
+        String pid = ServiceUtil.getServicePid(reference.getProperties());
         modifiedProvider(pid, service, true);
     }
-    
+
     public void modifiedProvider(String pid, MetaDataProvider provider, boolean notify) {
         addProvider(pid, provider, notify);
     }
 
     /**
      * Get the current registered providers
-     * Providers can be backed by an OSGi services, 
+     * Providers can be backed by an OSGi services,
      * or created from a bundle factory
      * @return meta data providers
      */

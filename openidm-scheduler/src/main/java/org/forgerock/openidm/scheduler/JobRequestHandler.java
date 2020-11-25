@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.scheduler;
 
@@ -34,7 +35,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -69,12 +69,10 @@ import org.forgerock.openidm.filter.JsonValueFilterVisitor;
 import org.forgerock.openidm.quartz.impl.ScheduledService;
 import org.forgerock.openidm.quartz.impl.SchedulerServiceJob;
 import org.forgerock.openidm.quartz.impl.StatefulSchedulerServiceJob;
-import org.forgerock.openidm.scheduler.impl.TriggerFactory;
 import org.forgerock.openidm.util.JsonUtil;
 import org.forgerock.services.context.Context;
 import org.forgerock.util.promise.Promise;
 import org.forgerock.util.query.QueryFilter;
-import org.quartz.CronTrigger;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;

@@ -12,12 +12,11 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  */
 package org.forgerock.openidm.repo.orientdb.impl;
 
 import static org.forgerock.json.resource.CountPolicy.EXACT;
-import static org.forgerock.json.resource.CountPolicy.NONE;
 import static org.forgerock.json.resource.QueryResponse.NO_COUNT;
 import static org.forgerock.json.resource.ResourceException.newResourceException;
 import static org.forgerock.json.resource.Responses.newActionResponse;
@@ -32,18 +31,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Modified;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
-import org.forgerock.openidm.router.IDMConnectionFactory;
-import org.forgerock.services.context.Context;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.JsonValueException;
 import org.forgerock.json.resource.ActionRequest;
@@ -64,8 +51,8 @@ import org.forgerock.json.resource.QueryResponse;
 import org.forgerock.json.resource.ReadRequest;
 import org.forgerock.json.resource.RequestHandler;
 import org.forgerock.json.resource.Requests;
-import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.ResourceException;
+import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.UpdateRequest;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
 import org.forgerock.openidm.core.IdentityServer;
@@ -76,9 +63,20 @@ import org.forgerock.openidm.repo.RepositoryService;
 import org.forgerock.openidm.repo.orientdb.impl.query.Commands;
 import org.forgerock.openidm.repo.orientdb.impl.query.PredefinedQueries;
 import org.forgerock.openidm.repo.orientdb.impl.query.Queries;
+import org.forgerock.openidm.router.IDMConnectionFactory;
+import org.forgerock.services.context.Context;
 import org.forgerock.util.Reject;
 import org.forgerock.util.promise.Promise;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,12 +92,16 @@ import com.orientechnologies.orient.core.version.OSimpleVersion;
 /**
  * Repository service implementation using OrientDB
  */
-@Component(name = OrientDBRepoService.PID, immediate=true, policy=ConfigurationPolicy.REQUIRE, enabled=true)
-@Service (value = {RepositoryService.class, RequestHandler.class}) // Omit the RepoBootService interface from the managed service
-@Properties({
-    @Property(name = "service.description", value = "Repository Service using OrientDB"),
-    @Property(name = "service.vendor", value = ServerConstants.SERVER_VENDOR_NAME),
-    @Property(name = ServerConstants.ROUTER_PREFIX, value = "/repo/*") }) // "/repo/{partition}*") })
+@Component(
+        name = OrientDBRepoService.PID,
+        immediate = true,
+        configurationPolicy = ConfigurationPolicy.REQUIRE,
+        property = {
+                ServerConstants.ROUTER_PREFIX + "=/repo/*"
+        },
+        service = { RepositoryService.class, RequestHandler.class })
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("Repository Service using OrientDB")
 public class OrientDBRepoService implements RequestHandler, RepositoryService, RepoBootService {
 
     final static Logger logger = LoggerFactory.getLogger(OrientDBRepoService.class);

@@ -12,11 +12,18 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Portions copyright 2013-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.cluster;
 
-import static org.forgerock.json.JsonValue.*;
-import static org.forgerock.json.resource.Requests.*;
+import static org.forgerock.json.JsonValue.field;
+import static org.forgerock.json.JsonValue.json;
+import static org.forgerock.json.JsonValue.object;
+import static org.forgerock.json.resource.Requests.newCreateRequest;
+import static org.forgerock.json.resource.Requests.newDeleteRequest;
+import static org.forgerock.json.resource.Requests.newQueryRequest;
+import static org.forgerock.json.resource.Requests.newReadRequest;
+import static org.forgerock.json.resource.Requests.newUpdateRequest;
 import static org.forgerock.json.resource.Responses.newResourceResponse;
 import static org.forgerock.openidm.core.IdentityServer.NODE_ID;
 import static org.forgerock.openidm.util.ResourceUtil.notSupported;
@@ -33,15 +40,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ActionRequest;
 import org.forgerock.json.resource.ActionResponse;
@@ -66,22 +64,31 @@ import org.forgerock.openidm.router.IDMConnectionFactory;
 import org.forgerock.openidm.util.DateUtil;
 import org.forgerock.services.context.Context;
 import org.forgerock.util.promise.Promise;
-import org.osgi.framework.Constants;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * A Cluster Management Service.
- *
  */
-@Component(name = ClusterManager.PID, policy = ConfigurationPolicy.REQUIRE, metatype = true,
-        description = "OpenIDM Cluster Management Service", immediate = true)
-@Service
-@Properties({
-    @Property(name = Constants.SERVICE_VENDOR, value = ServerConstants.SERVER_VENDOR_NAME),
-    @Property(name = Constants.SERVICE_DESCRIPTION, value = "Cluster Management Service"),
-    @Property(name = ServerConstants.ROUTER_PREFIX, value = "/cluster*") })
+@Component(
+        name = ClusterManager.PID,
+        configurationPolicy = ConfigurationPolicy.REQUIRE,
+        //description = "OpenIDM Cluster Management Service",
+        immediate = true,
+        property = {
+                ServerConstants.ROUTER_PREFIX + "=/cluster*"
+        })
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("Cluster Management Service")
 public class ClusterManager implements RequestHandler, ClusterManagementService {
 
     private static final Logger logger = LoggerFactory.getLogger(ClusterManager.class);
@@ -95,12 +102,12 @@ public class ClusterManager implements RequestHandler, ClusterManagementService 
      * Query ID for querying failed instances
      */
     public static final String QUERY_FAILED_INSTANCE = "query-cluster-failed-instances";
-    
+
     /**
      * Query ID for querying all instances
      */
     public static final String QUERY_INSTANCES = "query-cluster-instances";
-    
+
     /**
      * Query ID for getting pending cluster events
      */
@@ -109,13 +116,13 @@ public class ClusterManager implements RequestHandler, ClusterManagementService 
     /**
      * Resource name when issuing requests over the router
      */
-    private static final ResourcePath REPO_RESOURCE_CONTAINER = new ResourcePath("repo", "cluster", "states");     
-    
+    private static final ResourcePath REPO_RESOURCE_CONTAINER = new ResourcePath("repo", "cluster", "states");
+
     /**
      * Resource name when issuing cluster state requests directly with the Repository Service
      */
-    private static final ResourcePath STATES_RESOURCE_CONTAINER = new ResourcePath("cluster", "states");    
-    
+    private static final ResourcePath STATES_RESOURCE_CONTAINER = new ResourcePath("cluster", "states");
+
     /**
      * Resource name when issuing cluster event requests directly with the Repository Service
      */
@@ -125,7 +132,7 @@ public class ClusterManager implements RequestHandler, ClusterManagementService 
      * The instance ID
      */
     private String instanceId;
-    
+
     @Reference
     protected RepositoryService repoService;
 
@@ -180,10 +187,10 @@ public class ClusterManager implements RequestHandler, ClusterManagementService 
         JsonValue config = enhancedConfig.getConfigurationAsJson(compContext);
         init(config);
     }
-    
+
     /**
      * Initializes the Cluster Manager configuration
-     * 
+     *
      * @param config an {@link JsonValue} object representing the configuration
      */
     protected void init(JsonValue config) {
@@ -197,7 +204,7 @@ public class ClusterManager implements RequestHandler, ClusterManagementService 
         clusterConfig = clstrCfg;
         if (clusterConfig.isEnabled()) {
             enabled = true;
-            clusterManagerThread = new ClusterManagerThread(clusterConfig.getInstanceCheckInInterval(), 
+            clusterManagerThread = new ClusterManagerThread(clusterConfig.getInstanceCheckInInterval(),
             		clusterConfig.getInstanceCheckInOffset());
         }
     }
@@ -359,6 +366,7 @@ public class ClusterManager implements RequestHandler, ClusterManagementService 
         return instanceInfo;
     }
 
+    @Override
     public void renewRecoveryLease(String instanceId) {
         synchronized (repoLock) {
             try {
@@ -394,10 +402,10 @@ public class ClusterManager implements RequestHandler, ClusterManagementService 
             repoService.update(updateRequest);
         }
     }
-    
+
     /**
      * Gets a list of all instances in the cluster
-     * 
+     *
      * @return a list of Map objects representing each instance in the cluster
      * @throws ResourceException
      */
@@ -685,9 +693,9 @@ public class ClusterManager implements RequestHandler, ClusterManagementService 
             logger.error("Error sending cluster event " + event.toJsonValue(), e);
         }
     }
-    
+
     /**
-     * Finds and processes any pending cluster events for this node.  The event will then 
+     * Finds and processes any pending cluster events for this node.  The event will then
      * be deleting if the processing was successful.
      */
     private void processPendingEvents() {
@@ -769,6 +777,7 @@ public class ClusterManager implements RequestHandler, ClusterManagementService 
             running = true;
             logger.info("Starting the cluster manager thread");
             handler = scheduler.scheduleAtFixedRate(new Runnable() {
+                @Override
                 public void run() {
                     try {
                         // Check in this instance
@@ -805,7 +814,7 @@ public class ClusterManager implements RequestHandler, ClusterManagementService 
 
                         // Check for pending cluster events
                         processPendingEvents();
-                        
+
                         // Find failed instances
                         logger.debug("Finding failed instances");
                         Map<String, InstanceState> failedInstances = findFailedInstances();

@@ -2,7 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2011-2016 ForgeRock AS. All Rights Reserved
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -548,7 +548,7 @@ public class ConnectorUtil {
         return result;
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked" })
+    @SuppressWarnings("rawtypes")
     public static void  configureConfigurationProperties(JsonValue source, ConfigurationProperties target,
             CryptoService cryptoService) throws JsonValueException {
         source.required();
@@ -1007,7 +1007,7 @@ public class ConnectorUtil {
      * @throws NumberFormatException
      * @throws UnsupportedOperationException
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static <T> T coercedTypeCasting(Object source, Class<T> clazz)
     throws IllegalArgumentException {
         if (null == clazz) {
@@ -1421,6 +1421,7 @@ public class ConnectorUtil {
         final ByteArrayOutputStream clearStream = new ByteArrayOutputStream();
         GuardedByteArray.Accessor accessor = new GuardedByteArray.Accessor() {
 
+            @Override
             public void access(byte[] clearBytes) {
                 clearStream.write(clearBytes, 0, clearBytes.length);
             }
@@ -1433,6 +1434,7 @@ public class ConnectorUtil {
         final String[] clearText = new String[1];
         GuardedString.Accessor accessor = new GuardedString.Accessor() {
 
+            @Override
             public void access(char[] clearChars) {
                 clearText[0] = new String(clearChars);
             }

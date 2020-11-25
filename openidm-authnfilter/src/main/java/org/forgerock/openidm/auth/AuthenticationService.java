@@ -12,21 +12,27 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2013-2016 ForgeRock AS
+ * Portions Copyright 2020 Wren Security
  */
 
 package org.forgerock.openidm.auth;
 
 import static org.forgerock.caf.authentication.framework.AuthenticationFilter.AuthenticationModuleBuilder.configureModule;
 import static org.forgerock.http.handler.HttpClientHandler.OPTION_LOADER;
-import static org.forgerock.jaspi.modules.session.jwt.JwtSessionModule.LOGOUT_SESSION_REQUEST_ATTRIBUTE_NAME;
-import static org.forgerock.json.JsonValue.*;
+import static org.forgerock.json.JsonValue.array;
+import static org.forgerock.json.JsonValue.field;
+import static org.forgerock.json.JsonValue.json;
+import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.JsonValueFunctions.enumConstant;
 import static org.forgerock.json.resource.Responses.newActionResponse;
 import static org.forgerock.json.resource.Responses.newResourceResponse;
-import static org.forgerock.openidm.auth.modules.IDMAuthModuleWrapper.*;
+import static org.forgerock.openidm.auth.modules.IDMAuthModuleWrapper.AUTHENTICATION_ID;
+import static org.forgerock.openidm.auth.modules.IDMAuthModuleWrapper.PROPERTY_MAPPING;
+import static org.forgerock.openidm.auth.modules.IDMAuthModuleWrapper.QUERY_ID;
+import static org.forgerock.openidm.auth.modules.IDMAuthModuleWrapper.QUERY_ON_RESOURCE;
+import static org.forgerock.openidm.auth.modules.IDMAuthModuleWrapper.USER_CREDENTIAL;
 import static org.forgerock.openidm.idp.impl.IdentityProviderService.withoutClientSecret;
 
-import javax.inject.Provider;
 import java.io.UnsupportedEncodingException;
 import java.security.Key;
 import java.util.ArrayList;
@@ -34,17 +40,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Provider;
+
 import org.apache.commons.lang3.StringUtils;
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferenceCardinality;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
 import org.forgerock.api.annotations.Actions;
 import org.forgerock.api.annotations.ApiError;
 import org.forgerock.api.annotations.Handler;
@@ -95,14 +93,14 @@ import org.forgerock.openidm.config.enhanced.EnhancedConfig;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.crypto.CryptoService;
-import org.forgerock.openidm.idp.impl.api.IdentityProviderServiceResourceWithNoSecret;
-import org.forgerock.openidm.keystore.SharedKeyService;
 import org.forgerock.openidm.idp.client.OAuthHttpClient;
 import org.forgerock.openidm.idp.config.ProviderConfig;
 import org.forgerock.openidm.idp.impl.IdentityProviderListener;
 import org.forgerock.openidm.idp.impl.IdentityProviderService;
 import org.forgerock.openidm.idp.impl.IdentityProviderServiceException;
 import org.forgerock.openidm.idp.impl.ProviderConfigMapper;
+import org.forgerock.openidm.idp.impl.api.IdentityProviderServiceResourceWithNoSecret;
+import org.forgerock.openidm.keystore.SharedKeyService;
 import org.forgerock.openidm.router.IDMConnectionFactory;
 import org.forgerock.openidm.util.HeaderUtil;
 import org.forgerock.openidm.util.JettyPropertyUtil;
@@ -115,6 +113,15 @@ import org.forgerock.util.encode.Base64;
 import org.forgerock.util.promise.Promise;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -158,13 +165,15 @@ import org.slf4j.LoggerFactory;
         description = "Utilities related to authentication.",
         mvccSupported = false,
         resourceSchema = @Schema(fromType = IdentityProviderServiceResourceWithNoSecret.class)))
-@Component(name = AuthenticationService.PID, immediate = true, policy = ConfigurationPolicy.REQUIRE)
-@Service
-@Properties({
-        @Property(name = Constants.SERVICE_VENDOR, value = ServerConstants.SERVER_VENDOR_NAME),
-        @Property(name = Constants.SERVICE_DESCRIPTION, value = "OpenIDM Authentication Service"),
-        @Property(name = ServerConstants.ROUTER_PREFIX, value = "/authentication")
-})
+@Component(
+        name = AuthenticationService.PID,
+        immediate = true,
+        configurationPolicy = ConfigurationPolicy.REQUIRE,
+        property = {
+                ServerConstants.ROUTER_PREFIX + "=/authentication" 
+        })
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("OpenIDM Authentication Service")
 public class AuthenticationService implements SingletonResourceProvider, IdentityProviderListener {
 
     /** The PID for this Component. */
@@ -241,7 +250,7 @@ public class AuthenticationService implements SingletonResourceProvider, Identit
     @Reference(policy = ReferencePolicy.DYNAMIC, target="(service.pid=org.forgerock.openidm.auth.config)")
     private volatile AuthFilterWrapper authFilterWrapper;
 
-    @Reference(policy = ReferencePolicy.DYNAMIC, cardinality = ReferenceCardinality.OPTIONAL_UNARY)
+    @Reference(policy = ReferencePolicy.DYNAMIC, cardinality = ReferenceCardinality.OPTIONAL)
     private volatile IdentityProviderService identityProviderService;
 
     void bindIdentityProviderService(IdentityProviderService identityProviderService) {
@@ -752,7 +761,7 @@ public class AuthenticationService implements SingletonResourceProvider, Identit
                 case logout:
                     // adding the logout attribute will instruct CAF to clobber the JWT cookie's value.
                     context.asContext(AttributesContext.class).getAttributes()
-                            .put(LOGOUT_SESSION_REQUEST_ATTRIBUTE_NAME, true);
+                            .put(JwtSessionModule.LOGOUT_SESSION_REQUEST_ATTRIBUTE_NAME, true);
                     return newActionResponse(json(object(field("success", true)))).asPromise();
                 default:
                     return new BadRequestException("Action " + request.getAction() +

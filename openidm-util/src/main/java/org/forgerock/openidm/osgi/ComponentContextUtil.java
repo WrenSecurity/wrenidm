@@ -15,11 +15,11 @@
  */
 package org.forgerock.openidm.osgi;
 
-import org.osgi.service.component.ComponentContext;
-
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
+
+import org.osgi.service.component.ComponentContext;
 
 /**
  * Utilities for augmenting ComponentContext behavior.

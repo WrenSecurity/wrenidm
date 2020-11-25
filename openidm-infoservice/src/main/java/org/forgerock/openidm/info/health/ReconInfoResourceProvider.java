@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.info.health;
 
@@ -20,26 +21,26 @@ import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.resource.Responses.newResourceResponse;
 
+import java.lang.management.ManagementFactory;
+
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+
 import org.forgerock.api.annotations.Handler;
 import org.forgerock.api.annotations.Operation;
 import org.forgerock.api.annotations.Read;
 import org.forgerock.api.annotations.Schema;
 import org.forgerock.api.annotations.SingletonProvider;
 import org.forgerock.json.JsonValue;
-import org.forgerock.json.resource.ReadRequest;
-import org.forgerock.openidm.info.health.api.OsInfoResource;
-import org.forgerock.openidm.info.health.api.ReconInfoResource;
-import org.forgerock.services.context.Context;
 import org.forgerock.json.resource.InternalServerErrorException;
+import org.forgerock.json.resource.ReadRequest;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourceResponse;
+import org.forgerock.openidm.info.health.api.ReconInfoResource;
+import org.forgerock.services.context.Context;
 import org.forgerock.util.promise.Promise;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-import java.lang.management.ManagementFactory;
 
 /**
  * Gets Recon Health Info.

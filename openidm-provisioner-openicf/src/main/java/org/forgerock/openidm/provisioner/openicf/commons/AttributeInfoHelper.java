@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  */
 package org.forgerock.openidm.provisioner.openicf.commons;
 
@@ -257,7 +257,7 @@ public class AttributeInfoHelper {
      * The {@link QueryFilterVisitor} uses this method to convert the string
      * value to a {@link Attribute} value that is used in
      * {@link org.identityconnectors.framework.common.objects.filter.Filter}
-     * 
+     *
      * @param   source
      *          The object to convert.
      *
@@ -387,14 +387,14 @@ public class AttributeInfoHelper {
     private <T> T getSingleValue(Object source, Class<T> clazz) {
         if (null == source) {
             return null;
-        } 
+        }
 
         if (source instanceof JsonValue) {
             source = ((JsonValue) source).getObject();
         }
 
         if (source instanceof List) {
-            @SuppressWarnings({ "rawtypes", "unchecked" })
+            @SuppressWarnings("rawtypes")
             List c = (List) source;
             if (c.size() < 2) {
                 if (c.isEmpty()) {
@@ -423,7 +423,7 @@ public class AttributeInfoHelper {
         if (source instanceof JsonValue) {
             source = ((JsonValue) source).getObject();
         }
-        
+
         List<T> newValues = null;
         if (source instanceof Collection) {
             newValues = new ArrayList<T>(((Collection) source).size());

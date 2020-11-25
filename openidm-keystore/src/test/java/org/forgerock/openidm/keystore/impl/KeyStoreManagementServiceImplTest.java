@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  */
 
 package org.forgerock.openidm.keystore.impl;
@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 
 import java.security.KeyStore;
 import java.security.Security;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.openidm.keystore.KeyStoreDetails;

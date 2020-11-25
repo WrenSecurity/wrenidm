@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 
 package org.forgerock.openidm.managed;
@@ -26,6 +27,7 @@ import org.forgerock.json.resource.PreconditionFailedException;
  * a _rev mismatch.
  */
 public class DuplicateRelationshipException extends PreconditionFailedException {
+    private static final long serialVersionUID = 1L;
     public DuplicateRelationshipException(String message) {
         super(message);
     }

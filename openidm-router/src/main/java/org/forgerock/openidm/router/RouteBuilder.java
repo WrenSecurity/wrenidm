@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2013-2015 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2020 Wren Security
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -203,7 +204,7 @@ public final class RouteBuilder {
         return this;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings("unchecked")
     public RouteMatcher<Request>[] register(Router router) {
         if (routes.isEmpty()) {
             return new RouteMatcher[0];
