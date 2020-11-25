@@ -587,11 +587,11 @@
             <version>1.2</version>
         </dependency>
 
-        <!-- jdbc drivers -->
+        <!-- JDBC drivers -->
         <dependency>
             <groupId>org.postgresql</groupId>
-            <artifactId>postgresql-fr-osgi</artifactId>
-            <version>9.3-1101-jdbc41</version>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.18</version>
         </dependency>
 
         <!-- Javascript libraries -->

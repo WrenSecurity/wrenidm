@@ -109,7 +109,7 @@
 
     <properties>
 
-        <pgpWhitelistArtifact>org.wrensecurity:wrensec-pgp-whitelist:1.4.4</pgpWhitelistArtifact>
+        <pgpWhitelistArtifact>org.wrensecurity:wrensec-pgp-whitelist:1.4.5</pgpWhitelistArtifact>
 
         <!-- Version management -->
         <commons.commons-bom.version>22.0.0</commons.commons-bom.version>
