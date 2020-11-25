@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 
 package org.forgerock.openidm.router.impl;
@@ -95,6 +96,10 @@ public class RouterConfig {
 
     /** the component configuration */
     private JsonValue config;
+
+    void bindScriptRegistry(ScriptRegistry scriptRegistry) {
+        this.scriptRegistry = scriptRegistry;
+    }
 
     @Activate
     protected void activate(ComponentContext context) {

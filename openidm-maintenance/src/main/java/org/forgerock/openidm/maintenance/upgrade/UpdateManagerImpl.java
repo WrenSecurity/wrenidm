@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.maintenance.upgrade;
 
@@ -180,6 +181,10 @@ public class UpdateManagerImpl implements UpdateManager {
 
     /** The OSGiFramework Service **/
     protected OSGiFrameworkService osgiFrameworkService;
+
+    void bindUpdateLogService(UpdateLogService updateLogService) {
+        this.updateLogService = updateLogService;
+    }
 
     @Activate
     void activate(ComponentContext compContext) throws Exception {
@@ -935,6 +940,7 @@ public class UpdateManagerImpl implements UpdateManager {
             this.repoUpdates = listRequiredRepoUpdates(archive, fileStateChecker);
         }
 
+        @Override
         public void run() {
             try {
                 final String projectDir = IdentityServer.getInstance().getProjectLocation().toString();

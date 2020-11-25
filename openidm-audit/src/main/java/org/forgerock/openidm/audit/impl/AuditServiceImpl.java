@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.audit.impl;
 
@@ -119,22 +120,22 @@ public class AuditServiceImpl implements AuditService {
      if using this with for scr 1.6.2
      Ensure we do not get bound on router whilst it is activating
      */
-    @Reference(target = "("+ServerConstants.ROUTER_PREFIX + "=/*)")
+    @Reference(target = "("+ServerConstants.ROUTER_PREFIX + "=/*)", bind = "bindRouteService")
     private RouteService routeService;
 
     /** Script Registry service. */
-    @Reference(policy = ReferencePolicy.STATIC)
+    @Reference(policy = ReferencePolicy.STATIC, bind = "bindScriptRegistry")
     private ScriptRegistry scriptRegistry;
 
     private AuditServiceProxy auditService;
     private JsonValue config; // Existing active configuration
 
     /** Enhanced configuration service. */
-    @Reference(policy = ReferencePolicy.DYNAMIC)
+    @Reference(policy = ReferencePolicy.DYNAMIC, bind = "bindEnhancedConfig")
     private volatile EnhancedConfig enhancedConfig;
 
     /** Enhanced configuration service. */
-    @Reference
+    @Reference(bind = "bindCryptoService")
     private CryptoService cryptoService;
 
     /** the script to execute to format exceptions */
@@ -241,6 +242,22 @@ public class AuditServiceImpl implements AuditService {
      * call their useForQueriesMethod.
      */
     private final Map<String, EventHandlerConfiguration> dummyAuditEventHandlers = new LinkedHashMap<>();
+
+    void bindRouteService(RouteService routeService) {
+        this.routeService = routeService;
+    }
+
+    void bindScriptRegistry(ScriptRegistry scriptRegistry) {
+        this.scriptRegistry = scriptRegistry;
+    }
+
+    void bindEnhancedConfig(EnhancedConfig enhancedConfig) {
+        this.enhancedConfig = enhancedConfig;
+    }
+
+    void bindCryptoService(CryptoService cryptoService) {
+        this.cryptoService = cryptoService;
+    }
 
     @Activate
     void activate(ComponentContext compContext) throws Exception {

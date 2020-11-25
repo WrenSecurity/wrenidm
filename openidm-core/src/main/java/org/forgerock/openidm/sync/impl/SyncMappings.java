@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Portions copyright 2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.sync.impl;
 
@@ -68,6 +69,10 @@ public class SyncMappings implements Mappings {
     /** Script Registry service. */
     @Reference(policy = ReferencePolicy.DYNAMIC)
     private volatile ScriptRegistry scriptRegistry;
+
+    void bindEnhancedConfig(EnhancedConfig enhancedConfig) {
+        this.enhancedConfig = enhancedConfig;
+    }
 
     /**
      * Activate/modify the component.  Because the List of ObjectMappings is re-assigned based on the updated

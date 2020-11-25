@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
- * Copyright 2017-2018 Wren Security.
+ * Copyright 2017-2020 Wren Security.
  */
 
 package org.forgerock.openidm.servlet.internal;
@@ -98,11 +98,11 @@ public class ServletConnectionFactory implements ConnectionFactory, RouterFilter
     private static final Filter SERVICE_UNAVAILABLE_FILTER = new ServiceUnavailableFilter("Service is starting");
 
     /** the Request Handler (Router) */
-    @Reference(target = "(org.forgerock.openidm.router=*)")
+    @Reference(target = "(org.forgerock.openidm.router=*)", bind = "bindRequestHandler")
     private RequestHandler requestHandler = null;
 
     /** Enhanced configuration service. */
-    @Reference(policy = ReferencePolicy.DYNAMIC)
+    @Reference(policy = ReferencePolicy.DYNAMIC, bind = "bindEnhancedConfig")
     private volatile EnhancedConfig enhancedConfig = null;
 
     /**
@@ -142,6 +142,14 @@ public class ServletConnectionFactory implements ConnectionFactory, RouterFilter
 
     /** the created connection factory */
     protected ConnectionFactory connectionFactory;
+
+    void bindRequestHandler(RequestHandler requestHandler) {
+        this.requestHandler = requestHandler;
+    }
+
+    void bindEnhancedConfig(EnhancedConfig enhancedConfig) {
+        this.enhancedConfig = enhancedConfig;
+    }
 
     /**
      * Assign the maintenance filter delegate to the provided filter.

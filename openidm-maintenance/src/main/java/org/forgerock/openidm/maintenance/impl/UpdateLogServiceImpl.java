@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.maintenance.impl;
 
@@ -73,6 +74,10 @@ public class UpdateLogServiceImpl extends AbstractRequestHandler implements Upda
     /** The connection factory */
     @Reference(policy = ReferencePolicy.STATIC)
     private IDMConnectionFactory connectionFactory;
+
+    void bindConnectionFactory(IDMConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
 
     @Activate
     void activate(ComponentContext compContext) throws Exception {

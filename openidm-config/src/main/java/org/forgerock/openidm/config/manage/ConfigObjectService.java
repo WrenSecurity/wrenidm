@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  */
 
 package org.forgerock.openidm.config.manage;
@@ -168,6 +168,10 @@ public class ConfigObjectService implements RequestHandler, ClusterEventListener
     /** Scripted Patch Value Transformer Factory. */
     @Reference(policy = ReferencePolicy.DYNAMIC)
     private volatile ScriptedPatchValueTransformerFactory scriptedPatchValueTransformerFactory;
+
+    protected void bindScriptedPatchValueTransformerFactory(ScriptedPatchValueTransformerFactory scriptedPatchValueTransformerFactory) {
+        this.scriptedPatchValueTransformerFactory = scriptedPatchValueTransformerFactory;
+    }
 
     /** Enhanced configuration service. */
     @Reference(policy = ReferencePolicy.DYNAMIC)
@@ -1057,7 +1061,7 @@ public class ConfigObjectService implements RequestHandler, ClusterEventListener
         }
 
         /**
-         * Prepends the fields in the configuration object with the key where the object is stored.  
+         * Prepends the fields in the configuration object with the key where the object is stored.
          * Will not modify fields outside of the configuration object.
          *
          * @param field a {@link JsonPointer} representing the field to modify.
@@ -1153,6 +1157,7 @@ public class ConfigObjectService implements RequestHandler, ClusterEventListener
                     : ConfigBootstrapHelper.qualifyPid(pid);
         }
 
+        @Override
         public String toString() {
             return isFactoryConfig()
                     ? (factoryPid + "/" + instanceAlias)

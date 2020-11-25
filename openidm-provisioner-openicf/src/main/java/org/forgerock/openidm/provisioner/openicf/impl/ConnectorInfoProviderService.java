@@ -14,7 +14,7 @@
  * "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  */
 package org.forgerock.openidm.provisioner.openicf.impl;
 
@@ -141,22 +141,22 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
     private static final String SYSTEM_TYPE_OPENICF = "openicf";
 
     ReferenceCountedObject<ConnectorFramework>.Reference connectorFramework = null;
-    
+
     // Private
     private final Map<String, AsyncConnectorInfoManager> remoteFrameworkConnectionInfo = new HashMap<>();
     private final Map<Pair<String, Integer>, String> remoteLegacyManagerCache = new HashMap<>();
-    
+
     private List<URL> connectorURLs = null;
     private ClassLoader bundleParentClassLoader = null;
     private final MetaDataProviderCallback[] callback = new MetaDataProviderCallback[1];
-    
+
     /*
      * If this newBuilder was instantiated for MetaDataProvider by
      * Class#newInstance then this is false. If this newBuilder was activated by
      * OSGi SCR then this is true.
      */
     private boolean isOSGiServiceInstance = false;
-    
+
     /**
      * OSGi Enabled ConnectorFrameworkFactory service.
      */
@@ -176,20 +176,28 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
     @Reference(policy = ReferencePolicy.DYNAMIC)
     private volatile EnhancedConfig enhancedConfig;
 
+    void bindEnhancedConfig(EnhancedConfig enhancedConfig) {
+        this.enhancedConfig = enhancedConfig;
+    }
+
+    void bindConnectorFrameworkFactory(ConnectorFrameworkFactory connectorFrameworkFactory) {
+        this.connectorFrameworkFactory = connectorFrameworkFactory;
+    }
+
     @Activate
     public void activate(ComponentContext context) {
         logger.trace("Activating Service with configuration {}", context.getProperties());
         JsonValue configuration = enhancedConfig.getConfigurationAsJson(context);
-        
+
         try {
             // Service referenced a new unused connectorFrameworkFactory so we can configure
             connectorFrameworkFactory.setDefaultConnectorBundleParentClassLoader(getBundleParentClassLoader());
         } catch (IllegalStateException e){
             logger.trace("connectorFrameworkFactory has been acquired  before");
         }
-        
+
         connectorFramework = connectorFrameworkFactory.acquire();
-        
+
         try {
             String connectorLocation =
                     configuration.get(PROPERTY_OPENICF_CONNECTOR_URL).defaultTo(
@@ -239,7 +247,7 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
             try {
                 RemoteFrameworkConnectionInfo rfi =
                         ConnectorUtil.getRemoteFrameworkConnectionInfo(info.expect(Map.class));
-                
+
                 final String name = info.get("name").required().asString();
                 if (StringUtil.isNotBlank(name)) {
                     if (info.expect(Map.class).isDefined("protocol")
@@ -339,6 +347,7 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getProvisionerType() {
         return SYSTEM_TYPE_OPENICF;
     }
@@ -367,6 +376,7 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
     /**
      * {@inheritDoc}
      */
+    @Override
     public JsonValue getAvailableConnectors() throws ResourceException {
         try {
             return json(object(field(ConnectorUtil.OPENICF_CONNECTOR_REF, listAllConnectorInfo())));
@@ -378,6 +388,7 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
     /**
      * {@inheritDoc}
      */
+    @Override
     public JsonValue generateConnectorCoreConfig(JsonValue params) throws ResourceException {
         if (!isGenerateConnectorCoreConfig(params)) {
             return new JsonValue(new HashMap<String, Object>());
@@ -402,6 +413,7 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
     /**
      * {@inheritDoc}
      */
+    @Override
     public JsonValue generateConnectorFullConfig(JsonValue params) throws ResourceException {
         if (!isGenerateFullConfig(params)) {
             return new JsonValue(new HashMap<String, Object>());
@@ -443,9 +455,9 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
         if (null != connectorInfo) {
             APIConfiguration configuration = connectorInfo.createDefaultAPIConfiguration();
             ConnectorUtil.configureDefaultAPIConfiguration(params, configuration, cryptoService);
-            
+
             ConnectorFacade facade = connectorFramework.get().newInstance(configuration);
-            
+
             if (facade.getSupportedOperations().contains(TestApiOp.class)) {
                 try {
                     facade.test();
@@ -474,6 +486,7 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
     /**
      * {@inheritDoc}
      */
+    @Override
     public ConnectorInfo findConnectorInfo(ConnectorReference connectorReference) {
         return getConnectorInfo(connectorReference, getConnectorInfoManager(connectorReference));
     }
@@ -481,6 +494,7 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
     /**
      * {@inheritDoc}
      */
+    @Override
     public Promise<ConnectorInfo, RuntimeException> findConnectorInfoAsync(ConnectorReference connectorReference) {
         AsyncConnectorInfoManager manager = getConnectorInfoManager(connectorReference);
         if (null != manager){
@@ -502,6 +516,7 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
      * @param configuration APIConfiguartion to use for creating ConnectorFacde
      * @return connectorFacade for configuration if configuration not null;
      */
+    @Override
     public ConnectorFacade createConnectorFacade(APIConfiguration configuration) {
         return configuration != null ? connectorFramework.get().newInstance(configuration) : null;
     }
@@ -567,6 +582,7 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
     /**
      * {@inheritDoc}
      */
+    @Override
     public List<ConnectorInfo> getAllConnectorInfo() {
         final ConnectorFramework framework = connectorFramework.get();
 
@@ -634,6 +650,7 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
      * @throws org.identityconnectors.framework.common.exceptions.ConnectorException
      *             if OpenICF failed to create new connector facade
      */
+    @Override
     public void testConnector(APIConfiguration configuration) throws ResourceException {
         try {
             ConnectorFacade facade = connectorFramework.get().newInstance(configuration);
@@ -652,6 +669,7 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
     }
 
 
+    @Override
     public JsonValue createSystemConfiguration(ConnectorReference connectorReference, APIConfiguration configuration) throws ResourceException {
         ConnectorFacade facade = connectorFramework.get().newInstance(configuration);
 
@@ -693,6 +711,7 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
     /**
      * {@inheritDoc}
      */
+    @Override
     public List<JsonPointer> getPropertiesToEncrypt(String pidOrFactory, String instanceAlias,
             JsonValue config) throws WaitForMetaData {
         List<JsonPointer> result = null;
@@ -786,6 +805,7 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
             File lib = IdentityServer.getFileForInstallPath("lib");
             if (lib.isDirectory()) {
                 File[] files = lib.listFiles(new FileFilter() {
+                    @Override
                     public boolean accept(File f) {
                         return (f.getName().endsWith(".jar"));
                     }
@@ -833,6 +853,7 @@ public class ConnectorInfoProviderService implements ConnectorInfoProvider, Meta
                         File file = new File(resourceURL.toURI());
                         if (file.isDirectory()) {
                             FileFilter filter = new FileFilter() {
+                                @Override
                                 public boolean accept(File f) {
                                     File fManifest = new File(f.getPath(), "META-INF/MANIFEST.MF");
                                     return ((f.isDirectory()) && fManifest.isFile()) || (f.getName().endsWith(".jar"));

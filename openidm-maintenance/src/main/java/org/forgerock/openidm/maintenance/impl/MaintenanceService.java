@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.maintenance.impl;
 
@@ -79,6 +80,10 @@ public class MaintenanceService extends AbstractRequestHandler {
      * A boolean indicating if maintenance mode is currently enabled
      */
     private final AtomicBoolean maintenanceEnabled = new AtomicBoolean(false);
+
+    void bindMaintenanceFilter(MaintenanceFilter maintenanceFilter) {
+        this.maintenanceFilter = maintenanceFilter;
+    }
 
     @Activate
     void activate(ComponentContext compContext) throws Exception {

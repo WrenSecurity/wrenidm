@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.felix.webconsole;
 
@@ -67,6 +68,14 @@ public class WebConsoleSecurityProviderService implements WebConsoleSecurityProv
 
     private String userId;
     private JsonValue password;
+
+    void bindEnhancedConfig(EnhancedConfig enhancedConfig) {
+        this.enhancedConfig = enhancedConfig;
+    }
+
+    void bindCryptoService(CryptoService cryptoService) {
+        this.cryptoService = cryptoService;
+    }
 
     @Activate
     public void activate(ComponentContext context) {

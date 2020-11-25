@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  */
 
 package org.forgerock.openidm.messaging;
@@ -137,6 +137,14 @@ public class MessagingService {
      */
     @Reference(policy = ReferencePolicy.DYNAMIC)
     protected volatile ScriptRegistry scriptRegistry;
+
+    void bindEnhancedConfig(EnhancedConfig enhancedConfig) {
+        this.enhancedConfig = enhancedConfig;
+    }
+
+    void bindScriptRegistry(ScriptRegistry scriptRegistry) {
+        this.scriptRegistry = scriptRegistry;
+    }
 
     /**
      * A {@link Predicate} that returns whether the subscriber is enabled

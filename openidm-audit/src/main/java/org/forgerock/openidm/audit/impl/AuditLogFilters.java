@@ -12,16 +12,17 @@
  * information: "Portions Copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 
 package org.forgerock.openidm.audit.impl;
 
 import static org.forgerock.json.JsonValueFunctions.enumConstant;
-import static org.forgerock.json.JsonValueFunctions.setOf;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import javax.script.ScriptException;
@@ -83,7 +84,7 @@ public class AuditLogFilters {
                 public AuditLogFilter apply(JsonValue value) {
                     return newFieldValueFilter(
                             new JsonPointer(value.get("name").required().asString()),
-                            value.get("values").required().as(setOf(String.class)),
+                            new LinkedHashSet<>(value.get("values").required().asList(String.class)),
                             AS_STRING); // currently assumes values are strings
                 }
             };
@@ -121,6 +122,7 @@ public class AuditLogFilters {
 
         private ActionFilter(final Class<A> clazz, final Set<A> actionsToLog) {
             super(FIELD_ACTION, actionsToLog, new JsonValueObjectConverter<A>() {
+                @Override
                 public A apply(JsonValue value) throws JsonValueException {
                     return value.as(enumConstant(clazz));
                 }
@@ -154,6 +156,7 @@ public class AuditLogFilters {
 
         private OperationFilter(final Class<A> clazz, final Set<A> actionsToLog) {
             super(OPERATION, actionsToLog, new JsonValueObjectConverter<A>() {
+                @Override
                 public A apply(JsonValue value) throws JsonValueException {
                     return value.as(enumConstant(clazz));
                 }

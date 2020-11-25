@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.keystore.impl;
 
@@ -76,6 +77,14 @@ public class KeyStoreManagementServiceImpl implements KeyStoreManagementService 
 
     @Reference(target="(service.pid=" + TrustStoreServiceImpl.PID + ")")
     private KeyStoreService trustStore;
+
+    void bindKeyStore(KeyStoreService keyStore) {
+        this.keyStore = keyStore;
+    }
+
+    void bindTrustStore(KeyStoreService trustStore) {
+        this.trustStore = trustStore;
+    }
 
     public void activate(@SuppressWarnings("unused") ComponentContext context) {
         reloadSslContext();

@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Portions copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.sync.impl;
 
@@ -118,7 +119,7 @@ public class SynchronizationService implements SingletonResourceProvider, Schedu
     protected void bindConnectionFactory(IDMConnectionFactory connectionFactory) {
     	this.connectionFactory = connectionFactory;
     }
-    
+
     public ConnectionFactory getConnectionFactory() {
         return connectionFactory;
     }
@@ -128,6 +129,10 @@ public class SynchronizationService implements SingletonResourceProvider, Schedu
 
     @Reference
     Mappings mappings;
+
+    protected void bindMappings(Mappings mappings) {
+        this.mappings = mappings;
+    }
 
     /** Enhanced configuration service. */
     @Reference(policy = ReferencePolicy.DYNAMIC)
@@ -184,6 +189,7 @@ public class SynchronizationService implements SingletonResourceProvider, Schedu
         // mappings that should be synced are those which are enabled and whose
         // source object set matches the resource container
         final Predicate<ObjectMapping> thatMatchSource = new Predicate<ObjectMapping>() {
+            @Override
             public boolean apply(ObjectMapping objectMapping) {
                 return objectMapping.isSyncEnabled()
                         && objectMapping.isSourceObject(resourceContainer, resourceId);
@@ -196,7 +202,7 @@ public class SynchronizationService implements SingletonResourceProvider, Schedu
             try {
                 if (exceptionPending == null) {
                     // No failures yet, perform sync
-                    // This operation returns a list which will contain more than one result if 
+                    // This operation returns a list which will contain more than one result if
                     // there are multiple targets to sync the source to
                     mappingResults = action.sync(context, mapping);
                 } else {
@@ -361,7 +367,7 @@ public class SynchronizationService implements SingletonResourceProvider, Schedu
             }
         } catch (ResourceException e) {
         	return e.asPromise();
-        } catch (IllegalArgumentException e) { 
+        } catch (IllegalArgumentException e) {
         	// from getActionAsEnum
         	return new BadRequestException(e.getMessage(), e).asPromise();
         } finally {

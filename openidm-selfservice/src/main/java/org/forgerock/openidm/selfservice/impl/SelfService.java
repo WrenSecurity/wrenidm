@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  */
 
 package org.forgerock.openidm.selfservice.impl;
@@ -146,6 +146,10 @@ public class SelfService implements IdentityProviderListener {
     private ServiceRegistration<RequestHandler> serviceRegistration = null;
     private ComponentContext context;
     private ProgressStageProvider progressStageProvider;
+
+    void bindIdentityProviderService(IdentityProviderService identityProviderService) {
+        this.identityProviderService = identityProviderService;
+    }
 
     /**
      * Get the alias of the key self-service uses for pre-shared key encryption.
