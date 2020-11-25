@@ -80,12 +80,25 @@ You can also run Wren:IDM in a Docker container. Official Wren:IDM Docker images
 
 [![Documentation](https://img.shields.io/badge/Documentation-WIP-yellow)](https://github.com/WrenSecurity/Wrenidm)
 
-Documentation is still work in progress. Cookbook with few use cases will be ready in couple of weeks.
+Documentation is still work in progress. A Cookbook with common use cases will be ready soon.
 
 ## Acknowledgments
 
+Large portions of the source code are based on the open-source projects
+previously released by:
 * Sun Microsystems
 * ForgeRock
+
+We'd like to thank them for supporting the idea of open-source software.
+
+## Disclaimer
+
+Please note that the acknowledged parties are not affiliated with this project.
+Their trade names, product names and trademarks should not be used to refer to
+the Wren Security products, as it might be considered an unfair commercial
+practice.
+
+Wren Security is open source and always will be.
 
 ## Bibliogprahy
 
