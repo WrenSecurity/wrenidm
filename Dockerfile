@@ -1,7 +1,5 @@
 FROM openjdk:8
 
-LABEL maintainer="info@orchitech.cz"
-
 ARG WRENIDM_VERSION=6.0.0-SNAPSHOT
 
 # Install dependencies
