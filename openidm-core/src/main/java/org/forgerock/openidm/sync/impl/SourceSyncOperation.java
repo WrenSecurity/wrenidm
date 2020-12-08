@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Portions copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 
 package org.forgerock.openidm.sync.impl;
@@ -107,6 +108,7 @@ class SourceSyncOperation extends SyncOperation {
         }
     }
 
+    @Override
     protected boolean isSourceToTarget() {
         return true;
     }
@@ -320,7 +322,6 @@ class SourceSyncOperation extends SyncOperation {
      * @return JsonValue if found, null if none
      * @throws SynchronizationException if the correlation failed.
      */
-    @SuppressWarnings("unchecked")
     private JsonValue correlateTarget(JsonValue sourceObjectOverride) throws SynchronizationException {
         JsonValue result = null;
         // TODO: consider if there are cases where this would better be lazy and not get the full target

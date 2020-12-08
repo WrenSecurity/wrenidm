@@ -14,7 +14,7 @@
  * "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  */
 package org.forgerock.openidm.provisioner.openicf.impl;
 
@@ -33,18 +33,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
 import org.forgerock.guava.common.base.Predicate;
 import org.forgerock.guava.common.collect.FluentIterable;
-import org.forgerock.services.context.Context;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.JsonValueException;
 import org.forgerock.json.resource.ActionRequest;
@@ -58,8 +48,8 @@ import org.forgerock.json.resource.PatchRequest;
 import org.forgerock.json.resource.ReadRequest;
 import org.forgerock.json.resource.RequestHandler;
 import org.forgerock.json.resource.Requests;
-import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.ResourceException;
+import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.ServiceUnavailableException;
 import org.forgerock.json.resource.SingletonResourceProvider;
 import org.forgerock.json.resource.UpdateRequest;
@@ -87,6 +77,7 @@ import org.forgerock.openidm.router.IDMConnectionFactory;
 import org.forgerock.openidm.router.RouteBuilder;
 import org.forgerock.openidm.router.RouteEntry;
 import org.forgerock.openidm.router.RouterRegistry;
+import org.forgerock.services.context.Context;
 import org.forgerock.util.promise.Promise;
 import org.identityconnectors.common.security.GuardedString;
 import org.identityconnectors.framework.api.APIConfiguration;
@@ -108,9 +99,16 @@ import org.identityconnectors.framework.common.objects.SyncResultsHandler;
 import org.identityconnectors.framework.common.objects.SyncToken;
 import org.identityconnectors.framework.common.serializer.SerializerUtil;
 import org.identityconnectors.framework.impl.api.local.LocalConnectorFacadeImpl;
-import org.osgi.framework.Constants;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.ComponentException;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,17 +117,14 @@ import org.slf4j.LoggerFactory;
  * {@link CollectionResourceProvider} interface with <a
  * href="http://openicf.forgerock.org">OpenICF</a>.
  */
-@Component(name = OpenICFProvisionerService.PID,
-        policy = ConfigurationPolicy.REQUIRE,
-        metatype = true,
-        description = "OpenIDM OpenICF Provisioner Service",
-        immediate = true)
-@Service(value = {ProvisionerService.class})
-@Properties({
-    @Property(name = Constants.SERVICE_VENDOR, value = ServerConstants.SERVER_VENDOR_NAME),
-    @Property(name = Constants.SERVICE_DESCRIPTION, value = "OpenIDM OpenICF Provisioner Service"),
-    @Property(name = "suppressMetatypeWarning", value = "true")
-})
+@Component(
+        name = OpenICFProvisionerService.PID,
+        configurationPolicy = ConfigurationPolicy.REQUIRE,
+//        description = "OpenIDM OpenICF Provisioner Service",
+        immediate = true,
+        service = ProvisionerService.class)
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("OpenIDM OpenICF Provisioner Service")
 public class OpenICFProvisionerService implements ProvisionerService, SingletonResourceProvider {
 
     // Public Constants
@@ -170,6 +165,22 @@ public class OpenICFProvisionerService implements ProvisionerService, SingletonR
         this.connectionFactory = connectionFactory;
         // update activityLogger to use the "real" activity logger on the router
         this.activityLogger = new RouterActivityLogger(connectionFactory);
+    }
+
+    void bindConnectorInfoProvider(ConnectorInfoProvider connectorInfoProvider) {
+        this.connectorInfoProvider = connectorInfoProvider;
+    }
+
+    void bindEnhancedConfig(EnhancedConfig enhancedConfig) {
+        this.enhancedConfig = enhancedConfig;
+    }
+
+    void bindRouterRegistry(RouterRegistry routerRegistry) {
+        this.routerRegistry = routerRegistry;
+    }
+
+    void bindSyncFailureHandlerFactory(SyncFailureHandlerFactory syncFailureHandlerFactory) {
+        this.syncFailureHandlerFactory = syncFailureHandlerFactory;
     }
 
     @SuppressWarnings("unused")
@@ -236,6 +247,7 @@ public class OpenICFProvisionerService implements ProvisionerService, SingletonR
             final OpenICFProvisionerService provisionerService = this;
             connectorInfoProvider.findConnectorInfoAsync(connectorReference).thenOnResult(
                     new org.forgerock.util.promise.ResultHandler<ConnectorInfo>() {
+                        @Override
                         public void handleResult(ConnectorInfo connectorInfo) {
                             try {
                                 APIConfiguration config = connectorInfo.createDefaultAPIConfiguration();
@@ -568,6 +580,7 @@ public class OpenICFProvisionerService implements ProvisionerService, SingletonR
      *
      * @return  The unique system identifier.
      */
+    @Override
     public SystemIdentifier getSystemIdentifier() {
         return systemIdentifier;
     }
@@ -643,6 +656,7 @@ public class OpenICFProvisionerService implements ProvisionerService, SingletonR
      * @param context the Context of the request requesting the status
      * @return a Map of the current status of a connector
      */
+    @Override
     public Map<String, Object> getStatus(Context context) {
         Map<String, Object> result = new LinkedHashMap<>();
         JsonValue jv = new JsonValue(result);
@@ -682,6 +696,7 @@ public class OpenICFProvisionerService implements ProvisionerService, SingletonR
         return result;
     }
 
+    @Override
     public Map<String, Object> testConfig(JsonValue config) {
         JsonValue jv = json(object());
         jv.put("name", systemIdentifier.getName());
@@ -744,6 +759,7 @@ public class OpenICFProvisionerService implements ProvisionerService, SingletonR
             return null;
         }
         final Predicate<Entry<String, ObjectClassInfoHelper>> objectClassFilter = new Predicate<Entry<String, ObjectClassInfoHelper>>() {
+            @Override
             public boolean apply(Entry<String, ObjectClassInfoHelper> entry) {
                 return objectClass.equals(entry.getValue().getObjectClass());
             }
@@ -801,6 +817,7 @@ public class OpenICFProvisionerService implements ProvisionerService, SingletonR
      * @throws  org.forgerock.json.JsonValueException
      *          If the {@code previousStage} is not Map.
      */
+    @Override
     public JsonValue liveSynchronize(final Context context, final String objectType, final JsonValue previousStage)
             throws ResourceException {
 
@@ -859,6 +876,7 @@ public class OpenICFProvisionerService implements ProvisionerService, SingletonR
                                      * @throws RuntimeException If the application encounters an exception. This will
                                      * stop iteration and the exception will propagate to the application.
                                      */
+                                    @Override
                                     @SuppressWarnings("fallthrough")
                                     public boolean handle(SyncDelta syncDelta) {
                                         try {
@@ -938,18 +956,18 @@ public class OpenICFProvisionerService implements ProvisionerService, SingletonR
                                             try {
                                                 syncFailureHandler.invoke(context, syncFailureMap, e);
                                             } catch (SyncHandlerException syncHandlerException) {
-                                                // Current contract of the failure handler is that throwing this exception indicates 
+                                                // Current contract of the failure handler is that throwing this exception indicates
                                                 // that it should retry for this entry
                                                 syncRetry.setValue(true);
                                                 syncRetry.setThrowable(syncHandlerException);
-                                                logger.debug("Sync failure handler indicated to stop current change set processing until retry handling: {}", 
+                                                logger.debug("Sync failure handler indicated to stop current change set processing until retry handling: {}",
                                                         syncHandlerException.getMessage(), syncHandlerException);
                                             }
                                         }
 
                                         if (syncRetry.getValue()) {
                                             // Stop the processing of this result set. Next retry will start again after last token.
-                                            return false; 
+                                            return false;
                                         } else {
                                             // success (either by original sync or by failure handler)
                                             // Continue the processing of the rest of the result set

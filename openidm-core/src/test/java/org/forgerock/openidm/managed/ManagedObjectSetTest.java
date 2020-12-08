@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  */
 
 package org.forgerock.openidm.managed;
@@ -515,7 +515,7 @@ public class ManagedObjectSetTest {
         ));
     }
 
-    @SuppressWarnings({"unchecked", "unused"})
+    @SuppressWarnings("unused")
     private <T> TestResultHandler<T> newTestResultHandler(Class<T> type) {
         return new TestResultHandler<>();
     }

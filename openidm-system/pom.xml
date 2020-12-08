@@ -29,8 +29,7 @@
 
     <name>Wren:IDM - System Bundle</name>
     <description>
-        Provides the logic necessary to load startup properties and bootstrap the core Wren:IDM
-        system.
+        Provides the logic necessary to load startup properties and bootstrap the core Wren:IDM system.
     </description>
 
     <dependencies>
@@ -156,6 +155,7 @@
                     <instructions>
                         <Bundle-Activator>org.forgerock.openidm.core.internal.Activator</Bundle-Activator>
                         <Bundle-Category>utility</Bundle-Category>
+                        <Bundle-Description>${project.description}</Bundle-Description>
                     </instructions>
                 </configuration>
             </plugin>

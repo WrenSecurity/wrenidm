@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Portions copyright 2012-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 
 package org.forgerock.openidm.scheduler.impl;
@@ -20,7 +21,6 @@ import static org.forgerock.json.resource.Responses.newActionResponse;
 import static org.forgerock.json.resource.Responses.newResourceResponse;
 import static org.forgerock.openidm.util.ResourceUtil.notSupported;
 
-import javax.script.ScriptException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,18 +29,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
+import javax.script.ScriptException;
+
 import org.forgerock.audit.events.AuditEvent;
-import org.forgerock.openidm.router.IDMConnectionFactory;
-import org.forgerock.services.context.Context;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ActionRequest;
 import org.forgerock.json.resource.ActionResponse;
@@ -63,28 +54,40 @@ import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.quartz.impl.ExecutionException;
 import org.forgerock.openidm.quartz.impl.ScheduledService;
+import org.forgerock.openidm.router.IDMConnectionFactory;
 import org.forgerock.openidm.util.DateUtil;
 import org.forgerock.script.ScriptEntry;
 import org.forgerock.script.ScriptRegistry;
+import org.forgerock.services.context.Context;
 import org.forgerock.util.promise.Promise;
-import org.osgi.framework.Constants;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Component(name = "org.forgerock.openidm.taskscanner", policy = ConfigurationPolicy.IGNORE, immediate = true)
-@Properties({
-    @Property(name = Constants.SERVICE_DESCRIPTION, value = "OpenIDM TaskScanner Service"),
-    @Property(name = Constants.SERVICE_VENDOR, value = ServerConstants.SERVER_VENDOR_NAME),
-    @Property(name = ServerConstants.ROUTER_PREFIX, value = "/taskscanner*"),
-    @Property(name = ServerConstants.SCHEDULED_SERVICE_INVOKE_SERVICE, value = "taskscanner")
-})
-@Service
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+@Component(
+        name = "org.forgerock.openidm.taskscanner",
+        configurationPolicy = ConfigurationPolicy.IGNORE,
+        immediate = true,
+        property = {
+                ServerConstants.ROUTER_PREFIX + "=/taskscanner*",
+                ServerConstants.SCHEDULED_SERVICE_INVOKE_SERVICE + "=taskscanner"
+        })
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("OpenIDM TaskScanner Service")
 public class TaskScannerService implements RequestHandler, ScheduledService {
     private final static Logger logger = LoggerFactory.getLogger(TaskScannerService.class);
 
     private final static String INVOKE_CONTEXT = "invokeContext";
-    
+
     private static final DateUtil dateUtil = DateUtil.getDateUtil(ServerConstants.TIME_ZONE_UTC);
 
     private int maxCompletedRuns;
@@ -99,7 +102,7 @@ public class TaskScannerService implements RequestHandler, ScheduledService {
     /** The Connection Factory */
     @Reference(policy = ReferencePolicy.STATIC)
     protected IDMConnectionFactory connectionFactory;
-    
+
     protected void bindConnectionFactory(IDMConnectionFactory connectionFactory) {
     	this.connectionFactory = connectionFactory;
     }

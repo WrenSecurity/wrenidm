@@ -12,23 +12,23 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.keystore.impl;
 
-import static org.forgerock.openidm.core.IdentityServer.*;
+import static org.forgerock.openidm.core.IdentityServer.KEYSTORE_LOCATION;
+import static org.forgerock.openidm.core.IdentityServer.KEYSTORE_PASSWORD;
+import static org.forgerock.openidm.core.IdentityServer.KEYSTORE_PROVIDER;
+import static org.forgerock.openidm.core.IdentityServer.KEYSTORE_TYPE;
+import static org.forgerock.openidm.core.IdentityServer.TRUSTSTORE_LOCATION;
+import static org.forgerock.openidm.core.IdentityServer.TRUSTSTORE_PASSWORD;
+import static org.forgerock.openidm.core.IdentityServer.TRUSTSTORE_PROVIDER;
+import static org.forgerock.openidm.core.IdentityServer.TRUSTSTORE_TYPE;
 import static org.forgerock.util.Utils.isNullOrEmpty;
 
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.Service;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.keystore.KeyStoreDetails;
@@ -38,19 +38,24 @@ import org.forgerock.security.keystore.KeyStoreType;
 import org.forgerock.util.Utils;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component(
         name = TrustStoreServiceImpl.PID,
         immediate = true,
-        policy = ConfigurationPolicy.IGNORE
-)
-@Properties({
-        @Property(name = Constants.SERVICE_DESCRIPTION, value = "OpenIDM TrustStore Service"),
-        @Property(name = Constants.SERVICE_VENDOR, value = ServerConstants.SERVER_VENDOR_NAME)
-})
-@Service
+        configurationPolicy = ConfigurationPolicy.IGNORE,
+        property = Constants.SERVICE_PID + "=" + TrustStoreServiceImpl.PID,
+        service = KeyStoreService.class)
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("OpenIDM TrustStore Service")
 /**
  * Implements
  */

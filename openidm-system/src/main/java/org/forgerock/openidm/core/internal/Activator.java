@@ -37,6 +37,7 @@ public class Activator implements BundleActivator {
 
     private ServiceTracker<Map<String, Object>, Map<String, Object>> serviceTracker = null;
 
+    @Override
     public void start(final BundleContext context) throws Exception {
         String customFilter = context.getProperty("org.forgerock.openidm.core.map.filter");
         Filter filter = null;
@@ -45,6 +46,11 @@ public class Activator implements BundleActivator {
                     context.createFilter("(&(" + Constants.OBJECTCLASS + "=java.util.Map)"
                             + customFilter + ")");
         } else {
+            // XXX Not sure why we need this construct and why config.properties is not
+            // enough. The only difference is that this file is not undergoing Felix's own
+            // property substitution. Also note that boot file is being loaded by launcher
+            // library as well with the exception that it is actually not loading it because
+            // launcher.json contains it's own values. [PH]
             filter =
                     context.createFilter("(&(" + Constants.OBJECTCLASS + "=java.util.Map)("
                             + Constants.SERVICE_PID
@@ -58,6 +64,7 @@ public class Activator implements BundleActivator {
                 new FrameworkPropertyAccessor(context, null)));
     }
 
+    @Override
     public void stop(BundleContext context) throws Exception {
         if (null != serviceTracker) {
             serviceTracker.close();

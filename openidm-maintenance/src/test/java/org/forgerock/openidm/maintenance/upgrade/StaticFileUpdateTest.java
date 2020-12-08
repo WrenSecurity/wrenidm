@@ -12,13 +12,16 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.maintenance.upgrade;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.forgerock.openidm.maintenance.upgrade.StaticFileUpdate.NEW_SUFFIX;
 import static org.forgerock.openidm.maintenance.upgrade.StaticFileUpdate.OLD_SUFFIX;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -30,13 +33,13 @@ import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.forgerock.util.Function;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 /**
@@ -87,7 +90,8 @@ public class StaticFileUpdateTest {
     private StaticFileUpdate getStaticFileUpdate(FileStateChecker fileStateChecker) throws IOException {
         Archive archive = mock(Archive.class);
         when(archive.getVersion()).thenReturn(newVersion);
-        when(archive.withInputStreamForPath(eq(tempFile), Matchers.<Function<InputStream, Void, IOException>>any()))
+        when(archive.withInputStreamForPath(eq(tempFile),
+                ArgumentMatchers.<Function<InputStream, Void, IOException>>any()))
                 .then(
                         new Answer<Void>() {
                             @Override

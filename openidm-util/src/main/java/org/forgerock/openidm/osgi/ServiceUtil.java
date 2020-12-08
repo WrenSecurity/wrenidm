@@ -20,6 +20,7 @@ package org.forgerock.openidm.osgi;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Dictionary;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -27,6 +28,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.ComponentConstants;
 
 /**
  * Service helper utility, * Based on apache aries
@@ -35,6 +37,12 @@ import org.osgi.framework.ServiceReference;
 public final class ServiceUtil {
 
     private ServiceUtil() {
+    }
+
+    public static String getServicePid(Dictionary<String, ?> props) {
+        // XXX This can be array or collection [PH]
+        String pid = (String) props.get(Constants.SERVICE_PID);
+        return pid != null ? pid : (String) props.get(ComponentConstants.COMPONENT_NAME);
     }
 
     public static Object getService(BundleContext ctx, OsgiName lookupName, String id,
@@ -89,6 +97,7 @@ public final class ServiceUtil {
             if (refs != null) {
                 // change the service order
                 Arrays.sort(refs, new Comparator<ServiceReference<?>>() {
+                    @Override
                     public int compare(ServiceReference<?> o1, ServiceReference<?> o2) {
                         return o2.compareTo(o1);
                     }

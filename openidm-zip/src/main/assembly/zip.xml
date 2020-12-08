@@ -1186,8 +1186,7 @@
                 <exclude>org.apache.olingo:*</exclude>
                 <exclude>com.fasterxml:aalto-xml</exclude>
                 <exclude>org.forgerock.openidm.tools:custom-scripted-connector-bundler:*</exclude>
-                <!--exclude>org.apache.felix:org.apache.felix.scr.annotations</exclude>
-                <exclude>javax.persistence:persistence-api</exclude>
+                <!--exclude>javax.persistence:persistence-api</exclude>
                 <exclude>javax.transaction:jta</exclude>
                 <exclude>org.apache.felix:org.apache.felix.main</exclude>
                 <exclude>org.apache.felix:org.osgi.foundation</exclude>

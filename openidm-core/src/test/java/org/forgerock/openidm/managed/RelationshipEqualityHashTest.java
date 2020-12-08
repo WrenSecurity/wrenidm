@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 
 package org.forgerock.openidm.managed;
@@ -92,14 +93,14 @@ public class RelationshipEqualityHashTest {
     }
 
     private Map<String, Object> makeRefPropertiesMap(String grantType, String temporalConstraint, boolean idPresent) {
-        Map<String, Object> fieldMap = new HashMap();
+        Map<String, Object> fieldMap = new HashMap<>();
         fieldMap.put(RelationshipValidator.TEMPORAL_CONSTRAINTS, Collections.singletonList(temporalConstraint));
         fieldMap.put(RelationshipValidator.GRANT_TYPE, grantType);
         return makeRefProperties(fieldMap, idPresent);
     }
 
     private Map<String, Object> makeRefPropertiesMap(String grantType, boolean idPresent) {
-        Map<String, Object> fieldMap = new HashMap();
+        Map<String, Object> fieldMap = new HashMap<>();
         fieldMap.put(RelationshipValidator.GRANT_TYPE, grantType);
         return makeRefProperties(fieldMap, idPresent);
     }

@@ -3,7 +3,7 @@
   ~ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
   ~
   ~ Copyright (c) 2011-2015 ForgeRock AS. All Rights Reserved
-  ~ Portions Copyright 2017-2018 Wren Security.
+  ~ Portions Copyright 2017-2020 Wren Security.
   ~
   ~ The contents of this file are subject to the terms
   ~ of the Common Development and Distribution License
@@ -129,12 +129,6 @@
 
         <!-- Provided Dependencies -->
         <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.scr.annotations</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.forgerock.openidm</groupId>
             <artifactId>openidm-smartevent</artifactId>
             <version>${project.version}</version>
@@ -212,24 +206,17 @@
 
             <plugin>
                 <groupId>org.apache.felix</groupId>
-                <artifactId>maven-scr-plugin</artifactId>
-
-                <executions>
-                    <execution>
-                        <id>generate-scr-scrdescriptor</id>
-                        <goals>
-                            <goal>scr</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
 
                 <configuration>
+                    <!--
+                        XXX Investigate this strange delegation to router bundle. This mixes BundleContexts 
+                        and class-loaders. If the reason behind this is some load order voodoo, then different
+                        start levels might be a better solution. [PH]
+                        XXX Another issue might be dependency loop this introduces (it is harder to deploy bundles
+                        sequentially for testing purposes) - util > router > enhanced-config > crypto > util. [PH] 
+                    -->
                     <instructions>
                         <Bundle-Activator>org.forgerock.openidm.router.Activator</Bundle-Activator>
                         <Bundle-Category>utility</Bundle-Category>

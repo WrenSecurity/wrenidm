@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Portions copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.managed;
 
@@ -26,25 +27,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Modified;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferenceCardinality;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
 import org.forgerock.api.models.ApiDescription;
 import org.forgerock.http.ApiProducer;
-import org.forgerock.json.JsonPointer;
-import org.forgerock.json.resource.ResourcePath;
-import org.forgerock.services.context.Context;
-import org.forgerock.services.descriptor.Describable;
-import org.forgerock.services.routing.RouteMatcher;
 import org.forgerock.http.routing.RoutingMode;
+import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ActionRequest;
 import org.forgerock.json.resource.ActionResponse;
@@ -58,6 +44,7 @@ import org.forgerock.json.resource.ReadRequest;
 import org.forgerock.json.resource.Request;
 import org.forgerock.json.resource.RequestHandler;
 import org.forgerock.json.resource.ResourceException;
+import org.forgerock.json.resource.ResourcePath;
 import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.Router;
 import org.forgerock.json.resource.UpdateRequest;
@@ -67,25 +54,38 @@ import org.forgerock.openidm.crypto.CryptoService;
 import org.forgerock.openidm.router.IDMConnectionFactory;
 import org.forgerock.openidm.router.RouteService;
 import org.forgerock.script.ScriptRegistry;
+import org.forgerock.services.context.Context;
+import org.forgerock.services.descriptor.Describable;
+import org.forgerock.services.routing.RouteMatcher;
 import org.forgerock.util.promise.Promise;
-import org.osgi.framework.Constants;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.ComponentException;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
  * Provides access to managed objects.
- *
  */
-@Component(name = ManagedObjectService.PID, immediate = true,
-        policy = ConfigurationPolicy.REQUIRE)
-@Service
-@Properties({
-    @Property(name = Constants.SERVICE_DESCRIPTION, value = "OpenIDM managed objects service"),
-    @Property(name = Constants.SERVICE_VENDOR, value = ServerConstants.SERVER_VENDOR_NAME),
-    @Property(name = ServerConstants.ROUTER_PREFIX, value = "/managed*") })
+@Component(
+        name = ManagedObjectService.PID,
+        immediate = true,
+        configurationPolicy = ConfigurationPolicy.REQUIRE,
+        property = {
+                ServerConstants.ROUTER_PREFIX + "=/managed*"
+        })
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("OpenIDM managed objects service")
 public class ManagedObjectService implements RequestHandler, Describable<ApiDescription, Request> {
 
     public static final String PID = "org.forgerock.openidm.managed";
@@ -109,21 +109,18 @@ public class ManagedObjectService implements RequestHandler, Describable<ApiDesc
      * know if the SynchronizationService is available.  This optional reference is used to indicate that
      * availability.
      */
-    @Reference(referenceInterface = RouteService.class,
-            policy = ReferencePolicy.DYNAMIC,
-            bind = "bindSyncRoute",
-            unbind = "unbindSyncRoute",
-            cardinality = ReferenceCardinality.OPTIONAL_UNARY,
-            target = "(" + ServerConstants.ROUTER_PREFIX + "=/sync*)")
     private final AtomicReference<RouteService> syncRoute = new AtomicReference<RouteService>();
 
-    @SuppressWarnings("unused")
-	private void bindSyncRoute(final RouteService service) {
+    @Reference(service = RouteService.class,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unbindSyncRoute",
+            cardinality = ReferenceCardinality.OPTIONAL,
+            target = "(" + ServerConstants.ROUTER_PREFIX + "=/sync*)")
+    void bindSyncRoute(final RouteService service) {
         syncRoute.set(service);
     }
 
-    @SuppressWarnings("unused")
-	private void unbindSyncRoute(final RouteService service) {
+    void unbindSyncRoute(final RouteService service) {
         syncRoute.set(null);
     }
 

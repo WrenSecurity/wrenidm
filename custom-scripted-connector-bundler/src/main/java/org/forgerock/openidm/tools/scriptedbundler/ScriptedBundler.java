@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2015 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2020 Wren Security
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -24,18 +25,19 @@
 
 package org.forgerock.openidm.tools.scriptedbundler;
 
-import org.apache.commons.cli.BasicParser;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.ParseException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * This is the main class for this project.  It accepts a JSON configuration file and attempts to generate a set of
@@ -69,7 +71,7 @@ public class ScriptedBundler {
                 .append(ScriptedBundler.class.getPackage().getImplementationVersion());
         System.out.println(str);
 
-        CommandLineParser parser = new BasicParser();
+        CommandLineParser parser = new DefaultParser();
         CommandLine cmdline = null;
         try {
             cmdline = parser.parse(options, args);

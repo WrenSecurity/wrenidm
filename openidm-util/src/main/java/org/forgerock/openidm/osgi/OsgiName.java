@@ -38,7 +38,6 @@ import javax.naming.NamingException;
  * component 0: osgi:framework, osgi:service, openidm:services, osgi:servicelist
  * component 1: interface component 2: filter
  */
-@SuppressWarnings("serial")
 public class OsgiName extends CompositeName {
 
     private static final long serialVersionUID = 3567653491060394677L;

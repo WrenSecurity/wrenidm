@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Portions copyright 2012-2015 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.sync.impl;
 
@@ -36,23 +37,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferenceCardinality;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
-import org.forgerock.json.JsonValueException;
-import org.forgerock.openidm.router.IDMConnectionFactory;
-import org.forgerock.openidm.sync.ReconContext;
-import org.forgerock.openidm.sync.SynchronizationException;
-import org.forgerock.services.context.Context;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
+import org.forgerock.json.JsonValueException;
 import org.forgerock.json.resource.ActionRequest;
 import org.forgerock.json.resource.ActionResponse;
 import org.forgerock.json.resource.BadRequestException;
@@ -73,21 +60,35 @@ import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.UpdateRequest;
 import org.forgerock.openidm.core.IdentityServer;
+import org.forgerock.openidm.core.ServerConstants;
+import org.forgerock.openidm.router.IDMConnectionFactory;
+import org.forgerock.openidm.sync.ReconContext;
+import org.forgerock.openidm.sync.SynchronizationException;
+import org.forgerock.services.context.Context;
 import org.forgerock.util.promise.Promise;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Reconciliation service implementation.
  */
-@Component(name = ReconciliationService.PID, immediate = true, policy = ConfigurationPolicy.OPTIONAL)
-@Service()
-@Properties({
-        @Property(name = "service.description", value = "Reconciliation Service"),
-        @Property(name = "service.vendor", value = "ForgeRock AS"),
-        @Property(name = "openidm.router.prefix", value = "/recon/*")
-})
+@Component(
+        name = ReconciliationService.PID,
+        immediate = true,
+        property = {
+                ServerConstants.ROUTER_PREFIX + "=/recon/*"
+        })
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("Reconciliation Service")
 public class ReconciliationService
         implements RequestHandler, Reconcile, ReconciliationServiceMBean {
     final static Logger logger = LoggerFactory.getLogger(ReconciliationService.class);
@@ -125,13 +126,13 @@ public class ReconciliationService
     protected void bindConnectionFactory(IDMConnectionFactory connectionFactory) {
     	this.connectionFactory = connectionFactory;
     }
-    
+
     public ConnectionFactory getConnectionFactory() {
         return connectionFactory;
     }
 
     @Reference(
-            cardinality = ReferenceCardinality.OPTIONAL_UNARY,
+            cardinality = ReferenceCardinality.OPTIONAL,
             policy = ReferencePolicy.DYNAMIC
     )
     volatile Mappings mappings;
@@ -187,7 +188,7 @@ public class ReconciliationService
                                     )
                             ),
                             queryResult);
-                    
+
                     if (queryResult.isEmpty()) {
                     	return new NotFoundException("Reconciliation with id " + localId + " not found." ).asPromise();
                     } else {
@@ -238,7 +239,7 @@ public class ReconciliationService
      * {@inheritDoc}
      */
     @Override
-    public Promise<QueryResponse, ResourceException> handleQuery(final Context context, final QueryRequest request, 
+    public Promise<QueryResponse, ResourceException> handleQuery(final Context context, final QueryRequest request,
     		final QueryResourceHandler handler) {
         return notSupported(request).asPromise();
     }
@@ -276,7 +277,7 @@ public class ReconciliationService
                         } else {
                             waitForCompletion = Boolean.parseBoolean(waitParam.asString());
                         }
-                        reconId = reconcile(ReconAction.valueOf(request.getAction()), mapping, waitForCompletion, 
+                        reconId = reconcile(ReconAction.valueOf(request.getAction()), mapping, waitForCompletion,
                                 paramsVal, request.getContent());
                         result.put("_id",  reconId);
                         result.put("state", reconRuns.get(reconId).getState());
@@ -284,7 +285,7 @@ public class ReconciliationService
                         throw new ConflictException(se);
                     }
                 } else {
-                    throw new BadRequestException("Action " + request.getAction() + " on reconciliation not supported " 
+                    throw new BadRequestException("Action " + request.getAction() + " on reconciliation not supported "
                             + request.getAdditionalParameters());
                 }
             } else {
@@ -301,7 +302,7 @@ public class ReconciliationService
                     result.put("action", request.getAction());
                     result.put("status", "SUCCESS");
                 } else {
-                    throw new BadRequestException("Action " + request.getAction() + " on recon run " + id 
+                    throw new BadRequestException("Action " + request.getAction() + " on recon run " + id
                             + " not supported " + request.getAdditionalParameters());
                 }
             }
@@ -321,9 +322,9 @@ public class ReconciliationService
      * {@inheritDoc}
      */
     @Override
-    public String reconcile(ReconAction reconAction, final JsonValue mapping, Boolean synchronous, 
+    public String reconcile(ReconAction reconAction, final JsonValue mapping, Boolean synchronous,
             JsonValue reconParams, JsonValue config) throws ResourceException {
-        
+
         ObjectMapping objMapping = null;
         if (mapping.isString()) {
             objMapping = mappings.getMapping(mapping.asString());
@@ -337,11 +338,11 @@ public class ReconciliationService
         // Set the ReconContext on the request context chain.
         Context currentContext = ObjectSetContext.pop();
         ObjectSetContext.push(new ReconContext(currentContext, objMapping.getName()));
-        
+
         final ReconciliationContext reconciliationContext =
                 newReconContext(reconAction, objMapping, reconParams, config);
-        
-        
+
+
         addReconRun(reconciliationContext);
         if (Boolean.TRUE.equals(synchronous)) {
             reconcile(reconciliationContext);
@@ -482,7 +483,7 @@ public class ReconciliationService
 
     /**
      * Returns the {@link Context}
-     * 
+     *
      * @return the {@link Context}
      */
     Context getContext() {

@@ -12,14 +12,14 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2013-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 
 package org.forgerock.openidm.auth.modules;
 
 import static org.forgerock.caf.authentication.framework.AuthenticationFramework.ATTRIBUTE_AUTH_CONTEXT;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMapOf;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -76,7 +76,7 @@ public class IDMAuthModuleWrapperTest {
 
             authModule = mock(AsyncServerAuthModule.class);
             authModule.initialize(any(MessagePolicy.class), any(MessagePolicy.class), any(CallbackHandler.class),
-                    anyMapOf(String.class, Object.class));
+                    anyMap());
             roleCalculatorFactory = mock(RoleCalculatorFactory.class);
             when(roleCalculatorFactory.create(ArgumentMatchers.<String>anyList(), ArgumentMatchers.<String>any(), ArgumentMatchers.<String>any(),
                     ArgumentMatchers.<String, List<String>>anyMap(),
@@ -298,7 +298,7 @@ public class IDMAuthModuleWrapperTest {
         Request request = new Request();
         given(messageInfo.getRequest()).willReturn(request);
 
-        given(authModule.secureResponse(ArgumentMatchers.<MessageInfoContext>anyObject(), ArgumentMatchers.<Subject>anyObject()))
+        given(authModule.secureResponse(any(MessageInfoContext.class), any(Subject.class)))
                 .willReturn(Promises.<AuthStatus, AuthenticationException>newResultPromise(AuthStatus.SEND_SUCCESS));
 
         //When
@@ -325,7 +325,7 @@ public class IDMAuthModuleWrapperTest {
 
         Request request = new Request();
 
-        given(authModule.secureResponse(ArgumentMatchers.<MessageInfoContext>anyObject(), ArgumentMatchers.<Subject>anyObject()))
+        given(authModule.secureResponse(any(MessageInfoContext.class), any(Subject.class)))
                 .willReturn(Promises.<AuthStatus, AuthenticationException>newResultPromise(AuthStatus.SUCCESS));
         given(messageInfo.getRequest()).willReturn(request);
         request.getHeaders().put("X-OpenIDM-NoSession", "true");
@@ -357,7 +357,7 @@ public class IDMAuthModuleWrapperTest {
 
         Request request = new Request();
 
-        given(authModule.secureResponse(ArgumentMatchers.<MessageInfoContext>anyObject(), ArgumentMatchers.<Subject>anyObject()))
+        given(authModule.secureResponse(any(MessageInfoContext.class), any(Subject.class)))
                 .willReturn(Promises.<AuthStatus, AuthenticationException>newResultPromise(AuthStatus.SUCCESS));
         given(messageInfo.getRequest()).willReturn(request);
         request.getHeaders().put("X-OpenIDM-NoSession", null);

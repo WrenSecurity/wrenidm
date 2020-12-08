@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.external.rest;
 
@@ -28,14 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.Service;
 import org.forgerock.api.annotations.ApiError;
 import org.forgerock.api.annotations.Handler;
 import org.forgerock.api.annotations.Operation;
@@ -68,9 +61,9 @@ import org.forgerock.json.resource.SingletonResourceProvider;
 import org.forgerock.json.resource.UpdateRequest;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.ServerConstants;
+import org.forgerock.openidm.external.ExternalException;
 import org.forgerock.openidm.external.rest.api.CallActionRequest;
 import org.forgerock.openidm.external.rest.api.CallActionResponse;
-import org.forgerock.openidm.external.ExternalException;
 import org.forgerock.openidm.keystore.KeyStoreManagementService;
 import org.forgerock.services.context.Context;
 import org.forgerock.util.Function;
@@ -78,8 +71,14 @@ import org.forgerock.util.Options;
 import org.forgerock.util.annotations.VisibleForTesting;
 import org.forgerock.util.encode.Base64;
 import org.forgerock.util.promise.Promise;
-import org.osgi.framework.Constants;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,12 +90,15 @@ import org.slf4j.LoggerFactory;
         title = "External REST",
         description = "Service that acts as a HTTP client proxy to external REST services.",
         mvccSupported = false))
-@Component(name = RestService.PID, immediate = true, policy = ConfigurationPolicy.IGNORE)
-@Service
-@Properties({
-        @Property(name = Constants.SERVICE_VENDOR, value = ServerConstants.SERVER_VENDOR_NAME),
-        @Property(name = Constants.SERVICE_DESCRIPTION, value = "External REST Service"),
-        @Property(name = ServerConstants.ROUTER_PREFIX, value = "/external/rest")})
+@Component(
+        name = RestService.PID,
+        immediate = true,
+        configurationPolicy = ConfigurationPolicy.IGNORE,
+        property = {
+                ServerConstants.ROUTER_PREFIX + "=/external/rest"
+        })
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("External REST Service")
 public class RestService implements SingletonResourceProvider {
 
     static final String PID = "org.forgerock.openidm.external.rest";

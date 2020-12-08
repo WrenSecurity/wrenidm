@@ -12,13 +12,9 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.idp.impl;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static org.forgerock.http.handler.HttpClientHandler.OPTION_LOADER;
 import static org.forgerock.json.JsonValue.field;
@@ -26,18 +22,16 @@ import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.resource.Responses.newActionResponse;
 import static org.forgerock.json.resource.Responses.newResourceResponse;
-import static org.forgerock.openidm.idp.impl.ProviderConfigMapper.*;
+import static org.forgerock.openidm.idp.impl.ProviderConfigMapper.buildIdpObject;
+import static org.forgerock.openidm.idp.impl.ProviderConfigMapper.providerEnabled;
+import static org.forgerock.openidm.idp.impl.ProviderConfigMapper.toJsonValue;
+import static org.forgerock.openidm.idp.impl.ProviderConfigMapper.toProviderConfig;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferenceCardinality;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.forgerock.api.annotations.ApiError;
 import org.forgerock.api.annotations.Handler;
 import org.forgerock.api.annotations.Operation;
@@ -66,15 +60,23 @@ import org.forgerock.json.resource.SingletonResourceProvider;
 import org.forgerock.json.resource.UpdateRequest;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
 import org.forgerock.openidm.core.ServerConstants;
-import org.forgerock.openidm.idp.config.ProviderConfig;
 import org.forgerock.openidm.idp.client.OAuthHttpClient;
+import org.forgerock.openidm.idp.config.ProviderConfig;
 import org.forgerock.openidm.idp.impl.api.IdentityProviderServiceResource;
 import org.forgerock.openidm.idp.impl.api.IdentityProviderServiceResourceWithNoSecret;
 import org.forgerock.services.context.Context;
 import org.forgerock.util.Options;
 import org.forgerock.util.promise.Promise;
-import org.osgi.framework.Constants;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,12 +91,16 @@ import org.slf4j.LoggerFactory;
         description = "Service that handles Identity Provider configuration",
         mvccSupported = false,
         resourceSchema = @Schema(fromType = IdentityProviderServiceResourceWithNoSecret.class)))
-@Component(name = IdentityProviderService.PID, immediate = true, policy = ConfigurationPolicy.REQUIRE)
-@Service({ IdentityProviderService.class, SingletonResourceProvider.class })
-@Properties({
-        @Property(name = Constants.SERVICE_VENDOR, value = ServerConstants.SERVER_VENDOR_NAME),
-        @Property(name = Constants.SERVICE_DESCRIPTION, value = "OpenIDM Identity Provider Service"),
-        @Property(name = ServerConstants.ROUTER_PREFIX, value = "/identityProviders")})
+@Component(
+        name = IdentityProviderService.PID,
+        immediate = true,
+        configurationPolicy = ConfigurationPolicy.REQUIRE,
+        property = {
+                ServerConstants.ROUTER_PREFIX + "=/identityProviders"
+        },
+        service = { IdentityProviderService.class, SingletonResourceProvider.class })
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("OpenIDM Identity Provider Service")
 public class IdentityProviderService implements SingletonResourceProvider {
 
     /** The PID for this Component */
@@ -140,8 +146,8 @@ public class IdentityProviderService implements SingletonResourceProvider {
      * type of auth the identity provider supports.
      */
     @Reference(
-            referenceInterface = IdentityProviderConfig.class,
-            cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE,
+            service = IdentityProviderConfig.class,
+            cardinality = ReferenceCardinality.MULTIPLE,
             policy = ReferencePolicy.DYNAMIC)
     private final Map<String, List<IdentityProviderConfig>> identityProviders = new ConcurrentHashMap<>();
 

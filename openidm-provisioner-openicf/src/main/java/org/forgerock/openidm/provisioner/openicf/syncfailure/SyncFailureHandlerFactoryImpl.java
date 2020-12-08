@@ -1,5 +1,6 @@
 /*
  * Copyright 2013-2015 ForgeRock, AS.
+ * Portions Copyright 2020 Wren Security
  *
  * The contents of this file are subject to the terms of the Common Development and
  * Distribution License (the License). You may not use this file except in compliance with the
@@ -15,34 +16,27 @@
  */
 package org.forgerock.openidm.provisioner.openicf.syncfailure;
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
+import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.router.IDMConnectionFactory;
-import org.forgerock.json.JsonValue;
 import org.forgerock.script.ScriptRegistry;
-import org.osgi.framework.Constants;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 
 /**
  * A factory service to create the SyncFailureHandler strategy from config.
- *
  */
-@Component(name = SyncFailureHandlerFactoryImpl.PID,
-        policy = ConfigurationPolicy.IGNORE,
-        metatype = true,
-        description = "OpenIDM Sync Failure Handler Factory Service",
+@Component(
+        name = SyncFailureHandlerFactoryImpl.PID, 
+        configurationPolicy = ConfigurationPolicy.IGNORE,
+        // description = "OpenIDM Sync Failure Handler Factory Service",
         immediate = true)
-@Service()
-@Properties({
-    @Property(name = Constants.SERVICE_VENDOR, value = ServerConstants.SERVER_VENDOR_NAME),
-    @Property(name = Constants.SERVICE_DESCRIPTION, value = "OpenIDM Sync Failure Handler Factory"),
-    @Property(name = "suppressMetatypeWarning", value = "true")
-})
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("OpenIDM Sync Failure Handler Factory")
 public class SyncFailureHandlerFactoryImpl implements SyncFailureHandlerFactory {
     public static final String PID = "org.forgerock.openidm.openicf.syncfailure";
 
@@ -56,14 +50,6 @@ public class SyncFailureHandlerFactoryImpl implements SyncFailureHandlerFactory 
     /** Script Registry service. */
     @Reference(policy = ReferencePolicy.DYNAMIC)
     protected volatile ScriptRegistry scriptRegistry;
-
-    private void bindScriptRegistry(final ScriptRegistry service) {
-        scriptRegistry = service;
-    }
-
-    private void unbindScriptRegistry(final ScriptRegistry service) {
-        scriptRegistry = null;
-    }
 
     /** The Connection Factory */
     @Reference(policy = ReferencePolicy.STATIC)
@@ -85,6 +71,7 @@ public class SyncFailureHandlerFactoryImpl implements SyncFailureHandlerFactory 
      * @param config the config for the SyncFailureHandler
      * @return the SyncFailureHandler
      */
+    @Override
     public SyncFailureHandler create(JsonValue config) throws Exception {
 
         if (null == config || config.isNull()) {

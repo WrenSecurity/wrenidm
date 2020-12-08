@@ -12,14 +12,16 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.managed;
 
 import static java.text.MessageFormat.format;
 import static org.forgerock.openidm.util.RelationshipUtil.REFERENCE_ID;
 
-import org.forgerock.openidm.util.ResourceUtil;
-import org.forgerock.util.annotations.VisibleForTesting;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.BadRequestException;
 import org.forgerock.json.resource.NotFoundException;
@@ -28,11 +30,9 @@ import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourcePath;
 import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.services.context.Context;
+import org.forgerock.util.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Base class for Validators of relationship requests.  When a relationship action is determined to be invalid, the

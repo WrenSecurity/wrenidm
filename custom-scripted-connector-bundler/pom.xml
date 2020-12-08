@@ -3,7 +3,7 @@
  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
 
  Copyright (c) 2015 ForgeRock AS. All rights reserved.
- Portions Copyright 2017-2018 Wren Security.
+ Portions Copyright 2017-2020 Wren Security.
 
  The contents of this file are subject to the terms
  of the Common Development and Distribution License
@@ -34,7 +34,6 @@
 
     <groupId>org.forgerock.openidm.tools</groupId>
     <artifactId>custom-scripted-connector-bundler</artifactId>
-    <version>6.0.0-SNAPSHOT</version>
 
     <name>Wren:IDM - Custom Groovy Connector Bundler</name>
     <description>
@@ -102,7 +101,6 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.5</version>
         </dependency>
     </dependencies>
 

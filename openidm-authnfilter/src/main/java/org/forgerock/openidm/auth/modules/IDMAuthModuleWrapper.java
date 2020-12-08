@@ -14,7 +14,7 @@
  * "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security
  */
 package org.forgerock.openidm.auth.modules;
 
@@ -299,7 +299,6 @@ public class IDMAuthModuleWrapper implements AsyncServerAuthModule {
      * @param serviceSubject {@inheritDoc}
      * @return {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     @Override
     public Promise<AuthStatus, AuthenticationException> validateRequest(final MessageInfoContext messageInfo,
             final Subject clientSubject, Subject serviceSubject) {
@@ -441,7 +440,6 @@ public class IDMAuthModuleWrapper implements AsyncServerAuthModule {
      * @param serviceSubject {@inheritDoc}
      * @return {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     @Override
     public Promise<AuthStatus, AuthenticationException> secureResponse(MessageInfoContext messageInfo,
             Subject serviceSubject) {

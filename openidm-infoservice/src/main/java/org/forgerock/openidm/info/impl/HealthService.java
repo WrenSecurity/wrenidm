@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.info.impl;
 
@@ -25,13 +26,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Service;
 import org.forgerock.api.models.ApiDescription;
 import org.forgerock.http.ApiProducer;
 import org.forgerock.json.JsonValue;
@@ -76,7 +70,14 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.ComponentConstants;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,13 +85,17 @@ import org.slf4j.LoggerFactory;
 /**
  * A health service determining system state.
  */
-@Component(name = HealthService.PID, policy = ConfigurationPolicy.IGNORE, metatype = true,
-        description = "OpenIDM Health Service", immediate = true)
-@Properties({
-    @Property(name = Constants.SERVICE_VENDOR, value = ServerConstants.SERVER_VENDOR_NAME),
-    @Property(name = Constants.SERVICE_DESCRIPTION, value = "OpenIDM Health Service"),
-    @Property(name = ServerConstants.ROUTER_PREFIX, value = "/health/*")})
-@Service(value = { HealthInfo.class, RequestHandler.class })
+@Component(
+        name = HealthService.PID,
+        configurationPolicy = ConfigurationPolicy.IGNORE,
+        // description = "OpenIDM Health Service",
+        immediate = true,
+        property = {
+                ServerConstants.ROUTER_PREFIX + "=/health/*"
+        },
+        service = { HealthInfo.class, RequestHandler.class })
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("OpenIDM Health Service")
 public class HealthService
         implements HealthInfo, ClusterEventListener, Describable<ApiDescription, Request>,
                 ServiceTrackerListener<ClusterManagementService, ClusterManagementService>, RequestHandler {
@@ -128,27 +133,27 @@ public class HealthService
      */
     private ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
 
-    /** 
+    /**
      * A boolean indicating if we consider the underlying framework as started
      */
     private static volatile boolean frameworkStarted = false;
 
-    /** 
-     * Flag to help in processing state during start-up. For clients to querying application state, 
+    /**
+     * Flag to help in processing state during start-up. For clients to querying application state,
      * use the state detail instead
      */
     private volatile boolean appStarting = true;
-    
+
     /**
      * A boolean indicating if the cluster management thread is up in the "running" state
      */
     private volatile boolean clusterUp = false;
-    
+
     /**
      * A boolean indicating if the cluster management service is enabled
      */
     private volatile boolean clusterEnabled = true;
-    
+
     /**
      * A framework status instance used to store the latest framework event status.
      */
@@ -160,16 +165,16 @@ public class HealthService
     private volatile StateDetail stateDetail = new StateDetail(AppState.STARTING, "OpenIDM starting");
 
     /**
-     * Bundles and bundle fragments required to be started or resolved respectively for the system to 
+     * Bundles and bundle fragments required to be started or resolved respectively for the system to
      * consider itself READY. Required bundles may be expressed as a regex, for example:
-     * 
+     *
      * "org.forgerock.openidm.repo-(orientdb|jdbc)"
      */
     private List<String> requiredBundles = new ArrayList<String>();
 
     /**
-     * An array default bundles and bundle fragments required to be started or resolved respectively 
-     * for the system to consider itself READY. 
+     * An array default bundles and bundle fragments required to be started or resolved respectively
+     * for the system to consider itself READY.
      */
     private final String[] defaultRequiredBundles = new String[] {
         //ICF Bundles
@@ -198,7 +203,7 @@ public class HealthService
         "org.forgerock.commons.script-groovy",
         "org.forgerock.http.chf-http-core",
         "org.forgerock.http.chf-http-servlet",
-        
+
         // OpenIDM Bundles
         "org.forgerock.openidm.api-servlet",
         "org.forgerock.openidm.audit",
@@ -232,29 +237,29 @@ public class HealthService
         "org.forgerock.openidm.system",
         "org.forgerock.openidm.util",
         "org.forgerock.openidm.keystore",
-        
+
         // 3rd Party Bundles
         "org.ops4j.pax.web.pax-web-jetty-bundle"
     };
 
     /**
-     * Maximum time after framework start for required services to register to consider the system 
+     * Maximum time after framework start for required services to register to consider the system
      * startup as successful
      */
     private long serviceStartMax = 15000;
-    
+
     /**
-     * Services required to be registered for the system to consider itself READY. Required services 
+     * Services required to be registered for the system to consider itself READY. Required services
      * may be expressed as a regex, for example:
-     * 
+     *
      * "org.forgerock.openidm.bootrepo.(orientdb|jdbc)"
      */
     private List<String> requiredServices = new ArrayList<String>();
 
     /**
-     * An array default services required to be registered for the system to consider itself READY. 
+     * An array default services required to be registered for the system to consider itself READY.
      * Required services may be expressed as a regex, for example:
-     * 
+     *
      * "org.forgerock.openidm.bootrepo.(orientdb|jdbc)"
      */
     private final String[] defaultRequiredServices = new String[] {
@@ -269,7 +274,7 @@ public class HealthService
             "org.forgerock.openidm.external.rest",
             "org.forgerock.openidm.maintenance",
             "org.forgerock.openidm.managed",
-            "org.forgerock.openidm.policy",            
+            "org.forgerock.openidm.policy",
             "org.forgerock.openidm.provisioner",
             "org.forgerock.openidm.provisioner.openicf.connectorinfoprovider",
             "org.forgerock.openidm.repo.(orientdb|jdbc)",
@@ -285,7 +290,7 @@ public class HealthService
      * A router used to service requests for system health endpoints such as: os, memory, recon, jdbc.
      */
     private final Router router = new Router();
-    
+
     @Activate
     protected void activate(final ComponentContext context) {
         this.context = context;
@@ -297,7 +302,7 @@ public class HealthService
 
         // Get the framework status service instance
         frameworkStatus = FrameworkStatus.getInstance();
-        
+
         // Set up tracker
         BundleContext ctx = FrameworkUtil.getBundle(HealthService.class).getBundleContext();
         tracker = initServiceTracker(ctx);
@@ -308,7 +313,7 @@ public class HealthService
             public void frameworkEvent(FrameworkEvent event) {
                 final int eventType = event.getType();
                 logger.debug("Handle framework event {} {}", eventType, event.toString());
-                
+
                 // Store the framework event type as the framework status
                 frameworkStatus.setFrameworkStatus(eventType);
 
@@ -392,7 +397,7 @@ public class HealthService
         if (frameworkStatus.isReady()) {
             scheduleCheckStartup(2000);
         }
-        
+
         logger.info("OpenIDM Health Service component is activated.");
     }
 
@@ -435,7 +440,7 @@ public class HealthService
     /**
      * After the timeout period passes past framework start event, check that
      * the required services are present. If not, report startup error
-     * 
+     *
      * @param delay a delay in milliseconds before checking the state.
      */
     private void scheduleCheckStartup(long delay) {
@@ -560,6 +565,11 @@ public class HealthService
         if (refs != null && refs.length > 0) {
             for (String req : requiredServices) {
                 for (ServiceReference<?> ref : refs) {
+                    String name = (String) ref.getProperty(ComponentConstants.COMPONENT_NAME);
+                    if (name != null && name.matches(req)) {
+                        missingServices.remove(req);
+                        break;
+                    }
                     String pid = (String) ref.getProperty(Constants.SERVICE_PID);
                     if (pid != null && pid.matches(req)) {
                         missingServices.remove(req);
@@ -640,7 +650,7 @@ public class HealthService
             }
         }
     }
- 
+
     /**
      * @param bundle
      *            the bundle / bundle fragment to check

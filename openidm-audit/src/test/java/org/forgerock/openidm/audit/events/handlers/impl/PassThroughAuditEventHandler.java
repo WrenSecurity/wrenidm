@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 
 package org.forgerock.openidm.audit.events.handlers.impl;
@@ -29,24 +30,16 @@ import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.services.context.Context;
 import org.forgerock.util.promise.Promise;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Handles AuditEvents by just calling the result Handler.
  */
 public class PassThroughAuditEventHandler extends AuditEventHandlerBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(PassThroughAuditEventHandlerConfiguration.class);
-
-    /** A message logged when a new entry is added. */
-    private final String message;
-
     public PassThroughAuditEventHandler(
             final PassThroughAuditEventHandlerConfiguration configuration,
             final EventTopicsMetaData eventTopicsMetaData) {
         super(configuration.getName(), eventTopicsMetaData , configuration.getTopics(), configuration.isEnabled());
-        this.message = configuration.getMessage();
     }
 
     @Override

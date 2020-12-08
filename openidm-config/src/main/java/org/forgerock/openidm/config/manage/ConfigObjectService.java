@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  */
 
 package org.forgerock.openidm.config.manage;
@@ -34,15 +34,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
 import org.forgerock.api.models.ApiDescription;
 import org.forgerock.http.ApiProducer;
 import org.forgerock.json.JsonPointer;
@@ -98,25 +89,33 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Provides access to OSGi configuration.
- *
  */
 @Component(
-        name = "org.forgerock.openidm.config.manage",
+        name = ConfigObjectService.PID,
         immediate = true,
-        policy = ConfigurationPolicy.OPTIONAL
-)
-@Properties({
-        @Property(name = Constants.SERVICE_DESCRIPTION, value = "OpenIDM Configuration Service"),
-        @Property(name = Constants.SERVICE_VENDOR, value = ServerConstants.SERVER_VENDOR_NAME),
-        @Property(name = ServerConstants.ROUTER_PREFIX, value = "/config*")
-})
-@Service(value = { RequestHandler.class })
+        configurationPolicy = ConfigurationPolicy.OPTIONAL,
+        property = {
+                ServerConstants.ROUTER_PREFIX + "=/config*"
+        },
+        service = RequestHandler.class)
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("OpenIDM Configuration Service")
 public class ConfigObjectService implements RequestHandler, ClusterEventListener, Describable<ApiDescription, Request> {
+
+    static final String PID = "org.forgerock.openidm.config.manage";
 
     private static final Logger logger = LoggerFactory.getLogger(ConfigObjectService.class);
     private final ConfigAuditEventLogger auditLogger;
@@ -168,6 +167,10 @@ public class ConfigObjectService implements RequestHandler, ClusterEventListener
     /** Scripted Patch Value Transformer Factory. */
     @Reference(policy = ReferencePolicy.DYNAMIC)
     private volatile ScriptedPatchValueTransformerFactory scriptedPatchValueTransformerFactory;
+
+    protected void bindScriptedPatchValueTransformerFactory(ScriptedPatchValueTransformerFactory scriptedPatchValueTransformerFactory) {
+        this.scriptedPatchValueTransformerFactory = scriptedPatchValueTransformerFactory;
+    }
 
     /** Enhanced configuration service. */
     @Reference(policy = ReferencePolicy.DYNAMIC)
@@ -484,7 +487,6 @@ public class ConfigObjectService implements RequestHandler, ClusterEventListener
      *            <dd>If the passed identifier is invalid</dd>
      *          </dl>
      */
-    @SuppressWarnings("rawtypes")
     private Promise<ConfigAuditState, ResourceException> update(ResourcePath resourcePath, String rev,
             JsonValue obj) {
         logger.debug("Invoking update configuration {} {}", resourcePath.toString(), rev);
@@ -583,7 +585,6 @@ public class ConfigObjectService implements RequestHandler, ClusterEventListener
      * ConflictException:           if version is required but is {@code null}.
      * PreconditionFailedException: if version did not match the existing object in the set.
      */
-    @SuppressWarnings("rawtypes")
     private Promise<ConfigAuditState, ResourceException> delete(ResourcePath resourcePath,
                                                                String rev) {
         logger.debug("Invoking delete configuration {} {}", resourcePath.toString(), rev);
@@ -645,7 +646,6 @@ public class ConfigObjectService implements RequestHandler, ClusterEventListener
                         });
     }
 
-    @SuppressWarnings("rawtypes")
     private Promise<ConfigAuditState, ResourceException> patch(final Context context, final ResourcePath resourcePath,
             final List<PatchOperation> patchOperation) {
         final ParsedId parsedId;
@@ -1057,7 +1057,7 @@ public class ConfigObjectService implements RequestHandler, ClusterEventListener
         }
 
         /**
-         * Prepends the fields in the configuration object with the key where the object is stored.  
+         * Prepends the fields in the configuration object with the key where the object is stored.
          * Will not modify fields outside of the configuration object.
          *
          * @param field a {@link JsonPointer} representing the field to modify.
@@ -1153,6 +1153,7 @@ public class ConfigObjectService implements RequestHandler, ClusterEventListener
                     : ConfigBootstrapHelper.qualifyPid(pid);
         }
 
+        @Override
         public String toString() {
             return isFactoryConfig()
                     ? (factoryPid + "/" + instanceAlias)

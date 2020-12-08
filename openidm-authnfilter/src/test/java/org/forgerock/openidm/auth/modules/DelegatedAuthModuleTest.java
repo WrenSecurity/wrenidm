@@ -12,21 +12,29 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2013-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 
 package org.forgerock.openidm.auth.modules;
 
-import static org.forgerock.json.JsonValue.*;
+import static org.forgerock.json.JsonValue.field;
+import static org.forgerock.json.JsonValue.json;
+import static org.forgerock.json.JsonValue.object;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.security.auth.Subject;
 import javax.security.auth.message.AuthException;
 import javax.security.auth.message.AuthStatus;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.forgerock.caf.authentication.api.AuthenticationException;
 import org.forgerock.caf.authentication.api.MessageInfoContext;
@@ -37,8 +45,6 @@ import org.forgerock.json.resource.ResourceException;
 import org.forgerock.openidm.auth.Authenticator;
 import org.forgerock.openidm.auth.Authenticator.AuthenticatorResult;
 import org.forgerock.openidm.auth.AuthenticatorFactory;
-import org.forgerock.services.context.Context;
-import org.mockito.Matchers;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -178,7 +184,7 @@ public class DelegatedAuthModuleTest {
 
         given(authResult.isAuthenticated()).willReturn(true);
         given(authenticator.authenticate(eq("USERNAME"), eq("PASSWORD"),
-                Matchers.<Context>anyObject())).willReturn(authResult);
+                any())).willReturn(authResult);
 
         //When
         AuthStatus authStatus = module.validateRequest(messageInfo, clientSubject, serviceSubject)
@@ -210,7 +216,7 @@ public class DelegatedAuthModuleTest {
 
         given(authResult.isAuthenticated()).willReturn(false);
         given(authenticator.authenticate(eq("USERNAME"), eq("PASSWORD"),
-                Matchers.<Context>anyObject())).willReturn(authResult);
+                any())).willReturn(authResult);
 
         //When
         AuthStatus authStatus = module.validateRequest(messageInfo, clientSubject, serviceSubject)

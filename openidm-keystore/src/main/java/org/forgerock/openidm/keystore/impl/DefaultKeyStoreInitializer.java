@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.keystore.impl;
 
@@ -32,6 +33,7 @@ import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 

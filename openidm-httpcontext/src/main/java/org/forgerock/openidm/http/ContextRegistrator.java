@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2011-2012 ForgeRock AS. All rights reserved.
+ * Portions Copyright 2020 Wren Security
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -32,14 +33,14 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Reference;
 import org.ops4j.pax.web.service.WebContainer;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.http.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,10 +48,11 @@ import org.slf4j.LoggerFactory;
 /**
  * Http context to share amongst OpenIDM servlets to allow for applying uniform
  * security handling
- * 
  */
-@Component(name = "org.forgerock.openidm.http.context", immediate = true,
-        policy = ConfigurationPolicy.IGNORE)
+@Component(
+        name = "org.forgerock.openidm.http.context",
+        immediate = true,
+        configurationPolicy = ConfigurationPolicy.IGNORE)
 public final class ContextRegistrator {
     final static Logger logger = LoggerFactory.getLogger(ContextRegistrator.class);
     public static final String OPENIDM = "openidm";
@@ -66,7 +68,7 @@ public final class ContextRegistrator {
 
     /**
      * Allow access for the fragments
-     * 
+     *
      * @return bundle context if activated, null otherwise
      */
     public static BundleContext getBundleContext() {
@@ -100,7 +102,7 @@ public final class ContextRegistrator {
 
     /**
      * Loads and instantiates the pluggable Security Configurators
-     * 
+     *
      * To allow for pluggability with fragments a simple convention is used to
      * find security configurator(s); 1. A properties file contains a property
      * security.configurator.class of a class in the bundle fragment that
@@ -162,7 +164,7 @@ public final class ContextRegistrator {
 
     /**
      * Activate security configurators if present to enable security
-     * 
+     *
      * @param context
      *            the component context of the main bundle
      * @param httpContext
@@ -177,7 +179,7 @@ public final class ContextRegistrator {
 
     /**
      * Deactivate security configurators if present to cleanup
-     * 
+     *
      * @param context
      *            the component context of the main bundle
      * @param httpContext

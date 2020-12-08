@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  * Portions copyright 2013-2015 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.ui.internal.service;
 
@@ -32,19 +33,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Modified;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.PropertyUtil;
 import org.ops4j.pax.web.service.WebContainer;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,10 +58,12 @@ import org.slf4j.LoggerFactory;
  * Changes and additions by
  * Portions copyright 2017 Wren Security
  */
-@Component(name = "org.forgerock.openidm.ui.context", 
+@Component(
+        name = "org.forgerock.openidm.ui.context",
         immediate = true,
-        policy = ConfigurationPolicy.REQUIRE)
+        configurationPolicy = ConfigurationPolicy.REQUIRE)
 public final class ResourceServlet extends HttpServlet {
+
     private static final long serialVersionUID = 1;
 
     final static Logger logger = LoggerFactory.getLogger(ResourceServlet.class);
@@ -91,14 +94,14 @@ public final class ResourceServlet extends HttpServlet {
         logger.info("Activating resource servlet with configuration {}", context.getProperties());
         init(context);
     }
-    
+
     @Modified
     protected void modified(ComponentContext context) throws ServletException, NamespaceException {
         logger.info("Modifying resource servlet with configuration {}", context.getProperties());
         clear();
         init(context);
     }
-    
+
     @Deactivate
     protected void deactivate(ComponentContext context) {
         logger.info("Deactivating resource servlet with configuration {}", context.getProperties());
@@ -158,14 +161,14 @@ public final class ResourceServlet extends HttpServlet {
 
     /**
      * Initializes the servlet and registers it with the WebContainer.
-     * 
+     *
      * @param context the ComponentContext containing the configuration
      * @throws ServletException
      * @throws NamespaceException
      */
     private void init(ComponentContext context) throws ServletException, NamespaceException {
         JsonValue config = enhancedConfig.getConfigurationAsJson(context);
-        
+
         if (!config.get(CONFIG_ENABLED).isNull() && Boolean.FALSE.equals(config.get(CONFIG_ENABLED).asBoolean())) {
             logger.info("UI is disabled - not registering UI servlet");
             return;
@@ -190,7 +193,7 @@ public final class ResourceServlet extends HttpServlet {
         webContainer.registerServlet(contextRoot, this,  props, webContainer.getDefaultSharedHttpContext());
         logger.debug("Registered UI servlet at {}", contextRoot);
     }
-    
+
     /**
      * Clears the servlet, unregistering it with the WebContainer and removing the bundle listener.
      */
@@ -200,7 +203,7 @@ public final class ResourceServlet extends HttpServlet {
             logger.debug("Unregistered UI servlet at {}", contextRoot);
         }
     }
-    
+
     private void handle(HttpServletRequest req, HttpServletResponse res, URL url, String resName)
             throws IOException {
         String contentType = getServletContext().getMimeType(resName);
@@ -244,7 +247,7 @@ public final class ResourceServlet extends HttpServlet {
 
         return lastModified;
     }
-    
+
     private String getMimeType(String fileName) {
         if (fileName.endsWith(".css")) {
             return "text/css";
@@ -255,7 +258,7 @@ public final class ResourceServlet extends HttpServlet {
         } else if (fileName.endsWith(".html")) {
             return "text/html";
         }
-        
+
         return null;
     }
 

@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.info.health;
 
@@ -20,22 +21,21 @@ import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.resource.Responses.newResourceResponse;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+
 import org.forgerock.api.annotations.Handler;
 import org.forgerock.api.annotations.Operation;
 import org.forgerock.api.annotations.Read;
 import org.forgerock.api.annotations.Schema;
 import org.forgerock.api.annotations.SingletonProvider;
-import org.forgerock.openidm.info.health.api.MemoryInfoResource;
-import org.forgerock.openidm.info.health.api.OsInfoResource;
-import org.forgerock.services.context.Context;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ReadRequest;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourceResponse;
+import org.forgerock.openidm.info.health.api.MemoryInfoResource;
+import org.forgerock.services.context.Context;
 import org.forgerock.util.promise.Promise;
-
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
 
 /**
  * Gets Memory usage data from the {@link java.lang.management.MemoryMXBean MemoryMXBean}.

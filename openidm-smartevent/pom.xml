@@ -3,7 +3,7 @@
   ~ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
   ~
   ~ Copyright (c) 2011-2013 ForgeRock AS. All Rights Reserved
-  ~ Portions Copyright 2017-2018 Wren Security.
+  ~ Portions Copyright 2017-2020 Wren Security.
   ~
   ~ The contents of this file are subject to the terms
   ~ of the Common Development and Distribution License
@@ -37,8 +37,7 @@
 
     <name>Wren:IDM - SmartEvent Bundle</name>
     <description>
-        Provides a way to monitor and respond to both low-level and application-level events in
-        Wren:IDM.
+        Provides a way to monitor and respond to both low-level and application-level events in Wren:IDM.
     </description>
 
     <dependencies>
@@ -75,12 +74,6 @@
             <artifactId>json-resource</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.scr.annotations</artifactId>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -103,22 +96,13 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.felix</groupId>
-                <artifactId>maven-scr-plugin</artifactId>
-
-                <executions>
-                    <execution>
-                        <id>generate-scr-scrdescriptor</id>
-                        <goals>
-                            <goal>scr</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Private-Package>org.forgerock.openidm.smartevent</Private-Package>
+                    </instructions>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -1,4 +1,5 @@
 /*
+
  * The contents of this file are subject to the terms of the Common Development and
  * Distribution License (the License). You may not use this file except in compliance with the
  * License.
@@ -12,7 +13,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  */
 
 package org.forgerock.openidm.keystore.impl;
@@ -36,10 +37,11 @@ import java.io.OutputStream;
 import java.security.KeyStore;
 import java.security.Security;
 import java.util.Collections;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.forgerock.openidm.core.IdentityServer;
-import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.core.IdentityServerTestUtils;
+import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.keystore.KeyStoreDetails;
 import org.forgerock.security.keystore.KeyStoreType;
 import org.forgerock.util.Utils;
@@ -109,7 +111,6 @@ public class DefaultKeyStoreInitializerTest {
         createTrustStore(IdentityServer.getFileForPath(IdentityServer.getInstance().getProperty(TRUSTSTORE_LOCATION)));
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void createKeyStore(final File keystoreFile) throws Exception {
         keystoreFile.deleteOnExit();
         if (keystoreFile.exists()) {
@@ -129,7 +130,6 @@ public class DefaultKeyStoreInitializerTest {
         }
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void createTrustStore(final File keystoreFile) throws Exception {
         keystoreFile.deleteOnExit();
         if (keystoreFile.exists()) {

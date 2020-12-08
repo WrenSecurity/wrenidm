@@ -3,7 +3,7 @@
   ~ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
   ~
   ~ Copyright (c) 2011-2013 ForgeRock AS. All Rights Reserved
-  ~ Portions Copyright 2017-2018 Wren Security.
+  ~ Portions Copyright 2017-2020 Wren Security.
   ~
   ~ The contents of this file are subject to the terms
   ~ of the Common Development and Distribution License
@@ -99,12 +99,6 @@
 
         <!-- Provided Dependencies -->
         <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.scr.annotations</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>com.jolbox</groupId>
             <artifactId>bonecp</artifactId>
             <version>0.7.1.RELEASE</version>
@@ -184,21 +178,6 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.felix</groupId>
-                <artifactId>maven-scr-plugin</artifactId>
-
-                <executions>
-                    <execution>
-                        <id>generate-scr-scrdescriptor</id>
-
-                        <goals>
-                            <goal>scr</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
 
@@ -208,12 +187,13 @@
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Bundle-Activator>org.forgerock.openidm.repo.jdbc.impl.Activator</Bundle-Activator>
                         <Embed-Dependency>HikariCP;bonecp;guava;scope=provided</Embed-Dependency>
-
                         <Import-Package>
                             com.codahale.metrics.*;resolution:=optional,
                             io.prometheus.client.*;resolution:=optional,
                             javassist.*;resolution:=optional,
                             org.hibernate.*;resolution:=optional,
+                            com.google.appengine.api.*;resolution:=optional,
+                            com.google.apphosting.api.*;resolution:=optional,
                             *
                         </Import-Package>
                     </instructions>

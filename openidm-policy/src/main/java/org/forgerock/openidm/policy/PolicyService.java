@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.policy;
 
@@ -22,16 +23,6 @@ import java.util.Map;
 
 import javax.script.Bindings;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Modified;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.forgerock.services.context.Context;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ActionRequest;
 import org.forgerock.json.resource.ReadRequest;
@@ -42,24 +33,36 @@ import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.script.AbstractScriptedService;
 import org.forgerock.openidm.util.FileUtil;
+import org.forgerock.script.ScriptRegistry;
+import org.forgerock.services.context.Context;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.Constants;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * A Policy Service for policy validation.
- * 
+ *
  */
-@Component(name = PolicyService.PID, policy = ConfigurationPolicy.REQUIRE, metatype = true,
-        description = "OpenIDM Policy Service", immediate = true)
-@Properties({
-    @Property(name = Constants.SERVICE_VENDOR, value = ServerConstants.SERVER_VENDOR_NAME),
-    @Property(name = Constants.SERVICE_DESCRIPTION, value = "OpenIDM Policy Service"),
-    @Property(name = ServerConstants.ROUTER_PREFIX, value = "/policy*"),
-    @Property(name = "suppressMetatypeWarning", value = "true")
-})
+@Component(
+        name = PolicyService.PID,
+        configurationPolicy = ConfigurationPolicy.REQUIRE,
+//        description = "OpenIDM Policy Service",
+        immediate = true,
+        property = {
+                ServerConstants.ROUTER_PREFIX + "=/policy*"
+        })
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("OpenIDM Policy Service")
 public class PolicyService extends AbstractScriptedService {
 
     public static final String PID = "org.forgerock.openidm.policy";
@@ -73,8 +76,12 @@ public class PolicyService extends AbstractScriptedService {
     @Reference(policy = ReferencePolicy.DYNAMIC)
     private volatile EnhancedConfig enhancedConfig;
 
+    /** Script Registry service. */
+    @Reference(policy = ReferencePolicy.DYNAMIC)
+    private volatile ScriptRegistry scriptRegistry;
+
     private ComponentContext context;
-    
+
     private JsonValue configuration;
 
     public PolicyService() {
@@ -113,6 +120,12 @@ public class PolicyService extends AbstractScriptedService {
         logger.info("OpenIDM Policy Service component is deactivated.");
     }
 
+    @Override
+    protected ScriptRegistry getScriptRegistry() {
+        return scriptRegistry;
+    }
+
+    @Override
     protected BundleContext getBundleContext() {
         return context.getBundleContext();
     }
@@ -122,7 +135,7 @@ public class PolicyService extends AbstractScriptedService {
         init(configuration);
         return configuration;
     }
-    
+
     private void init(JsonValue configuration) {
         JsonValue additionalPolicies = configuration.get("additionalFiles");
         if (!additionalPolicies.isNull()) {
@@ -138,7 +151,7 @@ public class PolicyService extends AbstractScriptedService {
             configuration.add("additionalPolicies", list);
         }
     }
-    
+
     @Override
     public void handleAction(final Context context, final ActionRequest request,
             final Bindings handler) throws ResourceException {
@@ -155,7 +168,7 @@ public class PolicyService extends AbstractScriptedService {
         handler.put("request", request);
         handler.put("resources", configuration.get("resources").copy().getObject());
     }
-    
+
     @Override
     public void handleRead(final Context context, final ReadRequest request,
             final Bindings handler) throws ResourceException {

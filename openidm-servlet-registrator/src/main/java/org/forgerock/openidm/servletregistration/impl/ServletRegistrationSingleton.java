@@ -2,7 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2012-2015 ForgeRock AS. All Rights Reserved
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -48,38 +48,35 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.Service;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.JsonValueException;
 import org.forgerock.openidm.servletregistration.RegisteredFilter;
-import org.forgerock.openidm.servletregistration.ServletRegistration;
 import org.forgerock.openidm.servletregistration.ServletFilterRegistrator;
+import org.forgerock.openidm.servletregistration.ServletRegistration;
 import org.forgerock.util.Function;
 import org.ops4j.pax.web.service.WebContainer;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Takes configuration to register and de-register configured servlet filters, 
+ * Takes configuration to register and de-register configured servlet filters,
  * with support to load the filter or supporting classes off a defined class path
- * 
+ *
  */
 
 @Component(
-    name = "org.forgerock.openidm.servletfilter.registrator",
-    immediate = true,
-    policy = ConfigurationPolicy.IGNORE,
-    configurationFactory=true
-)
-@Service
+        name = "org.forgerock.openidm.servletfilter.registrator",
+        immediate = true,
+//        configurationFactory=true,
+        configurationPolicy = ConfigurationPolicy.IGNORE)
 public class ServletRegistrationSingleton implements ServletRegistration {
 
     private static final Logger logger = LoggerFactory.getLogger(ServletRegistrationSingleton.class);
@@ -90,14 +87,14 @@ public class ServletRegistrationSingleton implements ServletRegistration {
 
     // Context of this scr component
     private BundleContext bundleContext;
-    
+
     @Reference
     private WebContainer webContainer;
-    
+
     private List<RegisteredFilterImpl> filters = new ArrayList<RegisteredFilterImpl>();
-    
+
     private final static Object registrationLock = new Object();
-    
+
     /**
      * Initialises the ComponentContext.
      *
@@ -121,6 +118,7 @@ public class ServletRegistrationSingleton implements ServletRegistration {
     /**
      * {@inheritDoc}
      */
+    @Override
     @SuppressWarnings("rawtypes")
     public void registerServlet(String alias, Servlet servlet, Dictionary initParams) throws ServletException, NamespaceException {
         webContainer.registerServlet(alias, servlet, initParams, webContainer.getDefaultSharedHttpContext());
@@ -129,6 +127,7 @@ public class ServletRegistrationSingleton implements ServletRegistration {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void unregisterServlet(Servlet servlet) {
         webContainer.unregisterServlet(servlet);
     }
@@ -170,7 +169,7 @@ public class ServletRegistrationSingleton implements ServletRegistration {
             return newFilter;
         }
     }
-    
+
     /**
      * Registers a servlet filter configuration
      * @param config the filter configuration
@@ -191,7 +190,7 @@ public class ServletRegistrationSingleton implements ServletRegistration {
         logger.info("Added URLs { {} })) to filter classpath", StringUtils.join(urls, ", "));
 
         Map<String, Object> preInvokeReqAttributes = config.get(SERVLET_FILTER_PRE_INVOKE_ATTRIBUTES).asMap();
-        
+
         // Servlet names this filter should apply to, e.g. one could also add "OpenIDM Web"
         List<String> servletNames = config.get(SERVLET_FILTER_SERVLET_NAMES)
                 .defaultTo(Arrays.asList(DEFAULT_SERVLET_NAME))
@@ -210,7 +209,7 @@ public class ServletRegistrationSingleton implements ServletRegistration {
         }
 
         // Create a classloader and dynamically create the requested filter
-        Filter filter = null; 
+        Filter filter = null;
         ClassLoader filterCL = null;
         ClassLoader origCL = Thread.currentThread().getContextClassLoader();
         try {
@@ -238,7 +237,7 @@ public class ServletRegistrationSingleton implements ServletRegistration {
                 webContainer.getDefaultSharedHttpContext());
         return proxiedFilter;
     }
-    
+
     private void registerFilterService(JsonValue config) {
         // Register ServletFilterRegistrator service
         ServletFilterRegistrator servletFilterRegistrator = new ServletFilterRegistratorSvc(config);
@@ -253,11 +252,11 @@ public class ServletRegistrationSingleton implements ServletRegistration {
             logger.info("Successfully unregistered servlet filter {}", filter);
         }
     }
-    
+
     public void unregisterFilterWithWebContainer(Filter filter) {
         webContainer.unregisterFilter(filter);
     }
-    
+
     /**
      * Wraps Filter to set the thread context classloader
      */
@@ -269,15 +268,16 @@ public class ServletRegistrationSingleton implements ServletRegistration {
          * Sets the thread context for a filter invocation to the desired value
          * @param filter filter to wrap
          * @param threadCtxClassloader classloader to set as thread context classloader
-         * @param preInvokeReqAttributes request attributes to set before the filter doFilter is invoked 
+         * @param preInvokeReqAttributes request attributes to set before the filter doFilter is invoked
          */
-        public FilterProxy(Filter filter, ClassLoader threadCtxClassloader, 
-                Map<String, Object> preInvokeReqAttributes) { 
+        public FilterProxy(Filter filter, ClassLoader threadCtxClassloader,
+                Map<String, Object> preInvokeReqAttributes) {
             this.filter = filter;
             this.threadCtxClassloader = threadCtxClassloader;
             this.preInvokeReqAttributes = preInvokeReqAttributes;
         }
 
+        @Override
         public Object invoke(Object proxy, Method m, Object[] args) throws Throwable {
             ClassLoader origCL = Thread.currentThread().getContextClassLoader();
             try {

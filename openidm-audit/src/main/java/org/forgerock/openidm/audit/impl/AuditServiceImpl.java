@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.audit.impl;
 
@@ -21,7 +22,16 @@ import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.JsonValueFunctions.listOf;
 import static org.forgerock.json.resource.Responses.newActionResponse;
 import static org.forgerock.json.resource.Responses.newResourceResponse;
-import static org.forgerock.openidm.audit.impl.AuditLogFilters.*;
+import static org.forgerock.openidm.audit.impl.AuditLogFilters.AS_SINGLE_FIELD_VALUES_FILTER;
+import static org.forgerock.openidm.audit.impl.AuditLogFilters.NEVER_FILTER;
+import static org.forgerock.openidm.audit.impl.AuditLogFilters.TYPE_ACTIVITY;
+import static org.forgerock.openidm.audit.impl.AuditLogFilters.TYPE_CONFIG;
+import static org.forgerock.openidm.audit.impl.AuditLogFilters.newActionFilter;
+import static org.forgerock.openidm.audit.impl.AuditLogFilters.newAndCompositeFilter;
+import static org.forgerock.openidm.audit.impl.AuditLogFilters.newEventTypeFilter;
+import static org.forgerock.openidm.audit.impl.AuditLogFilters.newOrCompositeFilter;
+import static org.forgerock.openidm.audit.impl.AuditLogFilters.newReconActionFilter;
+import static org.forgerock.openidm.audit.impl.AuditLogFilters.newScriptedFilter;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -29,16 +39,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Modified;
-import org.apache.felix.scr.annotations.Properties;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
 import org.forgerock.audit.AuditException;
 import org.forgerock.audit.AuditServiceBuilder;
 import org.forgerock.audit.AuditServiceConfiguration;
@@ -67,11 +67,13 @@ import org.forgerock.json.resource.QueryRequest;
 import org.forgerock.json.resource.QueryResourceHandler;
 import org.forgerock.json.resource.QueryResponse;
 import org.forgerock.json.resource.ReadRequest;
+import org.forgerock.json.resource.RequestHandler;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.ServiceUnavailableException;
 import org.forgerock.json.resource.UpdateRequest;
 import org.forgerock.openidm.audit.AuditService;
+import org.forgerock.openidm.audit.impl.AuditLogFilters.JsonValueObjectConverter;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
 import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.crypto.CryptoService;
@@ -86,20 +88,35 @@ import org.forgerock.services.context.RootContext;
 import org.forgerock.util.annotations.VisibleForTesting;
 import org.forgerock.util.promise.Promise;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * This audit service is the entry point for audit logging on the router.
  */
-@Component(name = "org.forgerock.openidm.audit", immediate=true, policy=ConfigurationPolicy.REQUIRE)
-@Service
-@Properties({
-    @Property(name = "service.description", value = "Audit Service"),
-    @Property(name = "service.vendor", value = "ForgeRock AS"),
-    @Property(name = "openidm.router.prefix", value = AuditService.ROUTER_PREFIX + "/*")
-})
+@Component(
+        name = AuditServiceImpl.PID,
+        immediate = true,
+        configurationPolicy = ConfigurationPolicy.REQUIRE,
+        property = {
+                ServerConstants.ROUTER_PREFIX + "=" + AuditService.ROUTER_PREFIX + "/*"
+        },
+        service = { AuditService.class, RequestHandler.class })
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("Audit Service")
 public class AuditServiceImpl implements AuditService {
+
+    static final String PID = "org.forgerock.openidm.audit";
+
     private static final Logger logger = LoggerFactory.getLogger(AuditServiceImpl.class);
     public static final String EXCEPTION_FORMATTER = "exceptionFormatter";
     public static final String EXCEPTION = "exception";
@@ -119,11 +136,11 @@ public class AuditServiceImpl implements AuditService {
      if using this with for scr 1.6.2
      Ensure we do not get bound on router whilst it is activating
      */
-    @Reference(target = "("+ServerConstants.ROUTER_PREFIX + "=/*)")
+    @Reference(target = "("+ServerConstants.ROUTER_PREFIX + "=/*)", bind = "bindRouteService")
     private RouteService routeService;
 
     /** Script Registry service. */
-    @Reference(policy = ReferencePolicy.STATIC)
+    @Reference
     private ScriptRegistry scriptRegistry;
 
     private AuditServiceProxy auditService;
@@ -241,6 +258,22 @@ public class AuditServiceImpl implements AuditService {
      * call their useForQueriesMethod.
      */
     private final Map<String, EventHandlerConfiguration> dummyAuditEventHandlers = new LinkedHashMap<>();
+
+    void bindRouteService(RouteService routeService) {
+        this.routeService = routeService;
+    }
+
+    void bindScriptRegistry(ScriptRegistry scriptRegistry) {
+        this.scriptRegistry = scriptRegistry;
+    }
+
+    void bindEnhancedConfig(EnhancedConfig enhancedConfig) {
+        this.enhancedConfig = enhancedConfig;
+    }
+
+    void bindCryptoService(CryptoService cryptoService) {
+        this.cryptoService = cryptoService;
+    }
 
     @Activate
     void activate(ComponentContext compContext) throws Exception {

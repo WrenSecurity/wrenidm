@@ -12,35 +12,39 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Portions copyright 2012-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 
 package org.forgerock.openidm.scheduler;
 
 import java.text.ParseException;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
 import org.forgerock.openidm.config.enhanced.InvalidException;
+import org.forgerock.openidm.osgi.ServiceUtil;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Constants;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Schedule Config Service
- *
  */
-
-@Component(name = "org.forgerock.openidm.schedule", immediate=true, policy=ConfigurationPolicy.REQUIRE, configurationFactory=true)
+@Component(
+        name = "org.forgerock.openidm.schedule",
+        immediate = true,
+//        configurationFactory = true,
+        configurationPolicy = ConfigurationPolicy.REQUIRE)
 public class ScheduleConfigService {
 
     final static Logger logger = LoggerFactory.getLogger(ScheduleConfigService.class);
@@ -73,7 +77,7 @@ public class ScheduleConfigService {
         if (configFactoryPID != null) {
             jobName = configFactoryPID;
         } else {
-            jobName = (String) compContext.getProperties().get(Constants.SERVICE_PID);
+            jobName = ServiceUtil.getServicePid(compContext.getProperties());
         }
 
         schedulerService.registerConfigService(this);

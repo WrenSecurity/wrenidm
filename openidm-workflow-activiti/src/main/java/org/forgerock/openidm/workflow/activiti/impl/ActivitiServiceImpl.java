@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.workflow.activiti.impl;
 
@@ -33,8 +34,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
+
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
+
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.delegate.JavaDelegate;
@@ -45,10 +48,6 @@ import org.activiti.engine.impl.scripting.ResolverFactory;
 import org.activiti.engine.impl.scripting.ScriptBindingsFactory;
 import org.activiti.osgi.OsgiScriptingEngines;
 import org.activiti.osgi.blueprint.ProcessEngineFactory;
-import org.apache.felix.scr.annotations.*;
-import org.forgerock.openidm.datasource.DataSourceService;
-import org.forgerock.openidm.router.IDMConnectionFactory;
-import org.forgerock.services.context.Context;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ActionRequest;
@@ -69,15 +68,27 @@ import org.forgerock.openidm.config.enhanced.InvalidException;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.crypto.CryptoService;
+import org.forgerock.openidm.datasource.DataSourceService;
+import org.forgerock.openidm.router.IDMConnectionFactory;
 import org.forgerock.openidm.router.RouteService;
-import org.forgerock.script.ScriptRegistry;
 import org.forgerock.openidm.workflow.activiti.impl.session.OpenIDMSessionFactory;
+import org.forgerock.script.ScriptRegistry;
+import org.forgerock.services.context.Context;
 import org.forgerock.util.promise.Promise;
 import org.h2.jdbcx.JdbcDataSource;
 import org.osgi.framework.Constants;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.propertytypes.ServiceDescription;
+import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,22 +97,15 @@ import org.slf4j.LoggerFactory;
  *
  * @version $Revision$ $Date$
  */
-@Component(name = ActivitiServiceImpl.PID, immediate = true, policy = ConfigurationPolicy.REQUIRE)
-@Service
-@Properties({
-    @Property(name = Constants.SERVICE_DESCRIPTION, value = "Workflow Service"),
-    @Property(name = Constants.SERVICE_VENDOR, value = ServerConstants.SERVER_VENDOR_NAME),
-    @Property(name = ServerConstants.ROUTER_PREFIX, value = {
-        ActivitiServiceImpl.ROUTER_PREFIX})})
-@References({
-    @Reference(name = "JavaDelegateServiceReference", referenceInterface = JavaDelegate.class,
-    bind = "bindService", unbind = "unbindService",
-    cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, policy = ReferencePolicy.DYNAMIC),
-    @Reference(name = "ScriptRegistryService", referenceInterface = ScriptRegistry.class,
-    bind = "bindScriptRegistry", unbind = "unbindScriptRegistry",
-    cardinality = ReferenceCardinality.OPTIONAL_UNARY, policy = ReferencePolicy.DYNAMIC,
-    target = "(service.pid=org.forgerock.openidm.script)")
-})
+@Component(
+        name = ActivitiServiceImpl.PID,
+        immediate = true,
+        configurationPolicy = ConfigurationPolicy.REQUIRE,
+        property = {
+            ServerConstants.ROUTER_PREFIX + "=" + ActivitiServiceImpl.ROUTER_PREFIX
+        })
+@ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
+@ServiceDescription("Workflow Service")
 public class ActivitiServiceImpl implements RequestHandler {
 
     final static Logger logger = LoggerFactory.getLogger(ActivitiServiceImpl.class);
@@ -128,9 +132,12 @@ public class ActivitiServiceImpl implements RequestHandler {
     public static final int DEFAULT_MAIL_PORT = 25;
     private boolean selfMadeProcessEngine = true;
 
-    @Reference(name = "processEngine", referenceInterface = ProcessEngine.class,
-            bind = "bindProcessEngine", unbind = "unbindProcessEngine",
-            cardinality = ReferenceCardinality.OPTIONAL_UNARY, policy = ReferencePolicy.STATIC,
+    @Reference(
+            name = "processEngine",
+            service = ProcessEngine.class,
+            unbind = "unbindProcessEngine",
+            cardinality = ReferenceCardinality.OPTIONAL,
+            policy = ReferencePolicy.STATIC,
             target = "(!(openidm.activiti.engine=true))") //avoid registering the self made service
     private ProcessEngine processEngine;
 
@@ -139,11 +146,10 @@ public class ActivitiServiceImpl implements RequestHandler {
      * availability of this service during activation and deactivation to support the persistence of
      * barInstallerConfiguration.
      */
-    @Reference(cardinality = ReferenceCardinality.OPTIONAL_UNARY)
+    @Reference(cardinality = ReferenceCardinality.OPTIONAL)
     private RepositoryService repositoryService = null;
 
-    @Reference(cardinality = ReferenceCardinality.OPTIONAL_UNARY,
-            bind = "bindConfigAdmin", unbind = "unbindConfigAdmin")
+    @Reference(cardinality = ReferenceCardinality.OPTIONAL, bind = "bindConfigAdmin", unbind = "unbindConfigAdmin")
     private ConfigurationAdmin configurationAdmin = null;
 
     /**
@@ -152,14 +158,13 @@ public class ActivitiServiceImpl implements RequestHandler {
     @Reference(bind = "bindTransactionManager", unbind = "unbindTransactionManager")
     private TransactionManager transactionManager;
 
-    @Reference(referenceInterface = DataSourceService.class,
-            cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE,
-            bind = "bindDataSourceService",
-            unbind = "unbindDataSourceService",
-            policy = ReferencePolicy.DYNAMIC,
-            strategy = ReferenceStrategy.EVENT)
     private final Map<String, DataSourceService> dataSourceServices = new ConcurrentHashMap<>();
 
+    @Reference(
+            service = DataSourceService.class,
+            cardinality = ReferenceCardinality.MULTIPLE,
+            unbind = "unbindDataSourceService",
+            policy = ReferencePolicy.DYNAMIC)
     protected void bindDataSourceService(DataSourceService service, Map<String, Object> properties) {
         dataSourceServices.put(properties.get(ServerConstants.CONFIG_FACTORY_PID).toString(), service);
     }
@@ -207,7 +212,7 @@ public class ActivitiServiceImpl implements RequestHandler {
     private String historyLevel;
     private String useDataSource;
     private String workflowDir;
-    
+
     @Override
     public Promise<ActionResponse, ResourceException> handleAction(Context context, ActionRequest request) {
         return activitiResource.handleAction(context, request);
@@ -457,7 +462,14 @@ public class ActivitiServiceImpl implements RequestHandler {
         }
         logger.info("ProcessEngine stopped.");
     }
- 
+
+    @Reference(
+            name = "ScriptRegistryService",
+            service = ScriptRegistry.class,
+            unbind = "unbindScriptRegistry",
+            cardinality = ReferenceCardinality.OPTIONAL,
+            policy = ReferencePolicy.DYNAMIC,
+            target = "(service.pid=org.forgerock.openidm.script)")
     protected void bindScriptRegistry(ScriptRegistry scriptRegistry) {
         this.idmSessionFactory.setScriptRegistry(scriptRegistry);
     }
@@ -466,6 +478,12 @@ public class ActivitiServiceImpl implements RequestHandler {
         this.idmSessionFactory.setScriptRegistry(null);
     }
 
+    @Reference(
+            name = "JavaDelegateServiceReference",
+            service = JavaDelegate.class,
+            unbind = "unbindService",
+            cardinality = ReferenceCardinality.MULTIPLE,
+            policy = ReferencePolicy.DYNAMIC)
     public void bindService(JavaDelegate delegate, Map<String, Object> props) {
         expressionManager.bindService(delegate, props);
     }

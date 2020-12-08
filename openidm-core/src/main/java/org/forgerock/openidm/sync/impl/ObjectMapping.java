@@ -14,7 +14,7 @@
  * "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  */
 package org.forgerock.openidm.sync.impl;
 
@@ -23,7 +23,6 @@ import static org.forgerock.json.JsonValue.field;
 import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.JsonValueFunctions.enumConstant;
-import static org.forgerock.json.JsonValueFunctions.setOf;
 import static org.forgerock.openidm.sync.impl.ReconciliationStatistic.DurationMetric;
 
 import java.util.Collections;
@@ -129,24 +128,24 @@ class ObjectMapping {
 
     /** the target system */
     private String targetObjectSet;
-    
+
     /**
      * A boolean indicating if paging should be used for recon source queries.
      */
     private boolean reconSourceQueryPaging;
-    
+
     /**
      * A page size for recon source queries, if paging is used.
      */
     private int reconSourceQueryPageSize;
 
     /**
-     * A {@link List} containing the configured link qualifiers. 
+     * A {@link List} containing the configured link qualifiers.
      */
     private Set<String> linkQualifiersList = new HashSet<>();
-    
+
     /**
-     * A {@link Script} used for determining the link qualifiers. 
+     * A {@link Script} used for determining the link qualifiers.
      */
     private Script linkQualifiersScript;
 
@@ -211,7 +210,7 @@ class ObjectMapping {
             // No link qualifiers configured, so add only the default
             linkQualifiersList.add(Link.DEFAULT_LINK_QUALIFIER);
         } else if (linkQualifiersValue.isList()) {
-            linkQualifiersList.addAll(config.get("linkQualifiers").as(setOf(String.class)));
+            linkQualifiersList.addAll(config.get("linkQualifiers").asList(String.class));
         } else if (linkQualifiersValue.isMap()) {
             linkQualifiersScript = Scripts.newScript(linkQualifiersValue);
         } else {
@@ -285,7 +284,7 @@ class ObjectMapping {
 
     /**
      * Returns the complete set of link Qualifiers.
-     * 
+     *
      * @param context {@link Context} associated with the current sync.
      * @param reconContext Recon context or {@code null}
      * @return a {@link Set} object representing the complete set of link qualifiers
@@ -295,7 +294,7 @@ class ObjectMapping {
             throws SynchronizationException {
         return getLinkQualifiers(null, null, true, context, reconContext);
     }
-    
+
     /**
      * Returns a set of link qualifiers for a given source. If the returnAll boolean is used to indicate that all linkQualifiers
      * should be returned regardless of the source object.
@@ -320,7 +319,7 @@ class ObjectMapping {
 
             final long startNanoTime = startNanoTime(reconContext);
             try {
-                return json(linkQualifiersScript.exec(scope, context)).as(setOf(String.class));
+                return new HashSet<>(json(linkQualifiersScript.exec(scope, context)).asList(String.class));
             } catch (ScriptException se) {
                 LOGGER.debug("{} {} script encountered exception", name, "linkQualifiers", se);
                 throw new SynchronizationException(se);
@@ -332,7 +331,7 @@ class ObjectMapping {
         }
     }
 
-    /**
+    /**`
      * @return The configured name of the link set to use for this object mapping
      */
     public String getLinkTypeName() {
@@ -413,7 +412,7 @@ class ObjectMapping {
         } else {
             sourceObjectAccessor = new LazyObjectAccessor(connectionFactory, sourceObjectSet, resourceId);
         }
-                
+
         // Loop over correlation queries, performing a sync for each linkQualifier
         for (String linkQualifier : getLinkQualifiers(sourceObjectAccessor.getObject(), oldValue, false, context, null)) {
             // TODO: one day bifurcate this for synchronous and asynchronous source operation
@@ -608,7 +607,7 @@ class ObjectMapping {
                 if (params.isDefined("situation")) {
                     Situation situation = params.get("situation").required().as(enumConstant(Situation.class));
                     if (!situation.equals(op.situation)) {
-                        throw new SynchronizationException("Expected situation does not match. Expected: " 
+                        throw new SynchronizationException("Expected situation does not match. Expected: "
                                 + situation.name()
                                 + ", Found: " + op.situation.name());
                     }
@@ -706,7 +705,7 @@ class ObjectMapping {
         try {
             // Execute onRecon script.
             executeOnRecon(context, reconContext);
-            
+
             context = new TriggerContext(context, "recon");
             ObjectSetContext.push(context);
             logReconStart(reconContext, context);
@@ -771,7 +770,7 @@ class ObjectMapping {
 
             stats.sourcePhaseStart();
             final long sourcePhaseStart = startNanoTime(reconContext);
-            
+
             boolean queryNextPage = false;
 
             LOGGER.info("Performing source sync for recon {} on mapping {}", reconId, name);
@@ -786,7 +785,7 @@ class ObjectMapping {
                     stats.addDuration(DurationMetric.sourceQuery, pagedSourceQueryStart);
                 }
                 // Perform source recon phase on current set of source ids
-                ReconPhase sourcePhase = 
+                ReconPhase sourcePhase =
                         new ReconPhase(sourceIter, reconContext, context, allLinks, remainingTargetIds, sourceRecon);
                 sourcePhase.setFeedSize(feedSize);
                 sourcePhase.execute();
@@ -856,7 +855,7 @@ class ObjectMapping {
 
 // TODO: cleanup orphan link objects (no matching source or target) here
     }
-    
+
     private void executeOnRecon(Context context, final ReconciliationContext reconContext) throws SynchronizationException {
         if (onReconScript != null) {
             Map<String, Object> scope = new HashMap<>();
@@ -880,7 +879,7 @@ class ObjectMapping {
     /**
      * Sets the LogEntry message and messageDetail with the appropriate information
      * from the given Exception.
-     * 
+     *
      * @param entry the LogEntry
      * @param syncException the Exception
      */
@@ -888,7 +887,7 @@ class ObjectMapping {
         JsonValue messageDetail = null;  // top level ResourceException
         Throwable cause = syncException; // Root cause
         entry.setException(syncException);
-        
+
         // Loop to find original cause and top level ResourceException (if any)
         while (cause.getCause() != null) {
             cause = cause.getCause();
@@ -900,7 +899,7 @@ class ObjectMapping {
                 }
             }
         }
-        
+
         // Set message and messageDetail
         entry.setMessageDetail(messageDetail);
         entry.setMessage(syncException != cause
@@ -1022,7 +1021,7 @@ class ObjectMapping {
             linkOp.sync();
         }
     }
-    
+
     /**
      * Returns a {@link SynchronizationException} that represents the supplied {@link ScriptThrownException}.
 

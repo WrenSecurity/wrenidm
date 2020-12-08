@@ -12,10 +12,15 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security
  */
 package org.forgerock.openidm.idp.client;
 
 import static org.forgerock.json.JsonValue.json;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.forgerock.http.Client;
@@ -26,6 +31,10 @@ import org.forgerock.http.protocol.Response;
 import org.forgerock.http.protocol.Responses;
 import org.forgerock.http.util.Uris;
 import org.forgerock.json.JsonValue;
+import org.forgerock.json.jose.common.JwtReconstruction;
+import org.forgerock.json.jose.exceptions.JwtReconstructionException;
+import org.forgerock.json.jose.jws.SignedJwt;
+import org.forgerock.json.jose.jwt.JwtClaimsSet;
 import org.forgerock.json.resource.BadRequestException;
 import org.forgerock.json.resource.InternalServerErrorException;
 import org.forgerock.json.resource.NotFoundException;
@@ -33,17 +42,6 @@ import org.forgerock.json.resource.ResourceException;
 import org.forgerock.openidm.idp.config.ProviderConfig;
 import org.forgerock.util.Function;
 import org.forgerock.util.Reject;
-import org.forgerock.util.promise.NeverThrowsException;
-import org.forgerock.json.jose.common.JwtReconstruction;
-import org.forgerock.json.jose.exceptions.InvalidJwtException;
-import org.forgerock.json.jose.exceptions.JwtReconstructionException;
-import org.forgerock.json.jose.jws.SignedJwt;
-import org.forgerock.json.jose.jwt.JwtClaimsSet;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.Map;
-
 import org.forgerock.util.promise.Promise;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

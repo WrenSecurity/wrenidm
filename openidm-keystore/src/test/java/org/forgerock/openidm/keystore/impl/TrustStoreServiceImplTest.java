@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  */
 
 package org.forgerock.openidm.keystore.impl;
@@ -32,6 +32,7 @@ import java.io.OutputStream;
 import java.security.KeyStore;
 import java.security.Security;
 import java.util.Collections;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.IdentityServerTestUtils;
@@ -71,7 +72,6 @@ public class TrustStoreServiceImplTest {
         createTrustStore(IdentityServer.getFileForPath(IdentityServer.getInstance().getProperty(TRUSTSTORE_LOCATION)));
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void createKeyStore(final File keystoreFile) throws Exception {
         keystoreFile.deleteOnExit();
         if (keystoreFile.exists()) {
@@ -91,7 +91,6 @@ public class TrustStoreServiceImplTest {
         }
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void createTrustStore(final File keystoreFile) throws Exception {
         keystoreFile.deleteOnExit();
         if (keystoreFile.exists()) {

@@ -61,17 +61,19 @@ public class ServiceTrackerNotifier<S, T> extends ServiceTracker<S, T> {
         this.context = context;
     }
 
+    @Override
     public T addingService(ServiceReference<S> reference) {
         T service =  super.addingService(reference);
         if (service == null) {
             logger.warn("Framework issue, service in service tracker is null for {}",
-                    reference.getProperty(Constants.SERVICE_PID));
+                    ServiceUtil.getServicePid(reference.getProperties()));
         }
         if (listener != null) {
             listener.addedService(reference, service);
         }
         return service;
     }
+    @Override
     public void removedService(ServiceReference<S> reference, T service) {
         if (listener != null) {
             listener.removedService(reference, service);
@@ -79,10 +81,11 @@ public class ServiceTrackerNotifier<S, T> extends ServiceTracker<S, T> {
         super.removedService(reference, service);
     }
 
+    @Override
     public void modifiedService(ServiceReference<S> reference, T service) {
         if (service == null) {
             logger.warn("Framework issue, service in service tracker modified is null for {}",
-                    reference.getProperty(Constants.SERVICE_PID));
+                    ServiceUtil.getServicePid(reference.getProperties()));
         }
         if (listener != null) {
             listener.modifiedService(reference, service);

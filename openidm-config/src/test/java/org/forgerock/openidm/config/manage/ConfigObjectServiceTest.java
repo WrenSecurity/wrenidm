@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2020 Wren Security.
  */
 
 package org.forgerock.openidm.config.manage;
@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
@@ -94,6 +95,7 @@ import org.forgerock.util.query.QueryFilter;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentConstants;
@@ -107,7 +109,6 @@ import org.testng.annotations.Test;
  */
 public class ConfigObjectServiceTest {
 
-    @SuppressWarnings("rawtypes")
     private Dictionary<String, Object> properties = null;
     private ConfigObjectService configObjectService;
 
@@ -117,7 +118,6 @@ public class ConfigObjectServiceTest {
     private EnhancedConfig enhancedConfig;
     private ClusterManagementService clusterManagementService;
 
-    @SuppressWarnings("unchecked")
     @BeforeTest
     public void beforeTest() throws Exception {
         IdentityServerTestUtils.initInstanceForTest();
@@ -259,7 +259,6 @@ public class ConfigObjectServiceTest {
 
     }
 
-    @SuppressWarnings("rawtypes")
     @Test(priority=3)
     public void testCreateNew() throws Exception {
         config.put("property1", "value1");
@@ -285,7 +284,6 @@ public class ConfigObjectServiceTest {
         throw new Exception("Duplicate object not detected");
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     @Test(priority=5)
     public void testCreateDupeOk() throws Exception {
         configObjectService.create(rname, id, json(config), true).getOrThrow();
@@ -323,7 +321,6 @@ public class ConfigObjectServiceTest {
                 newQueryRequest(""), mock(QueryResourceHandler.class)).getOrThrow();
     }
 
-    @SuppressWarnings("unchecked")
     @Test(priority=8)
     public void testDelete() throws Exception {
         configObjectService.handleDelete(new TransactionIdContext(new RootContext(), new TransactionId()),
@@ -427,9 +424,19 @@ public class ConfigObjectServiceTest {
             }
             return null;
         }
+
+        @Override
+        public Configuration getFactoryConfiguration(String factoryPid, String name) throws IOException {
+            return null;
+        }
+
+        @Override
+        public Configuration getFactoryConfiguration(String factoryPid, String name, String location)
+                throws IOException {
+            return null;
+        }
     }
 
-    @SuppressWarnings("rawtypes")
     private class MockConfiguration implements Configuration {
         String pid = "pid";
         Dictionary<String, Object> dictionary = null;
@@ -481,6 +488,29 @@ public class ConfigObjectServiceTest {
         @Override
         public long getChangeCount() {
             return 0;
+        }
+
+        @Override
+        public Dictionary<String, Object> getProcessedProperties(ServiceReference<?> reference) {
+            return null;
+        }
+
+        @Override
+        public boolean updateIfDifferent(Dictionary<String, ?> properties) throws IOException {
+            return false;
+        }
+
+        @Override
+        public void addAttributes(ConfigurationAttribute... attrs) throws IOException {
+        }
+
+        @Override
+        public Set<ConfigurationAttribute> getAttributes() {
+            return null;
+        }
+
+        @Override
+        public void removeAttributes(ConfigurationAttribute... attrs) throws IOException {
         }
     }
 
