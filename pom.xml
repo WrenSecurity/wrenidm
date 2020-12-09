@@ -109,7 +109,7 @@
 
     <properties>
 
-        <pgpVerifyPluginVersion>1.10.1-wren</pgpVerifyPluginVersion>
+        <pgpVerifyPluginVersion>1.10.1</pgpVerifyPluginVersion>
         <pgpWhitelistArtifact>org.wrensecurity:wrensec-pgp-whitelist:1.5.0</pgpWhitelistArtifact>
 
         <!-- Version management -->
