@@ -1,27 +1,19 @@
 /*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ * The contents of this file are subject to the terms of the Common Development and
+ * Distribution License (the License). You may not use this file except in compliance with the
+ * License.
  *
- * Copyright (c) 2012-2013 ForgeRock AS. All Rights Reserved
+ * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
+ * specific language governing permission and limitations under the License.
  *
- * The contents of this file are subject to the terms
- * of the Common Development and Distribution License
- * (the License). You may not use this file except in
- * compliance with the License.
+ * When distributing Covered Software, include this CDDL Header Notice in each file and include
+ * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
+ * Header, with the fields enclosed by brackets [] replaced by your own identifying
+ * information: "Portions copyright [year] [name of copyright owner]".
  *
- * You can obtain a copy of the License at
- * http://forgerock.org/license/CDDLv1.0.html
- * See the License for the specific language governing
- * permission and limitations under the License.
- *
- * When distributing Covered Code, include this CDDL
- * Header Notice in each file and include the License file
- * at http://forgerock.org/license/CDDLv1.0.html
- * If applicable, add the following below the CDDL Header,
- * with the fields enclosed by brackets [] replaced by
- * your own identifying information:
- * "Portions Copyrighted [year] [name of copyright owner]"
+ * Copyright 2012-2013 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security.
  */
-
 package org.forgerock.commons.launcher;
 
 import static org.kohsuke.args4j.ExampleMode.ALL;
@@ -39,7 +31,6 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -52,11 +43,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.codehaus.plexus.util.DirectoryScanner;
-import org.forgerock.json.fluent.JsonException;
-import org.forgerock.json.fluent.JsonTransformer;
-import org.forgerock.json.fluent.JsonValue;
+import org.forgerock.json.JsonValue;
+import org.forgerock.json.JsonValueTraverseFunction;
 import org.json.simple.parser.JSONParser;
-import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -67,7 +56,7 @@ import org.osgi.framework.Constants;
 /**
  * An OSGiDaemonBean starts the Embedded OSGi
  * {@link org.osgi.framework.launch.Framework}.
- * 
+ *
  * @author Laszlo Hordos
  */
 public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
@@ -137,13 +126,14 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
      */
     private JsonValue launcherConfiguration = null;
 
-    private final JsonTransformer transformer;
+    private final JsonValueTraverseFunction transformer;
 
     private final PropertyAccessor propertyAccessor;
 
     public OSGiFrameworkService() {
 
         propertyAccessor = new PropertyAccessor() {
+            @Override
             public <T> T get(String name) {
                 Object value = null;
                 if (null != bootParameters) {
@@ -172,13 +162,9 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
             }
         };
 
-        transformer = new JsonTransformer() {
-            public void transform(JsonValue value) throws JsonException {
-                if (null != value && value.isString()) {
-                    value.setObject(ConfigurationUtil.substVars(value.asString(), propertyAccessor));
-                }
-            }
-        };
+        transformer = new JsonValueTraverseFunction((value) -> null != value && value.isString()
+                ? ConfigurationUtil.substVars(value.asString(), propertyAccessor)
+                : value);
     }
 
     public String getInstallDir() {
@@ -221,6 +207,7 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
         this.configFile = configFile;
     }
 
+    @Override
     protected boolean isVerbose() {
         return verbose;
     }
@@ -248,6 +235,7 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
         this.bootParameters = bootParameters;
     }
 
+    @Override
     public boolean isNewThread() {
         return newThread;
     }
@@ -257,10 +245,12 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
         newThread = value;
     }
 
+    @Override
     protected long getStopTimeout() {
         return 0;
     }
 
+    @Override
     @SuppressWarnings({ "unchecked" })
     public void init(String[] arguments) throws Exception {
         CmdLineParser parser = new CmdLineParser(this);
@@ -291,14 +281,17 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
         init();
     }
 
+    @Override
     public void destroy() {
 
     }
 
+    @Override
     public Bundle getSystemBundle() {
         return getFramework();
     }
 
+    @Override
     public void init() throws Exception {
         if (null == bootParameters) {
             bootParameters = new HashMap<String, Object>();
@@ -340,8 +333,7 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
                                     + Main.class.getResource("/").toString() + "/launcher.json");
                 }
             }
-            launcherConfiguration = new JsonValue((new JSONParser()).parse(input));
-            launcherConfiguration.getTransformers().add(transformer);
+            launcherConfiguration = transformer.apply(new JsonValue((new JSONParser()).parse(input)));
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         } finally {
@@ -385,6 +377,7 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
                 || ((enableHook instanceof String) && !((String) enableHook)
                         .equalsIgnoreCase("false"))) {
             Runtime.getRuntime().addShutdownHook(new Thread("Felix Shutdown Hook") {
+                @Override
                 public void run() {
                     try {
                         OSGiFrameworkService.this.stop();
@@ -399,6 +392,7 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
 
     }
 
+    @Override
     protected void registerServices(BundleContext bundleContext) throws Exception {
         Dictionary<String, String> properties = new Hashtable<String, String>(4);
         properties.put(Constants.SERVICE_VENDOR, "ForgeRock AS.");
@@ -407,8 +401,14 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
         properties.put(Constants.SERVICE_RANKING, "16");
         bundleContext.registerService(Map.class, Collections.unmodifiableMap(bootParameters),
                 properties);
+
+        Dictionary<String, String> frameworkProps = new Hashtable<>();
+        frameworkProps.put(Constants.SERVICE_VENDOR, "ForgeRock AS.");
+        frameworkProps.put(Constants.SERVICE_DESCRIPTION, "OSGi Framework Service");
+        bundleContext.registerService(OSGiFramework.class, this, frameworkProps);
     }
 
+    @Override
     protected Map<String, String> getConfigurationProperties() {
         if (null == configurationProperties) {
             configurationProperties = new HashMap<String, String>();
@@ -423,7 +423,6 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
     public JsonValue getLauncherConfiguration() {
         if (null == launcherConfiguration) {
             launcherConfiguration = new JsonValue(new HashMap<String, Object>());
-            launcherConfiguration.getTransformers().add(transformer);
         }
         return launcherConfiguration;
     }
@@ -432,6 +431,7 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
         this.launcherConfiguration = launcherConfiguration;
     }
 
+    @Override
     protected List<BundleHandler> listBundleHandlers(BundleContext context)
             throws MalformedURLException {
         JsonValue bundle = getLauncherConfiguration().get("bundle");
@@ -546,7 +546,7 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
      * located in the <tt>conf/</tt> directory and is called "
      * <tt>config.properties</tt>".
      * </p>
-     * 
+     *
      * @return A <tt>Map<String, Object></tt> instance or <tt>null</tt> if there
      *         was an error.
      */
@@ -562,7 +562,7 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
             if (props == null)
                 return new HashMap<String, String>(0);
             // Perform variable substitution on specified properties.
-            systemProperties = (new JsonValue(props, null, Arrays.asList(transformer))).copy();
+            systemProperties = transformer.apply(new JsonValue(props, null));
         }
         Map<String, String> config = new HashMap<String, String>(systemProperties.size());
         for (Map.Entry<String, Object> entry : systemProperties.asMap().entrySet()) {
@@ -582,7 +582,7 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
      * default, the configuration property file is located in the <tt>conf/</tt>
      * directory and is called " <tt>config.properties</tt>".
      * </p>
-     * 
+     *
      * @return A <tt>Map<String, Object></tt> instance or <tt>null</tt> if there
      *         was an error.
      */
@@ -598,8 +598,7 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
             if (props == null)
                 return new HashMap<String, Object>(0);
             // Perform variable substitution on specified properties.
-            return (new JsonValue(props, null, Arrays.asList(transformer))).expect(Map.class)
-                    .copy().asMap();
+            return transformer.apply(new JsonValue(props, null)).asMap();
         }
     }
 
@@ -666,7 +665,7 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
      * If the given path is an absolute path, then it will be used. If the path
      * is relative, then it will be interpreted as if it were relative to the
      * Identity Server root.
-     * 
+     *
      * @param path
      *            The path string to be retrieved as a <CODE>File</CODE>
      * @param rootDir
@@ -686,7 +685,7 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
     /**
      * Retrieves the path to the install directory for this instance of the
      * Identity Server.
-     * 
+     *
      * @return The path to the root directory for this instance of the Identity
      *         Server.
      */
@@ -697,7 +696,7 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
     /**
      * Retrieves the path to the project directory for this instance of the
      * Identity Server.
-     * 
+     *
      * @return The path to the project directory for this instance of the
      *         Identity Server.
      */
@@ -708,7 +707,7 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
     /**
      * Retrieves the path to the working directory for this instance of the
      * Identity Server.
-     * 
+     *
      * @return The path to the working directory for this instance of the
      *         Identity Server.
      */

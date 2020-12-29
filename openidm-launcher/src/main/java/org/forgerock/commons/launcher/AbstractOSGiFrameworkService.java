@@ -1,27 +1,19 @@
 /*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ * The contents of this file are subject to the terms of the Common Development and
+ * Distribution License (the License). You may not use this file except in compliance with the
+ * License.
  *
- * Copyright (c) 2012 ForgeRock AS. All Rights Reserved
+ * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
+ * specific language governing permission and limitations under the License.
  *
- * The contents of this file are subject to the terms
- * of the Common Development and Distribution License
- * (the License). You may not use this file except in
- * compliance with the License.
+ * When distributing Covered Software, include this CDDL Header Notice in each file and include
+ * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
+ * Header, with the fields enclosed by brackets [] replaced by your own identifying
+ * information: "Portions copyright [year] [name of copyright owner]".
  *
- * You can obtain a copy of the License at
- * http://forgerock.org/license/CDDLv1.0.html
- * See the License for the specific language governing
- * permission and limitations under the License.
- *
- * When distributing Covered Code, include this CDDL
- * Header Notice in each file and include the License file
- * at http://forgerock.org/license/CDDLv1.0.html
- * If applicable, add the following below the CDDL Header,
- * with the fields enclosed by brackets [] replaced by
- * your own identifying information:
- * "Portions Copyrighted [year] [name of copyright owner]"
+ * Copyright 2012 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security.
  */
-
 package org.forgerock.commons.launcher;
 
 import java.net.MalformedURLException;
@@ -46,7 +38,7 @@ import org.osgi.framework.startlevel.BundleStartLevel;
 /**
  * An AbstractOSGiContainerService is a prototype of how to start an OSGi
  * {@link Framework}.
- * 
+ *
  * @author Laszlo Hordos
  */
 public abstract class AbstractOSGiFrameworkService implements OSGiFramework {
@@ -78,6 +70,7 @@ public abstract class AbstractOSGiFrameworkService implements OSGiFramework {
 
     protected abstract void registerServices(BundleContext bundleContext) throws Exception;
 
+    @Override
     public void start() throws Exception {
         // Create an instance of the framework.
         FrameworkFactory factory = ServiceLoader.load(FrameworkFactory.class).iterator().next();
@@ -95,16 +88,17 @@ public abstract class AbstractOSGiFrameworkService implements OSGiFramework {
             registerServices(framework.get().getBundleContext());
 
             Callable<Void> container = new Callable<Void>() {
+                @Override
                 public Void call() throws Exception {
                     FrameworkEvent event = null;
                     do {
                         // Start the framework.
                         Framework fw = framework.get();
                         fw.start();
-                        
+
                         // Wait for framework to stop to exit the VM.
                         event = fw.waitForStop(0);
-                        
+
                     }
                     // If the framework was updated, then restart it.
                     while (event.getType() == FrameworkEvent.STOPPED_UPDATE);
@@ -126,7 +120,8 @@ public abstract class AbstractOSGiFrameworkService implements OSGiFramework {
             throw e;
         }
     }
-    
+
+    @Override
     public void stop() throws Exception {
         Framework fw = framework.getAndSet(null);
         if (null != fw) {

@@ -1,27 +1,19 @@
 /*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ * The contents of this file are subject to the terms of the Common Development and
+ * Distribution License (the License). You may not use this file except in compliance with the
+ * License.
  *
- * Copyright (c) 2012 ForgeRock AS. All Rights Reserved
+ * You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
+ * specific language governing permission and limitations under the License.
  *
- * The contents of this file are subject to the terms
- * of the Common Development and Distribution License
- * (the License). You may not use this file except in
- * compliance with the License.
+ * When distributing Covered Software, include this CDDL Header Notice in each file and include
+ * the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
+ * Header, with the fields enclosed by brackets [] replaced by your own identifying
+ * information: "Portions copyright [year] [name of copyright owner]".
  *
- * You can obtain a copy of the License at
- * http://forgerock.org/license/CDDLv1.0.html
- * See the License for the specific language governing
- * permission and limitations under the License.
- *
- * When distributing Covered Code, include this CDDL
- * Header Notice in each file and include the License file
- * at http://forgerock.org/license/CDDLv1.0.html
- * If applicable, add the following below the CDDL Header,
- * with the fields enclosed by brackets [] replaced by
- * your own identifying information:
- * "Portions Copyrighted [year] [name of copyright owner]"
+ * Copyright 2012 ForgeRock AS.
+ * Portions Copyright 2020 Wren Security.
  */
-
 package org.forgerock.commons.launcher;
 
 import java.net.URL;
@@ -33,7 +25,7 @@ import org.osgi.framework.Constants;
 /**
  * A BundleHandler contains the instruction of how to provision {@link Bundle}
  * to the {@link org.osgi.framework.launch.Framework}.
- * 
+ *
  * @author Laszlo Hordos
  */
 public class BundleHandler {
@@ -73,7 +65,7 @@ public class BundleHandler {
 
     /**
      * Get the bundle location URL.
-     * 
+     *
      * @return the URL of the Bundle location.
      */
     public URL getBundleUrl() {
@@ -88,6 +80,7 @@ public class BundleHandler {
         return actions;
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("BundleHandler[");
         sb.append("url: ").append(bundleUrl);
