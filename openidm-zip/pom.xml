@@ -43,6 +43,24 @@
     <dependencies>
         <dependency>
             <groupId>org.forgerock.openidm</groupId>
+            <artifactId>openidm-launcher</artifactId>
+            <version>${project.version}</version>
+            <!-- Prevent transitive dependencies from being picked up in zip assembly -->
+            <scope>compile</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>commons-daemon</groupId>
+            <artifactId>commons-daemon</artifactId>
+            <version>1.2.3</version>
+            <classifier>bin-windows</classifier>
+            <type>zip</type>
+            <!-- Prevent transitive dependencies from being picked up in zip assembly -->
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.forgerock.openidm</groupId>
             <artifactId>openidm-audit</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -415,12 +433,6 @@
         </dependency>
 
         <!-- ForgeRock commons -->
-        <dependency>
-            <groupId>org.forgerock.commons</groupId>
-            <artifactId>launcher-zip</artifactId>
-            <type>zip</type>
-        </dependency>
-
         <dependency>
             <groupId>org.forgerock.commons</groupId>
             <artifactId>script-javascript</artifactId>

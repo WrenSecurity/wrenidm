@@ -108,8 +108,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.forgerock.commons</groupId>
-            <artifactId>launcher</artifactId>
+            <groupId>org.forgerock.openidm</groupId>
+            <artifactId>openidm-launcher</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 

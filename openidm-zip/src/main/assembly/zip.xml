@@ -13,6 +13,7 @@
   information: "Portions Copyrighted [year] [name of copyright owner]".
 
   Copyright (c) 2011-2016 ForgeRock AS. All rights reserved.
+  Portions Copyright 2020 Wren Security
 -->
 <assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -1146,7 +1147,6 @@
     <files>
         <file>
             <source>${basedir}/src/main/resources/samples/provisioners/provisioner.openicf-adldap.json</source>
-            <destName>provisioner.openicf-realad.json</destName>
             <outputDirectory>/wrenidm/samples/sample6/alternatives</outputDirectory>
         </file>
     </files>
@@ -1165,6 +1165,7 @@
                 <exclude>org.apache.felix:org.osgi.foundation</exclude>
                 <exclude>org.apache.felix:javax.servlet</exclude>
                 <exclude>org.forgerock.openicf.connectors:*</exclude>
+                <exclude>org.forgerock.openidm:openidm-launcher</exclude>
                 <exclude>org.forgerock.openidm:openidm-shell</exclude>
                 <exclude>org.forgerock.openidm:openidm-ui-ria*</exclude>
                 <exclude>org.forgerock.openidm:openidm-ui</exclude>
@@ -1285,6 +1286,23 @@
             <outputDirectory>/wrenidm/bin</outputDirectory>
         </dependencySet>
         <dependencySet>
+            <unpack>true</unpack>
+            <scope>compile</scope>
+            <includes>
+                <include>commons-daemon:commons-daemon</include>
+            </includes>
+            <outputDirectory>/wrenidm/bin</outputDirectory>
+        </dependencySet>
+        <dependencySet>
+            <unpack>false</unpack>
+            <scope>compile</scope>
+            <outputFileNameMapping>launcher.jar</outputFileNameMapping>
+            <includes>
+                <include>org.forgerock.openidm:openidm-launcher</include>
+            </includes>
+            <outputDirectory>/wrenidm/bin</outputDirectory>
+        </dependencySet>
+        <dependencySet>
             <unpack>false</unpack>
             <outputFileNameMapping>openidm.jar</outputFileNameMapping>
             <includes>
@@ -1306,18 +1324,6 @@
                 <include>org.forgerock.openidm:openidm-workflow-activiti:**:jar-with-dependencies</include>
                 <include>org.forgerock.openidm:openidm-workflow-remote</include>
             </includes>
-        </dependencySet>
-        <dependencySet>
-            <unpack>true</unpack>
-            <outputDirectory>/wrenidm/</outputDirectory>
-            <includes>
-                <include>org.forgerock.commons:launcher-zip:zip:*</include>
-            </includes>
-            <unpackOptions>
-                <includes>
-                    <include>bin/**</include>
-                </includes>
-            </unpackOptions>
         </dependencySet>
         <dependencySet>
             <unpack>false</unpack>
