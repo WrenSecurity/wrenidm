@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wrensecurity</groupId>
         <artifactId>wrensec-parent</artifactId>
-        <version>3.0.1</version>
+        <version>3.2.1-SNAPSHOT</version>
     </parent>
 
     <groupId>org.forgerock.openidm</groupId>
@@ -110,27 +110,27 @@
     <properties>
 
         <pgpVerifyPluginVersion>1.10.1</pgpVerifyPluginVersion>
-        <pgpWhitelistArtifact>org.wrensecurity:wrensec-pgp-whitelist:1.5.2-SNAPSHOT</pgpWhitelistArtifact>
+        <pgpWhitelistArtifact>org.wrensecurity:wrensec-pgp-whitelist:1.5.3-SNAPSHOT</pgpWhitelistArtifact>
 
         <!-- Version management -->
-        <commons.commons-bom.version>22.0.1-SNAPSHOT</commons.commons-bom.version>
+        <commons.commons-bom.version>22.1.0-SNAPSHOT</commons.commons-bom.version>
 
         <!-- Commons versions -->
-        <commons.forgerock-script.version>4.3.0</commons.forgerock-script.version>
+        <commons.forgerock-script.version>4.4.0-SNAPSHOT</commons.forgerock-script.version>
         <commons.forgerock-i18n.version>1.4.2</commons.forgerock-i18n.version>
 
         <!-- Third party dependency versions -->
         <javascript.maven.plugin.version>2.0.0-alpha-1</javascript.maven.plugin.version>
-        <joda-time.version>2.10.1</joda-time.version>
+        <joda-time.version>2.10.9</joda-time.version>
         <h2.version>1.4.200</h2.version>
-        <paxweb.version>4.2.7</paxweb.version>
+        <paxweb.version>4.3.6</paxweb.version>
         <javax.inject.version>1_3</javax.inject.version>
-        <xbean.version>4.5</xbean.version>
-        <asm.version>5.0.4</asm.version>
+        <xbean.version>4.18</xbean.version>
+        <asm.version>9.0</asm.version>
         <!-- quartz 2.x is not compatible yet -->
         <quartz.version>1.8.6_1</quartz.version>
-        <rhino.version>1.7R4_1</rhino.version>
-        <groovy.version>2.4.7</groovy.version>
+        <rhino.version>1.7.13_1</rhino.version>
+        <groovy.version>2.5.13</groovy.version>
 
         <!-- OSGi / Felix versions -->
         <osgi.core.version>7.0.0</osgi.core.version>
@@ -141,17 +141,17 @@
         <osgi.pushstream.version>1.0.1</osgi.pushstream.version>
 
         <felix.framework.version>6.0.3</felix.framework.version>
-        <felix.configadmin.version>1.9.18</felix.configadmin.version>
-        <felix.eventadmin.version>1.5.0</felix.eventadmin.version>
+        <felix.configadmin.version>1.9.20</felix.configadmin.version>
+        <felix.eventadmin.version>1.6.2</felix.eventadmin.version>
         <felix.gogo.shell.version>1.1.4</felix.gogo.shell.version>
         <felix.inventory.version>1.0.6</felix.inventory.version>
-        <felix.metatype.version>1.1.2</felix.metatype.version>
-        <felix.fileinstall.version>3.6.4</felix.fileinstall.version>
-        <felix.log.version>1.2.2</felix.log.version>
-        <felix.scr.version>2.1.20</felix.scr.version>
+        <felix.metatype.version>1.2.4</felix.metatype.version>
+        <felix.fileinstall.version>3.6.8</felix.fileinstall.version>
+        <felix.log.version>1.2.4</felix.log.version>
+        <felix.scr.version>2.1.24</felix.scr.version>
         <felix.shell.version>1.4.3</felix.shell.version>
         <felix.shell.tui.version>1.4.1</felix.shell.tui.version>
-        <felix.webconsole.version>4.5.4</felix.webconsole.version>
+        <felix.webconsole.version>4.6.0</felix.webconsole.version>
         <felix.webconsole.ds.version>2.1.0</felix.webconsole.ds.version>
         <felix.webconsole.event.version>1.1.8</felix.webconsole.event.version>
         <felix.webconsole.memoryusage.version>1.0.10</felix.webconsole.memoryusage.version>
@@ -431,7 +431,7 @@
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
-                <version>3.0.1</version>
+                <version>3.1.0</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -644,6 +644,7 @@
             <dependency>
                 <groupId>org.codehaus.groovy</groupId>
                 <artifactId>groovy-all</artifactId>
+                <type>pom</type>
                 <version>${groovy.version}</version>
             </dependency>
 

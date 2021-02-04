@@ -22,7 +22,7 @@ import com.zaxxer.hikari.HikariConfig;
  */
 class HikariCPDataSourceConfig extends AbstractConnectionDataSourceConfig {
 
-    private HikariConfig connectionPool;
+    private HikariConfigEx connectionPool;
 
     public HikariConfig getConnectionPool() {
         return connectionPool;
@@ -32,4 +32,9 @@ class HikariCPDataSourceConfig extends AbstractConnectionDataSourceConfig {
     public <R, P> R accept(DataSourceConfigVisitor<R, P> visitor, P parameters) {
         return visitor.visit(this, parameters);
     }
+
+    // FIXME Workaround for gadget blocking in jackson-databind's SubTypeValidator
+    static class HikariConfigEx extends HikariConfig {
+    }
+
 }

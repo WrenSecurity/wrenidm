@@ -25,7 +25,7 @@
     </parent>
 
     <artifactId>openidm-launcher</artifactId>
-    
+
     <name>ForgeRock OSGi Launcher Main</name>
 
     <dependencies>
@@ -79,7 +79,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>1.5</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -126,17 +125,17 @@
                                 <artifactItem>
                                     <groupId>org.apache.felix</groupId>
                                     <artifactId>org.apache.felix.configadmin</artifactId>
-                                    <version>1.6.0</version>
+                                    <version>${felix.configadmin.version}</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.apache.felix</groupId>
                                     <artifactId>org.apache.felix.log</artifactId>
-                                    <version>1.0.1</version>
+                                    <version>${felix.log.version}</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.apache.felix</groupId>
                                     <artifactId>org.apache.felix.fileinstall</artifactId>
-                                    <version>3.2.6</version>
+                                    <version>${felix.fileinstall.version}</version>
                                 </artifactItem>
                             </artifactItems>
                             <outputDirectory>${project.build.directory}/osgi/bundle</outputDirectory>

@@ -5,13 +5,16 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        java: [8, 11]
+    name: "Java ${{ matrix.java }} build"
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 8
+          java-version: ${{ matrix.java }}
       - name: Cache Maven packages
         uses: actions/cache@v2
         with:

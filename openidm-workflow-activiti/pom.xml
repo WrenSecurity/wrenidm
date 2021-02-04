@@ -91,7 +91,7 @@
 
             <exclusions>
                 <exclusion>
-                    <artifactId>activation</artifactId>
+                    <artifactId>javax.activation-api</artifactId>
                     <groupId>javax.activation</groupId>
                 </exclusion>
 
@@ -117,6 +117,12 @@
             <groupId>org.activiti</groupId>
             <artifactId>activiti-osgi</artifactId>
             <version>5.23.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>javax.activation-api</artifactId>
+                    <groupId>javax.activation</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
