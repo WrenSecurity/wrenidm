@@ -16,13 +16,13 @@
 
 package org.forgerock.openidm.core;
 
-import static org.forgerock.openidm.core.ServerConstants.LAUNCHER_INSTALL_LOCATION;
-import static org.forgerock.openidm.core.ServerConstants.LAUNCHER_PROJECT_LOCATION;
-
 import java.io.File;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import static org.forgerock.openidm.core.ServerConstants.LAUNCHER_INSTALL_LOCATION;
+import static org.forgerock.openidm.core.ServerConstants.LAUNCHER_PROJECT_LOCATION;
 
 /**
  * A utility class for tests that depend on the state of
@@ -73,19 +73,19 @@ public final class IdentityServerTestUtils {
      *   IDM install folder than the root of the test classpath.
      */
     public static void initInstanceForTest(Class<?> testClass) {
+
         final Path classpathRoot;
         final String classpathRootAbsolute;
-
         try {
-            classpathRoot = Paths.get(testClass.getClass().getResource("/").toURI());
+            classpathRoot = Paths.get(testClass.getResource("/").toURI());
         } catch (URISyntaxException ex) {
             throw new RuntimeException("Failed to parse classpath", ex);
         }
 
         classpathRootAbsolute = classpathRoot.toFile().getAbsolutePath();
-
         initInstanceForTest(classpathRootAbsolute, classpathRootAbsolute);
     }
+
 
     /**
      * Attempts to initialize the global {@code IdentityServer} instance to use the specified

@@ -488,6 +488,7 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
+            <type>pom</type>
         </dependency>
 
         <dependency>
@@ -515,7 +516,6 @@
             <artifactId>pax-web-spi</artifactId>
             <version>${paxweb.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.xbean</groupId>
             <artifactId>xbean-finder</artifactId>
@@ -686,7 +686,7 @@
         <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>stax2-api</artifactId>
-            <version>3.1.4</version>
+            <version>4.2.1</version>
         </dependency>
 
         <dependency>
@@ -811,7 +811,7 @@
                         </goals>
 
                         <configuration>
-                            <tasks>
+                            <targets>
                                 <zip basedir="${basedir}/src/main/resources/samples/usecase/workflow" destfile="${project.build.directory}/bar-files/samples/usecase/workflow/certificationRoles.bar" includes="certificationRoles*" />
 
                                 <zip basedir="${basedir}/src/main/resources/samples/usecase/workflow" destfile="${project.build.directory}/bar-files/samples/usecase/workflow/certificationEntitlements.bar" includes="certificationEntitlements*" />
@@ -823,7 +823,7 @@
                                 <zip basedir="${basedir}/src/main/resources/samples/workflow/workflow" destfile="${project.build.directory}/bar-files/samples/workflow/workflow/chess.bar" includes="chess*" />
 
                                 <zip basedir="${basedir}/src/main/resources/samples/workflow/workflow" destfile="${project.build.directory}/bar-files/samples/workflow/workflow/contractorOnboarding.bar" includes="contractor*" />
-                            </tasks>
+                            </targets>
                         </configuration>
                     </execution>
                 </executions>
