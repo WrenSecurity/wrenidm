@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2015 ForgeRock AS.
+ * Portions Copyright 2021 Wren Security
  */
 package org.forgerock.openidm.workflow.activiti.impl;
 
@@ -109,6 +110,21 @@ public class JsonValueTypeTest {
 
         @Override
         public void setBytes(byte[] bytes) {
+        }
+
+        @Override
+        public String getProcessInstanceId() {
+            return null;
+        }
+
+        @Override
+        public String getExecutionId() {
+            return null;
+        }
+
+        @Override
+        public String getTaskId() {
+            return null;
         }
     }
 }

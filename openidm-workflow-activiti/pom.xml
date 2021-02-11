@@ -87,7 +87,7 @@
         <dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-engine</artifactId>
-            <version>5.15</version>
+            <version>5.23.0</version>
 
             <exclusions>
                 <exclusion>
@@ -116,7 +116,7 @@
         <dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-osgi</artifactId>
-            <version>5.15</version>
+            <version>5.23.0</version>
         </dependency>
 
         <dependency>

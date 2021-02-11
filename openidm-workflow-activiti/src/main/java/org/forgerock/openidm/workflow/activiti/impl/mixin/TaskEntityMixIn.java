@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2015 ForgeRock AS.
+ * Portions Copyright 2021 Wren Security
  */
 package org.forgerock.openidm.workflow.activiti.impl.mixin;
 
@@ -26,7 +27,8 @@ import org.forgerock.openidm.workflow.activiti.ActivitiConstants;
  *
  */
 @JsonIgnoreProperties({"variableInstances", "execution", "taskDefinition", "candidates", "identityLinks", "variables",
-    "variablesLocal", "variableNames", "variableNamesLocal", "assignee", "persistentState", "processInstance"})
+    "variablesLocal", "variableNames", "variableNamesLocal", "assignee", "persistentState", "processInstance",
+    "variableInstanceEntities", "variableInstanceLocal", "variableInstancesLocal"})
 public class TaskEntityMixIn {
 
     @JsonProperty(ActivitiConstants.ID)
