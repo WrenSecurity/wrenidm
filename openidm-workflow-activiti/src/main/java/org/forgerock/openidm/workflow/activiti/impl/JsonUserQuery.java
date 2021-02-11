@@ -12,23 +12,24 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2015 ForgeRock AS.
+ * Portions Copyright 2021 Wren Security
  */
 package org.forgerock.openidm.workflow.activiti.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.activiti.engine.identity.User;
+import org.activiti.engine.impl.Page;
+import org.activiti.engine.impl.UserQueryImpl;
+import org.activiti.engine.impl.interceptor.CommandContext;
 import org.forgerock.json.resource.QueryRequest;
 import org.forgerock.json.resource.QueryResourceHandler;
 import org.forgerock.json.resource.Requests;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.openidm.workflow.activiti.ActivitiConstants;
-import org.activiti.engine.identity.User;
-import org.activiti.engine.impl.Page;
-import org.activiti.engine.impl.UserQueryImpl;
-import org.activiti.engine.impl.interceptor.CommandContext;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * @version $Revision$ $Date$
@@ -79,7 +80,7 @@ public class JsonUserQuery extends UserQueryImpl {
     public User executeSingleResult(CommandContext commandContext) {
         return readUser(getId());
     }
-    
+
     User readUser(String id) {
         try {
             QueryRequest request = Requests.newQueryRequest(SharedIdentityService.USER_PATH);

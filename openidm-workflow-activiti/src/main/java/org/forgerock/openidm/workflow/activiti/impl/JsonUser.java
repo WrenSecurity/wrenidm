@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2015 ForgeRock AS.
+ * Portions Copyright 2021 Wren Security
  */
 package org.forgerock.openidm.workflow.activiti.impl;
 
@@ -45,7 +46,7 @@ public class JsonUser extends JsonValue implements User {
     public void setCryptoService(CryptoService cryptoService) {
         this.cryptoService = cryptoService;
     }
-    
+
     public JsonUser(JsonValue value) {
         super(value);
     }
@@ -101,4 +102,10 @@ public class JsonUser extends JsonValue implements User {
     public void setPassword(String password) {
         put(SCIM_PASSWORD, password);
     }
+
+    @Override
+    public boolean isPictureSet() {
+        return false;
+    }
+
 }

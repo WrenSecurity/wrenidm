@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2015 ForgeRock AS.
- * Portions Copyright 2017 Wren Security
+ * Portions Copyright 2021 Wren Security
  */
 package org.forgerock.openidm.workflow.activiti.impl;
 
@@ -40,13 +40,13 @@ import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.impl.RepositoryServiceImpl;
-import org.activiti.engine.impl.bpmn.diagram.ProcessDiagramGenerator;
 import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.HistoricProcessInstanceEntity;
 import org.activiti.engine.impl.persistence.entity.HistoricTaskInstanceEntity;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ActionRequest;
@@ -274,8 +274,9 @@ public class ProcessInstanceResource implements CollectionResourceProvider {
                                     executionEntity.getProcessDefinitionId());
                     if (def != null && def.isGraphicalNotationDefined()) {
                         final BpmnModel model = repositoryService.getBpmnModel(def.getId());
-                        try (final InputStream is = ProcessDiagramGenerator.generateDiagram(model, "png",
-                                runtimeService.getActiveActivityIds(resourceId))) {
+
+                        try (final InputStream is = processEngine.getProcessEngineConfiguration().getProcessDiagramGenerator()
+                                .generateDiagram(model, "png", runtimeService.getActiveActivityIds(resourceId))) {
                             final byte[] data = new byte[is.available()];
                             is.read(data);
                             content.put(ActivitiConstants.ACTIVITI_DIAGRAM, Base64.encode(data));
