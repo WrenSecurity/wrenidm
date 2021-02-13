@@ -129,7 +129,7 @@ function ($, _, Handlebars,
 
         editor.render(
             {
-                "queryFilter": filter,
+                "queryFilter": filter || "",
                 "element": "#conditionFilterHolder",
                 "resource": "managed/role"
             },
