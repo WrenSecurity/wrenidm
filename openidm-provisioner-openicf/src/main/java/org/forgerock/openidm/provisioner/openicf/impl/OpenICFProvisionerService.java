@@ -158,9 +158,9 @@ public class OpenICFProvisionerService implements ProvisionerService, SingletonR
     private Map<String, ObjectClassInfoHelper> objectTypes;
 
     /** The Connection Factory */
-    @Reference(policy = ReferencePolicy.STATIC)
     protected IDMConnectionFactory connectionFactory;
 
+    @Reference(policy = ReferencePolicy.STATIC)
     void bindConnectionFactory(final IDMConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
         // update activityLogger to use the "real" activity logger on the router
@@ -181,13 +181,6 @@ public class OpenICFProvisionerService implements ProvisionerService, SingletonR
 
     void bindSyncFailureHandlerFactory(SyncFailureHandlerFactory syncFailureHandlerFactory) {
         this.syncFailureHandlerFactory = syncFailureHandlerFactory;
-    }
-
-    @SuppressWarnings("unused")
-    void unbindConnectionFactory(final IDMConnectionFactory connectionFactory) {
-        this.connectionFactory = null;
-        // ConnectionFactory has gone away, use null activity logger
-        this.activityLogger = NullActivityLogger.INSTANCE;
     }
 
     /**
