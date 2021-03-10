@@ -7,20 +7,10 @@ Apache Software License, Version 2.0
 Version: less-1.5.1-min.js
 Copyright: Copyright (c) 2009-2013, Alexis Sellier <self@cloudhead.net>
 
-Version: orientdb-api.js
-Copyright: Copyright 1999-2010 Luca Molino
 
-Version: orientdb-app.js
-Copyright: Copyright 1999-2010 Luca Garulli (l.garulli--at--orientechnologies.com)
 
-Version: orientdb-controller.js
-Copyright: Copyright 1999-2011 Luca Garulli (l.garulli--at--orientechnologies.com)
 
-Version: orientdb-form.js
-Copyright: Copyright 1999-2011 Luca Garulli (l.garulli--at--orientechnologies.com)
 
-Version: orientweb-crud.js
-Copyright: Copyright 1999-2010 Luca Garulli (l.garulli--at--orientechnologies.com)
 
 Version: felix.jar
 Copyright: Copyright 2006 The Apache Software Foundation
@@ -232,23 +222,11 @@ Version: org.springframework:spring-beans:jar:2.5.6.SEC01
          org.springframework:spring-context:jar:2.5.6.SEC01
 Copyright:  Copyright 2002-2015 the original author or authors.
 
-Version: orient-commons-1.7.10.jar
-Copyright: Copyright 2010-2012 Luca Garulli (l.garulli(at)orientechnologies.com)
 
-Version: orientdb-client-1.7.10.jar
-Copyright: Copyright 2010-2012 Luca Garulli (l.garulli(at)orientechnologies.com)
 
-Version: orientdb-core-1.7.10.jar
-Copyright: Copyright 2010-2012 Luca Garulli (l.garulli(at)orientechnologies.com)
 
-Version: orientdb-enterprise-1.7.10.jar
-Copyright: Copyright 2010-2012 Luca Garulli (l.garulli(at)orientechnologies.com)
 
-Version: orientdb-server-1.7.10.jar
-Copyright: Copyright 2010-2012 Luca Garulli (l.garulli(at)orientechnologies.com)
 
-Version: orientdb-nativeos-1.7.10.jar
-Copyright: Copyright 2010-2012 Luca Garulli (l.garulli(at)orientechnologies.com)
 
 Version: pax-swissbox-extender-1.8.0.jar
 Copyright: Copyright 2007-2008 Alin Dreghiciu.
@@ -720,9 +698,6 @@ Version: openidm-repo-4.0.0.jar
 Copyright: Copyright 2015 ForgeRock AS.
 
 Version: openidm-repo-jdbc-4.0.0.jar
-Copyright: Copyright 2015 ForgeRock AS.
-
-Version: openidm-repo-orientdb-4.0.0.jar
 Copyright: Copyright 2015 ForgeRock AS.
 
 Version: openidm-router-4.0.0.jar

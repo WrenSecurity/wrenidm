@@ -48,7 +48,7 @@
             <!-- Prevent transitive dependencies from being picked up in zip assembly -->
             <scope>compile</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>commons-daemon</groupId>
             <artifactId>commons-daemon</artifactId>
@@ -111,12 +111,6 @@
         <dependency>
             <groupId>org.forgerock.openidm</groupId>
             <artifactId>openidm-provisioner-openicf</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.forgerock.openidm</groupId>
-            <artifactId>openidm-repo-orientdb</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -804,63 +798,9 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-
-                <executions>
-                    <execution>
-                        <id>unpack-orientdb-studio</id>
-
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-
-                        <phase>generate-resources</phase>
-
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>com.orientechnologies</groupId>
-                                    <artifactId>orientdb-community</artifactId>
-                                    <version>${orientdb.studio.version}</version>
-                                    <type>zip</type>
-                                    <classifier>distribution</classifier>
-                                    <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/</outputDirectory>
-                                    <includes>**/www/**,**/plugins/studio-*.zip</includes>
-                                </artifactItem>
-                            </artifactItems>
-
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>false</overWriteSnapshots>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.6</version>
 
                 <executions>
-                    <execution>
-                        <id>unpack-studio-ui</id>
-                        <phase>prepare-package</phase>
-
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-
-                        <configuration>
-                            <tasks>
-                                <unzip dest="${project.build.directory}/orientdb-community-${orientdb.studio.version}">
-                                    <fileset dir="${project.build.directory}/orientdb-community-${orientdb.studio.version}\plugins">
-                                        <include name="studio-**.zip" />
-                                    </fileset>
-                                </unzip>
-                            </tasks>
-                        </configuration>
-                    </execution>
 
                     <execution>
                         <id>zip-workflow-files</id>
@@ -892,7 +832,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.4</version>
 
                 <configuration>
                     <appendAssemblyId>false</appendAssemblyId>
@@ -913,28 +852,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!--plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jslint-maven-plugin</artifactId>
-                <configuration>
-                    <assumeRhino>true</assumeRhino>
-                    <predefinedVars>request,openidm,identityServer,java,logger</predefinedVars>
-                    <sourceJsFolder>src/main/resources</sourceJsFolder>
-                    <tolerateEval>true</tolerateEval>
-                    <excludes>
-                        <exclude>**/libs/*.js</exclude>
-                    </excludes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>jslint</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin-->
         </plugins>
     </build>
 

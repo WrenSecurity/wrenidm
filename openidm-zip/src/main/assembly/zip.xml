@@ -92,10 +92,6 @@
                 <include>Forgerock_License.txt</include>
             </includes>
         </fileSet>
-        <fileSet>
-            <directory>${project.build.directory}/orientdb-community-${orientdb.studio.version}/www</directory>
-            <outputDirectory>/wrenidm/db/util/orientdb/studio</outputDirectory>
-        </fileSet>
         <!-- Create empty logs directory  -->
         <fileSet>
             <directory>${project.build.directory}</directory>
@@ -694,7 +690,8 @@
             <excludes>
                 <exclude>conf/managed.json</exclude>
                 <exclude>conf/policy.json</exclude>
-                <exclude>conf/repo.orientdb.json</exclude>
+                <exclude>conf/repo.jdbc.json</exclude>
+                <exclude>conf/datasource.jdbc-h2.json</exclude>
                 <exclude>conf/system.properties</exclude>
                 <exclude>conf/*patch*</exclude>
             </excludes>
@@ -704,7 +701,8 @@
             <directory>${basedir}/src/main/resources/samples/usecase</directory>
             <includes>
                 <include>conf/managed.json</include>
-                <include>conf/repo.orientdb.json</include>
+                <include>conf/repo.jdbc.json</include>
+                <include>conf/datasource.jdbc-h2.json</include>
                 <include>conf/sync.json</include>
                 <include>conf/system.properties</include>
                 <include>conf/provisioner.openicf-HRldap.json</include>
@@ -727,7 +725,8 @@
                 <exclude>conf/managed.json</exclude>
                 <exclude>conf/policy.json</exclude>
                 <exclude>conf/process-access.json</exclude>
-                <exclude>conf/repo.orientdb.json</exclude>
+                <exclude>conf/repo.jdbc.json</exclude>
+                <exclude>conf/datasource.jdbc-h2.json</exclude>
                 <exclude>conf/system.properties</exclude>
                 <exclude>conf/workflow.json</exclude>
                 <exclude>conf/*patch*</exclude>
@@ -741,7 +740,8 @@
                 <include>conf/managed.json</include>
                 <include>conf/policy.json</include>
                 <include>conf/process-access.json</include>
-                <include>conf/repo.orientdb.json</include>
+                <include>conf/repo.jdbc.json</include>
+                <include>conf/datasource.jdbc-h2.json</include>
                 <include>conf/schedule-taskscan_sun*.json</include>
                 <include>conf/system.properties</include>
                 <include>conf/workflow.json</include>
@@ -775,7 +775,8 @@
                 <exclude>conf/managed.json</exclude>
                 <exclude>conf/policy.json</exclude>
                 <exclude>conf/process-access.json</exclude>
-                <exclude>conf/repo.orientdb.json</exclude>
+                <exclude>conf/repo.jdbc.json</exclude>
+                <exclude>conf/datasource.jdbc-h2.json</exclude>
                 <exclude>conf/system.properties</exclude>
                 <exclude>conf/workflow.json</exclude>
                 <exclude>conf/*patch*</exclude>
@@ -789,7 +790,8 @@
                 <include>conf/external.email.json</include>
                 <include>conf/managed.json</include>
                 <include>conf/process-access.json</include>
-                <include>conf/repo.orientdb.json</include>
+                <include>conf/repo.jdbc.json</include>
+                <include>conf/datasource.jdbc-h2.json</include>
                 <include>conf/system.properties</include>
                 <include>conf/workflow.json</include>
                 <include>conf/policy.json</include>
@@ -811,7 +813,8 @@
                 <exclude>conf/managed.json</exclude>
                 <exclude>conf/policy.json</exclude>
                 <exclude>conf/process-access.json</exclude>
-                <exclude>conf/repo.orientdb.json</exclude>
+                <exclude>conf/repo.jdbc.json</exclude>
+                <exclude>conf/datasource.jdbc-h2.json</exclude>
                 <exclude>conf/system.properties</exclude>
                 <exclude>conf/workflow.json</exclude>
                 <exclude>conf/*patch*</exclude>
@@ -825,7 +828,8 @@
                 <include>conf/managed.json</include>
                 <include>conf/process-access.json</include>
                 <include>conf/provisioner.openicf-BusinessCSV.json</include>
-                <include>conf/repo.orientdb.json</include>
+                <include>conf/repo.jdbc.json</include>
+                <include>conf/datasource.jdbc-h2.json</include>
                 <include>conf/syncManagedBusiness.json</include>
                 <include>conf/system.properties</include>
                 <include>conf/workflow.json</include>
@@ -859,7 +863,8 @@
             <excludes>
                 <exclude>conf/managed.json</exclude>
                 <exclude>conf/process-access.json</exclude>
-                <exclude>conf/repo.orientdb.json</exclude>
+                <exclude>conf/repo.jdbc.json</exclude>
+                <exclude>conf/datasource.jdbc-h2.json</exclude>
                 <exclude>conf/system.properties</exclude>
                 <exclude>conf/workflow.json</exclude>
             </excludes>
@@ -871,7 +876,8 @@
                 <include>conf/endpoint-getusermanager.json</include>
                 <include>conf/managed.json</include>
                 <include>conf/process-access.json</include>
-                <include>conf/repo.orientdb.json</include>
+                <include>conf/repo.jdbc.json</include>
+                <include>conf/datasource.jdbc-h2.json</include>
                 <include>conf/schedule-certification.json</include>
                 <include>conf/schedule-certificationEntitlements.json</include>
                 <include>conf/system.properties</include>
@@ -904,7 +910,8 @@
                 <exclude>conf/managed.json</exclude>
                 <exclude>conf/policy.json</exclude>
                 <exclude>conf/process-access.json</exclude>
-                <exclude>conf/repo.orientdb.json</exclude>
+                <exclude>conf/repo.jdbc.json</exclude>
+                <exclude>conf/datasource.jdbc-h2.json</exclude>
                 <exclude>conf/system.properties</exclude>
                 <exclude>conf/workflow.json</exclude>
                 <exclude>conf/*patch*</exclude>
@@ -918,7 +925,8 @@
                 <include>conf/external.email.json</include>
                 <include>conf/managed.json</include>
                 <include>conf/process-access.json</include>
-                <include>conf/repo.orientdb.json</include>
+                <include>conf/repo.jdbc.json</include>
+                <include>conf/datasource.jdbc-h2.json</include>
                 <include>conf/schedule-taskscan_passwordchange.json</include>
                 <include>conf/system.properties</include>
                 <include>conf/workflow.json</include>

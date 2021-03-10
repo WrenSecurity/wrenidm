@@ -36,7 +36,6 @@
                 "location":"bundle",
                 "includes":[
                     "**/openidm-repo-jdbc*.jar",
-                    "**/openidm-repo-orientdb*.jar",
                     "**/org.apache.felix.scr-*.jar"
                 ],
                 "start-level":4,
@@ -73,7 +72,6 @@
                     "**/openidm-cluster*.jar",
                     "**/openidm-config*.jar",
                     "**/openidm-repo-jdbc*.jar",
-                    "**/openidm-repo-orientdb*.jar",
                     "**/org.apache.felix.scr-*.jar",
                     "**/org.apache.felix.configadmin*.jar",
                     "**/org.apache.felix.fileinstall*.jar",
