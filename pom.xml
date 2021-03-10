@@ -120,11 +120,9 @@
         <commons.forgerock-i18n.version>1.4.2</commons.forgerock-i18n.version>
 
         <!-- Third party dependency versions -->
-        <orientdb.version>1.7.10</orientdb.version>
-        <orientdb.studio.version>1.7.10</orientdb.studio.version>
         <javascript.maven.plugin.version>2.0.0-alpha-1</javascript.maven.plugin.version>
         <joda-time.version>2.10.1</joda-time.version>
-        <h2.version>1.4.192</h2.version>
+        <h2.version>1.4.200</h2.version>
         <paxweb.version>4.2.7</paxweb.version>
         <javax.inject.version>1_3</javax.inject.version>
         <xbean.version>4.5</xbean.version>
@@ -213,7 +211,6 @@
         <module>openidm-provisioner-openicf</module>
         <module>openidm-provisioner</module>
         <module>openidm-repo-jdbc</module>
-        <module>openidm-repo-orientdb</module>
         <module>openidm-repo</module>
         <module>openidm-authnfilter</module>
         <module>openidm-api-servlet</module>

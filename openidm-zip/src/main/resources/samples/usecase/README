@@ -29,9 +29,9 @@ The openidm/samples/usecase directory includes a number of sample workflows that
 use cases for OpenIDM. The use cases work together to describe a complete business story, with the
 same set of sample data. Each of the use cases is integrated with the Self-Service UI.
 
-These use cases use OrientDB as a repository by default. Alternative repository configuration files
+These use cases use H2 as a repository by default. Alternative repository configuration files
 are provided in the openidm/samples/usecase/db directory. If you want to use one of these alternative
-repositories, remove the repo.orientdb.json file from the conf/ directory of the use case you are
+repositories, replace the repo.jdbc.json file from the conf/ directory of the use case you are
 testing and copy the appropriate JDBC repository configuration files into that conf/ directory. For
 more information on using an alternative repository, see the OpenIDM Installation Guide.
 
@@ -40,7 +40,7 @@ Each use case builds on the previous one. You must run the use cases in order, f
 import and reconcile when you run use case 1.
 
 All the samples assume an initial setup of managed users in OpenIDM. The users are organized as follows:
-- there are 20 ordinary users: user.0 ... user.19 where 
+- there are 20 ordinary users: user.0 ... user.19 where
 
     - user.0 .. user.4 belong to Human Resources having user.0 as Manager,
        user.0 .. user.3 employees and user.4 contractor
@@ -112,7 +112,7 @@ Usecase1 - Initial Reconciliation
     On this third recon there will be 10 new additional users created, bringing the total to 23 users. These additional
     10 users were created this time successfully because the users that were created on the second recon are their
     managers.
-    
+
     There should be 23 users created. The default password of the imported users is "Passw0rd".
 
 Usecase 2 - New User Onboarding
@@ -148,7 +148,7 @@ Usecase 2 - New User Onboarding
 
          $ cp /tmp/newUserCreate.bar  /path/to/openidm/samples/usecase/usecase2/workflow
 
-    
+
     1. Start OpenIDM with the configuration for usecase2.
 
         $ cd /path/to/openidm
@@ -204,7 +204,7 @@ Usecase 2 - New User Onboarding
        workflow, and one for the newly created user. The notifications are visible in the UI after login.
        If you selected email notification, one email is sent to the user that you defined when you
        configured email notification.
-    
+
     10. Initiate the sunrise workflow:
         To trigger the sunrise workflow (which activates the account), enable the sunrise task scanning
         schedule. The schedule is disabled by default. Modify the schedule configuration file
@@ -257,11 +257,11 @@ Usecase 3 - User Access Request
         samples/usecase/usecase3/workflow/accessRequest.bpmn20.xml
 
         Original:
-        emailParams = [from : 'usecasetest@forgerock.com', to : 'notification@example.com', 
+        emailParams = [from : 'usecasetest@forgerock.com', to : 'notification@example.com',
                     subject : 'Use Case Test Notification', type : 'text/plain', body : 'The access request was accepted']
         Change the from and to fields to contain valid email addresses.
         Note that there are two occurrences of the emailParams, change both.
-    
+
     1. Start OpenIDM with the configuration for usecase3.
 
         $ cd /path/to/openidm
@@ -337,14 +337,14 @@ Usecase 4 - Orphan Account Detection and Manual Linking Started From Reconciliat
     taken into account during the reconciliation.
 
     There are some extra users in that csv file:
-    - user.50 is defined only in the csv file so when running the reconciliation this user will be 
+    - user.50 is defined only in the csv file so when running the reconciliation this user will be
         detected as an orphan account (orphan account workflow is triggered when the situation is
         "UNQUALIFIED" or "UNASSIGNED").
 
     - user.33: the 'userName' attribute of this user is 'user.3', same as for user.3.
         When running the correlation query during reconciliation there will be two candidate users
-        to be linked with user.3 from managed users (correlation query is based on userName attribute).   
-    
+        to be linked with user.3 from managed users (correlation query is based on userName attribute).
+
     2. Start OpenIDM with the configuration for usecase4.
 
     $ cd /path/to/openidm
@@ -364,7 +364,7 @@ Usecase 4 - Orphan Account Detection and Manual Linking Started From Reconciliat
         The decision can be one of the following:
         - Ignore: no action will be taken (no link will be created) and the workflow terminates.
         - user.3 (user.3 - Atrc, Aaron) or user.3 (user.33 - Atrc, Aaron): these are the two candidate
-            users found in the target object set by executing the correlation query. These values 
+            users found in the target object set by executing the correlation query. These values
             are queried in the workflow and the possible values of that field are determined
             at runtime. Select one user from this list.
             After choosing one of the users the workflow links the managed user user.3 to the selected
@@ -419,4 +419,3 @@ Usecase6 - Password Change Reminder
        When the task scanner is triggered, a notification is sent to the user in the UI.
 
     4. To test the workflow, change the user's password by selecting Change Password from the top right dropdown list.
-    

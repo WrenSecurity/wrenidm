@@ -998,6 +998,10 @@ public class JDBCRepoService implements RequestHandler, RepoBootService, Reposit
             return
                     new OracleTableHandler(tableConfig, dbSchemaName, queries, commands, maxBatchSize,
                             new DefaultSQLExceptionHandler());
+        case H2:
+            return
+                    new H2TableHandler(tableConfig, dbSchemaName, queries, commands, maxBatchSize,
+                            new DefaultSQLExceptionHandler());
         case POSTGRESQL:
             return
                     new PostgreSQLTableHandler(tableConfig, dbSchemaName, queries, commands, maxBatchSize,
@@ -1040,6 +1044,9 @@ public class JDBCRepoService implements RequestHandler, RepoBootService, Reposit
             return
                     new OracleMappedTableHandler(table, objectToColumn, dbSchemaName, explicitQueries, explicitCommands,
                             new DefaultSQLExceptionHandler(), cryptoServiceAccessor);
+        case H2:
+            return new H2MappedTableHandler(table, objectToColumn, dbSchemaName, explicitQueries, explicitCommands,
+                    new DefaultSQLExceptionHandler(), cryptoServiceAccessor);
         case POSTGRESQL:
             return
                     new PostgreSQLMappedTableHandler(table, objectToColumn, dbSchemaName, explicitQueries, explicitCommands,
