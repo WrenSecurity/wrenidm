@@ -35,12 +35,11 @@ CREATE TABLE IF NOT EXISTS openidm.genericobjectproperties (
   genericobjects_id BIGINT NOT NULL,
   propkey VARCHAR(255) NOT NULL,
   proptype VARCHAR(32) DEFAULT NULL,
-  propvalue TEXT,
+  propvalue VARCHAR(65535), --H2 cannot create indexes on clobs yet (1.4.200)
   CONSTRAINT fk_genericobjectproperties_genericobjects FOREIGN KEY (genericobjects_id) REFERENCES openidm.genericobjects (id) ON DELETE CASCADE ON UPDATE NO ACTION
 );
 CREATE INDEX IF NOT EXISTS fk_genericobjectproperties_genericobjects ON openidm.genericobjectproperties (genericobjects_id);
---H2 cannot create indexes on clobs yet (1.4.200)
--- CREATE INDEX idx_genericobjectproperties_prop ON openidm.genericobjectproperties (propkey,propvalue);
+CREATE INDEX IF NOT EXISTS idx_genericobjectproperties_prop ON openidm.genericobjectproperties (propkey,propvalue);
 
 -- -----------------------------------------------------
 -- Table openidm.managedobjects
@@ -57,12 +56,6 @@ CREATE TABLE IF NOT EXISTS openidm.managedobjects (
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_managedobjects_object ON openidm.managedobjects (objecttypes_id,objectid);
--- Note that the next two indices apply only to role objects, as only role objects have a condition or temporalConstraints
--- CREATE INDEX IF NOT EXISTS idx_json_managedobjects_roleCondition ON openidm.managedobjects
---    ( json_extract_path_text(fullobject, 'condition') );
--- CREATE INDEX IF NOT EXISTS idx_json_managedobjects_roleTemporalConstraints ON openidm.managedobjects
---    ( json_extract_path_text(fullobject, 'temporalConstraints') );
---H2 doesn't recognize json_extract_path
 
 -- -----------------------------------------------------
 -- Table openidm.managedobjectproperties
@@ -72,12 +65,12 @@ CREATE TABLE IF NOT EXISTS openidm.managedobjectproperties (
   managedobjects_id BIGINT NOT NULL,
   propkey VARCHAR(255) NOT NULL,
   proptype VARCHAR(32) DEFAULT NULL,
-  propvalue TEXT,
+  propvalue VARCHAR(65535),
   CONSTRAINT fk_managedobjectproperties_managedobjects FOREIGN KEY (managedobjects_id) REFERENCES openidm.managedobjects (id) ON DELETE CASCADE ON UPDATE NO ACTION
 );
 
 CREATE INDEX IF NOT EXISTS fk_managedobjectproperties_managedobjects ON openidm.managedobjectproperties (managedobjects_id);
--- CREATE INDEX IF NOT EXISTS idx_managedobjectproperties_prop ON openidm.managedobjectproperties (propkey,propvalue);
+CREATE INDEX IF NOT EXISTS idx_managedobjectproperties_prop ON openidm.managedobjectproperties (propkey,propvalue);
 
 -- -----------------------------------------------------
 -- Table openidm.configobjects
@@ -104,12 +97,12 @@ CREATE TABLE IF NOT EXISTS openidm.configobjectproperties (
   configobjects_id BIGINT NOT NULL,
   propkey VARCHAR(255) NOT NULL,
   proptype VARCHAR(255) DEFAULT NULL,
-  propvalue TEXT,
+  propvalue VARCHAR(65535),
   CONSTRAINT fk_configobjectproperties_configobjects FOREIGN KEY (configobjects_id) REFERENCES openidm.configobjects (id) ON DELETE CASCADE ON UPDATE NO ACTION
 );
 
 CREATE INDEX IF NOT EXISTS fk_configobjectproperties_configobjects ON openidm.configobjectproperties (configobjects_id);
--- CREATE INDEX IF NOT EXISTS idx_configobjectproperties_prop ON openidm.configobjectproperties (propkey,propvalue);
+CREATE INDEX IF NOT EXISTS idx_configobjectproperties_prop ON openidm.configobjectproperties (propkey,propvalue);
 
 -- -----------------------------------------------------
 -- Table openidm.relationships
@@ -126,10 +119,6 @@ CREATE TABLE IF NOT EXISTS openidm.relationships (
   CONSTRAINT idx_relationships_object UNIQUE (objecttypes_id, objectid)
 );
 
--- CREATE INDEX IF NOT EXISTS idx_json_relationships_first ON openidm.relationships ( json_extract_path_text(fullobject, 'firstId'), json_extract_path_text(fullobject, 'firstPropertyName') );
--- CREATE INDEX IF NOT EXISTS idx_json_relationships_second ON openidm.relationships ( json_extract_path_text(fullobject, 'secondId'), json_extract_path_text(fullobject, 'secondPropertyName') );
--- CREATE INDEX IF NOT EXISTS idx_json_relationships ON openidm.relationships ( json_extract_path_text(fullobject, 'firstId'), json_extract_path_text(fullobject, 'firstPropertyName'), json_extract_path_text(fullobject, 'secondId'), json_extract_path_text(fullobject, 'secondPropertyName') );
-
 -- -----------------------------------------------------
 -- Table openidm.relationshipproperties (not used in postgres)
 -- -----------------------------------------------------
@@ -138,11 +127,11 @@ CREATE TABLE IF NOT EXISTS openidm.relationshipproperties (
   relationships_id BIGINT NOT NULL,
   propkey VARCHAR(255) NOT NULL,
   proptype VARCHAR(32) DEFAULT NULL,
-  propvalue TEXT,
+  propvalue VARCHAR(65535),
   CONSTRAINT fk_relationshipproperties_relationships FOREIGN KEY (relationships_id) REFERENCES openidm.relationships (id) ON DELETE CASCADE ON UPDATE NO ACTION
 );
 CREATE INDEX IF NOT EXISTS fk_relationshipproperties_relationships ON openidm.relationshipproperties (relationships_id);
--- CREATE INDEX IF NOT EXISTS idx_relationshipproperties_prop ON openidm.relationshipproperties (propkey,propvalue);
+CREATE INDEX IF NOT EXISTS idx_relationshipproperties_prop ON openidm.relationshipproperties (propkey,propvalue);
 
 -- -----------------------------------------------------
 -- Table openidm.links
@@ -370,12 +359,12 @@ CREATE TABLE IF NOT EXISTS openidm.schedulerobjectproperties (
   schedulerobjects_id BIGINT NOT NULL,
   propkey VARCHAR(255) NOT NULL,
   proptype VARCHAR(32) DEFAULT NULL,
-  propvalue TEXT,
+  propvalue VARCHAR(65535),
   CONSTRAINT fk_schedulerobjectproperties_schedulerobjects FOREIGN KEY (schedulerobjects_id) REFERENCES openidm.schedulerobjects (id) ON DELETE CASCADE ON UPDATE NO ACTION
 );
 
 CREATE INDEX IF NOT EXISTS fk_schedulerobjectproperties_schedulerobjects ON openidm.schedulerobjectproperties (schedulerobjects_id);
--- CREATE INDEX IF NOT EXISTS idx_schedulerobjectproperties_prop ON openidm.schedulerobjectproperties (propkey,propvalue);
+CREATE INDEX IF NOT EXISTS idx_schedulerobjectproperties_prop ON openidm.schedulerobjectproperties (propkey,propvalue);
 
 -- -----------------------------------------------------
 -- Table openidm.uinotification
@@ -416,12 +405,12 @@ CREATE TABLE IF NOT EXISTS openidm.clusterobjectproperties (
   clusterobjects_id BIGINT NOT NULL,
   propkey VARCHAR(255) NOT NULL,
   proptype VARCHAR(32) DEFAULT NULL,
-  propvalue TEXT,
+  propvalue VARCHAR(65535),
   CONSTRAINT fk_clusterobjectproperties_clusterobjects FOREIGN KEY (clusterobjects_id) REFERENCES openidm.clusterobjects (id) ON DELETE CASCADE ON UPDATE NO ACTION
 );
 
 CREATE INDEX IF NOT EXISTS fk_clusterobjectproperties_clusterobjects ON openidm.clusterobjectproperties (clusterobjects_id);
--- CREATE INDEX IF NOT EXISTS idx_clusterobjectproperties_prop ON openidm.clusterobjectproperties (propkey,propvalue);
+CREATE INDEX IF NOT EXISTS idx_clusterobjectproperties_prop ON openidm.clusterobjectproperties (propkey,propvalue);
 
 -- -----------------------------------------------------
 -- Table openidm.updateobjects
@@ -446,11 +435,11 @@ CREATE TABLE IF NOT EXISTS openidm.updateobjectproperties (
   updateobjects_id BIGINT NOT NULL,
   propkey VARCHAR(255) NOT NULL,
   proptype VARCHAR(32) DEFAULT NULL,
-  propvalue TEXT,
+  propvalue VARCHAR(65535),
   CONSTRAINT fk_updateobjectproperties_updateobjects FOREIGN KEY (updateobjects_id) REFERENCES openidm.updateobjects (id) ON DELETE CASCADE ON UPDATE NO ACTION
 );
 CREATE INDEX IF NOT EXISTS fk_updateobjectproperties_updateobjects ON openidm.updateobjectproperties (updateobjects_id);
--- CREATE INDEX IF NOT EXISTS idx_updateobjectproperties_prop ON openidm.updateobjectproperties (propkey,propvalue);
+CREATE INDEX IF NOT EXISTS idx_updateobjectproperties_prop ON openidm.updateobjectproperties (propkey,propvalue);
 
 -- -----------------------------------------------------
 -- Data for table openidm.internaluser
@@ -477,6 +466,3 @@ ON (source.C1=target.objectid)
             VALUES(source.C1, source.C2, source.C3);
 
 COMMIT;
-
--- CREATE INDEX IF NOT EXISTS idx_json_clusterobjects_timestamp ON openidm.clusterobjects ( json_extract_path_text(fullobject, 'timestamp') );
--- CREATE INDEX IF NOT EXISTS idx_json_clusterobjects_state ON openidm.clusterobjects ( json_extract_path_text(fullobject, 'state') );
