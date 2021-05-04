@@ -397,6 +397,42 @@ CREATE INDEX fk_configobjects_objecttypes ON configobjects
 )
 ;
 
+-- DROP TABLE relationships CASCADE CONSTRAINTS;
+
+
+PROMPT Creating Table relationships ...
+CREATE TABLE relationships (
+  id NUMBER(24,0) NOT NULL,
+  objecttypes_id NUMBER(24,0) NOT NULL,
+  objectid VARCHAR2(255 CHAR) NOT NULL,
+  rev VARCHAR2(38 CHAR) NOT NULL,
+  fullobject CLOB
+);
+
+
+PROMPT Creating Primary Key Constraint pk_relationships on table relationships ...
+ALTER TABLE relationships
+ADD CONSTRAINT pk_relationships PRIMARY KEY
+(
+  id
+)
+ENABLE
+;
+PROMPT Creating Unique Index idx_relationships_object on relationships...
+CREATE UNIQUE INDEX idx_relationships_object ON relationships
+(
+  objecttypes_id,
+  objectid
+)
+;
+PROMPT Creating Index fk_relationships_objecttypes on relationships ...
+CREATE INDEX fk_relationships_objecttypes ON relationships
+(
+  objecttypes_id
+)
+;
+
+
 -- DROP TABLE relationshipproperties CASCADE CONSTRAINTS;
 
 
@@ -438,41 +474,6 @@ PROMPT Creating Index idx_relationshippropert_2 on relationshipproperties ...
 CREATE INDEX idx_relationshippropert_2 ON relationshipproperties
 (
   propvalue
-)
-;
-
--- DROP TABLE relationships CASCADE CONSTRAINTS;
-
-
-PROMPT Creating Table relationships ...
-CREATE TABLE relationships (
-  id NUMBER(24,0) NOT NULL,
-  objecttypes_id NUMBER(24,0) NOT NULL,
-  objectid VARCHAR2(255 CHAR) NOT NULL,
-  rev VARCHAR2(38 CHAR) NOT NULL,
-  fullobject CLOB
-);
-
-
-PROMPT Creating Primary Key Constraint pk_relationships on table relationships ...
-ALTER TABLE relationships
-ADD CONSTRAINT pk_relationships PRIMARY KEY
-(
-  id
-)
-ENABLE
-;
-PROMPT Creating Unique Index idx_relationships_object on relationships...
-CREATE UNIQUE INDEX idx_relationships_object ON relationships
-(
-  objecttypes_id,
-  objectid
-)
-;
-PROMPT Creating Index fk_relationships_objecttypes on relationships ...
-CREATE INDEX fk_relationships_objecttypes ON relationships
-(
-  objecttypes_id
 )
 ;
 
