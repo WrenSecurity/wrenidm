@@ -47,6 +47,9 @@ if [ $JAVA_VER -gt 18 ]; then
         --add-opens=java.base/java.lang=ALL-UNNAMED
         --add-opens=java.base/java.net=ALL-UNNAMED
         --add-opens=java.base/java.util=ALL-UNNAMED"
+    # Hides warning caused by Groovy 2.4.7, remove this once Groovy is upgraded (#97
+    COMPATIBILITY_OPTS="$COMPATIBILITY_OPTS
+        --add-opens=java.base/java.lang.invoke=ALL-UNNAMED"
 fi
 
 # clean up left over pid files if necessary

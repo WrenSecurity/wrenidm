@@ -130,7 +130,7 @@
         <!-- quartz 2.x is not compatible yet -->
         <quartz.version>1.8.6_1</quartz.version>
         <rhino.version>1.7.13_1</rhino.version>
-        <groovy.version>2.5.13</groovy.version>
+        <groovy.version>2.4.7</groovy.version>
 
         <!-- OSGi / Felix versions -->
         <osgi.core.version>7.0.0</osgi.core.version>
@@ -644,7 +644,6 @@
             <dependency>
                 <groupId>org.codehaus.groovy</groupId>
                 <artifactId>groovy-all</artifactId>
-                <type>pom</type>
                 <version>${groovy.version}</version>
             </dependency>
 
