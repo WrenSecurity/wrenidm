@@ -24,15 +24,15 @@ import static org.forgerock.json.resource.Requests.newCreateRequest;
 import static org.forgerock.json.resource.Requests.newDeleteRequest;
 import static org.forgerock.json.resource.Requests.newUpdateRequest;
 
+import javax.script.ScriptException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.script.ScriptException;
+
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.JsonValueException;
-import org.forgerock.json.resource.Connection;
 import org.forgerock.json.resource.CreateRequest;
 import org.forgerock.json.resource.DeleteRequest;
 import org.forgerock.json.resource.NotFoundException;
@@ -487,7 +487,6 @@ abstract class SyncOperation {
                         case UPDATE:
                         case LINK:
                             String targetId = getTargetObjectId();
-
                             if (getTargetObjectId() == null) {
                                 throw new SynchronizationException("no target object to link");
                             }
@@ -516,32 +515,21 @@ abstract class SyncOperation {
                                     }
                                 }
                             }
-
                             updateTargetLink(context, targetId);
-
                             // TODO: Detect change of source id, and update link accordingly.
                             if (action == ReconAction.CREATE || action == ReconAction.LINK) {
                                 execScript("postMapping", postMapping);
                                 break; // do not update target
                             }
-
-                            JsonValue sourceObject  = getSourceObject();
-                            JsonValue updatedTarget = getTargetObject();
-
-                            if ((sourceObject != null) && (updatedTarget != null)) {
-                                applyMappings(
-                                    context, sourceObject, oldValue, updatedTarget, oldTarget,
-                                    linkObject.linkQualifier, reconContext);
-
+                            if (getSourceObject() != null && getTargetObject() != null) {
+                                applyMappings(context, getSourceObject(), oldValue, getTargetObject(), oldTarget,
+                                        linkObject.linkQualifier, reconContext);
                                 execScript("onUpdate", onUpdateScript, oldTarget);
-
                                 // only update if target changes
-                                if (!oldTarget.isEqualTo(updatedTarget)) {
-                                    updateTargetObject(
-                                        context, updatedTarget, targetId, reconContext);
+                                if (!oldTarget.isEqualTo(getTargetObject())) {
+                                    updateTargetObject(context, getTargetObject(), targetId, reconContext);
                                 }
                             }
-
                             // execute the defaultPostMapping script to add lastSync attribute to managed user
                             execScript("postMapping", postMapping);
                             break; // terminate UPDATE
@@ -605,32 +593,11 @@ abstract class SyncOperation {
         }
     }
 
-    /**
-     * Updates where the current link object points.
-     *
-     * <p>If linking is not enabled, there is currently no link, or the link already points to the
-     * specified link, this method has no effect.
-     *
-     * @param   context
-     *          The context of the current sync request.
-     * @param   targetId
-     *          The ID of the target object to which the link should point.
-     *
-     * @throws  SynchronizationException
-     *          If the link update fails.
-     */
-    private void updateTargetLink(final Context context, final String targetId)
-      throws SynchronizationException {
-        if (objectMapping.isLinkingEnabled()
-            && (linkObject._id != null)
-            && !linkObject.targetEquals(targetId)) {
+    private void updateTargetLink(final Context context, final String targetId) throws SynchronizationException {
+        if (objectMapping.isLinkingEnabled() && linkObject._id != null && !linkObject.targetEquals(targetId)) {
             linkObject.targetId = targetId;
-
             linkObject.update(context);
-
-            LOGGER.debug(
-              "Updated link: {} sourceId: {} targetId: {}",
-              linkObject._id, linkObject.sourceId, linkObject.targetId);
+            LOGGER.debug("Updated link: {} sourceId: {} targetId: {}", linkObject._id, linkObject.sourceId, linkObject.targetId);
         }
     }
 
@@ -653,17 +620,12 @@ abstract class SyncOperation {
     protected void createLink(Context context, String sourceId, String targetId, String reconId)
             throws SynchronizationException {
         Link linkObject = new Link(objectMapping);
-
         linkObject.setLinkQualifier(this.linkObject.linkQualifier);
-
         execScript("onLink", onLinkScript);
-
         linkObject.sourceId = sourceId;
         linkObject.targetId = targetId;
-
         linkObject.create(context);
         initializeLink(linkObject);
-
         LOGGER.debug("Established link sourceId: {} targetId: {} in reconId: {}", sourceId, targetId, reconId);
     }
 
@@ -878,39 +840,24 @@ abstract class SyncOperation {
             ReconciliationContext reconContext) throws SynchronizationException {
         EventEntry measure = Publisher.start(ObjectMapping.EVENT_UPDATE_TARGET, target, null);
         final long startNanoTime = ObjectMapping.startNanoTime(reconContext);
-
         try {
-            final LinkType linkType = objectMapping.getLinkType();
             final String id = target.get("_id").required().asString();
-            final String fullId;
-            final String normalizedIdParam = linkType.normalizeTargetId(targetId);
-            final String normalizedTargetId = linkType.normalizeTargetId(id);
-            final UpdateRequest request;
-            final ResourceResponse updateResponse;
-            final Connection connection = objectMapping.getConnectionFactory().getConnection();
-
-            fullId = LazyObjectAccessor.qualifiedId(objectMapping.getTargetObjectSet(), id);
-
+            final String fullId = LazyObjectAccessor.qualifiedId(objectMapping.getTargetObjectSet(), id);
             // Do simple comparison first, only if it fails handle case sensitivity
-            if (!targetId.equals(id) && !normalizedIdParam.equals(normalizedTargetId)) {
+            if (!targetId.equals(id) &&
+                    !objectMapping.getLinkType().normalizeTargetId(targetId).equals(objectMapping.getLinkType().normalizeTargetId(id))) {
                 throw new SynchronizationException("target '_id' has changed");
             }
-
             LOGGER.trace("Update target object {}", fullId);
-
-            request = newUpdateRequest(fullId, target).setRevision(target.get("_rev").asString());
-            updateResponse = connection.update(context, request);
-
+            UpdateRequest request = newUpdateRequest(fullId, target)
+                    .setRevision(target.get("_rev").asString());
+            final ResourceResponse updateResponse = objectMapping.getConnectionFactory().getConnection().update(context, request);
             measure.setResult(target);
-
             if (updateResponse != null) {
                 final String updatedTargetId = updateResponse.getId();
-
                 // Handle potential UID target change during update
                 updateTargetLink(context, updatedTargetId);
             }
-        } catch (SynchronizationException se) {
-            throw se;
         } catch (JsonValueException jve) {
             throw new SynchronizationException(jve);
         } catch (ResourceException ose) {
