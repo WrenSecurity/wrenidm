@@ -200,9 +200,18 @@ module.exports = function(grunt, options) {
         },
         qunit: {
             /**
-             * Run the unit tests using PhantonJS.
+             * Run the unit tests using Puppeteer.
              */
-            test: testDirectory + '/index.html'
+            test: testDirectory + '/index.html',
+            options: {
+                puppeteer: {
+                    ignoreDefaultArgs: true,
+                    args: [
+                        // "--headless",
+                        "--allow-file-access-from-files"
+                    ]
+                }
+            }
         },
         requirejs: {
             /**
