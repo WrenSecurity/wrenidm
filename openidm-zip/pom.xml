@@ -810,7 +810,7 @@
                         </goals>
 
                         <configuration>
-                            <targets>
+                            <target>
                                 <zip basedir="${basedir}/src/main/resources/samples/usecase/workflow" destfile="${project.build.directory}/bar-files/samples/usecase/workflow/certificationRoles.bar" includes="certificationRoles*" />
 
                                 <zip basedir="${basedir}/src/main/resources/samples/usecase/workflow" destfile="${project.build.directory}/bar-files/samples/usecase/workflow/certificationEntitlements.bar" includes="certificationEntitlements*" />
@@ -822,7 +822,7 @@
                                 <zip basedir="${basedir}/src/main/resources/samples/workflow/workflow" destfile="${project.build.directory}/bar-files/samples/workflow/workflow/chess.bar" includes="chess*" />
 
                                 <zip basedir="${basedir}/src/main/resources/samples/workflow/workflow" destfile="${project.build.directory}/bar-files/samples/workflow/workflow/contractorOnboarding.bar" includes="contractor*" />
-                            </targets>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>
