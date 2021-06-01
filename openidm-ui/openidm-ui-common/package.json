@@ -3,6 +3,9 @@
   "author": "Jake Feasel <jake.feasel@forgerock.com>",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "build": "grunt build"
+  },
   "devDependencies": {
     "babel-eslint": "6.0.3",
     "babel-plugin-check-es2015-constants": "^6.8.0",

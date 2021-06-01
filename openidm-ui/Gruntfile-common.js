@@ -77,6 +77,12 @@ module.exports = function(grunt, options) {
         },
         copy: {
             /**
+             * Copy libs installed by NPM or provided locally.
+             */
+            libs: {
+                files: options.copyLibs,
+            },
+            /**
              * Copy all the sources and resources from this project and all dependencies into the composition directory.
              *
              * TODO: This copying shouldn't really be necessary, but is required because the dependencies are all over
@@ -202,12 +208,12 @@ module.exports = function(grunt, options) {
             /**
              * Run the unit tests using Puppeteer.
              */
-            test: testDirectory + '/index.html',
+            all: [testDirectory + "/index.html"],
             options: {
                 puppeteer: {
                     ignoreDefaultArgs: true,
                     args: [
-                        // "--headless",
+                        "--headless",
                         "--allow-file-access-from-files"
                     ]
                 }
@@ -349,6 +355,7 @@ module.exports = function(grunt, options) {
         "replace",
         'babel:test',
         'copy:test',
+        'copy:libs',
         'qunit'
     ]);
 
@@ -363,6 +370,7 @@ module.exports = function(grunt, options) {
         "replace",
         'babel:test',
         'copy:test',
+        'copy:libs',
         'qunit'
     ]);
 
@@ -375,11 +383,12 @@ module.exports = function(grunt, options) {
         "newer:babel:test",
         'copy:test',
         "sync:deploy",
+        'copy:libs',
         'qunit',
         'eslint'
     ]);
 
-    grunt.registerTask("dev", ["copy:compose", "deploy", "watch"]);
+    grunt.registerTask("dev", ["copy:compose", "copy:libs", "deploy", "watch"]);
     grunt.registerTask("default", "dev");
 
     grunt.task.run('notify_hooks');
