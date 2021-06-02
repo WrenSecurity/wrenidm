@@ -345,6 +345,7 @@ module.exports = function(grunt, options) {
     grunt.loadNpmTasks("grunt-text-replace");
 
     grunt.registerTask('build:dev', [
+        'copy:libs',
         'copy:compose',
         'eslint',
         'babel:source',
@@ -355,11 +356,11 @@ module.exports = function(grunt, options) {
         "replace",
         'babel:test',
         'copy:test',
-        'copy:libs',
         'qunit'
     ]);
 
     grunt.registerTask('build:prod', [
+        'copy:libs',
         'copy:compose',
         'eslint',
         'babel:source',
@@ -370,11 +371,11 @@ module.exports = function(grunt, options) {
         "replace",
         'babel:test',
         'copy:test',
-        'copy:libs',
         'qunit'
     ]);
 
     grunt.registerTask("deploy", [
+        'copy:libs',
         "sync:compose",
         'babel:source',
         "less:dev",
@@ -383,12 +384,11 @@ module.exports = function(grunt, options) {
         "newer:babel:test",
         'copy:test',
         "sync:deploy",
-        'copy:libs',
         'qunit',
         'eslint'
     ]);
 
-    grunt.registerTask("dev", ["copy:compose", "copy:libs", "deploy", "watch"]);
+    grunt.registerTask("dev", ["copy:libs", "copy:compose", "deploy", "watch"]);
     grunt.registerTask("default", "dev");
 
     grunt.task.run('notify_hooks');

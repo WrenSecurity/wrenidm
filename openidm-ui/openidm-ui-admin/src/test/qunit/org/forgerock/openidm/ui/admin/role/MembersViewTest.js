@@ -11,19 +11,19 @@ define([
 
     QUnit.module('MembersView Tests');
 
-    QUnit.test("Checkboxes on grid rows that have _grantType = 'condtion' have been removed", function () {
+    QUnit.test("Checkboxes on grid rows that have _grantType = 'condtion' have been removed", function (assert) {
         var membersList = $(membersListHTML),
             checkboxesBefore = membersList.find("td.select-row-cell input:checkbox"),
             checkboxesAfter;
 
 
-        QUnit.equal(checkboxesBefore.length, 3, "Correct number of checkboxes are displayed before removing the ones for conditional grants");
+        assert.equal(checkboxesBefore.length, 3, "Correct number of checkboxes are displayed before removing the ones for conditional grants");
 
         MembersView.removeConditionalGrantCheckboxes(membersList);
 
         checkboxesAfter = membersList.find("td.select-row-cell input:checkbox");
 
-        QUnit.equal(checkboxesAfter.length, 1, "Correct number of checkboxes are displayed after removing the ones for conditional grants");
+        assert.equal(checkboxesAfter.length, 1, "Correct number of checkboxes are displayed after removing the ones for conditional grants");
     });
 
 });

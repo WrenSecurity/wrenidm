@@ -54,6 +54,6 @@ module.exports = function(grunt) {
 
             // CSS - custom
             { src: "libs/css/fontawesome-iconpicker-1.0.0-min.css", dest: "target/www/css/fontawesome-iconpicker-1.0.0-min.css" },
-        ]
+        ],
     });
 };
