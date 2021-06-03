@@ -614,22 +614,6 @@
             <version>42.2.18</version>
         </dependency>
 
-        <!-- Javascript libraries -->
-        <dependency>
-            <groupId>org.forgerock.commons.ui.libs</groupId>
-            <artifactId>lodash</artifactId>
-            <version>2.4.1</version>
-            <classifier>min</classifier>
-            <type>js</type>
-        </dependency>
-
-        <dependency>
-            <groupId>org.forgerock.commons.ui.libs</groupId>
-            <artifactId>handlebars</artifactId>
-            <version>4.0.5</version>
-            <type>js</type>
-        </dependency>
-
         <!-- Scripted REST Groovy dependencies -->
         <dependency>
             <groupId>commons-beanutils</groupId>
