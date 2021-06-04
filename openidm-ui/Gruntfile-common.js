@@ -77,6 +77,12 @@ module.exports = function(grunt, options) {
         },
         copy: {
             /**
+             * Copy libs installed by NPM or provided locally.
+             */
+            libs: {
+                files: options.copyLibs,
+            },
+            /**
              * Copy all the sources and resources from this project and all dependencies into the composition directory.
              *
              * TODO: This copying shouldn't really be necessary, but is required because the dependencies are all over
@@ -200,9 +206,18 @@ module.exports = function(grunt, options) {
         },
         qunit: {
             /**
-             * Run the unit tests using PhantonJS.
+             * Run the unit tests using Puppeteer.
              */
-            test: testDirectory + '/index.html'
+            all: [testDirectory + "/index.html"],
+            options: {
+                puppeteer: {
+                    ignoreDefaultArgs: true,
+                    args: [
+                        "--headless",
+                        "--allow-file-access-from-files"
+                    ]
+                }
+            }
         },
         requirejs: {
             /**
@@ -330,6 +345,7 @@ module.exports = function(grunt, options) {
     grunt.loadNpmTasks("grunt-text-replace");
 
     grunt.registerTask('build:dev', [
+        'copy:libs',
         'copy:compose',
         'eslint',
         'babel:source',
@@ -344,6 +360,7 @@ module.exports = function(grunt, options) {
     ]);
 
     grunt.registerTask('build:prod', [
+        'copy:libs',
         'copy:compose',
         'eslint',
         'babel:source',
@@ -358,6 +375,7 @@ module.exports = function(grunt, options) {
     ]);
 
     grunt.registerTask("deploy", [
+        'copy:libs',
         "sync:compose",
         'babel:source',
         "less:dev",
@@ -370,7 +388,7 @@ module.exports = function(grunt, options) {
         'eslint'
     ]);
 
-    grunt.registerTask("dev", ["copy:compose", "deploy", "watch"]);
+    grunt.registerTask("dev", ["copy:libs", "copy:compose", "deploy", "watch"]);
     grunt.registerTask("default", "dev");
 
     grunt.task.run('notify_hooks');

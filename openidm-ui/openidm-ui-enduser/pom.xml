@@ -56,14 +56,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.forgerock.commons.ui.libs</groupId>
-      <artifactId>jsoneditor</artifactId>
-      <version>0.7.9</version>
-      <classifier>min</classifier>
-      <type>js</type>
-    </dependency>
-
-    <dependency>
       <groupId>org.forgerock.openidm</groupId>
       <artifactId>openidm-ui-common</artifactId>
       <version>${project.version}</version>
@@ -72,95 +64,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.forgerock.commons.ui.libs</groupId>
-      <artifactId>contentflow</artifactId>
-      <version>1.0.2</version>
-      <classifier>min</classifier>
-      <type>js</type>
-    </dependency>
-
-    <dependency>
-      <groupId>org.forgerock.commons.ui.libs</groupId>
-      <artifactId>backgrid</artifactId>
-      <version>0.3.5</version>
-      <classifier>min</classifier>
-      <type>js</type>
-    </dependency>
-
-    <dependency>
-      <groupId>org.forgerock.commons.ui.libs</groupId>
-      <artifactId>backgrid-paginator</artifactId>
-      <version>0.3.5</version>
-      <classifier>min</classifier>
-      <type>js</type>
-    </dependency>
-
-    <dependency>
-      <groupId>org.forgerock.commons.ui.libs</groupId>
-      <artifactId>backgrid-filter</artifactId>
-      <version>0.3.7</version>
-      <classifier>min</classifier>
-      <type>js</type>
-    </dependency>
-
-    <dependency>
-      <groupId>org.forgerock.commons.ui.libs</groupId>
-      <artifactId>d3</artifactId>
-      <version>3.5.5</version>
-      <classifier>min</classifier>
-      <type>js</type>
-    </dependency>
-
-    <dependency>
-      <groupId>org.forgerock.commons.ui.libs</groupId>
-      <artifactId>dimple</artifactId>
-      <version>2.1.2</version>
-      <classifier>min</classifier>
-      <type>js</type>
-    </dependency>
-
-    <dependency>
-      <groupId>org.forgerock.commons.ui.libs</groupId>
-      <artifactId>fontawesome-iconpicker</artifactId>
-      <version>1.0.0</version>
-      <classifier>min</classifier>
-      <type>js</type>
-    </dependency>
-
-    <dependency>
-      <groupId>org.forgerock.commons.ui.libs</groupId>
-      <artifactId>fontawesome-iconpicker</artifactId>
-      <version>1.0.0</version>
-      <classifier>min</classifier>
-      <type>css</type>
-    </dependency>
-
-    <dependency>
-      <groupId>org.forgerock.commons.ui.libs</groupId>
-      <artifactId>jquery-ui</artifactId>
-      <version>1.11.1</version>
-      <classifier>min</classifier>
-      <type>js</type>
-    </dependency>
-
-    <dependency>
       <groupId>org.apache.servicemix.bundles</groupId>
       <artifactId>org.apache.servicemix.bundles.rhino</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.forgerock.commons.ui.libs</groupId>
-      <artifactId>less</artifactId>
-      <version>1.5.1</version>
-      <classifier>rhino</classifier>
-      <type>js</type>
-    </dependency>
-
-    <dependency>
-      <groupId>org.forgerock.commons.ui.libs</groupId>
-      <artifactId>r</artifactId>
-      <version>2.1.10</version>
-      <type>js</type>
     </dependency>
   </dependencies>
 
@@ -227,28 +132,6 @@
                 </artifactItem>
               </artifactItems>
             </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptors>
-            <descriptor>src/main/assembly/dir.xml</descriptor>
-          </descriptors>
-
-          <finalName>www</finalName>
-          <appendAssemblyId>false</appendAssemblyId>
-        </configuration>
-
-        <executions>
-          <execution>
-            <phase>process-resources</phase>
-
-            <goals>
-              <goal>single</goal>
-            </goals>
           </execution>
         </executions>
       </plugin>

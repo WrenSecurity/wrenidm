@@ -102,3 +102,6 @@ tags
 
 # TestNG
 */test-output
+
+# VS Code
+.vscode/
