@@ -1,11 +1,35 @@
-OpenIDM Sample Projects and Sample Resources
-====================================
-Copyright (c) 2012-2016 ForgeRock AS
-This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
-See http://creativecommons.org/licenses/by-nc-nd/3.0/
+# What happened to the old samples?
 
-This directory contains samples to get you started with the many different configuration and security files you may
-need for your specific use case.
+The old samples have been removed from the project because of their CC-BY-NC-ND license, which we cannot change.
 
-The documentation at https://forgerock.org/openidm/doc/bootstrap/samples-guide/#chap-overview
-describes the purpose of each sample.
+New samples are going to be created from scratch. Please be patient.
+
+## Where can I find the original samples?
+
+The original samples can still be found in the [sustaining branch](https://github.com/WrenSecurity/wrenidm/tree/sustaining/5.x/openidm-zip/src/main/resources/samples).
+
+You might get `Unknown property used in expression: ${decision=='accept'}` error when running the old workflow based samples. This error is caused by a backward-incompatible change in Activiti Framework integration, where the variables created in tasks are no longer stored in the process scope by default.
+
+The problem can be fixed using the following code:
+
+```
+<userTask ...>
+    ...
+    <extensionElements>
+         ...
+         <!-- Paste taskListener inside extensionElements within task -->
+        <activiti:taskListener event="complete" class="org.activiti.engine.impl.bpmn.listener.ScriptTaskListener">
+            <activiti:field name="script">
+                <activiti:string>
+                        task.getExecution().setVariable("decision", decision)
+                </activiti:string>
+            </activiti:field>
+            <activiti:field name="language" stringValue="groovy"/>
+        </activiti:taskListener>
+        ...
+    </extensionElements>
+    ...
+</userTask>
+````
+
+
