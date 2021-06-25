@@ -1,4 +1,4 @@
-FROM openjdk:8
+FROM openjdk:11
 
 ARG WRENIDM_VERSION=6.0.0-SNAPSHOT
 
