@@ -30,7 +30,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -463,9 +462,10 @@ public class TableQueries {
      */
     PreparedStatement resolveInlineQuery(Connection con, String queryExpression,
             Map<String, Object> params) throws SQLException, ResourceException {
-        // No token replacement on expressions for now
-        List<String> tokenNames = new ArrayList<>();
-        QueryInfo info = new QueryInfo(queryExpression, tokenNames);
+        TokenHandler tokenHandler = new TokenHandler();
+        List<String> tokenNames = tokenHandler.extractTokens(queryExpression);
+        String queryString = tokenHandler.replaceTokens(queryExpression, "?", PREFIX_LIST);
+        QueryInfo info = new QueryInfo(queryString, tokenNames);
         return resolveQuery(info, con, params);
     }
 
