@@ -13,7 +13,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2018-2020 Wren Security.
+ * Portions Copyright 2018-2021 Wren Security.
  */
 
 package org.forgerock.openidm.keystore.impl;
@@ -30,6 +30,8 @@ import static org.forgerock.openidm.core.IdentityServer.TRUSTSTORE_PASSWORD;
 import static org.forgerock.openidm.core.IdentityServer.TRUSTSTORE_TYPE;
 import static org.forgerock.openidm.core.ServerConstants.JWTSESSION_SIGNING_KEY_ALIAS_PROPERTY;
 import static org.forgerock.openidm.core.ServerConstants.SELF_SERVICE_CERT_ALIAS;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,6 +45,7 @@ import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.IdentityServerTestUtils;
 import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.keystore.KeyStoreDetails;
+import org.forgerock.openidm.keystore.KeyStoreService;
 import org.forgerock.security.keystore.KeyStoreType;
 import org.forgerock.util.Utils;
 import org.testng.annotations.BeforeClass;
@@ -90,8 +93,11 @@ public class DefaultKeyStoreInitializerTest {
         final KeyStoreDetails keyStoreDetails = createKeyStoreDetails();
         final KeyStore keyStore = defaultKeyStoreInitializer.initializeKeyStore(keyStoreDetails);
 
+        final KeyStoreService keyStoreService = mock(KeyStoreService.class);
+        when(keyStoreService.getKeyStore()).thenReturn(keyStore);
+
         // when
-        final KeyStore trustStore = defaultKeyStoreInitializer.initializeTrustStore(keyStore, keyStoreDetails);
+        final KeyStore trustStore = defaultKeyStoreInitializer.initializeTrustStore(keyStoreService, keyStoreDetails);
 
         // then
         final String alias = IdentityServer.getInstance().getProperty(

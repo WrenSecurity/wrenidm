@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2021 Wren Security
  */
 package org.forgerock.openidm.keystore.impl;
 
@@ -41,6 +41,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.keystore.KeyStoreDetails;
+import org.forgerock.openidm.keystore.KeyStoreService;
 import org.forgerock.openidm.util.CertUtil;
 import org.forgerock.security.keystore.KeyStoreBuilder;
 import org.slf4j.Logger;
@@ -124,8 +125,9 @@ class DefaultKeyStoreInitializer implements KeyStoreInitializer {
     }
 
     @Override
-    public KeyStore initializeTrustStore(final KeyStore keyStore, KeyStoreDetails keyStoreDetails)
+    public KeyStore initializeTrustStore(final KeyStoreService keyStoreService, KeyStoreDetails keyStoreDetails)
             throws GeneralSecurityException {
+        final KeyStore keyStore = keyStoreService.getKeyStore();
         final KeyStore trustStore = loadKeyStore(keyStoreDetails);
 
         if (PKCS11.equals(keyStoreDetails.getType())) {
@@ -150,8 +152,10 @@ class DefaultKeyStoreInitializer implements KeyStoreInitializer {
                 final KeyStore.PrivateKeyEntry entry = new KeyStore.PrivateKeyEntry(key, new Certificate[]{cert});
                 keyStore.setEntry(
                         alias, entry, new KeyStore.PasswordProtection(keyStoreDetails.getPassword().toCharArray()));
+                keyStoreService.store();
                 trustStore.setEntry(
                         alias, entry, new KeyStore.PasswordProtection(keyStoreDetails.getPassword().toCharArray()));
+                writeKeyStore(trustStore, keyStoreDetails.getFilename(), keyStoreDetails.getPassword().toCharArray());
             }
         } catch (final Exception e) {
             logger.error("Unable to create ssl certificate", e);

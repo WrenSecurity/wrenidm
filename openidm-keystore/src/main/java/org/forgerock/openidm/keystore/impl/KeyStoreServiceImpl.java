@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2021 Wren Security
  */
 package org.forgerock.openidm.keystore.impl;
 
@@ -80,7 +80,6 @@ public class KeyStoreServiceImpl extends AbstractKeyStoreService {
     public void activate(@SuppressWarnings("unused") ComponentContext context) throws GeneralSecurityException {
         logger.debug("Activating key store service");
         this.store = keyStoreInitializer.initializeKeyStore(getKeyStoreDetails());
-        store();
     }
 
     /**
