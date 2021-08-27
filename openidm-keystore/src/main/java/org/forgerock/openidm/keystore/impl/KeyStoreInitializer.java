@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2020-2021 Wren Security
  */
 package org.forgerock.openidm.keystore.impl;
 
@@ -19,6 +20,7 @@ import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 
 import org.forgerock.openidm.keystore.KeyStoreDetails;
+import org.forgerock.openidm.keystore.KeyStoreService;
 
 /**
  * Interface for loading and initializing the keystore and truststore.
@@ -35,11 +37,11 @@ public interface KeyStoreInitializer {
 
     /**
      * Loads and initializes the truststore.
-     * @param keyStore the keystore to store the ssl cert to.
+     * @param keyStoreService the keystore service to store the ssl cert to.
      * @param keyStoreDetails the truststore {@link KeyStoreDetails truststore details}.
      * @return the loaded and initialized {@link KeyStore truststore}.
      * @throws GeneralSecurityException if unable to load or initialize the {@link KeyStore truststore}.
      */
-    KeyStore initializeTrustStore(final KeyStore keyStore, final KeyStoreDetails keyStoreDetails)
+    KeyStore initializeTrustStore(final KeyStoreService keyStoreService, final KeyStoreDetails keyStoreDetails)
             throws GeneralSecurityException;
 }
