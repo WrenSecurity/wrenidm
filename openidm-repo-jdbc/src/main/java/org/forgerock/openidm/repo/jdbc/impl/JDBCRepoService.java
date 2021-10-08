@@ -622,29 +622,7 @@ public class JDBCRepoService implements RequestHandler, RepoBootService, Reposit
                 switch (request.getTotalPagedResultsPolicy()) {
                     case ESTIMATE:
                     case EXACT:
-                        // Get total if -count query is available
-                        final String countQueryId = request.getQueryId() + "-count";
-                        if (tableHandler.queryIdExists(countQueryId)) {
-                            QueryRequest countRequest = Requests.copyOfQueryRequest(request);
-                            countRequest.setQueryId(countQueryId);
-
-                            // Strip pagination parameters
-                            countRequest.setPageSize(0);
-                            countRequest.setPagedResultsOffset(0);
-                            countRequest.setPagedResultsCookie(null);
-
-                            List<ResourceResponse> countResult = query(countRequest);
-
-                            if (countResult != null && !countResult.isEmpty()) {
-                                resultCount = countResult.get(0).getContent().get("total").asInteger();
-                            } else {
-                                logger.debug("Count query {} failed", countQueryId);
-                                resultCount = NO_COUNT;
-                            }
-                        } else {
-                            logger.debug("Count query with id {} not found", countQueryId);
-                            resultCount = NO_COUNT;
-                        }
+                        resultCount = executeCountRequest(request, tableHandler);
                         break;
                     case NONE:
                     default:
@@ -741,6 +719,51 @@ public class JDBCRepoService implements RequestHandler, RepoBootService, Reposit
         } catch (Exception e) {
             return new InternalServerErrorException("Action failed", e).asPromise();
         }
+    }
+
+    private QueryRequest copyWithoutPagination(QueryRequest request) {
+        QueryRequest countRequest = Requests.copyOfQueryRequest(request);
+        countRequest.setPageSize(0);
+        countRequest.setPagedResultsOffset(0);
+        countRequest.setPagedResultsCookie(null);
+        return countRequest;
+    }
+
+    /**
+     * Tries to construct and execute count request from given request.
+     * Only works with QueryId and QueryFilter requests.
+     *
+     * @param request
+     * @return object count if request can be constructed and executes successfully. {@value #NO_COUNT} otherwise.
+     * @throws ResourceException
+     */
+    private int executeCountRequest(QueryRequest request, TableHandler tableHandler) throws ResourceException {
+        int resultCount = NO_COUNT;
+        if (request.getQueryId() != null) {
+            // Try to create count query by adding -count to request id
+            final String countQueryId = request.getQueryId() + "-count";
+            if (tableHandler.queryIdExists(countQueryId)) {
+                QueryRequest countRequest = copyWithoutPagination(request);
+                countRequest.setQueryId(countQueryId);
+                List<ResourceResponse> countResult = query(countRequest);
+                if (countResult != null && !countResult.isEmpty()) {
+                    resultCount = countResult.get(0).getContent().get("total").asInteger();
+                } else {
+                    logger.debug("Count query {} failed", countQueryId);
+                }
+            } else {
+                logger.debug("Count query with id {} not found", countQueryId);
+            }
+        } else if (request.getQueryFilter() != null) {
+            QueryRequest countRequest = copyWithoutPagination(request);
+            List<ResourceResponse> countResult = query(countRequest);
+            if (countResult != null && !countResult.isEmpty()) {
+                resultCount = countResult.size();
+            }
+        } else {
+            logger.debug("Cannot create count query");
+        }
+        return resultCount;
     }
 
     /**
@@ -1066,4 +1089,5 @@ public class JDBCRepoService implements RequestHandler, RepoBootService, Reposit
                             new DefaultSQLExceptionHandler(), cryptoServiceAccessor);
         }
     }
+
 }
