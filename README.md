@@ -74,7 +74,7 @@ Built binary can be found in `${GIT_REPOSITORIES}/wrenidm/openidm-zip/target/wre
 
 ### Docker image
 
-You can also run Wren:IDM in a Docker container. Official Wren:IDM Docker images can be found [here](https://hub.docker.com/r/wrensec/wrenidm).
+You can also run Wren:IDM in a Docker container. Official Wren:IDM Docker images can be found [here](https://hub.docker.com/r/wrensecurity/wrenidm).
 
 ## Documentation
 
