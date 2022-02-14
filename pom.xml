@@ -113,7 +113,7 @@
         <pgpWhitelistArtifact>org.wrensecurity:wrensec-pgp-whitelist:1.5.3</pgpWhitelistArtifact>
 
         <!-- Version management -->
-        <commons.commons-bom.version>22.1.0</commons.commons-bom.version>
+        <commons.commons-bom.version>22.1.1</commons.commons-bom.version>
 
         <!-- Commons versions -->
         <commons.forgerock-script.version>4.4.1</commons.forgerock-script.version>
