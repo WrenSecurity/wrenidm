@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.forgerock.json.JsonValue.field;
 import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -40,28 +40,28 @@ import org.testng.annotations.Test;
  * Test the Scripts class
  */
 public class ScriptsTest {
-    
+
     // Mocked interfaces
     private ScriptRegistry mockScriptRegistry = mock(ScriptRegistry.class);
     private ScriptEntry mockScriptEntry = mock(ScriptEntry.class);
     private Script mockScript = mock(Script.class);
     private Bindings mockBindings = mock(Bindings.class);
     private Context context = new RootContext();
-    
+
     // A valid script configuration
     private JsonValue testScriptConfig = json(object(
-            field("type", "text/javascript"), 
+            field("type", "text/javascript"),
             field("file", "script/test.js")));
-    
+
     @BeforeClass
     public void beforeClass() throws ScriptException {
         when(mockScript.eval(any(Bindings.class))).thenReturn(true);
         when(mockScript.createBindings()).thenReturn(mockBindings);
         when(mockScriptEntry.getScript(context)).thenReturn(mockScript);
-        when(mockScriptRegistry.takeScript(any(JsonValue.class))).thenReturn(mockScriptEntry);      
+        when(mockScriptRegistry.takeScript(any(JsonValue.class))).thenReturn(mockScriptEntry);
         Scripts.init(mockScriptRegistry);
     }
-    
+
     @Test
     public void testScriptUtil() throws JsonValueException, ScriptException {
         // Test a valid script configuration

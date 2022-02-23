@@ -217,7 +217,7 @@ public class RestServiceTest {
 
         // verify that JSON response has expected top-level fields
         final JsonValue actualJsonContent = result.get().getJsonContent();
-        assertThat(actualJsonContent.keys()).containsOnlyElementsOf(expectedJsonContent.keys());
+        assertThat(actualJsonContent.keys()).hasSameElementsAs(expectedJsonContent.keys());
 
         // non-JSON responses are converted into a JSON object with "headers" and "body" fields
         if (expectedJsonContent.isDefined(ARG_HEADERS)) {
@@ -290,7 +290,9 @@ public class RestServiceTest {
 
     private String resourceAsString(final String resourcePath) throws Exception {
         try (final InputStream inputStream = getClass().getResourceAsStream(resourcePath)) {
-            return new Scanner(inputStream, "UTF-8").useDelimiter("\\A").next();
+            try (final Scanner scanner = new Scanner(inputStream, "UTF-8")) {
+                return scanner.useDelimiter("\\A").next();
+            }
         }
     }
 

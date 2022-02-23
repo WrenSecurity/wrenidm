@@ -24,7 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -86,7 +86,7 @@ public class DelegatedAuthModuleTest {
                 .getOrThrowUninterruptibly();
 
         //Then
-        verifyZeroInteractions(authenticator);
+        verifyNoInteractions(authenticator);
         assertTrue(clientSubject.getPrincipals().isEmpty());
         assertEquals(authStatus, AuthStatus.SEND_FAILURE);
     }
@@ -110,7 +110,7 @@ public class DelegatedAuthModuleTest {
                 .getOrThrowUninterruptibly();
 
         //Then
-        verifyZeroInteractions(authenticator);
+        verifyNoInteractions(authenticator);
         assertTrue(clientSubject.getPrincipals().isEmpty());
         assertEquals(authStatus, AuthStatus.SEND_FAILURE);
     }
@@ -134,7 +134,7 @@ public class DelegatedAuthModuleTest {
                 .getOrThrowUninterruptibly();
 
         //Then
-        verifyZeroInteractions(authenticator);
+        verifyNoInteractions(authenticator);
         assertTrue(clientSubject.getPrincipals().isEmpty());
         assertEquals(authStatus, AuthStatus.SEND_FAILURE);
     }
@@ -158,7 +158,7 @@ public class DelegatedAuthModuleTest {
                 .getOrThrowUninterruptibly();
 
         //Then
-        verifyZeroInteractions(authenticator);
+        verifyNoInteractions(authenticator);
         assertTrue(clientSubject.getPrincipals().isEmpty());
         assertEquals(authStatus, AuthStatus.SEND_FAILURE);
     }
@@ -239,6 +239,6 @@ public class DelegatedAuthModuleTest {
 
         //Then
         assertEquals(authStatus, AuthStatus.SEND_SUCCESS);
-        verifyZeroInteractions(messageInfo);
+        verifyNoInteractions(messageInfo);
     }
 }

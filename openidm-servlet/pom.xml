@@ -1,118 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
-  ~
-  ~ Copyright 2011-2015 ForgeRock AS. All Rights Reserved
-  ~ Portions Copyright 2017-2020 Wren Security.
-  ~
-  ~ The contents of this file are subject to the terms
-  ~ of the Common Development and Distribution License
-  ~ (the License). You may not use this file except in
-  ~ compliance with the License.
-  ~
-  ~ You can obtain a copy of the License at
-  ~ http://forgerock.org/license/CDDLv1.0.html
-  ~ See the License for the specific language governing
-  ~ permission and limitations under the License.
-  ~
-  ~ When distributing Covered Code, include this CDDL
-  ~ Header Notice in each file and include the License file
-  ~ at http://forgerock.org/license/CDDLv1.0.html
-  ~ If applicable, add the following below the CDDL Header,
-  ~ with the fields enclosed by brackets [] replaced by
-  ~ your own identifying information:
-  ~ "Portions Copyrighted [year] [name of copyright owner]"
-  -->
+    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+    Copyright 2011-2015 ForgeRock AS. All Rights Reserved
+    Portions Copyright 2017-2022 Wren Security.
+
+    The contents of this file are subject to the terms
+    of the Common Development and Distribution License
+    (the License). You may not use this file except in
+    compliance with the License.
+
+    You can obtain a copy of the License at
+    http://forgerock.org/license/CDDLv1.0.html
+    See the License for the specific language governing
+    permission and limitations under the License.
+
+    When distributing Covered Code, include this CDDL
+    Header Notice in each file and include the License file
+    at http://forgerock.org/license/CDDLv1.0.html
+    If applicable, add the following below the CDDL Header,
+    with the fields enclosed by brackets [] replaced by
+    your own identifying information:
+    "Portions Copyrighted [year] [name of copyright owner]"
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <artifactId>openidm-project</artifactId>
-    <groupId>org.forgerock.openidm</groupId>
-    <version>6.0.3-SNAPSHOT</version>
-  </parent>
+    <parent>
+        <groupId>org.forgerock.openidm</groupId>
+        <artifactId>openidm-project</artifactId>
+        <version>6.1.0-SNAPSHOT</version>
+    </parent>
 
-  <artifactId>openidm-servlet</artifactId>
-  <packaging>bundle</packaging>
+    <artifactId>openidm-servlet</artifactId>
 
-  <name>Wren:IDM - Web Servlet</name>
-  <description>
-    Provides a servlet for hosting optional web content within Wren:IDM using OSGi.
-  </description>
+    <name>Wren:IDM - Web Servlet</name>
+    <description>
+        Provides a servlet for hosting optional web content within Wren:IDM using OSGi.
+    </description>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.forgerock.openidm</groupId>
-      <artifactId>openidm-system</artifactId>
-      <version>${project.version}</version>
-    </dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.forgerock.openidm</groupId>
+            <artifactId>openidm-system</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-    <dependency>
-      <groupId>org.forgerock.openidm</groupId>
-      <artifactId>openidm-enhanced-config</artifactId>
-      <version>${project.version}</version>
-    </dependency>
+        <dependency>
+            <groupId>org.forgerock.openidm</groupId>
+            <artifactId>openidm-enhanced-config</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-    <dependency>
-      <groupId>org.forgerock.openidm</groupId>
-      <artifactId>openidm-servlet-registrator</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.forgerock.commons</groupId>
-      <artifactId>forgerock-util</artifactId>
-    </dependency>
+        <dependency>
+            <groupId>org.forgerock.openidm</groupId>
+            <artifactId>openidm-servlet-registrator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
+        <dependency>
+            <groupId>org.forgerock.commons</groupId>
+            <artifactId>forgerock-util</artifactId>
+        </dependency>
 
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>osgi.cmpn</artifactId>
-      <scope>provided</scope>
-    </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
 
-    <dependency>
-      <groupId>org.ops4j.pax.web</groupId>
-      <artifactId>pax-web-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.cmpn</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>org.apache.felix</groupId>
-      <artifactId>org.apache.felix.framework</artifactId>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
+        <dependency>
+            <groupId>org.ops4j.pax.web</groupId>
+            <artifactId>pax-web-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-  <build>
-    <resources>
-      <resource>
-        <directory>src/main/webapp</directory>
-      </resource>
-    </resources>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.framework</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
-    <plugins>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <extensions>true</extensions>
-
-        <configuration>
-          <instructions>
-            <Import-Package>*</Import-Package>
-            <Include-Resource>{maven-resources}</Include-Resource>
-          </instructions>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Import-Package>*</Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

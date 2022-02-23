@@ -44,7 +44,6 @@ import org.testng.annotations.Test;
 public class ScriptedPatchValueTransformerFactoryTest {
     private JsonValue subject = json(object(field("key", "value")));
     private ScriptRegistryImpl scriptRegistry = null;
-    private ScriptExecutor scriptExecutor = null;
     private ScriptedPatchValueTransformerFactory scriptedPatchValueTransformerFactory = new ScriptedPatchValueTransformerFactory();
 
     protected Map<String, Object> getConfiguration() {

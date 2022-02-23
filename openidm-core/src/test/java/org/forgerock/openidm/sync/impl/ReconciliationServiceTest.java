@@ -20,7 +20,7 @@ import static org.forgerock.json.JsonValue.field;
 import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.resource.Responses.newQueryResponse;
 import static org.forgerock.json.resource.Responses.newResourceResponse;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -64,14 +64,14 @@ public class ReconciliationServiceTest {
 
         when(connectionFactory.getConnection()).thenReturn(connection);
         when(connection.query(any(Context.class), any(QueryRequest.class), any(Collection.class)))
-	        .then(new Answer<QueryResponse>() {
-	        	@Override
-	        	public QueryResponse answer(InvocationOnMock invocationOnMock) throws Throwable {
-	        		Collection<ResourceResponse> collection = (Collection<ResourceResponse>) invocationOnMock.getArguments()[2];
-	        		collection.add(expectedResource);
-	        		return newQueryResponse();
-	        	}
-	        });
+            .then(new Answer<QueryResponse>() {
+                @Override
+                public QueryResponse answer(InvocationOnMock invocationOnMock) throws Throwable {
+                    Collection<ResourceResponse> collection = (Collection<ResourceResponse>) invocationOnMock.getArguments()[2];
+                    collection.add(expectedResource);
+                    return newQueryResponse();
+                }
+            });
 
         Promise<ResourceResponse, ResourceException> readPromise = reconciliationService.handleRead(context, readRequest);
         AssertJPromiseAssert.assertThat(readPromise).succeeded();
@@ -99,8 +99,8 @@ public class ReconciliationServiceTest {
                 .thenReturn(newQueryResponse());
 
         AssertJPromiseAssert.assertThat(reconciliationService.handleRead(context, readRequest))
-        		.failedWithException()
-        		.isInstanceOf(NotFoundException.class);
+                .failedWithException()
+                .isInstanceOf(NotFoundException.class);
 
     }
 

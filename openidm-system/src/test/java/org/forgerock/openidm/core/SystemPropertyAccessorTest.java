@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import org.testng.annotations.Test;
 
@@ -47,7 +47,7 @@ public class SystemPropertyAccessorTest {
         assertThat(testable.getProperty("testable", "defaultValue", String.class)).isEqualTo("testvalue");
         assertThat(testable.getProperty("pirospaprika", "voroshagyma", null)).isEqualTo("voroshagyma");
         assertThat(testable.getProperty("pirospaprika", "voroshagyma", Object.class)).isEqualTo("voroshagyma");
-        verifyZeroInteractions(delegate);
+        verifyNoInteractions(delegate);
         assertThat(testable.getProperty(null, null, Object.class)).isNull();
         verify(delegate, times(1)).getProperty(null, null, Object.class);
         assertThat(testable.getProperty("testable", 1, null)).isNull();

@@ -33,7 +33,6 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.log.LogEntry;
 import org.osgi.service.log.LogListener;
 import org.osgi.service.log.LogReaderService;
-import org.osgi.service.log.LogService;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 import org.slf4j.Logger;
@@ -44,7 +43,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class OsgiLogHandler {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(OsgiLogHandler.class);
 
     ServiceTracker<LogReaderService, LogReaderService> tracker;
@@ -60,18 +59,18 @@ public class OsgiLogHandler {
  * Attach log listeners to log reader services to re-direct to slf4j
  */
 class LogServiceTracker<S, T extends LogReaderService> extends ServiceTracker<S, T> {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(LogServiceTracker.class);
-    
-    // Logger to use for OSGi log entries 
+
+    // Logger to use for OSGi log entries
     private static final Logger defaultEntryLogger = LoggerFactory.getLogger("org.forgerock.openidm.Framework");
-    
+
     private Map<T, LogListener> logReaderServices = Collections.synchronizedMap(new HashMap<T, LogListener>());
-    
+
     public LogServiceTracker(BundleContext context, String clazz, ServiceTrackerCustomizer<S, T> customizer) {
         super(context, clazz, customizer);
     }
-    
+
     @Override
     public T addingService(ServiceReference<S> reference) {
         @SuppressWarnings("unchecked")
@@ -86,7 +85,7 @@ class LogServiceTracker<S, T extends LogReaderService> extends ServiceTracker<S,
         T svc = (T) context.getService(reference);
         removeLogReaderService(svc);
     }
-    
+
     private void addLogReaderService(T reader) {
         logger.trace("Adding log reader service");
         LogListener existing = logReaderServices.get(reader);
@@ -98,8 +97,8 @@ class LogServiceTracker<S, T extends LogReaderService> extends ServiceTracker<S,
                 }
             };
             reader.addLogListener(logListener);
-            
-            // This dumps the existing log entries. 
+
+            // This dumps the existing log entries.
             // These entries may appear out of chronological order
             // if services already started logging to slf4j directly
             @SuppressWarnings("rawtypes")
@@ -107,7 +106,7 @@ class LogServiceTracker<S, T extends LogReaderService> extends ServiceTracker<S,
             while (entries.hasMoreElements()) {
                 logEntry((LogEntry) entries.nextElement());
             }
-            
+
             // Redirects all new log entries
             logReaderServices.put(reader, logListener);
         }
@@ -126,32 +125,32 @@ class LogServiceTracker<S, T extends LogReaderService> extends ServiceTracker<S,
         }
         logMessage.append(" ");
         logMessage.append(entry.getMessage());
-       
+
         Throwable ex = entry.getException();
-        
-        switch (entry.getLevel()) {
-            case LogService.LOG_ERROR: {
+
+        switch (entry.getLogLevel()) {
+            case ERROR: {
                 defaultEntryLogger.error(logMessage.toString(), ex);
                 break;
             }
-            case LogService.LOG_WARNING: {
+            case WARN: {
                 defaultEntryLogger.warn(logMessage.toString(), ex);
                 break;
             }
-            case LogService.LOG_INFO: {
+            case INFO: {
                 defaultEntryLogger.info(logMessage.toString(), ex);
                 break;
             }
-            case LogService.LOG_DEBUG: {
+            case DEBUG: {
                 defaultEntryLogger.debug(logMessage.toString(), ex);
                 break;
             }
             default: {
-                defaultEntryLogger.warn("Unknown OSGi log level [" + entry.getLevel() + "] for" + logMessage.toString(), ex);
+                defaultEntryLogger.warn("Unknown OSGi log level [" + entry.getLogLevel() + "] for" + logMessage.toString(), ex);
             }
         }
     }
-    
+
     private void removeLogReaderService(T reader) {
         logger.trace("Removing log reader service");
         LogListener logListener = logReaderServices.remove(reader);

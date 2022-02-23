@@ -1,39 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
-  ~
-  ~ Copyright (c) 2011-2015 ForgeRock AS. All Rights Reserved
-  ~ Portions Copyright 2017-2020 Wren Security.
-  ~
-  ~ The contents of this file are subject to the terms
-  ~ of the Common Development and Distribution License
-  ~ (the License). You may not use this file except in
-  ~ compliance with the License.
-  ~
-  ~ You can obtain a copy of the License at
-  ~ http://forgerock.org/license/CDDLv1.0.html
-  ~ See the License for the specific language governing
-  ~ permission and limitations under the License.
-  ~
-  ~ When distributing Covered Code, include this CDDL
-  ~ Header Notice in each file and include the License file
-  ~ at http://forgerock.org/license/CDDLv1.0.html
-  ~ If applicable, add the following below the CDDL Header,
-  ~ with the fields enclosed by brackets [] replaced by
-  ~ your own identifying information:
-  ~ "Portions Copyrighted [year] [name of copyright owner]"
-  -->
+    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+    Copyright (c) 2011-2015 ForgeRock AS. All Rights Reserved
+    Portions Copyright 2017-2022 Wren Security.
+
+    The contents of this file are subject to the terms
+    of the Common Development and Distribution License
+    (the License). You may not use this file except in
+    compliance with the License.
+
+    You can obtain a copy of the License at
+    http://forgerock.org/license/CDDLv1.0.html
+    See the License for the specific language governing
+    permission and limitations under the License.
+
+    When distributing Covered Code, include this CDDL
+    Header Notice in each file and include the License file
+    at http://forgerock.org/license/CDDLv1.0.html
+    If applicable, add the following below the CDDL Header,
+    with the fields enclosed by brackets [] replaced by
+    your own identifying information:
+    "Portions Copyrighted [year] [name of copyright owner]"
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.forgerock.openidm</groupId>
         <artifactId>openidm-project</artifactId>
-        <version>6.0.3-SNAPSHOT</version>
+        <version>6.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>openidm-util</artifactId>
-    <packaging>bundle</packaging>
 
     <name>Wren:IDM - Utility Bundle</name>
     <description>
@@ -190,32 +189,16 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>test-jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <extensions>true</extensions>
-
                 <configuration>
                     <!--
-                        XXX Investigate this strange delegation to router bundle. This mixes BundleContexts 
+                        XXX Investigate this strange delegation to router bundle. This mixes BundleContexts
                         and class-loaders. If the reason behind this is some load order voodoo, then different
                         start levels might be a better solution. [PH]
                         XXX Another issue might be dependency loop this introduces (it is harder to deploy bundles
-                        sequentially for testing purposes) - util > router > enhanced-config > crypto > util. [PH] 
+                        sequentially for testing purposes) - util > router > enhanced-config > crypto > util. [PH]
                     -->
                     <instructions>
                         <Bundle-Activator>org.forgerock.openidm.router.Activator</Bundle-Activator>
@@ -223,6 +206,17 @@
                         <Main-Class>org.forgerock.openidm.util.CryptoUtil</Main-Class>
                     </instructions>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                    <goals>
+                        <goal>test-jar</goal>
+                    </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

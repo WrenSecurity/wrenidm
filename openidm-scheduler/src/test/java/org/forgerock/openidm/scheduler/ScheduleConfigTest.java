@@ -15,7 +15,7 @@
  */
 package org.forgerock.openidm.scheduler;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 

@@ -391,7 +391,7 @@ public class TaskInstanceResource implements CollectionResourceProvider {
                         query.orderByExecutionId();
                         break;
                     case ActivitiConstants.ACTIVITI_DUEDATE:
-                        query.orderByDueDate();
+                        query.orderByTaskDueDate();
                         break;
                     case ActivitiConstants.ACTIVITI_TENANTID:
                         query.orderByTenantId();
