@@ -1,43 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ! CCPL HEADER START
-  !
-  ! This work is licensed under the Creative Commons
-  ! Attribution-NonCommercial-NoDerivs 3.0 Unported License.
-  ! To view a copy of this license, visit
-  ! http://creativecommons.org/licenses/by-nc-nd/3.0/
-  ! or send a letter to Creative Commons, 444 Castro Street,
-  ! Suite 900, Mountain View, California, 94041, USA.
-  !
-  ! See the License for the specific language governing permissions
-  ! and limitations under the License.
-  !
-  ! If applicable, add the following below this CCPL HEADER, with the fields
-  ! enclosed by brackets "[]" replaced with your own identifying information:
-  !      Portions Copyright [yyyy] [name of copyright owner]
-  !
-  ! CCPL HEADER END
-  !
-  !      Copyright 2014 ForgeRock AS
-  !
+    The contents of this file are subject to the terms of the Common Development and
+    Distribution License (the License). You may not use this file except in compliance with the
+    License.
+
+    You can obtain a copy of the License at legal/CDDLv1.1.txt. See the License for the
+    specific language governing permission and limitations under the License.
+
+    When distributing Covered Software, include this CDDL Header Notice in each file and include
+    the License file at legal/CDDLv1.1.txt. If applicable, add the following below the CDDL
+    Header, with the fields enclosed by brackets [] replaced by your own identifying
+    information: "Portions copyright [year] [name of copyright owner]".
+
+    Copyright 2022 Wren Security
 -->
-<document
- xmlns="http://maven.apache.org/XDOC/2.0"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://maven.apache.org/XDOC/2.0
-                     http://maven.apache.org/xsd/xdoc-2.0.xsd">
- <properties>
+<project xmlns="http://maven.apache.org/DECORATION/1.8.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 http://maven.apache.org/xsd/decoration-1.8.0.xsd">
+    <body>
+        <menu ref="reports" inherit="top" />
 
-  <title>${project.name}</title>
-  <author email="commons@forgerock.org">ForgeRock AS</author>
- </properties>
- <body>
-  <section name="About ${project.name}">
-
-   <p>
-    ${project.description}
-   </p>
-
-  </section>
- </body>
-</document>
+        <menu ref="modules" inherit="top" />
+    </body>
+</project>

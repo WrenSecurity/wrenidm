@@ -649,7 +649,7 @@ public class UpdateCommandTest {
             if (null == actionToMatch) {
                 return false;
             }
-            ActionRequest actionRequest = (ActionRequest) actionToMatch;
+            ActionRequest actionRequest = actionToMatch;
             return actionRequest.getResourcePath().equals(route) && actionRequest.getAction().equals(this.action);
         }
     }
@@ -663,7 +663,7 @@ public class UpdateCommandTest {
 
         @Override
         public boolean matches(ReadRequest requestToMatch) {
-            return (null != requestToMatch && ((ReadRequest) requestToMatch).getResourcePath().startsWith(route));
+            return (null != requestToMatch && requestToMatch.getResourcePath().startsWith(route));
         }
     }
 }

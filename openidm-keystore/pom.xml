@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- ~ The contents of this file are subject to the terms of the Common Development and
- ~ Distribution License (the License). You may not use this file except in compliance with the
- ~ License.
- ~
- ~ You can obtain a copy of the License at legal/CDDLv1.0.txt. See the License for the
- ~ specific language governing permission and limitations under the License.
- ~
- ~ When distributing Covered Software, include this CDDL Header Notice in each file and include
- ~ the License file at legal/CDDLv1.0.txt. If applicable, add the following below the CDDL
- ~ Header, with the fields enclosed by brackets [] replaced by your own identifying
- ~ information: "Portions copyright [year] [name of copyright owner]".
- ~
- ~ Copyright 2016 ForgeRock AS.
- ~ Portions Copyright 2017-2020 Wren Security.
-  -->
+    The contents of this file are subject to the terms of the Common Development and
+    Distribution License (the License). You may not use this file except in compliance with the
+    License.
+
+    You can obtain a copy of the License at legal/CDDLv1.1.txt. See the License for the
+    specific language governing permission and limitations under the License.
+
+    When distributing Covered Software, include this CDDL Header Notice in each file and include
+    the License file at legal/CDDLv1.1.txt. If applicable, add the following below the CDDL
+    Header, with the fields enclosed by brackets [] replaced by your own identifying
+    information: "Portions copyright [year] [name of copyright owner]".
+
+    Copyright 2016 ForgeRock AS.
+    Portions Copyright 2017-2022 Wren Security.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>openidm-project</artifactId>
-        <groupId>org.forgerock.openidm</groupId>
-        <version>6.0.3-SNAPSHOT</version>
-    </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.forgerock.openidm</groupId>
+        <artifactId>openidm-project</artifactId>
+        <version>6.1.0-SNAPSHOT</version>
+    </parent>
+
     <artifactId>openidm-keystore</artifactId>
-    <packaging>bundle</packaging>
+
     <name>Wren:IDM - Keystore</name>
     <description>This bundle initializes and manages the keystore for sensitive credentials in Wren:IDM.</description>
 
@@ -95,8 +96,6 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <extensions>true</extensions>
-
                 <configuration>
                     <instructions>
                         <Import-Package>sun.security.pkcs11;resolution:=optional,*</Import-Package>

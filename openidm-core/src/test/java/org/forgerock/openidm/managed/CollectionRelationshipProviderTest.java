@@ -162,7 +162,7 @@ public class CollectionRelationshipProviderTest {
 
         @Override
         public boolean matches(ReadRequest requestToMatch) {
-            return (null != requestToMatch && ((ReadRequest) requestToMatch).getResourcePath().startsWith(route));
+            return (null != requestToMatch && requestToMatch.getResourcePath().startsWith(route));
         }
     }
 

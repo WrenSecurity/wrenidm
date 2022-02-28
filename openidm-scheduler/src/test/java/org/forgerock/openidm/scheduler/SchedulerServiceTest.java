@@ -15,9 +15,9 @@
  */
 package org.forgerock.openidm.scheduler;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.forgerock.json.JsonValue.*;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.io.InputStream;
@@ -45,22 +45,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Basic unit tests for the scheduler service
  */
 public class SchedulerServiceTest {
-    
+
     /**
      * Returns a {@link JsonValue} object representing a JSON configuration.
-     * 
+     *
      * @param configName the name of the file containing the configuration
      * @return a {@link JsonValue} object representing a JSON configuration
      * @throws Exception
      */
     private JsonValue getConfig(final String configName) throws Exception {
         final InputStream configStream = getClass().getResourceAsStream(configName);
-        return new JsonValue(new ObjectMapper().readValue(configStream, LinkedHashMap.class)); 
+        return new JsonValue(new ObjectMapper().readValue(configStream, LinkedHashMap.class));
     }
-    
+
     /**
      * Creates a {@link SchedulerService} from the passed in configuration file.
-     * 
+     *
      * @param configFile the scheduler's configuration file name
      * @return a {@link SchedulerService} implementation
      * @throws Exception

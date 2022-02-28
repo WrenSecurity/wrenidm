@@ -23,7 +23,7 @@ import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.openidm.audit.AuditService.AuditAction.availableHandlers;
 import static org.forgerock.openidm.audit.AuditService.AuditAction.getChangedPasswordFields;
 import static org.forgerock.openidm.audit.AuditService.AuditAction.getChangedWatchedFields;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -346,7 +346,7 @@ public class AuditServiceImplTest {
         ActionResponse actionResponse = promise.get();
         final JsonValue result = actionResponse.getJsonContent();
         assertThat(result.keys().size()).isEqualTo(1);
-        
+
         final JsonValue expectedConfig;
         try (InputStream in = getClass().getResourceAsStream(PASS_THROUGH_CONFIG_SCHEMA_JSON_FILE)) {
             expectedConfig = json(Json.readJson(new InputStreamReader(in)));

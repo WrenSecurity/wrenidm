@@ -1,39 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
-  ~
-  ~ Copyright 2011-2016 ForgeRock AS.
-  ~ Portions Copyright 2017-2020 Wren Security.
-  ~
-  ~ The contents of this file are subject to the terms
-  ~ of the Common Development and Distribution License
-  ~ (the License). You may not use this file except in
-  ~ compliance with the License.
-  ~
-  ~ You can obtain a copy of the License at
-  ~ http://forgerock.org/license/CDDLv1.0.html
-  ~ See the License for the specific language governing
-  ~ permission and limitations under the License.
-  ~
-  ~ When distributing Covered Code, include this CDDL
-  ~ Header Notice in each file and include the License file
-  ~ at http://forgerock.org/license/CDDLv1.0.html
-  ~ If applicable, add the following below the CDDL Header,
-  ~ with the fields enclosed by brackets [] replaced by
-  ~ your own identifying information:
-  ~ "Portions Copyrighted [year] [name of copyright owner]"
-  -->
+    The contents of this file are subject to the terms of the Common Development and
+    Distribution License (the License). You may not use this file except in compliance with the
+    License.
+
+    You can obtain a copy of the License at legal/CDDLv1.1.txt. See the License for the
+    specific language governing permission and limitations under the License.
+
+    When distributing Covered Software, include this CDDL Header Notice in each file and include
+    the License file at legal/CDDLv1.1.txt. If applicable, add the following below the CDDL
+    Header, with the fields enclosed by brackets [] replaced by your own identifying
+    information: "Portions copyright [year] [name of copyright owner]".
+
+    Copyright 2011-2016 ForgeRock AS.
+    Portions Copyright 2017-2022 Wren Security.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>openidm-project</artifactId>
         <groupId>org.forgerock.openidm</groupId>
-        <version>6.0.3-SNAPSHOT</version>
+        <artifactId>openidm-project</artifactId>
+        <version>6.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>openidm-provisioner-openicf</artifactId>
-    <packaging>bundle</packaging>
 
     <name>Wren:IDM - Provisioner System Bundle - Wren:ICF</name>
     <description>
@@ -175,20 +166,16 @@
 
     <build>
         <finalName>${project.artifactId}</finalName>
-
         <plugins>
             <plugin>
                 <groupId>org.forgerock.commons</groupId>
                 <artifactId>i18n-maven-plugin</artifactId>
-
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
-
                         <goals>
                             <goal>generate-messages</goal>
                         </goals>
-
                         <configuration>
                             <messageFiles>
                                 <messageFile>org/forgerock/openidm/provisioner/openicf/logger.properties</messageFile>
@@ -197,11 +184,9 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-
                 <configuration>
                     <systemPropertyVariables>
                         <bundles.configuration.location>${project.build.testOutputDirectory}/connectorServer/</bundles.configuration.location>
@@ -210,26 +195,20 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <extensions>true</extensions>
             </plugin>
-
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
-
                 <executions>
                     <!-- Copy bundle JARs -->
                     <execution>
                         <id>copy-connectorbundles</id>
                         <phase>generate-test-sources</phase>
-
                         <goals>
                             <goal>copy</goal>
                         </goals>
-
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
@@ -237,37 +216,30 @@
                                     <artifactId>xml-connector</artifactId>
                                     <version>${openicf.xmlconnector.version}</version>
                                 </artifactItem>
-
                                 <artifactItem>
                                     <groupId>org.forgerock.openicf.connectors</groupId>
                                     <artifactId>csvfile-connector</artifactId>
                                     <version>${openicf.csvconnector.version}</version>
                                 </artifactItem>
-
                                 <artifactItem>
                                     <groupId>org.forgerock.openicf.connectors</groupId>
                                     <artifactId>groovy-connector</artifactId>
                                     <version>${openicf.groovyconnector.version}</version>
                                 </artifactItem>
                             </artifactItems>
-
                             <outputDirectory>
                                 ${project.build.testOutputDirectory}/connectors
                             </outputDirectory>
-
                             <stripVersion>true</stripVersion>
                         </configuration>
                     </execution>
-
                     <!-- Unpack sample scripts -->
                     <execution>
                         <id>unpack-connector-samples</id>
                         <phase>generate-test-sources</phase>
-
                         <goals>
                             <goal>unpack</goal>
                         </goals>
-
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
@@ -278,62 +250,26 @@
                                     <type>zip</type>
                                 </artifactItem>
                             </artifactItems>
-
                             <outputDirectory>
                                 ${project.build.testOutputDirectory}/samples
                             </outputDirectory>
-
                             <outputAbsoluteArtifactFilename>true</outputAbsoluteArtifactFilename>
                         </configuration>
                     </execution>
 
-                    <!--execution>
-                        <id>copy-connectorServer</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.forgerock.openicf.framework</groupId>
-                                    <artifactId>connector-framework</artifactId>
-                                    <version>${openicf.framework.version}</version>
-                                </artifactItem>
-
-                                <artifactItem>
-                                    <groupId>org.forgerock.openicf.framework</groupId>
-                                    <artifactId>connector-framework-internal</artifactId>
-                                    <version>${openicf.framework.version}</version>
-                                </artifactItem>
-
-                                <artifactItem>
-                                    <groupId>org.codehaus.groovy</groupId>
-                                    <artifactId>groovy-all</artifactId>
-                                    <version>2.1.6</version>
-                                </artifactItem>
-                            </artifactItems>
-                            <outputDirectory>${project.build.testOutputDirectory}/connectorServer/lib</outputDirectory>
-                            <stripVersion>true</stripVersion>
-                        </configuration>
-                    </execution-->
                 </executions>
             </plugin>
-
             <!-- Remote Connector Server Test -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <version>1.8</version>
-
                 <executions>
                     <execution>
                         <id>reserve-network-port</id>
-
                         <goals>
                             <goal>reserve-network-port</goal>
                         </goals>
-
                         <phase>process-resources</phase>
                         <configuration>
                             <portNames>

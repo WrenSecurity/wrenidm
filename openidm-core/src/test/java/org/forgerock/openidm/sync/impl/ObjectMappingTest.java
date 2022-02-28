@@ -20,7 +20,7 @@ import static org.forgerock.json.JsonValue.array;
 import static org.forgerock.json.JsonValue.field;
 import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -54,21 +54,21 @@ public class ObjectMappingTest {
     private ScriptEntry mockScriptEntry = mock(ScriptEntry.class);
     private Script mockScript = mock(Script.class);
     private Bindings mockBindings = mock(Bindings.class);
-    
+
     @BeforeClass
     public void setUp() throws Exception {
         // Mock the script registry and script any requests
         when(mockScript.eval(any(Bindings.class))).thenReturn(true);
         when(mockScript.createBindings()).thenReturn(mockBindings);
         when(mockScriptEntry.getScript(any(Context.class))).thenReturn(mockScript);
-        when(mockScriptRegistry.takeScript(any(JsonValue.class))).thenReturn(mockScriptEntry);      
+        when(mockScriptRegistry.takeScript(any(JsonValue.class))).thenReturn(mockScriptEntry);
         Scripts.init(mockScriptRegistry);
     }
 
     @AfterMethod
     public void tearDown() {
     }
-    
+
     @Test
     public void testSourceCondition() throws Exception{
         SyncOperation testSyncOperation = createObjectMapping("/conf/sync.json").getSyncOperation();
@@ -83,14 +83,14 @@ public class ObjectMappingTest {
                         ))
                 ));
         testSyncOperation.sourceObjectAccessor = new LazyObjectAccessor(null, null, "test1", testValue);
-        
+
         // Test passing of three conditions: equals, includes, jsonPointer-equals
         assertThat(testSyncOperation.checkSourceConditions("default")).isTrue();
-        
+
         // Test failing of equals condition
         testSyncOperation.sourceObjectAccessor.getObject().put("equalsKey", "bar");
         assertThat(testSyncOperation.checkSourceConditions("default")).isFalse();
-        
+
         // Test failing of includes condition
         testSyncOperation.sourceObjectAccessor.getObject().put("equalsKey", "foo");
         testSyncOperation.sourceObjectAccessor.getObject().get("includesKey").asList().remove("1");
@@ -112,7 +112,7 @@ public class ObjectMappingTest {
                         field("target", "testTarget")
                 )
         ));
-        
+
         ObjectSetContext.push(new ReconContext(new RootContext("test_id"), dummyMapping.getName()));
         SyncOperation testSyncOperation = dummyMapping.getSyncOperation();
         testSyncOperation.situation = Situation.CONFIRMED;
@@ -120,7 +120,7 @@ public class ObjectMappingTest {
         testSyncOperation.sourceObjectAccessor = new LazyObjectAccessor(null, null, "source1", json(null));
         testSyncOperation.targetObjectAccessor = new LazyObjectAccessor(null, null, "target1", null);
         dummyMapping.linkType = mock(LinkType.class);
-        
+
         Link link = new Link(dummyMapping);
         link._id = "testId";
         link._rev = "testRev";
@@ -128,22 +128,22 @@ public class ObjectMappingTest {
         link.sourceId = testSyncOperation.sourceObjectAccessor.getLocalId();
         link.targetId = testSyncOperation.targetObjectAccessor.getLocalId();
         testSyncOperation.initializeLink(link);
-        
+
         // Test that UPDATE action does not throw a NPE if targetObject == null
         testSyncOperation.performAction();
     }
-    
+
     private TestObjectMapping createObjectMapping(String syncJson) throws Exception {
         URL config = ObjectMappingTest.class.getResource(syncJson);
         assertThat(config).as("sync configuration is not found").isNotNull();
         JsonValue syncConfig = new JsonValue((new ObjectMapper()).readValue(new File(config.toURI()), Map.class));
         return createObjectMapping(syncConfig.get("mappings").get(0));
     }
-    
+
     private TestObjectMapping createObjectMapping(JsonValue syncConfig) throws Exception {
         return new TestObjectMapping(null, syncConfig);
     }
-    
+
     class TestObjectMapping extends ObjectMapping {
 
         public TestObjectMapping(ConnectionFactory connectionFactory, JsonValue config) throws JsonValueException {
@@ -153,7 +153,7 @@ public class ObjectMappingTest {
         public TestSyncOperation getSyncOperation() throws Exception {
             return new TestSyncOperation(this, new RootContext());
         }
-        
+
         class TestSyncOperation extends SyncOperation {
 
             public TestSyncOperation(ObjectMapping objectMapping, Context context) {
@@ -169,7 +169,7 @@ public class ObjectMappingTest {
             protected boolean isSourceToTarget() {
                 return false;
             }
-            
+
         }
     }
 }

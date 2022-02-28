@@ -297,7 +297,7 @@ public class TaskInstanceHistoryResource implements CollectionResourceProvider {
                         query.orderByHistoricTaskInstanceDuration();
                         break;
                     case ActivitiConstants.ACTIVITI_STARTTIME:
-                        query.orderByHistoricTaskInstanceStartTime();
+                        query.orderByTaskCreateTime();
                         break;
                     case ActivitiConstants.ACTIVITI_ENDTIME:
                         query.orderByHistoricTaskInstanceEndTime();
