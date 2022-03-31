@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.forgerock.json.crypto.JsonCryptoException;
 import org.forgerock.json.JsonValue;
+import org.forgerock.json.crypto.JsonCryptoException;
 import org.forgerock.json.resource.InternalServerErrorException;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.schema.validator.Constants;
@@ -114,7 +114,8 @@ public class AttributeInfoHelper {
         } else {
             defaultValue = def.getObject();
         }
-
+        AttributeInfoBuilder builder = new AttributeInfoBuilder(nativeName, nativeType);
+        builder.setMultiValued(Collection.class.isAssignableFrom(type));
         if (!isOperationalOption) {
 
             // Encrypted attribute
@@ -130,9 +131,6 @@ public class AttributeInfoHelper {
             } else {
                 cipher = ServerConstants.SECURITY_CRYPTOGRAPHY_DEFAULT_CIPHER;
             }
-
-            AttributeInfoBuilder builder = new AttributeInfoBuilder(nativeName, nativeType);
-            builder.setMultiValued(Collection.class.isAssignableFrom(type));
 
             // flags
             JsonValue flagsObject = schema.get(ConnectorUtil.OPENICF_FLAGS);
@@ -170,7 +168,7 @@ public class AttributeInfoHelper {
             key = null;
             cipher = null;
             flags = null;
-            attributeInfo = null;
+            attributeInfo = builder.build();
         }
     }
 
@@ -344,9 +342,9 @@ public class AttributeInfoHelper {
      * @throws IllegalArgumentException
      *         If the type is not on the supported list.
      */
-    public void build(OperationOptionsBuilder builder, Object value)
-    throws IOException {
-        if (value == null || (value instanceof JsonValue && !((JsonValue) value).isNull())) {
+    public void build(OperationOptionsBuilder builder, Object value) throws IOException {
+        Object resolvedValue = (value == null || (value instanceof JsonValue && ((JsonValue) value).isNull())) ? defaultValue : value;
+        if (resolvedValue == null) {
             return;
         }
         if (OperationOptions.OP_ATTRIBUTES_TO_GET.equals(name)) {
@@ -372,7 +370,7 @@ public class AttributeInfoHelper {
         } else if (OperationOptions.OP_SORT_KEYS.equals(name)) {
             builder.setSortKeys((List<SortKey>) getMultiValue(value, SortKey.class));
         } else {
-            builder.setOption(name, getNewValue(value, attributeInfo.isMultiValued(), attributeInfo.getType()));
+            builder.setOption(name, getNewValue(resolvedValue, attributeInfo.isMultiValued(), attributeInfo.getType()));
         }
     }
 

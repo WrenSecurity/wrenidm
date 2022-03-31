@@ -32,6 +32,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,8 +44,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.crypto.JsonCryptoException;
 import org.forgerock.json.schema.validator.exceptions.SchemaException;
@@ -57,13 +59,17 @@ import org.identityconnectors.framework.api.APIConfiguration;
 import org.identityconnectors.framework.api.ConnectorFacade;
 import org.identityconnectors.framework.api.ConnectorFacadeFactory;
 import org.identityconnectors.framework.api.operations.APIOperation;
+import org.identityconnectors.framework.api.operations.CreateApiOp;
 import org.identityconnectors.framework.common.objects.ObjectClass;
+import org.identityconnectors.framework.common.objects.OperationOptionsBuilder;
 import org.identityconnectors.framework.common.objects.Schema;
 import org.identityconnectors.framework.common.serializer.SerializerUtil;
 import org.identityconnectors.framework.impl.api.APIConfigurationImpl;
 import org.identityconnectors.test.common.TestHelpers;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Sample Class Doc.
@@ -392,4 +398,30 @@ public class ConnectorUtilTest {
         assertThat(operationOptionConfiguration.keySet().contains("__TEST__"));
         assertThat(operationOptionConfiguration.keySet().contains("CUSTOM"));
     }
+
+    @Test
+    public void testGetOperationOptionProperties() throws IOException {
+        // Extract account operation options
+        Map<String, Map<Class<? extends APIOperation>, OperationOptionInfoHelper>> operationOptions =
+                ConnectorUtil.getOperationOptionConfiguration(jsonConfiguration);
+        Map<Class<? extends APIOperation>, OperationOptionInfoHelper> accountOptions =
+                operationOptions.get(ObjectClass.ACCOUNT_NAME);
+        assertNotNull(accountOptions);
+        // Extract options for CREATE operation
+        OperationOptionInfoHelper createOptions = accountOptions.get(CreateApiOp.class);
+        assertNotNull(createOptions);
+        Set<AttributeInfoHelper> attributes = createOptions.getAttributes();
+        // Check test option
+        assertEquals(attributes.size(), 3);
+        AttributeInfoHelper testOption = attributes.stream().
+                filter(attr -> "testOption".equals(attr.getName())).
+                findFirst().orElse(null);
+        assertNotNull(testOption);
+        assertNotNull(testOption.getAttributeInfo());
+        // Check default value of test option
+        OperationOptionsBuilder builder = OperationOptionsBuilder.create();
+        testOption.build(builder, new JsonValue(null));
+        assertEquals(builder.getOptions().get("testOption"), "foobar");
+    }
+
 }

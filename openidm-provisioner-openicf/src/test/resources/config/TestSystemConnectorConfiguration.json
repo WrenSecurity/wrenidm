@@ -362,12 +362,12 @@
          }
       },
       "operationOptions":{
-         "AuthenticationApiOp":{
+         "AUTHENTICATE":{
 
          },
-         "CreateApiOp":{
+         "CREATE":{
             "objectFeatures":{
-               "user":{
+               "__ACCOUNT__":{
                   "operationOptionInfo":{
                      "$schema":"http://json-schema.org/draft-03/schema#",
                      "id":"http://openidm.forgerock.org/openidm/system/_configuration/1AB5045E-607C-11E0-95F8-77CADFD72085/optionsByOperation/CreateApiOp/operationOptionInfos",
@@ -381,6 +381,10 @@
                         },
                         "ssoUser":{
                            "type":"boolean"
+                        },
+                        "testOption":{
+                           "type":"string",
+                           "default":"foobar"
                         }
                      }
                   }
@@ -391,9 +395,9 @@
                }
             }
          },
-         "DeleteApiOp":{
+         "DELETE":{
             "objectFeatures":{
-               "user":{
+               "__ACCOUNT__":{
                   "denied":true,
                   "onDeny":"DO_NOTHING"
                },
@@ -403,15 +407,14 @@
                }
             }
          },
-         "GetApiOp":{
+         "GET":{
             "operationOptionInfo":{
                "$schema":"http://json-schema.org/draft-03/schema#",
                "id":"http://openidm.forgerock.org/openidm/system/_configuration/1AB5045E-607C-11E0-95F8-77CADFD72085/optionsByOperation/GetApiOp/operationOptionInfos",
                "type":"object",
                "properties":{
                   "ATTRS_TO_GET":{
-                     "type":"array",
-                     "items":"string",
+                     "type":"object",
                      "mapType":"string"
                   },
                   "SCOPE":{
@@ -421,31 +424,31 @@
                }
             }
          },
-         "ResolveUsernameApiOp":{
+         "RESOLVEUSERNAME":{
 
          },
-         "SchemaApiOp":{
+         "SCHEMA":{
 
          },
-         "ScriptOnConnectorApiOp":{
+         "SCRIPT_ON_CONNECTOR":{
 
          },
-         "ScriptOnResourceApiOp":{
+         "SCRIPT_ON_RESOURCE":{
 
          },
-         "SearchApiOp":{
+         "SEARCH":{
 
          },
-         "SyncApiOp":{
+         "SYNC":{
 
          },
-         "TestApiOp":{
+         "TEST":{
 
          },
-         "UpdateApiOp":{
+         "UPDATE":{
 
          },
-         "ValidateApiOp":{
+         "VALIDATE":{
 
          }
       }
