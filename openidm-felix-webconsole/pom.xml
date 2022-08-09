@@ -20,7 +20,7 @@
 
     <parent>
         <artifactId>openidm-project</artifactId>
-        <groupId>org.forgerock.openidm</groupId>
+        <groupId>org.wrensecurity.wrenidm</groupId>
         <version>6.1.0-SNAPSHOT</version>
     </parent>
 
@@ -31,7 +31,7 @@
     <dependencies>
         <!-- OpenIDM Dependencies -->
         <dependency>
-            <groupId>org.forgerock.openidm</groupId>
+            <groupId>org.wrensecurity.wrenidm</groupId>
             <artifactId>openidm-enhanced-config</artifactId>
             <version>${project.version}</version>
         </dependency>

@@ -19,7 +19,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.forgerock.openidm</groupId>
+        <groupId>org.wrensecurity.wrenidm</groupId>
         <artifactId>openidm-ui</artifactId>
         <version>6.1.0-SNAPSHOT</version>
     </parent>
@@ -41,7 +41,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.forgerock.openidm</groupId>
+            <groupId>org.wrensecurity.wrenidm</groupId>
             <artifactId>openidm-ui-common</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
@@ -104,7 +104,7 @@
                                 </artifactItem>
 
                                 <artifactItem>
-                                    <groupId>org.forgerock.openidm</groupId>
+                                    <groupId>org.wrensecurity.wrenidm</groupId>
                                     <artifactId>openidm-ui-common</artifactId>
                                     <version>${project.version}</version>
                                     <type>zip</type>
