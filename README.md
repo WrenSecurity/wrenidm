@@ -78,9 +78,8 @@ You can also run Wren:IDM in a Docker container. Official Wren:IDM Docker images
 
 ## Documentation
 
-[![Documentation](https://img.shields.io/badge/Documentation-WIP-yellow)](https://github.com/WrenSecurity/Wrenidm)
-
-Documentation is still work in progress. A Cookbook with common use cases will be ready soon.
+Project documentation can be found in our documentation platform ([docs.wrensecurity.org](https://docs.wrensecurity.org/wrenidm/latest/index.html)).
+Repository hosting cookbook with common use cases is available on [GitHub](https://github.com/WrenSecurity/wrenidm-cookbook).
 
 ## Acknowledgments
 
