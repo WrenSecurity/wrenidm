@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wrensecurity</groupId>
         <artifactId>wrensec-parent</artifactId>
-        <version>3.2.1</version>
+        <version>3.3.0</version>
     </parent>
 
     <groupId>org.forgerock.openidm</groupId>
@@ -124,10 +124,10 @@
     <properties>
 
         <pgpVerifyPluginVersion>1.10.1</pgpVerifyPluginVersion>
-        <pgpWhitelistArtifact>org.wrensecurity:wrensec-pgp-whitelist:1.5.3</pgpWhitelistArtifact>
+        <pgpWhitelistArtifact>org.wrensecurity:wrensec-pgp-whitelist:1.6.1</pgpWhitelistArtifact>
 
         <!-- Version management -->
-        <commons.commons-bom.version>22.1.1</commons.commons-bom.version>
+        <commons.commons-bom.version>22.2.0</commons.commons-bom.version>
 
         <!-- Commons versions -->
         <commons.forgerock-script.version>4.4.1</commons.forgerock-script.version>
@@ -144,7 +144,7 @@
         <!-- quartz 2.x is not compatible yet -->
         <quartz.version>1.8.6_1</quartz.version>
         <rhino.version>1.7.13_1</rhino.version>
-        <groovy.version>2.4.7</groovy.version>
+        <groovy.version>2.4.21</groovy.version>
 
         <!-- OSGi / Felix versions -->
         <osgi.core.version>7.0.0</osgi.core.version>
@@ -154,7 +154,7 @@
         <osgi.function.version>1.1.0</osgi.function.version>
         <osgi.pushstream.version>1.0.1</osgi.pushstream.version>
 
-        <felix.framework.version>6.0.3</felix.framework.version>
+        <felix.framework.version>6.0.5</felix.framework.version>
         <felix.configadmin.version>1.9.20</felix.configadmin.version>
         <felix.eventadmin.version>1.6.2</felix.eventadmin.version>
         <felix.gogo.shell.version>1.1.4</felix.gogo.shell.version>
@@ -173,7 +173,7 @@
         <felix.webconsole.packageadmin.version>1.0.4</felix.webconsole.packageadmin.version>
 
         <!-- Wren:ICF Framework and Connector versions -->
-        <openicf.framework.version>1.5.2.1</openicf.framework.version>
+        <openicf.framework.version>1.5.3.0-SNAPSHOT</openicf.framework.version>
         <openicf.xmlconnector.version>1.1.0.3</openicf.xmlconnector.version>
         <openicf.csvconnector.version>1.5.1.4</openicf.csvconnector.version>
         <openicf.dbtableconnector.version>1.1.0.2</openicf.dbtableconnector.version>
@@ -427,7 +427,7 @@
 
             <!-- Main ForgeRock Bill of Materials pom -->
             <dependency>
-              <groupId>org.forgerock.commons</groupId>
+              <groupId>org.wrensecurity.commons</groupId>
               <artifactId>commons-bom</artifactId>
               <version>${commons.commons-bom.version}</version>
               <scope>import</scope>

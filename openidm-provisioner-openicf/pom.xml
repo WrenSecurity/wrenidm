@@ -60,7 +60,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.forgerock.commons</groupId>
+            <groupId>org.wrensecurity.commons</groupId>
             <artifactId>json-schema-core</artifactId>
         </dependency>
 
@@ -70,21 +70,27 @@
         </dependency>
 
         <dependency>
-            <groupId>org.forgerock.openicf.framework</groupId>
+            <groupId>org.wrensecurity.wrenicf.framework</groupId>
             <artifactId>connector-framework-server</artifactId>
             <version>${openicf.framework.version}</version>
 
             <exclusions>
                 <exclusion>
-                    <groupId>org.forgerock.openicf.framework</groupId>
-                    <artifactId>connector-test-common</artifactId>
+                    <groupId>org.wrensecurity.wrenicf.framework</groupId>
+                    <artifactId>connector-framework-test</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
 
         <dependency>
-            <groupId>org.forgerock.openicf.framework</groupId>
-            <artifactId>connector-framework</artifactId>
+            <groupId>org.wrensecurity.wrenicf.framework</groupId>
+            <artifactId>connector-framework-core</artifactId>
+            <version>${openicf.framework.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wrensecurity.wrenicf.framework</groupId>
+            <artifactId>connector-framework-internal</artifactId>
             <version>${openicf.framework.version}</version>
         </dependency>
 
@@ -130,8 +136,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.forgerock.openicf.framework</groupId>
-            <artifactId>connector-test-common</artifactId>
+            <groupId>org.wrensecurity.wrenicf.framework</groupId>
+            <artifactId>connector-framework-test</artifactId>
             <version>${openicf.framework.version}</version>
             <scope>test</scope>
         </dependency>
@@ -157,9 +163,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.forgerock.commons</groupId>
-            <artifactId>forgerock-test-utils
-            </artifactId>
+            <groupId>org.wrensecurity.commons</groupId>
+            <artifactId>forgerock-test-utils</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
