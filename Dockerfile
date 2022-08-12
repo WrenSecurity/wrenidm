@@ -1,6 +1,6 @@
-FROM openjdk:11
+FROM openjdk:17-bullseye
 
-ARG WRENIDM_VERSION=6.0.0-SNAPSHOT
+ARG WRENIDM_VERSION=6.1.0-SNAPSHOT
 
 # Install dependencies
 RUN apt-get install -y unzip
