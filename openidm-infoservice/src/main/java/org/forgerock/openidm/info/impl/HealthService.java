@@ -205,38 +205,38 @@ public class HealthService
         "org.wrensecurity.http.chf-http-servlet",
 
         // OpenIDM Bundles
-        "org.forgerock.openidm.api-servlet",
-        "org.forgerock.openidm.audit",
-        "org.forgerock.openidm.authnfilter",
-        "org.forgerock.openidm.cluster",
-        "org.forgerock.openidm.config",
-        "org.forgerock.openidm.core",
-        "org.forgerock.openidm.crypto",
-        "org.forgerock.openidm.customendpoint",
-        "org.forgerock.openidm.enhanced-config",
-        "org.forgerock.openidm.external-email",
-        "org.forgerock.openidm.external-rest",
-        "org.forgerock.openidm.httpcontext",
-        "org.forgerock.openidm.infoservice",
-        "org.forgerock.openidm.jetty-fragment",
-        "org.forgerock.openidm.maintenance",
-        "org.forgerock.openidm.policy",
-        "org.forgerock.openidm.provisioner",
-        "org.forgerock.openidm.provisioner-openicf",
-        "org.forgerock.openidm.quartz-fragment",
-        "org.forgerock.openidm.repo",
-        "org.forgerock.openidm.repo-jdbc",
-        "org.forgerock.openidm.router",
-        "org.forgerock.openidm.scheduler",
-        "org.forgerock.openidm.security",
-        "org.forgerock.openidm.security-jetty",
-        "org.forgerock.openidm.servlet",
-        "org.forgerock.openidm.servlet-registrator",
-        "org.forgerock.openidm.smartevent",
-        "org.forgerock.openidm.script",
-        "org.forgerock.openidm.system",
-        "org.forgerock.openidm.util",
-        "org.forgerock.openidm.keystore",
+        "org.wrensecurity.wrenidm.openidm-api-servlet",
+        "org.wrensecurity.wrenidm.openidm-audit",
+        "org.wrensecurity.wrenidm.openidm-authnfilter",
+        "org.wrensecurity.wrenidm.openidm-cluster",
+        "org.wrensecurity.wrenidm.openidm-config",
+        "org.wrensecurity.wrenidm.openidm-core",
+        "org.wrensecurity.wrenidm.openidm-crypto",
+        "org.wrensecurity.wrenidm.openidm-customendpoint",
+        "org.wrensecurity.wrenidm.openidm-enhanced-config",
+        "org.wrensecurity.wrenidm.openidm-external-email",
+        "org.wrensecurity.wrenidm.openidm-external-rest",
+        "org.wrensecurity.wrenidm.openidm-httpcontext",
+        "org.wrensecurity.wrenidm.openidm-infoservice",
+        "org.wrensecurity.wrenidm.openidm-jetty-fragment",
+        "org.wrensecurity.wrenidm.openidm-maintenance",
+        "org.wrensecurity.wrenidm.openidm-policy",
+        "org.wrensecurity.wrenidm.openidm-provisioner",
+        "org.wrensecurity.wrenidm.openidm-provisioner-openicf",
+        "org.wrensecurity.wrenidm.openidm-quartz-fragment",
+        "org.wrensecurity.wrenidm.openidm-repo",
+        "org.wrensecurity.wrenidm.openidm-repo-jdbc",
+        "org.wrensecurity.wrenidm.openidm-router",
+        "org.wrensecurity.wrenidm.openidm-scheduler",
+        "org.wrensecurity.wrenidm.openidm-security",
+        "org.wrensecurity.wrenidm.openidm-security-jetty",
+        "org.wrensecurity.wrenidm.openidm-servlet",
+        "org.wrensecurity.wrenidm.openidm-servlet-registrator",
+        "org.wrensecurity.wrenidm.openidm-smartevent",
+        "org.wrensecurity.wrenidm.openidm-script",
+        "org.wrensecurity.wrenidm.openidm-system",
+        "org.wrensecurity.wrenidm.openidm-util",
+        "org.wrensecurity.wrenidm.openidm-keystore",
 
         // 3rd Party Bundles
         "org.ops4j.pax.web.pax-web-jetty-bundle"
@@ -755,8 +755,8 @@ public class HealthService
             clusterUp = true;
             checkState();
             break;
-		default:
-			break;
+        default:
+            break;
         }
         return true;
     }
