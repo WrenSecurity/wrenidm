@@ -95,7 +95,7 @@ class SourceRecon implements Recon {
             if (!ReconAction.NOREPORT.equals(op.action) && (status == Status.FAILURE || op.action != null)) {
                 auditEvent.setReconciling("source");
                 try {
-                    if (op.hasTargetObject()) {
+                    if (op.hasTargetObject() && op.getTargetObjectId() != null) {
                         auditEvent.setTargetObjectId(LazyObjectAccessor.qualifiedId(objectMapping.getTargetObjectSet(),
                                 op.getTargetObjectId()));
                     }
