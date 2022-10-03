@@ -1,9 +1,15 @@
+FROM maven:3.8.6 AS project-build
+
+RUN apt-get update && apt-get install -y unzip
+
+WORKDIR /project
+COPY . .
+
+RUN mvn package
+
+RUN WRENIDM_VERSION=$(mvn -Dexpression=project.version -q -DforceStdout help:evaluate) && unzip openidm-zip/target/wrenidm-$WRENIDM_VERSION.zip -d /build
+
 FROM openjdk:17-bullseye
-
-ARG WRENIDM_VERSION=6.1.0-SNAPSHOT
-
-# Install dependencies
-RUN apt-get install -y unzip
 
 # Create wrenidm user
 ARG WRENIDM_UID=1000
@@ -12,8 +18,7 @@ RUN addgroup --gid ${WRENIDM_GID} wrenidm && \
     adduser --uid ${WRENIDM_UID} --gid ${WRENIDM_GID} --system wrenidm
 
 # Deploy wrenidm project
-ADD openidm-zip/target/wrenidm-${WRENIDM_VERSION}.zip /tmp
-RUN unzip /tmp/wrenidm-${WRENIDM_VERSION}.zip -d /opt && chown -R wrenidm /opt/wrenidm && rm /tmp/wrenidm-${WRENIDM_VERSION}.zip
+COPY --chown=wrenidm:root --from=project-build /build/wrenidm /opt/wrenidm
 
 USER ${WRENIDM_UID}
 WORKDIR /opt/wrenidm
