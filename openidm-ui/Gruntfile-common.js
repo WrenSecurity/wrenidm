@@ -213,6 +213,7 @@ module.exports = function(grunt, options) {
                 puppeteer: {
                     ignoreDefaultArgs: true,
                     args: [
+                        process.env.DISABLE_PUPPETEER_SANDBOX ? "--no-sandbox" : "",
                         "--headless",
                         "--allow-file-access-from-files"
                     ]

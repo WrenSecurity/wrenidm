@@ -32,7 +32,7 @@ abspath() {
     fi
 }
 
-JAVA_VER=$(java -version 2>&1 | sed 's/.* version "\(.*\)\.\(.*\)\..*".*/\1\2/; 1q')
+JAVA_VER=$(java -version 2>&1 | sed 's/.* version "\([[:digit:]]\+\)\.\([[:digit:]]\+\)\..*".*/\1\2/; 1q')
 if [ "$JAVA_VER" -lt 17 ]; then
   echo "Java version 1.7 or higher required";
   exit 1;
