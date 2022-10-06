@@ -1,3 +1,3 @@
-# Ignore everything except wrenidm build
-**
-!openidm-zip/target/wrenidm-*.zip
+# Ignore build-related folders
+**/target
+**/node_modules
