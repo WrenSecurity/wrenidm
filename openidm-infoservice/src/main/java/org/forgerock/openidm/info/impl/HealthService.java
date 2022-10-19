@@ -198,9 +198,9 @@ public class HealthService
         "org.wrensecurity.commons.json-resource-http",
         "org.wrensecurity.commons.json-schema-core",
         "org.wrensecurity.commons.json-web-token",
-        "org.forgerock.commons.script-common",
-        "org.forgerock.commons.script-javascript",
-        "org.forgerock.commons.script-groovy",
+        "org.wrensecurity.commons.script-common",
+        "org.wrensecurity.commons.script-javascript",
+        "org.wrensecurity.commons.script-groovy",
         "org.wrensecurity.http.chf-http-core",
         "org.wrensecurity.http.chf-http-servlet",
 

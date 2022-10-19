@@ -130,7 +130,7 @@
         <commons.commons-bom.version>22.2.0</commons.commons-bom.version>
 
         <!-- Commons versions -->
-        <commons.forgerock-script.version>4.4.1</commons.forgerock-script.version>
+        <commons.script.version>4.5.0</commons.script.version>
         <commons.forgerock-i18n.version>1.4.2</commons.forgerock-i18n.version>
 
         <!-- Third party dependency versions -->
@@ -143,7 +143,7 @@
         <asm.version>9.0</asm.version>
         <!-- quartz 2.x is not compatible yet -->
         <quartz.version>1.8.6_1</quartz.version>
-        <rhino.version>1.7.13_1</rhino.version>
+        <rhino.version>1.7.14_2</rhino.version>
         <groovy.version>2.4.21</groovy.version>
 
         <!-- OSGi / Felix versions -->
@@ -436,21 +436,21 @@
 
             <!-- Non-BOM ForgeRock Commons artifacts -->
             <dependency>
-                <groupId>org.forgerock.commons</groupId>
+                <groupId>org.wrensecurity.commons</groupId>
                 <artifactId>script-common</artifactId>
-                <version>${commons.forgerock-script.version}</version>
+                <version>${commons.script.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.forgerock.commons</groupId>
+                <groupId>org.wrensecurity.commons</groupId>
                 <artifactId>script-groovy</artifactId>
-                <version>${commons.forgerock-script.version}</version>
+                <version>${commons.script.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.forgerock.commons</groupId>
+                <groupId>org.wrensecurity.commons</groupId>
                 <artifactId>script-javascript</artifactId>
-                <version>${commons.forgerock-script.version}</version>
+                <version>${commons.script.version}</version>
             </dependency>
 
             <dependency>
