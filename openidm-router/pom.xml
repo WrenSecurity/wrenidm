@@ -55,7 +55,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.forgerock.commons</groupId>
+            <groupId>org.wrensecurity.commons</groupId>
             <artifactId>script-common</artifactId>
         </dependency>
 
@@ -75,7 +75,7 @@
 
         <!-- Test Dependencies -->
         <dependency>
-            <groupId>org.forgerock.commons</groupId>
+            <groupId>org.wrensecurity.commons</groupId>
             <artifactId>script-groovy</artifactId>
             <scope>test</scope>
         </dependency>

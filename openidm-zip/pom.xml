@@ -394,12 +394,12 @@
 
         <!-- ForgeRock commons -->
         <dependency>
-            <groupId>org.forgerock.commons</groupId>
+            <groupId>org.wrensecurity.commons</groupId>
             <artifactId>script-javascript</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.forgerock.commons</groupId>
+            <groupId>org.wrensecurity.commons</groupId>
             <artifactId>script-groovy</artifactId>
         </dependency>
 
