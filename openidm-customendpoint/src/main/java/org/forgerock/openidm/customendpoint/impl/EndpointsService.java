@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2023 Wren Security
  */
 package org.forgerock.openidm.customendpoint.impl;
 
@@ -84,14 +84,14 @@ public class EndpointsService extends AbstractScriptedService {
         setProperties(context);
         setProperty(ServerConstants.ROUTER_PREFIX, getRouterPrefixes(factoryPid, configuration));
         registerService(context.getBundleContext(), configuration);
-        logger.info("OpenIDM Endpoints Service \"{}\" component is activated.", factoryPid);
+        logger.info("Wren:IDM Endpoints Service \"{}\" component is activated.", factoryPid);
     }
 
     @Deactivate
     protected void deactivate(ComponentContext context) {
         unregisterService();
         this.context = null;
-        logger.info("OpenIDM Endpoints Service component is deactivated.");
+        logger.info("Wren:IDM Endpoints Service component is deactivated.");
     }
 
     private String[] getRouterPrefixes(String factoryPid, JsonValue configuration) {

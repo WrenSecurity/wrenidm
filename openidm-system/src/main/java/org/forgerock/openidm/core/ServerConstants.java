@@ -23,7 +23,7 @@
  *
  *      Copyright 2006-2010 Sun Microsystems, Inc.
  *      Portions Copyright 2010-2016 ForgeRock AS
- *      Portions Copyright 2018 Wren Security.
+ *      Portions Copyright 2018-2023 Wren Security.
  */
 package org.forgerock.openidm.core;
 
@@ -66,7 +66,7 @@ public final class ServerConstants {
     }
 
     public static String getDisplayVersion() {
-        StringBuilder sb = new StringBuilder("OpenIDM version \"")
+        StringBuilder sb = new StringBuilder("Wren:IDM version \"")
                 .append(getVersion())
                 .append("\" (revision: ")
                 .append(getRevision())
