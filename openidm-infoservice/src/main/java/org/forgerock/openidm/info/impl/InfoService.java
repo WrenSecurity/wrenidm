@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2023 Wren Security
  */
 package org.forgerock.openidm.info.impl;
 
@@ -105,14 +105,14 @@ public class InfoService extends AbstractScriptedService {
         setProperties(context);
         setProperty(ServerConstants.ROUTER_PREFIX, "/info/" + String.valueOf(factoryPid) + "*");
         registerService(context.getBundleContext(), configuration);
-        logger.info("OpenIDM Info Service \"{}\" component is activated.", factoryPid);
+        logger.info("Wren:IDM Info Service \"{}\" component is activated.", factoryPid);
     }
 
     @Deactivate
     protected void deactivate(ComponentContext context) {
         unregisterService();
         this.context = null;
-        logger.info("OpenIDM Info Service component is deactivated.");
+        logger.info("Wren:IDM Info Service component is deactivated.");
     }
 
     @Override

@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2023 Wren Security
  */
 package org.forgerock.openidm.info.impl;
 
@@ -162,7 +162,7 @@ public class HealthService
     /**
      * The current state of OpenIDM
      */
-    private volatile StateDetail stateDetail = new StateDetail(AppState.STARTING, "OpenIDM starting");
+    private volatile StateDetail stateDetail = new StateDetail(AppState.STARTING, "Wren:IDM starting");
 
     /**
      * Bundles and bundle fragments required to be started or resolved respectively for the system to
@@ -398,7 +398,7 @@ public class HealthService
             scheduleCheckStartup(2000);
         }
 
-        logger.info("OpenIDM Health Service component is activated.");
+        logger.info("Wren:IDM Health Service component is activated.");
     }
 
     /**
@@ -451,7 +451,7 @@ public class HealthService
                                      // than starting if something fails
                 checkState();
                 if (!stateDetail.state.equals(AppState.ACTIVE_READY)) {
-                    logger.error("OpenIDM failure during startup, {}: {}", stateDetail.state,
+                    logger.error("Wren:IDM failure during startup, {}: {}", stateDetail.state,
                             stateDetail.shortDesc);
                 } else {
                     logger.debug("Startup check found ready state");
@@ -593,7 +593,7 @@ public class HealthService
             updatedShortDesc = "This node can not yet join the cluster";
         } else {
             updatedAppState = AppState.ACTIVE_READY;
-            updatedShortDesc = "OpenIDM ready";
+            updatedShortDesc = "Wren:IDM ready";
         }
         setState(updatedAppState, updatedShortDesc);
     }
@@ -641,9 +641,9 @@ public class HealthService
                 // IF we're changing to a ready state, report ready
                 if (!stateDetail.isState(AppState.ACTIVE_READY)
                         && updatedState.isState(AppState.ACTIVE_READY)) {
-                    logger.info("OpenIDM ready");
+                    logger.info("Wren:IDM ready");
                     // Show ready on the system console
-                    System.out.println("OpenIDM ready");
+                    System.out.println("Wren:IDM ready");
                 }
 
                 stateDetail = updatedState;
@@ -699,8 +699,8 @@ public class HealthService
         // that the system may be shutting down
         // Ideally replace with enhanced detection on regular shutdown initiated
         frameworkStarted = false;
-        setState(AppState.STOPPING, "OpenIDM stopping");
-        logger.info("OpenIDM Health Service component is deactivated.");
+        setState(AppState.STOPPING, "Wren:IDM stopping");
+        logger.info("Wren:IDM Health Service component is deactivated.");
     }
 
     /**

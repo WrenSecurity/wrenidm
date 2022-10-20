@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2023 Wren Security
  */
 package org.forgerock.openidm.policy;
 
@@ -99,7 +99,7 @@ public class PolicyService extends AbstractScriptedService {
         setProperties(context);
         configuration = getConfiguration(context);
         registerService(context.getBundleContext(), configuration);
-        logger.info("OpenIDM Policy Service component is activated.");
+        logger.info("Wren:IDM Policy Service component is activated.");
     }
 
     /**
@@ -110,14 +110,14 @@ public class PolicyService extends AbstractScriptedService {
     void modified(ComponentContext context) throws Exception {
         configuration = getConfiguration(context);
         updateScriptHandler(configuration);
-        logger.info("OpenIDM Policy Service component is updateScriptHandler.");
+        logger.info("Wren:IDM Policy Service component is updateScriptHandler.");
     }
 
     @Deactivate
     protected void deactivate(ComponentContext context) {
         unregisterService();
         this.context = null;
-        logger.info("OpenIDM Policy Service component is deactivated.");
+        logger.info("Wren:IDM Policy Service component is deactivated.");
     }
 
     @Override
