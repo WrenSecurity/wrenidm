@@ -4,7 +4,7 @@
 
 # Wren:IDM
 
-[![License](https://img.shields.io/badge/license-CDDL-blue.svg)](https://github.com/WrenSecurity/wrenidm/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/license-CDDL-blue.svg)](https://github.com/WrenSecurity/wrenidm/blob/main/LICENSE)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/WrenSecurity)
 
 Wren:IDM is a community‐developed identity management system with a flexible data model, multiple extension points
@@ -37,7 +37,7 @@ deployments that do not desire to use them [[1]](#Bibliogprahy).
 [![Contributing Guide](https://img.shields.io/badge/Contributions-guide-green.svg?style=flat)][contribute]
 [![Contributors](https://img.shields.io/github/contributors/WrenSecurity/wrenidm)][contribute]
 [![Pull Requests](https://img.shields.io/github/issues-pr/WrenSecurity/wrenidm)][contribute]
-[![Last commit](https://img.shields.io/github/last-commit/WrenSecurity/Wrenidm.svg)](https://github.com/WrenSecurity/Wrenidm/commits/master)
+[![Last commit](https://img.shields.io/github/last-commit/WrenSecurity/Wrenidm.svg)](https://github.com/WrenSecurity/Wrenidm/commits/main)
 
 ## Getting the Wren:IDM application
 
