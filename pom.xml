@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wrensecurity</groupId>
         <artifactId>wrensec-parent</artifactId>
-        <version>3.3.0</version>
+        <version>3.4.0</version>
     </parent>
 
     <groupId>org.wrensecurity.wrenidm</groupId>
@@ -126,12 +126,9 @@
         <pgpVerifyPluginVersion>1.10.1</pgpVerifyPluginVersion>
         <pgpWhitelistArtifact>org.wrensecurity:wrensec-pgp-whitelist:1.6.1</pgpWhitelistArtifact>
 
-        <!-- Version management -->
-        <commons.commons-bom.version>22.2.0</commons.commons-bom.version>
-
         <!-- Commons versions -->
+        <wrensec.commons.version>22.3.0</wrensec.commons.version>
         <commons.script.version>4.5.0</commons.script.version>
-        <commons.forgerock-i18n.version>1.4.2</commons.forgerock-i18n.version>
 
         <!-- Third party dependency versions -->
         <javascript.maven.plugin.version>2.0.0-alpha-1</javascript.maven.plugin.version>
@@ -203,8 +200,6 @@
         <!-- Build settings -->
         <!-- ************** -->
 
-        <!-- i18n-maven-plugin -->
-        <i18nPluginVersion>1.4.1</i18nPluginVersion>
         <!-- jslint-maven-plugin -->
         <jslintPluginVersion>1.0.1</jslintPluginVersion>
         <!-- webminifier-maven-plugin -->
@@ -260,26 +255,10 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.forgerock.commons</groupId>
+                    <groupId>org.wrensecurity.commons</groupId>
                     <artifactId>i18n-maven-plugin</artifactId>
-                    <version>${i18nPluginVersion}</version>
-                    <executions>
-                        <execution>
-                            <phase>generate-sources</phase>
-
-                            <goals>
-                                <goal>generate-messages</goal>
-                            </goals>
-
-                            <configuration>
-                                <messageFiles>
-                                    <messageFile>com/example/my_tool.properties</messageFile>
-                                </messageFiles>
-                            </configuration>
-                        </execution>
-                    </executions>
+                    <version>${wrensec.commons.version}</version>
                 </plugin>
-
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>jslint-maven-plugin</artifactId>
@@ -429,7 +408,7 @@
             <dependency>
               <groupId>org.wrensecurity.commons</groupId>
               <artifactId>commons-bom</artifactId>
-              <version>${commons.commons-bom.version}</version>
+              <version>${wrensec.commons.version}</version>
               <scope>import</scope>
               <type>pom</type>
             </dependency>
@@ -454,15 +433,15 @@
             </dependency>
 
             <dependency>
-                <groupId>org.forgerock.commons</groupId>
+                <groupId>org.wrensecurity.commons</groupId>
                 <artifactId>i18n-slf4j</artifactId>
-                <version>${commons.forgerock-i18n.version}</version>
+                <version>${wrensec.commons.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.forgerock.commons</groupId>
+                <groupId>org.wrensecurity.commons</groupId>
                 <artifactId>i18n-core</artifactId>
-                <version>${commons.forgerock-i18n.version}</version>
+                <version>${wrensec.commons.version}</version>
             </dependency>
 
             <!-- Commons -->
