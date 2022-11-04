@@ -31,7 +31,7 @@
     <description>Parent POM for all UI components in Wren:IDM.</description>
 
     <properties>
-        <forgerock-ui.version>22.1.0</forgerock-ui.version>
+        <forgerock-ui.version>22.1.1-SNAPSHOT</forgerock-ui.version>
         <node.install.directory>${project.parent.basedir}</node.install.directory>
         <grunt.task>build:dev</grunt.task>
     </properties>
