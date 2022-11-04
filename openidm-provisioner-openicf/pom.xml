@@ -173,7 +173,7 @@
         <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
-                <groupId>org.forgerock.commons</groupId>
+                <groupId>org.wrensecurity.commons</groupId>
                 <artifactId>i18n-maven-plugin</artifactId>
                 <executions>
                     <execution>
