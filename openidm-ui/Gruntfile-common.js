@@ -215,7 +215,8 @@ module.exports = function(grunt, options) {
                     args: [
                         process.env.DISABLE_PUPPETEER_SANDBOX ? "--no-sandbox" : "",
                         "--headless",
-                        "--allow-file-access-from-files"
+                        "--allow-file-access-from-files",
+                        "--disable-dev-shm-usage"
                     ]
                 }
             }
