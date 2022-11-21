@@ -1,5 +1,9 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/13997406/99670197-73a79b80-2a70-11eb-945d-a421a4d3d6a2.png">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://user-images.githubusercontent.com/13997406/203101588-348157bd-edc6-42a9-b8f9-e2333f6ec0e6.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://user-images.githubusercontent.com/13997406/203096721-d7617bff-70fe-402a-b04e-fd799273a3fd.png">
+    <img alt="Wren:IDM logo" src="https://user-images.githubusercontent.com/13997406/203096721-d7617bff-70fe-402a-b04e-fd799273a3fd.png" width="70%">
+  </picture>
 </p>
 
 # Wren:IDM
