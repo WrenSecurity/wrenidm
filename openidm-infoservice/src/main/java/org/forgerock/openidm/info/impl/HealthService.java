@@ -185,12 +185,12 @@ public class HealthService
         "org.wrensecurity.wrenicf.framework.connector-framework-server",
         "org.wrensecurity.wrenicf.framework.icfl-over-slf4j",
 
-        // ForgeRock Commons Bundles
+        // Wren Security Commons Bundles
         "org.wrensecurity.commons.forgerock-audit-core",
         "org.wrensecurity.commons.forgerock-util",
         "org.wrensecurity.commons.forgerock-jaspi-runtime",
         "org.wrensecurity.commons.forgerock-jaspi-.*-module",
-        "org.forgerock.commons.guava.forgerock-guava-.*",
+        "org.wrensecurity.commons.guava.wrensec-guava-.*",
         "org.wrensecurity.commons.i18n-core",
         "org.wrensecurity.commons.i18n-slf4j",
         "org.wrensecurity.commons.json-crypto-core",
@@ -204,7 +204,7 @@ public class HealthService
         "org.wrensecurity.http.chf-http-core",
         "org.wrensecurity.http.chf-http-servlet",
 
-        // OpenIDM Bundles
+        // Wren:IDM Bundles
         "org.wrensecurity.wrenidm.openidm-api-servlet",
         "org.wrensecurity.wrenidm.openidm-audit",
         "org.wrensecurity.wrenidm.openidm-authnfilter",

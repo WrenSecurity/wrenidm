@@ -31,13 +31,13 @@
     <dependencies>
         <!-- Commons Dependencies -->
         <dependency>
-            <groupId>org.forgerock.commons.guava</groupId>
-            <artifactId>forgerock-guava-base</artifactId>
+            <groupId>org.wrensecurity.commons.guava</groupId>
+            <artifactId>wrensec-guava-base</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.forgerock.commons.guava</groupId>
-            <artifactId>forgerock-guava-collect</artifactId>
+            <groupId>org.wrensecurity.commons.guava</groupId>
+            <artifactId>wrensec-guava-collect</artifactId>
         </dependency>
 
         <dependency>

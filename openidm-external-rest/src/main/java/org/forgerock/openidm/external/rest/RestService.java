@@ -34,7 +34,7 @@ import org.forgerock.api.annotations.Handler;
 import org.forgerock.api.annotations.Operation;
 import org.forgerock.api.annotations.Schema;
 import org.forgerock.api.annotations.SingletonProvider;
-import org.forgerock.guava.common.net.MediaType;
+import org.wrensecurity.guava.common.net.MediaType;
 import org.forgerock.http.Client;
 import org.forgerock.http.HttpApplicationException;
 import org.forgerock.http.apache.async.AsyncHttpClientProvider;

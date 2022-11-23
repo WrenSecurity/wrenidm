@@ -33,8 +33,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.forgerock.guava.common.base.Function;
-import org.forgerock.guava.common.collect.FluentIterable;
+import org.wrensecurity.guava.common.base.Function;
+import org.wrensecurity.guava.common.collect.FluentIterable;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.SortKey;
@@ -141,13 +141,13 @@ public class PostgreSQLTableHandler extends GenericTableHandler {
         result.put(QueryDefinition.READFORUPDATEQUERYSTR, "SELECT obj.* FROM " + mainTable + " obj INNER JOIN " + typeTable + " objtype ON obj.objecttypes_id = objtype.id AND objtype.objecttype = ? WHERE obj.objectid  = ? FOR UPDATE OF obj");
         return result;
     }
-    
+
     @Override
     public String renderQueryFilter(QueryFilter<JsonPointer> filter, Map<String, Object> replacementTokens, Map<String, Object> params) {
         final String offsetParam = (String) params.get(PAGED_RESULTS_OFFSET);
         final String pageSizeParam = (String) params.get(PAGE_SIZE);
         String pageClause = " LIMIT " + pageSizeParam + " OFFSET " + offsetParam;
-        
+
         // JsonValue-cheat to avoid an unchecked cast
         final List<SortKey> sortKeys = new JsonValue(params).get(SORT_KEYS).asList(SortKey.class);
         // Check for sort keys and build up order-by syntax

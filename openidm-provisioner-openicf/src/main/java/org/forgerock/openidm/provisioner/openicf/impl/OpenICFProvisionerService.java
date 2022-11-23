@@ -33,8 +33,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.lang3.StringUtils;
-import org.forgerock.guava.common.base.Predicate;
-import org.forgerock.guava.common.collect.FluentIterable;
+import org.wrensecurity.guava.common.base.Predicate;
+import org.wrensecurity.guava.common.collect.FluentIterable;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.JsonValueException;
 import org.forgerock.json.resource.ActionRequest;

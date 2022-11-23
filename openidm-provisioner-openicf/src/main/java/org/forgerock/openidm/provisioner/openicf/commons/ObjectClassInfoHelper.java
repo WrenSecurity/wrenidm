@@ -30,8 +30,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.forgerock.guava.common.base.Predicate;
-import org.forgerock.guava.common.collect.FluentIterable;
+import org.wrensecurity.guava.common.base.Predicate;
+import org.wrensecurity.guava.common.collect.FluentIterable;
 import org.forgerock.json.crypto.JsonCryptoException;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
@@ -218,7 +218,7 @@ public class ObjectClassInfoHelper {
      */
     public String getFullResourceId(final Request request) {
         ResourcePath fullId = request.getResourcePathObject();
-        
+
         // For everything but Create requests, simply decode the resource path.
         // If this is a Create request, construct the fullId from a concatentation
         // of the resource path and the user spcified id if present.
@@ -291,7 +291,7 @@ public class ObjectClassInfoHelper {
 
     /**
      * Get the attributes are that are writable on an update.
-     * 
+     *
      * @param request UpdateRequest
      * @param newName a new name
      * @param cryptoService encryption and decryption service
@@ -339,17 +339,17 @@ public class ObjectClassInfoHelper {
 
     /**
      * Gets an attribute that is writable on a patch.
-     * 
+     *
      * @param patchOperation the {@link PatchOperation}
      * @param before the before value
      * @param cryptoService encryption and decryption service
      * @return an Attributes that is writable on patch
      * @throws ResourceException if and error is encountered
      */
-    public Attribute getPatchAttribute(final PatchOperation patchOperation, final JsonValue before, 
+    public Attribute getPatchAttribute(final PatchOperation patchOperation, final JsonValue before,
             final CryptoService cryptoService) throws ResourceException {
         Attribute result = null;
-        
+
         // A Map to hold the attributes being patched
         JsonValue patchedContent = json(object());
         // The field to patch
@@ -399,7 +399,7 @@ public class ObjectClassInfoHelper {
             builder.setUid("***");
             logger.trace("Patch ConnectorObject: {}", SerializerUtil.serializeXmlObject(builder.build(), false));
         }
-        
+
         return result;
     }
 
