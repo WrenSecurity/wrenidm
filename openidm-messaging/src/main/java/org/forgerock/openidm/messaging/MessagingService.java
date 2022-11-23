@@ -17,15 +17,15 @@
 
 package org.forgerock.openidm.messaging;
 
-import static org.forgerock.guava.common.collect.FluentIterable.from;
+import static org.wrensecurity.guava.common.collect.FluentIterable.from;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.jms.Message;
 
-import org.forgerock.guava.common.base.Function;
-import org.forgerock.guava.common.base.Predicate;
+import org.wrensecurity.guava.common.base.Function;
+import org.wrensecurity.guava.common.base.Predicate;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;

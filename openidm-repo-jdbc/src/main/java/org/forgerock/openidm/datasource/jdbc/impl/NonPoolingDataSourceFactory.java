@@ -15,7 +15,7 @@
  */
 package org.forgerock.openidm.datasource.jdbc.impl;
 
-import static org.forgerock.guava.common.base.Strings.isNullOrEmpty;
+import static org.wrensecurity.guava.common.base.Strings.isNullOrEmpty;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -81,11 +81,11 @@ class NonPoolingDataSourceFactory implements DataSourceFactory {
     protected class NonPoolingDataSource implements DataSource
     {
         Properties properties;
-        
+
         private NonPoolingDataSource(Properties properties) {
             this.properties = properties;
         }
-        
+
         @Override
         public Connection getConnection() throws SQLException {
             try {

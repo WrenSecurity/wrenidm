@@ -32,9 +32,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.forgerock.guava.common.collect.ArrayListMultimap;
-import org.forgerock.guava.common.collect.ImmutableSet;
-import org.forgerock.guava.common.collect.Multimap;
+import org.wrensecurity.guava.common.collect.ArrayListMultimap;
+import org.wrensecurity.guava.common.collect.ImmutableSet;
+import org.wrensecurity.guava.common.collect.Multimap;
 import org.forgerock.http.routing.UriRouterContext;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
@@ -362,7 +362,7 @@ class ObjectClassResourceProvider implements RequestHandler {
             final Pair<String, GuardedString> reauthCreds = getReauthCredentials(context, beforeValue);
             final Multimap<String, Attribute> attributes  = ArrayListMultimap.create();
             final Multimap<String, Attribute> runAsAttributes  = ArrayListMultimap.create();
-            
+
             // build the maps of attribute operations
             for (PatchOperation operation : request.getPatchOperations()) {
                 Attribute attribute = objectClassInfoHelper.getPatchAttribute(operation, beforeValue,
@@ -386,7 +386,7 @@ class ObjectClassResourceProvider implements RequestHandler {
                 OperationOptionsBuilder builder = getOperationOptionsBuilder(reauthCreds.first, reauthCreds.second, UpdateApiOp.class);
                 uid = executePatchOperations(facade, builder.build(), runAsAttributes, _uid);
             }
-            
+
             // update remaining attributes
             uid = executePatchOperations(facade, getOperationOptionsBuilder(null, null, UpdateApiOp.class).build(), attributes, uid);
 

@@ -54,10 +54,10 @@ import org.forgerock.caf.authentication.api.AsyncServerAuthModule;
 import org.forgerock.caf.authentication.api.AuthenticationException;
 import org.forgerock.caf.authentication.framework.AuthenticationFilter;
 import org.forgerock.caf.authentication.framework.AuthenticationFilter.AuthenticationModuleBuilder;
-import org.forgerock.guava.common.base.Function;
-import org.forgerock.guava.common.base.Optional;
-import org.forgerock.guava.common.base.Predicate;
-import org.forgerock.guava.common.collect.FluentIterable;
+import org.wrensecurity.guava.common.base.Function;
+import org.wrensecurity.guava.common.base.Optional;
+import org.wrensecurity.guava.common.base.Predicate;
+import org.wrensecurity.guava.common.collect.FluentIterable;
 import org.forgerock.http.Client;
 import org.forgerock.http.Filter;
 import org.forgerock.http.HttpApplicationException;
@@ -170,7 +170,7 @@ import org.slf4j.LoggerFactory;
         immediate = true,
         configurationPolicy = ConfigurationPolicy.REQUIRE,
         property = {
-                ServerConstants.ROUTER_PREFIX + "=/authentication" 
+                ServerConstants.ROUTER_PREFIX + "=/authentication"
         })
 @ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
 @ServiceDescription("OpenIDM Authentication Service")

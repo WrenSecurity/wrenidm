@@ -33,9 +33,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.forgerock.audit.events.AuditEvent;
-import org.forgerock.guava.common.base.Function;
-import org.forgerock.guava.common.base.Predicate;
-import org.forgerock.guava.common.collect.FluentIterable;
+import org.wrensecurity.guava.common.base.Function;
+import org.wrensecurity.guava.common.base.Predicate;
+import org.wrensecurity.guava.common.collect.FluentIterable;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.JsonValueException;

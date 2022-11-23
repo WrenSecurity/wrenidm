@@ -27,9 +27,9 @@ package org.forgerock.openidm.smartevent;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.forgerock.guava.common.cache.CacheBuilder;
-import org.forgerock.guava.common.cache.CacheLoader;
-import org.forgerock.guava.common.cache.LoadingCache;
+import org.wrensecurity.guava.common.cache.CacheBuilder;
+import org.wrensecurity.guava.common.cache.CacheLoader;
+import org.wrensecurity.guava.common.cache.LoadingCache;
 
 import org.forgerock.openidm.smartevent.core.DisabledPublisher;
 import org.forgerock.openidm.smartevent.core.DisruptorReferringPublisher;
@@ -44,14 +44,14 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Represents the name and additional configuration for an event type
- * 
+ *
  * Allows callers to pre-construct, parse event hierarchies and set additional
  * configuration by declaring the Names outside of the publishing of the events
- * 
+ *
  * The fluent API allows for easier set-up directly in the declaration example:
  * <code>public static final Name MY_EVENT = Name.get("internal/myevent").setTags(new String[] {MONITOR, APP_EVENT}).setXyz("dummy")</code>
- * 
- * 
+ *
+ *
  */
 public class Name {
 
@@ -60,7 +60,7 @@ public class Name {
     /**
      * The available publisher types for handling event pub/sub
      * BLOCKING uses a blocking queue for the events
-     * DISRUPTOR uses a non-blocking library with a ring buffer 
+     * DISRUPTOR uses a non-blocking library with a ring buffer
      */
     enum PublisherType {BLOCKING, DISRUPTOR};
 
@@ -96,7 +96,7 @@ public class Name {
     boolean resultHistoryEnabled = false;
 
     PublisherType publisherType;
-    
+
     PluggablePublisher publisherImpl;
 
     private Name(String stringifiedName) {
@@ -111,7 +111,7 @@ public class Name {
 
     /**
      * Factory method to get the event Name object
-     * 
+     *
      * @param stringifiedName
      *            The string representation of the event name
      * @return the event Name object representing the requested event type
@@ -122,7 +122,7 @@ public class Name {
 
     /**
      * Factory method to get the event Name object
-     * 
+     *
      * @param stringifiedName
      *            The string representation of the event name
      * @param tags
@@ -135,7 +135,7 @@ public class Name {
 
     /**
      * Fluent API to set Tags on this event name
-     * 
+     *
      * @param tags
      *            the tags to set
      * @return this Name instance for use as a fluent API
@@ -150,7 +150,7 @@ public class Name {
 
     /**
      * Fluent API to set events publishing type
-     * 
+     *
      * @param enabled
      *            true to enable event publishing for this Name, false to
      *            disable
@@ -165,7 +165,7 @@ public class Name {
         }
         return this;
     }
-    
+
     /**
      * @return the events publishing state
      */
@@ -175,7 +175,7 @@ public class Name {
 
     /**
      * Fluent API to set result history behavior
-     * 
+     *
      * @param enabled
      *            true to enable keeping results in the recent event history
      * @return this Name instance for use as a fluent API
@@ -195,7 +195,7 @@ public class Name {
     /**
      * Get all currently registered event names The returned map should not be
      * directly modified.
-     * 
+     *
      * @return a map pointing from stringified event name representation to the
      *         the event Name object for each event Name
      */
@@ -210,7 +210,7 @@ public class Name {
     public final String asString() {
         return stringifiedName;
     }
-    
+
     /**
      * Factory method, could eventually be moved out
      */

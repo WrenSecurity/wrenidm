@@ -56,7 +56,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.forgerock.commons.launcher.OSGiFrameworkService;
-import org.forgerock.guava.common.base.Strings;
+import org.wrensecurity.guava.common.base.Strings;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.CreateRequest;

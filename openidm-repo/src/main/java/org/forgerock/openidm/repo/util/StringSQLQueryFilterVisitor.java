@@ -28,8 +28,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import org.forgerock.guava.common.base.Function;
-import org.forgerock.guava.common.collect.FluentIterable;
+import org.wrensecurity.guava.common.base.Function;
+import org.wrensecurity.guava.common.collect.FluentIterable;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.util.query.QueryFilter;
 import org.forgerock.util.query.QueryFilterVisitor;
