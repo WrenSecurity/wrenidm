@@ -127,7 +127,7 @@
         <pgpWhitelistArtifact>org.wrensecurity:wrensec-pgp-whitelist:1.6.1</pgpWhitelistArtifact>
 
         <!-- Commons versions -->
-        <wrensec.commons.version>22.4.0-SNAPSHOT</wrensec.commons.version>
+        <wrensec.commons.version>22.4.0</wrensec.commons.version>
         <commons.script.version>4.5.0</commons.script.version>
 
         <!-- Third party dependency versions -->
