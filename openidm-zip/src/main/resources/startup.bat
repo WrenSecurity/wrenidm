@@ -96,10 +96,10 @@ set MAINCLASS=org.forgerock.commons.launcher.Main
 rem Execute Java with the applicable properties
 pushd %OPENIDM_HOME%
 if not "%JPDA%" == "" goto doJpda
-call %_EXECJAVA% %JAVA_OPTS% %OPENIDM_OPTS%  -Djava.endorsed.dirs="%JAVA_ENDORSED_DIRS%" -classpath "%CLASSPATH%" -Dopenidm.system.server.root="%OPENIDM_HOME%" %MAINCLASS% %CMD_LINE_ARGS%
+call %_EXECJAVA% %JAVA_OPTS% %OPENIDM_OPTS%  -Djava.endorsed.dirs="%JAVA_ENDORSED_DIRS%" -classpath "%CLASSPATH%" -Dcontent.types.user.table="%OPENIDM_HOME%\bin\content-types.properties" -Dopenidm.system.server.root="%OPENIDM_HOME%" %MAINCLASS% %CMD_LINE_ARGS%
 goto end
 :doJpda
-call %_EXECJAVA% %JAVA_OPTS% %OPENIDM_OPTS% %JPDA_OPTS% -Djava.endorsed.dirs="%JAVA_ENDORSED_DIRS%" -classpath "%CLASSPATH%" -Dopenidm.system.server.root="%OPENIDM_HOME%" %MAINCLASS% %CMD_LINE_ARGS%
+call %_EXECJAVA% %JAVA_OPTS% %OPENIDM_OPTS% %JPDA_OPTS% -Djava.endorsed.dirs="%JAVA_ENDORSED_DIRS%" -classpath "%CLASSPATH%" -Dcontent.types.user.table="%OPENIDM_HOME%\bin\content-types.properties" -Dopenidm.system.server.root="%OPENIDM_HOME%" %MAINCLASS% %CMD_LINE_ARGS%
 popd
 
 :end
