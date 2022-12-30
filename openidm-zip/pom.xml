@@ -457,12 +457,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.glassfish.grizzly</groupId>
-            <artifactId>grizzly-framework</artifactId>
-            <version>2.3.22</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.ops4j.pax.swissbox</groupId>
             <artifactId>pax-swissbox-extender</artifactId>
             <version>1.8.2</version>
@@ -610,6 +604,14 @@
             <groupId>org.forgerock.opendj</groupId>
             <artifactId>opendj-ldap-sdk</artifactId>
             <version>2.6.10</version>
+
+            <exclusions>
+                <exclusion>
+                    <!-- We are getting managed version from ICF -->
+                    <groupId>org.glassfish.grizzly</groupId>
+                    <artifactId>grizzly-framework</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- scriptedazure sample Groovy dependencies -->
