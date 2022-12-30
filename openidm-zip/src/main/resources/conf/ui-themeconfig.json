@@ -17,7 +17,7 @@
             "src" : "images/login-logo.png",
             "title" : "Wren Security",
             "alt" : "Wren Security",
-            "width" : "210px"
+            "width" : "300px"
         },
         "footer" : {
             "mailto" : "info@wrensecurity.org"
