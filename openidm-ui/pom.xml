@@ -13,7 +13,7 @@
     information: "Portions copyright [year] [name of copyright owner]".
 
     Copyright (c) 2014-2015 ForgeRock AS. All Rights Reserved
-    Portions Copyright 2017-2022 Wren Security.
+    Portions Copyright 2017-2023 Wren Security.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -31,7 +31,7 @@
     <description>Parent POM for all UI components in Wren:IDM.</description>
 
     <properties>
-        <forgerock-ui.version>22.1.1</forgerock-ui.version>
+        <forgerock-ui.version>22.1.2</forgerock-ui.version>
         <node.install.directory>${project.parent.basedir}</node.install.directory>
         <grunt.task>build:dev</grunt.task>
     </properties>
