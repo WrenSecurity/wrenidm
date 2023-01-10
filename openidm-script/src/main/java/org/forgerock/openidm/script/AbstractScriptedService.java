@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2013-2016 ForgeRock AS.
- * Portions Copyright 2018-2020 Wren Security.
+ * Portions Copyright 2020-2023 Wren Security.
  */
 package org.forgerock.openidm.script;
 
@@ -149,7 +149,7 @@ public abstract class AbstractScriptedService implements ScriptCustomizer, Scrip
                 getScriptRegistry().deleteScriptListener(scriptName, this);
             }
         }
-        logger.info("OpenIDM Info Service component is deactivated.");
+        logger.info("Wren:IDM Info Service component is deactivated.");
     }
 
     // ----- Implementation of ScriptListener interface

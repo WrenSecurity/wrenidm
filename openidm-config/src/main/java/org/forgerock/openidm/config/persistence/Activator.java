@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2011-2015 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2023 Wren Security
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -78,7 +79,7 @@ public class Activator implements BundleActivator {
         // Configure pax web properties
         PaxWeb.configurePaxWebProperties();
 
-        logger.info("OpenIDM is starting from {}", IdentityServer.getInstance().getServerRoot());
+        logger.info("Wren:IDM is starting from {}", IdentityServer.getInstance().getServerRoot());
     }
 
     public void stop(BundleContext context) {

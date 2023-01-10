@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2013-2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2023 Wren Security
  */
 
 package org.forgerock.openidm.script.impl;
@@ -266,7 +266,7 @@ public class ScriptRegistryService extends ScriptRegistryImpl implements Request
         // Initialize the registry in ScriptUtil
         Scripts.init(this);
 
-        logger.info("OpenIDM Script Service component is activated.");
+        logger.info("Wren:IDM Script Service component is activated.");
     }
 
     @Modified
@@ -305,7 +305,7 @@ public class ScriptRegistryService extends ScriptRegistryImpl implements Request
         // Initialize the registry in ScriptUtil
         Scripts.init(this);
 
-        logger.info("OpenIDM Script Service component is modified.");
+        logger.info("Wren:IDM Script Service component is modified.");
     }
 
     @Deactivate
@@ -319,7 +319,7 @@ public class ScriptRegistryService extends ScriptRegistryImpl implements Request
         propertiesCache.clear();
         openidm.clear();
         setBindings(null);
-        logger.info("OpenIDM Script Service component is deactivated.");
+        logger.info("Wren:IDM Script Service component is deactivated.");
     }
 
     @Reference(
@@ -569,7 +569,7 @@ public class ScriptRegistryService extends ScriptRegistryImpl implements Request
         if (name instanceof String && StringUtils.isNotBlank(name)
                 && !reservedNames.contains(name)) {
             openidm.put(name, function);
-            logger.info("openidm.{} function is enabled", name);
+            logger.info("Wren:IDM.{} function is enabled", name);
         }
     }
 
@@ -579,7 +579,7 @@ public class ScriptRegistryService extends ScriptRegistryImpl implements Request
         if (name instanceof String && StringUtils.isNotBlank(name)
                 && !reservedNames.contains(name)) {
             openidm.remove(name, function);
-            logger.info("openidm.{} function is disabled", name);
+            logger.info("Wren:IDM.{} function is disabled", name);
         }
     }
 
