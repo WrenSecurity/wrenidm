@@ -1,12 +1,15 @@
-FROM maven:3.8.6-eclipse-temurin-17-alpine AS project-build
+FROM debian:bullseye-slim AS project-build
 
-# Install management tools
-RUN apk add unzip
+# Install build dependencies
+RUN \
+  apt-get update && \
+  apt-get install -y --no-install-recommends openjdk-17-jdk maven unzip chromium && \
+  # Workaround Chromium binary path for arm64 (see https://github.com/puppeteer/puppeteer/blob/v4.0.0/src/Launcher.ts#L110)
+  ln -s /usr/bin/chromium /usr/bin/chromium-browser
 
-# Install and configure headless Chrome for Puppeteer
-RUN apk add chromium
+# Configure headless Chromium for Puppeteer
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 # Use '--no-sandbox' option for Puppeteer's Chromium because of incompatibility with Docker
 ENV DISABLE_PUPPETEER_SANDBOX=true
 
@@ -15,10 +18,17 @@ WORKDIR /project
 COPY . .
 
 # Perform actual Wren:IDM build
-RUN --mount=type=cache,target=/root/.m2 mvn clean package
+ARG BUILD_ARGS
+RUN \
+  --mount=type=cache,target=/root/.m2 \
+  --mount=type=cache,target=/root/.npm \
+  mvn package ${BUILD_ARGS}
 
-# Extract built project into target directory
-RUN WRENIDM_VERSION=$(mvn -Dexpression=project.version -q -DforceStdout help:evaluate) && unzip openidm-zip/target/wrenidm-$WRENIDM_VERSION.zip -d /build
+# Copy built artifact into target directory
+RUN \
+  mkdir /build && \
+  WRENIDM_VERSION=$(mvn -Dexpression=project.version -q -DforceStdout help:evaluate) && \
+  unzip openidm-zip/target/wrenidm-$WRENIDM_VERSION.zip -d /build
 
 
 FROM eclipse-temurin:17-jdk
