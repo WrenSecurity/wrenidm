@@ -1,3 +1,7 @@
 # Ignore build-related folders
 **/target
 **/node_modules
+
+# Ignore Docker files
+.dockerignore
+Dockerfile
