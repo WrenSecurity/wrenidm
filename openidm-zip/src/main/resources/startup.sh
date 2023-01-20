@@ -155,14 +155,14 @@ cd "$PRGDIR"
 
 # start in normal mode
 START_IDM() {
-(java "$LOGGING_CONFIG" $JAVA_OPTS $COMPATIBILITY_OPTS $OPENIDM_OPTS \
+exec java "$LOGGING_CONFIG" $JAVA_OPTS $COMPATIBILITY_OPTS $OPENIDM_OPTS \
         -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" \
         -classpath "$CLASSPATH" \
         -Dopenidm.system.server.root="$OPENIDM_HOME" \
         -Djava.awt.headless=true \
         -Dcontent.types.user.table="$OPENIDM_HOME"/bin/content-types.properties \
         org.forgerock.commons.launcher.Main -c "$OPENIDM_HOME"/bin/launcher.json $CLOPTS \
-        -p "$PROJECT_HOME")
+        -p "$PROJECT_HOME"
 }
 
 while
