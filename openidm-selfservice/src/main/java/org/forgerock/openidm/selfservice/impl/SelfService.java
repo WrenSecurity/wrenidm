@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2018-2020 Wren Security.
+ * Portions Copyright 2018-2023 Wren Security.
  */
 
 package org.forgerock.openidm.selfservice.impl;
@@ -67,7 +67,9 @@ import org.forgerock.selfservice.stages.tokenhandlers.JwtTokenHandlerConfig;
 import org.forgerock.tokenhandler.TokenHandler;
 import org.forgerock.util.Options;
 import org.forgerock.util.encode.Base64;
+import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -115,14 +117,16 @@ public class SelfService implements IdentityProviderListener {
     /** config key present if config requires KBA questions */
     private static final String KBA_CONFIG = "kbaConfig";
 
-    // ----- Declarative Service Implementation
+    /** map of service classes and respective reference filters */
+    private static final Map<Class<?>, String> REFERENCE_FILTERS;
 
-    /**
-     * Use the external servlet connection factory so that self-service requests are subject to authz rules
-     * as "external" requests.
-     */
-    @Reference(policy = ReferencePolicy.STATIC, target = ServerConstants.EXTERNAL_ROUTER_SERVICE_PID_FILTER)
-    private ConnectionFactory connectionFactory;
+    static {
+        Map<Class<?>, String> referenceFilters = new HashMap<>();
+        referenceFilters.put(ConnectionFactory.class, ServerConstants.EXTERNAL_ROUTER_SERVICE_PID_FILTER);
+        REFERENCE_FILTERS = Collections.unmodifiableMap(referenceFilters);
+    }
+
+    // ----- Declarative Service Implementation
 
     /** Enhanced configuration service. */
     @Reference(policy = ReferencePolicy.DYNAMIC)
@@ -138,9 +142,6 @@ public class SelfService implements IdentityProviderListener {
 
     @Reference(policy = ReferencePolicy.DYNAMIC, cardinality = ReferenceCardinality.OPTIONAL)
     private volatile IdentityProviderService identityProviderService;
-
-    @Reference(policy = ReferencePolicy.STATIC)
-    private PropertyMappingService mappingService;
 
     private Dictionary<String, Object> properties = null;
     private JsonValue config;
@@ -270,15 +271,24 @@ public class SelfService implements IdentityProviderListener {
                 Object[] parameters = new Object[parameterTypes.length];
 
                 for (int i = 0; i < parameterTypes.length; i++) {
-                    if (parameterTypes[i].equals(ConnectionFactory.class)) {
-                        parameters[i] = connectionFactory;
-                    } else if (parameterTypes[i].equals(Client.class)) {
-                        parameters[i] = httpClient;
-                    } else if (parameterTypes[i].equals(PropertyMappingService.class)) {
-                        parameters[i] = mappingService;
-                    } else {
-                        throw new StageConfigException("Unexpected parameter type for configured progress stage "
-                                + parameters[i]);
+                    try {
+                        ServiceReference<?>[] serviceReferences = context.getBundleContext().getServiceReferences
+                                (parameterTypes[i].getName(), REFERENCE_FILTERS.get(parameterTypes[i]));
+                        if (serviceReferences != null && serviceReferences.length > 0) {
+                            // rank references as would getServiceReference
+                            ServiceReference<?> bestReference = serviceReferences[0];
+                            for (int y = 1; y < serviceReferences.length; y++) {
+                                if (bestReference.compareTo(serviceReferences[y]) < 0) {
+                                    bestReference = serviceReferences[y];
+                                }
+                            }
+                            parameters[i] = context.getBundleContext().getService(bestReference);
+                        } else {
+                            throw new StageConfigException("Unexpected parameter type for configured progress stage "
+                                    + parameters[i]);
+                        }
+                    } catch (InvalidSyntaxException e) {
+                        throw new IllegalStateException("Couldn't get service references", e);
                     }
                 }
 
