@@ -124,10 +124,10 @@
     <properties>
 
         <pgpVerifyPluginVersion>1.10.1</pgpVerifyPluginVersion>
-        <pgpWhitelistArtifact>org.wrensecurity:wrensec-pgp-whitelist:1.6.1</pgpWhitelistArtifact>
+        <pgpWhitelistArtifact>org.wrensecurity:wrensec-pgp-whitelist:1.7.9</pgpWhitelistArtifact>
 
         <!-- Commons versions -->
-        <wrensec.commons.version>22.4.0</wrensec.commons.version>
+        <wrensec.commons.version>22.6.0</wrensec.commons.version>
         <commons.script.version>4.5.0</commons.script.version>
 
         <!-- Third party dependency versions -->
