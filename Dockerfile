@@ -3,7 +3,7 @@ FROM debian:bullseye-slim AS project-build
 # Install build dependencies
 RUN \
   apt-get update && \
-  apt-get install -y --no-install-recommends openjdk-17-jdk maven unzip chromium && \
+  apt-get install -y --no-install-recommends openjdk-17-jdk maven unzip chromium vainfo && \
   # Workaround Chromium binary path for arm64 (see https://github.com/puppeteer/puppeteer/blob/v4.0.0/src/Launcher.ts#L110)
   ln -s /usr/bin/chromium /usr/bin/chromium-browser
 
