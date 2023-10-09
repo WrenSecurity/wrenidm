@@ -23,9 +23,9 @@
  */
 
 /**
- * Initial implementation of Commons Auditing. 
+ * Initial implementation of Commons Auditing.
  * This should be moved to common project and the
  * package may be {@code org.forgerock.resource.audit} and
  * it won't conflict with openidm-audit
  */
-package org.forgerock.openidm.audit;
+package org.forgerock.openidm.audit.util;
