@@ -58,18 +58,8 @@
         </dependency>
 
         <dependency>
-            <groupId>net.lingala.zip4j</groupId>
-            <artifactId>zip4j</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.googlecode.java-diff-utils</groupId>
-            <artifactId>diffutils</artifactId>
         </dependency>
 
         <dependency>

@@ -35,17 +35,6 @@ public interface UpdateManager {
     JsonValue report(final Path archiveFile, final Path installDir) throws UpdateException;
 
     /**
-     * Return the diff of a single file to show what changes will be made if we overwrite the existing file.
-     *
-     * @param archiveFile the {@link Path} to a ZIP archive containing a new version of OpenIDM
-     * @param installDir the base directory where OpenIDM is installed
-     * @param filename the file to diff
-     * @return a json response showing the current file, the new file, and the diff
-     * @throws UpdateException on failure to perform diff
-     */
-    JsonValue diff(final Path archiveFile, final Path installDir, final String filename) throws UpdateException;
-
-    /**
      * Perform the upgrade.
      *
      * @param archiveFile the {@link Path} to a ZIP archive containing a new version of OpenIDM

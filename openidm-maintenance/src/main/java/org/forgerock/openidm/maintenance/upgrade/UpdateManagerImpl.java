@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2023 Wren Security
  */
 package org.forgerock.openidm.maintenance.upgrade;
 
@@ -22,7 +22,6 @@ import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.JsonValueFunctions.listOf;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -34,8 +33,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -43,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -53,10 +53,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.jar.Attributes;
 import java.util.regex.Pattern;
-
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.forgerock.commons.launcher.OSGiFrameworkService;
-import org.wrensecurity.guava.common.base.Strings;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.CreateRequest;
@@ -103,11 +103,7 @@ import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.osgi.util.tracker.ServiceTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import difflib.DiffUtils;
-import difflib.Patch;
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
+import org.wrensecurity.guava.common.base.Strings;
 
 /**
  * Basic manager to initiate the product maintenance and upgrade mechanisms.
@@ -258,15 +254,7 @@ public class UpdateManagerImpl implements UpdateManager {
             this.upgradeRoot = destination.resolve("openidm");
 
             // unzip the upgrade dist
-            try {
-                ZipFile zipFile = new ZipFile(zipFilePath.toString());
-                if (zipFile.isEncrypted()) {
-                    throw new UnsupportedOperationException("Encrypted zip files are not supported");
-                }
-                zipFile.extractAll(destination.toString());
-            } catch (ZipException e) {
-                throw new ArchiveException("Can't read archive file: " + zipFilePath.toAbsolutePath(), e);
-            }
+            ZipUtils.unzipFile(zipFilePath, destination);
 
             // get the file set from the upgrade dist checksum file
             try {
@@ -683,52 +671,6 @@ public class UpdateManagerImpl implements UpdateManager {
     }
 
     @Override
-    public JsonValue diff(final Path archiveFile, final Path installDir, final String filename)
-            throws UpdateException {
-        return usingArchive(archiveFile, installDir,
-                new UpgradeAction<JsonValue>() {
-                    // Helper function for get the file content
-                    private Function<InputStream, List<String>, IOException> inputStreamToLines =
-                            new Function<InputStream, List<String>, IOException>() {
-                                @Override
-                                public List<String> apply(InputStream is) throws IOException {
-                                    final List<String> lines = new LinkedList<String>();
-                                    String line = "";
-                                    try (final InputStreamReader isr = new InputStreamReader(is);
-                                         final BufferedReader in = new BufferedReader(isr)) {
-                                        while ((line = in.readLine()) != null) {
-                                            lines.add(line);
-                                        }
-                                    }
-                                    return lines;
-                                }
-                            };
-
-                    @Override
-                    public JsonValue invoke(Archive archive, FileStateChecker fileStateChecker) throws UpdateException {
-                        final Path file = Paths.get(filename);
-
-                        try {
-                            final List<String> currentFileLines = withInputStreamForPath(installDir.resolve(file), inputStreamToLines);
-                            final List<String> newFileLines = archive.withInputStreamForPath(file, inputStreamToLines);
-                            Patch<String> patch = DiffUtils.diff(currentFileLines, newFileLines);
-                            return json(object(
-                                    field("current", currentFileLines),
-                                    field("new", newFileLines),
-                                    field("diff", DiffUtils.generateUnifiedDiff(
-                                            Paths.get("current").resolve(file).toString(),
-                                            Paths.get("new").resolve(file).toString(),
-                                            currentFileLines,
-                                            patch,
-                                            3))));
-                        } catch (IOException e) {
-                            throw new UpdateException("Unable to retrieve file content for " + file.toString(), e);
-                        }
-                    }
-                });
-    }
-
-    @Override
     public JsonValue upgrade(final Path archiveFile, final Path installDir, final String userName)
             throws UpdateException {
 
@@ -793,9 +735,9 @@ public class UpdateManagerImpl implements UpdateManager {
         validateHasChecksumFile(archiveFile.toFile());
 
         try {
-            ZipFile zip = new ZipFile(archiveFile.toFile());
             Path tmpDir = Files.createTempDirectory(UUID.randomUUID().toString());
-            zip.extractFile("openidm/" + LICENSE_PATH, tmpDir.toString());
+            ZipUtils.unzipFile(archiveFile, FileSystems.getDefault().getPathMatcher(
+                    "glob:openidm/" + LICENSE_PATH), tmpDir);
             File file = new File(tmpDir.toString() + "/openidm/" + LICENSE_PATH);
             if (!file.exists()) {
                 throw new UpdateException("Unable to locate a license file.");
@@ -807,7 +749,7 @@ public class UpdateManagerImpl implements UpdateManager {
             } catch (IOException e) {
                 throw new UpdateException("Unable to load license file.", e);
             }
-        } catch (IOException | ZipException e) {
+        } catch (IOException e) {
             return json(object());
         }
     }
@@ -1424,11 +1366,11 @@ public class UpdateManagerImpl implements UpdateManager {
      */
     Path extractFileToDirectory(File zipFile, Path fileToExtract) throws UpdateException {
         try {
-            ZipFile zip = new ZipFile(zipFile);
+            PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + fileToExtract.toString());
             Path tmpDir = Files.createTempDirectory(UUID.randomUUID().toString());
-            zip.extractFile(fileToExtract.toString(), tmpDir.toString());
+            ZipUtils.unzipFile(zipFile.toPath(), pathMatcher, tmpDir);
             return tmpDir.resolve(fileToExtract).getParent();
-        } catch (IOException | ZipException e) {
+        } catch (IOException e) {
             throw new UpdateException("Unable to load " + fileToExtract + ".", e);
         }
     }
