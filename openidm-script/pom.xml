@@ -82,16 +82,10 @@
         <dependency>
             <groupId>org.ops4j.pax.swissbox</groupId>
             <artifactId>pax-swissbox-extender</artifactId>
-            <version>1.8.2</version>
+            <version>${pax.swissbox.extender.version}</version>
 
             <scope>provided</scope>
             <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <artifactId>pax-swissbox-optional-jcl</artifactId>
-                    <groupId>org.ops4j.pax.swissbox</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!-- Test Dependencies -->
