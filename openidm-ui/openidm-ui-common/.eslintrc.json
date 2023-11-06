@@ -1,14 +1,12 @@
 {
     "root": true,
-    "extends": "forgerock",
-    "parser": "babel-eslint",
+    "extends": "@wrensecurity/eslint-config",
+    "parser": "@babel/eslint-parser",
     "env": {
         "amd": true,
         "browser": true,
-        "qunit": true
-    },
-    "ecmaFeatures": {
-        "arrowFunctions": true
+        "qunit": true,
+        "es6": true
     },
     "rules": {
         "indent": [2, 4, {
