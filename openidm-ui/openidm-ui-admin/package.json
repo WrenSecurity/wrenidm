@@ -1,6 +1,6 @@
 {
   "name": "openidm-ui-admin",
-  "author": "Jake Feasel <jake.feasel@forgerock.com>",
+  "author": "Wren Security <info@wrensecurity.org>",
   "version": "0.0.1",
   "private": true,
   "scripts": {
