@@ -23,11 +23,11 @@ define([
     "org/forgerock/openidm/ui/admin/mapping/association/correlationQuery/CorrelationQueryBuilderView",
     "bootstrap-dialog"
 ], function($, _,
-            AbstractView,
-            conf,
-            uiUtils,
-            CorrelationQueryBuilderView,
-            BootstrapDialog) {
+        AbstractView,
+        conf,
+        uiUtils,
+        CorrelationQueryBuilderView,
+        BootstrapDialog) {
 
     var CorrelationQueryDialog = AbstractView.extend({
         template: "templates/admin/mapping/association/correlationQuery/CorrelationQueryDialogTemplate.html",

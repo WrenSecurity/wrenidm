@@ -41,8 +41,8 @@ define([
 
             $.when(
                 resourceDelegate.searchResource(
-                        args.prop.propName + ' eq "' + args.prop.parentId + '"&_pageSize=100&_sortKeys=' + args.prop.resourceCollection.query.fields[0],
-                        args.prop.resourceCollection.path
+                    args.prop.propName + ' eq "' + args.prop.parentId + '"&_pageSize=100&_sortKeys=' + args.prop.resourceCollection.query.fields[0],
+                    args.prop.resourceCollection.path
                 ),
                 ModuleLoader.load("d3")
             ).then(_.bind(function(qry, d3) {
@@ -56,17 +56,17 @@ define([
                 }, this));
 
                 this.parentRender(_.bind(function() {
-                    if(this.data.relatedTo.length) {
+                    if (this.data.relatedTo.length) {
                         this.parentRender(_.bind(function() {
                             this.loadTree();
-                            if(callback) {
+                            if (callback) {
                                 callback();
                             }
                         }, this));
                     } else {
                         this.$el.closest(".container").find(".tab-menu").find("#tabHeader_relationship-" + this.data.prop.propName).hide();
                     }
-                    if(callback) {
+                    if (callback) {
                         callback();
                     }
                 }, this));
@@ -114,7 +114,7 @@ define([
 
                     //Declare the nodes
                     node = svg.selectAll("g.node").data(nodes, function(data) {
-                        if(!data.id) {
+                        if (!data.id) {
                             data.id = ++i;
                         }
 

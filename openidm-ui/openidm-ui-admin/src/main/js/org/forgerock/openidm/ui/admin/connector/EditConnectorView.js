@@ -41,28 +41,28 @@ define([
     "org/forgerock/commons/ui/common/main/ValidatorsManager",
     "bootstrap-tabdrop"
 ], function($, _,
-            Backbone,
-            Backgrid,
-            form2js,
-            Handlebars,
-            AbstractConnectorView,
-            ObjectUtil,
-            BackgridUtils,
-            ConfigDelegate,
-            ConnectorDelegate,
-            ConnectorRegistry,
-            ConnectorType,
-            connectorUtils,
-            constants,
-            eventManager,
-            InlineScriptEditor,
-            liveSyncDialog,
-            objectTypesDialog,
-            router,
-            Scheduler,
-            SchedulerDelegate,
-            UIUtils,
-            validatorsManager) {
+        Backbone,
+        Backgrid,
+        form2js,
+        Handlebars,
+        AbstractConnectorView,
+        ObjectUtil,
+        BackgridUtils,
+        ConfigDelegate,
+        ConnectorDelegate,
+        ConnectorRegistry,
+        ConnectorType,
+        connectorUtils,
+        constants,
+        eventManager,
+        InlineScriptEditor,
+        liveSyncDialog,
+        objectTypesDialog,
+        router,
+        Scheduler,
+        SchedulerDelegate,
+        UIUtils,
+        validatorsManager) {
 
     var AddEditConnectorView = AbstractConnectorView.extend({
         template: "templates/admin/connector/EditConnectorTemplate.html",
@@ -167,9 +167,9 @@ define([
                     })
                     .value();
 
-                let splitDetails = args[0].match(/(.*?)_(.*)/).splice(1),
-                    urlArgs = router.convertCurrentUrlToJSON(),
-                    version;
+                let splitDetails = args[0].match(/(.*?)_(.*)/).splice(1);
+                let urlArgs = router.convertCurrentUrlToJSON();
+                let version;
 
                 this.data.editState = true;
                 this.data.systemType = splitDetails[0];
@@ -189,7 +189,7 @@ define([
                     this.data.enabled = data.enabled;
 
                     //Need a check here in the instances where connectors do not have enable
-                    if(_.isUndefined(this.data.enabled)) {
+                    if (_.isUndefined(this.data.enabled)) {
                         this.data.enabled = true;
                     }
 
@@ -197,7 +197,7 @@ define([
                     this.data.resultsHandlerConfig = data.resultsHandlerConfig;
                     this.data.operationTimeout = data.operationTimeout;
 
-                    if(this.data.resultsHandlerConfig) {
+                    if (this.data.resultsHandlerConfig) {
                         this.data.resultsHandlerConfig.enableAttributesToGetSearchResultsHandler = (this.data.resultsHandlerConfig.enableAttributesToGetSearchResultsHandler === "true" || this.data.resultsHandlerConfig.enableAttributesToGetSearchResultsHandler === true);
                         this.data.resultsHandlerConfig.enableCaseInsensitiveFilter = (this.data.resultsHandlerConfig.enableCaseInsensitiveFilter === "true" || this.data.resultsHandlerConfig.enableCaseInsensitiveFilter === true);
                         this.data.resultsHandlerConfig.enableFilteredResultsHandler = (this.data.resultsHandlerConfig.enableFilteredResultsHandler === "true" || this.data.resultsHandlerConfig.enableFilteredResultsHandler === true);
@@ -237,7 +237,7 @@ define([
 
                     version = this.data.fullversion;
 
-                    if(version.indexOf("(") !== -1 || version.indexOf(")") !== -1 || version.indexOf("[") !== -1 || version.indexOf("]") !== -1) {
+                    if (version.indexOf("(") !== -1 || version.indexOf(")") !== -1 || version.indexOf("[") !== -1 || version.indexOf("]") !== -1) {
                         version = version.replace(/\[|\)|\(|\]/g,'');
                         version = version.split(",");
                         version = version[0].split(".");
@@ -324,23 +324,23 @@ define([
 
                                 //Render the connector template / details
                                 this.connectorTypeRef.render({"connectorType": this.data.connectorTypeName + "_" + this.data.currentMainVersion,
-                                        "animate": true,
-                                        "connectorDefaults": data,
-                                        "editState": this.data.editState,
-                                        "systemType": this.data.systemType },
-                                    () => {
-                                        validatorsManager.validateAllFields(this.$el);
+                                    "animate": true,
+                                    "connectorDefaults": data,
+                                    "editState": this.data.editState,
+                                    "systemType": this.data.systemType },
+                                () => {
+                                    validatorsManager.validateAllFields(this.$el);
 
-                                        //Set the current newest version incase there is a range
-                                        this.connectorTypeRef.data.connectorDefaults.connectorRef.bundleVersion = data.connectorRef.bundleVersion;
-                                        this.setSubmitFlow();
+                                    //Set the current newest version incase there is a range
+                                    this.connectorTypeRef.data.connectorDefaults.connectorRef.bundleVersion = data.connectorRef.bundleVersion;
+                                    this.setSubmitFlow();
 
-                                        this.model.originalForm = this.cleanseObject(form2js('connectorForm', '.', false));
+                                    this.model.originalForm = this.cleanseObject(form2js('connectorForm', '.', false));
 
-                                        if (callback) {
-                                            callback();
-                                        }
-                                    });
+                                    if (callback) {
+                                        callback();
+                                    }
+                                });
 
                                 this.setupLiveSync();
                             });
@@ -352,7 +352,7 @@ define([
         },
 
         connectorFlowCheck: function() {
-            if(this.oAuthConnector) {
+            if (this.oAuthConnector) {
                 this.setSubmitFlow();
             }
         },
@@ -385,10 +385,10 @@ define([
         },
 
         advancedDetailsGenerate: function(oldAdvanced, newAdvanced) {
-            let mergedResults = {},
-                tempNumber,
-                defaultOperationTimeout = -1,
-                defaultPoolConfigOption = 10;
+            let mergedResults = {};
+            let tempNumber;
+            let defaultOperationTimeout = -1;
+            let defaultPoolConfigOption = 10;
 
             $.extend(true, mergedResults, oldAdvanced, newAdvanced);
 
@@ -396,7 +396,7 @@ define([
             _.each(mergedResults.operationTimeout, (value, key) => {
                 tempNumber = parseInt(value, 10);
 
-                if(!_.isNaN(tempNumber)) {
+                if (!_.isNaN(tempNumber)) {
                     mergedResults.operationTimeout[key] = parseInt(value, 10);
                 } else {
                     mergedResults.operationTimeout[key] = defaultOperationTimeout;
@@ -406,7 +406,7 @@ define([
             _.each(mergedResults.poolConfigOption, (value, key) => {
                 tempNumber = parseInt(value, 10);
 
-                if(!_.isNaN(tempNumber)) {
+                if (!_.isNaN(tempNumber)) {
                     mergedResults.poolConfigOption[key] = parseInt(value, 10);
                 } else {
                     mergedResults.poolConfigOption[key] = defaultPoolConfigOption;
@@ -454,7 +454,7 @@ define([
          * and update the configuration
          */
         connectorPass: function(preTestResult, updatedForm) {
-            if(updatedForm.enabled) {
+            if (updatedForm.enabled) {
                 ConfigDelegate.patchEntity({"id": this.data.systemType + "/" + this.data.connectorId}, [{
                     field : "/enabled",
                     operation : "replace",
@@ -510,7 +510,7 @@ define([
                 value : false
             });
 
-            if(connectorSpecificChangesEvent) {
+            if (connectorSpecificChangesEvent) {
                 patch = connectorSpecificChangesEvent.call(this, patch, this.getConnectorConfig(), connector);
             }
 
@@ -538,8 +538,8 @@ define([
 
         //Saves the sync tab
         syncFormSubmit: function() {
-            let syncData = this.cleanseObject(form2js('syncForm', '.', false)),
-                connectorDetails = this.getConnectorConfig();
+            let syncData = this.cleanseObject(form2js('syncForm', '.', false));
+            let connectorDetails = this.getConnectorConfig();
 
             connectorDetails.syncFailureHandler.maxRetries = parseInt(syncData.syncFailureHandler.maxRetries, 10);
             connectorDetails.syncFailureHandler.postRetryAction = syncData.syncFailureHandler.postRetryAction;
@@ -561,7 +561,7 @@ define([
 
         //Saves the object type tab
         objectTypeFormSubmit: function() {
-            if(!this.userDefinedObjectTypes) {
+            if (!this.userDefinedObjectTypes) {
                 this.userDefinedObjectTypes = this.data.objectTypes;
             }
 
@@ -581,7 +581,7 @@ define([
 
         //will hide warning message if no messages left
         warningMessageCheck: function() {
-            if(this.$el.find("#connectorWarningMessage .message .pending-changes").length === 0) {
+            if (this.$el.find("#connectorWarningMessage .message .pending-changes").length === 0) {
                 this.$el.find("#connectorWarningMessage").hide();
             }
         },
@@ -619,8 +619,8 @@ define([
         editSchedule: function(e) {
             e.preventDefault();
 
-            let scheduleName = $(e.currentTarget.closest("tr")).data("source"),
-                scheduleId = $(e.currentTarget.closest("tr")).data("id");
+            let scheduleName = $(e.currentTarget.closest("tr")).data("source");
+            let scheduleId = $(e.currentTarget.closest("tr")).data("id");
 
             liveSyncDialog.render({
                 "id": scheduleId,
@@ -632,10 +632,10 @@ define([
 
         renderGrid: function() {
 
-            let state = "",
-                liveSyncGrid,
-                RenderRow = null,
-                _this = this;
+            let state = "";
+            let liveSyncGrid;
+            let RenderRow = null;
+            let _this = this;
 
             this.$el.find("#liveSyncSchedule table").remove();
 
@@ -694,8 +694,8 @@ define([
                             deleteSchedule: function(e) {
                                 e.preventDefault();
 
-                                let scheduleName = this.model.attributes.source,
-                                    scheduleId = this.model.id;
+                                let scheduleName = this.model.attributes.source;
+                                let scheduleId = this.model.id;
 
                                 _this.$el.find(".sources").append("<option value='" + scheduleName + "'>" +  _.startCase(_.last(scheduleName.split("/"))) + "</option>");
 
@@ -844,21 +844,21 @@ define([
         },
 
         pendingSyncChangesCheck: function() {
-            if(this.$el.find("#connectorWarningMessage .message .sync-pending").length === 0) {
+            if (this.$el.find("#connectorWarningMessage .message .sync-pending").length === 0) {
                 this.$el.find("#connectorWarningMessage .message").append('<div class="pending-changes sync-pending">' +$.t("templates.connector.pendingSync") +'</div>');
                 this.$el.find("#connectorWarningMessage").show();
             }
         },
 
         connectorChangesCheck: function() {
-            if(this.$el.find("#connectorWarningMessage .message .connector-pending").length === 0) {
+            if (this.$el.find("#connectorWarningMessage .message .connector-pending").length === 0) {
                 this.$el.find("#connectorWarningMessage .message").append('<div class="pending-changes connector-pending">' +$.t("templates.connector.pendingConnectorChanges") +'</div>');
                 this.$el.find("#connectorWarningMessage").show();
             }
         },
 
         advancedChangesCheck: function() {
-            if(this.$el.find("#connectorWarningMessage .message .advanced-pending").length === 0) {
+            if (this.$el.find("#connectorWarningMessage .message .advanced-pending").length === 0) {
                 this.$el.find("#connectorWarningMessage .message").append('<div class="pending-changes advanced-pending">' +$.t("templates.connector.advanced.pendingAdvancedChanges") +'</div>');
                 this.$el.find("#connectorWarningMessage").show();
             }
@@ -866,15 +866,15 @@ define([
 
         //This function is to find the newest version of a connector and verify that it falls within a user provided range
         versionRangeCheck: function(version) {
-            let cleanVersion = null,
-                tempVersion,
-                tempMinorVersion,
-                mainVersion,
-                minorVersion;
+            let cleanVersion = null;
+            let tempVersion;
+            let tempMinorVersion;
+            let mainVersion;
+            let minorVersion;
 
             //Checks to see if there is a range
-            if(version.indexOf("(") !== -1 || version.indexOf(")") !== -1 || version.indexOf("[") !== -1 || version.indexOf("]") !== -1) {
-                if(this.data.versionDisplay[0].versions.length === 1) {
+            if (version.indexOf("(") !== -1 || version.indexOf(")") !== -1 || version.indexOf("[") !== -1 || version.indexOf("]") !== -1) {
+                if (this.data.versionDisplay[0].versions.length === 1) {
                     cleanVersion = this.data.versionDisplay[0].versions[0].bundleVersion;
                     mainVersion = this.findMainVersion(cleanVersion);
                 } else {
@@ -918,8 +918,8 @@ define([
 
         // make sure current connector version falls within bundleVersion range
         isRangeValid(mainVersion, range) {
-            let startRange,
-                endRange;
+            let startRange;
+            let endRange;
 
             [startRange, endRange] = range.split(",");
             startRange = this.findMainVersion(startRange.slice(1));
@@ -968,7 +968,7 @@ define([
 
             _.each(this.userDefinedObjectTypes, (object, key) => {
                 this.$el.find("#objectTypesTab table tbody").append(
-                        "<tr data-objecttype='" + key + "'><td>" + key + "</td>"
+                    "<tr data-objecttype='" + key + "'><td>" + key + "</td>"
                         + "<td><button class='btn btn-link edit-objectType'><i class='fa fa-pencil'></i></button>"
                         + "<button class='btn btn-link delete-objectType'><i class='fa fa-times'></i></button></td></tr>");
             });
@@ -976,7 +976,7 @@ define([
 
             this.updateLiveSyncObjects();
 
-            if(this.$el.find("#connectorWarningMessage .message .objecttype-pending").length === 0) {
+            if (this.$el.find("#connectorWarningMessage .message .objecttype-pending").length === 0) {
                 this.$el.find("#connectorWarningMessage .message").append('<div class="pending-changes objecttype-pending">' +$.t("templates.connector.pendingObjectTypes") +'</div>');
                 this.$el.find("#connectorWarningMessage").show();
             }
@@ -1006,7 +1006,7 @@ define([
         deleteObjectType: function(event){
             let objectTypeName = $(event.target).parents("tr").attr("data-objectType");
 
-            if(!this.userDefinedObjectTypes) {
+            if (!this.userDefinedObjectTypes) {
                 this.userDefinedObjectTypes = this.data.objectTypes;
             }
 
@@ -1021,7 +1021,7 @@ define([
 
             _.each(objectTypes, function(object, key){
                 this.$el.find(".dropdown-menu .divider").before(
-                        '<li class="data-link">'
+                    '<li class="data-link">'
                         +'<a href="#resource/system/' + this.data.connectorId +'/' +key+'/list/"><i class="fa fa-database"> Data ('+key  +')</i></a>'
                         +'</li>');
             }, this);
@@ -1034,17 +1034,17 @@ define([
 
         //Used when an object type template selector is available.
         changeObjectTypeConfig: function(event) {
-            let value = $(event.target).val(),
-                type = $(event.target).attr("data-type");
+            let value = $(event.target).val();
+            let type = $(event.target).attr("data-type");
 
-            if(!this.userDefinedObjectTypes) {
+            if (!this.userDefinedObjectTypes) {
                 this.userDefinedObjectTypes = this.data.objectTypes;
             }
 
             $(event.target).val(this.currentObjectTypeLoaded);
 
             UIUtils.jqConfirm($.t('templates.connector.objectTypes.changeConfiguration'), () => {
-                if(value === "fullConfig") {
+                if (value === "fullConfig") {
                     this.model.connectorDetails.configurationProperties.readSchema = true;
 
                     ConnectorDelegate.testConnector(this.model.connectorDetails).then(
@@ -1057,8 +1057,8 @@ define([
                             eventManager.sendEvent(constants.EVENT_DISPLAY_MESSAGE_REQUEST, "objectTypeFailedToLoad");
                         }
                     );
-                } else if(value === "savedConfig") {
-                    if(this.previousObjectType) {
+                } else if (value === "savedConfig") {
+                    if (this.previousObjectType) {
                         this.renderObjectTypes(this.previousObjectType);
                     }
                 } else {

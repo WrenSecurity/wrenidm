@@ -21,9 +21,9 @@ define([
     "org/forgerock/commons/ui/common/main/Router",
     "org/forgerock/commons/ui/common/util/OAuth"
 ], function ($, _,
-             Handlebars,
-             Router,
-             OAuth) {
+        Handlebars,
+        Router,
+        OAuth) {
 
     var obj = {};
 

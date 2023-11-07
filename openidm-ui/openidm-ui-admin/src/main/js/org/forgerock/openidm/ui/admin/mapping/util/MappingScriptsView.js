@@ -22,11 +22,11 @@ define([
     "org/forgerock/openidm/ui/admin/util/InlineScriptEditor",
     "org/forgerock/openidm/ui/admin/util/ScriptList"
 ], function( _,
-            MappingAdminAbstractView,
-            eventManager,
-            constants,
-            InlineScriptEditor,
-            ScriptList) {
+        MappingAdminAbstractView,
+        eventManager,
+        constants,
+        InlineScriptEditor,
+        ScriptList) {
 
     var MappingScriptsView = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/util/MappingScriptsTemplate.html",
@@ -39,7 +39,7 @@ define([
             this.model.mappingName = this.getMappingName();
             this.model.hasWorkflow = true;
 
-            if(!_.isUndefined(args) && args.hasWorkFlow === false) {
+            if (!_.isUndefined(args) && args.hasWorkFlow === false) {
                 this.model.hasWorkflow = false;
             }
 

@@ -40,7 +40,7 @@ define([
                 return _.escape(eval("item." + p));
             }).join(obj.displayTextDelimiter);
 
-        if(!obj.resourceCollectionCache[resourceKey]) {
+        if (!obj.resourceCollectionCache[resourceKey]) {
             obj.resourceCollectionCache[resourceKey] = txt;
         }
 
@@ -50,7 +50,7 @@ define([
     obj.autocompleteProps = function(prop, resourceCollectionIndex, showRaw) {
         var fields = (prop.items) ? prop.items.resourceCollection[resourceCollectionIndex].query.fields : prop.resourceCollection[resourceCollectionIndex].query.fields;
 
-        if(showRaw) {
+        if (showRaw) {
             return fields;
         } else {
             return _.map(fields, function(field) {
@@ -83,7 +83,7 @@ define([
                 load: function(query, callback) {
                     var queryFilter;
 
-                    if(prop.items) {
+                    if (prop.items) {
                         queryFilter = prop.items.resourceCollection[resourceCollectionIndex].query.queryFilter;
                     } else {
                         queryFilter = prop.resourceCollection[resourceCollectionIndex].query.queryFilter;
@@ -92,7 +92,7 @@ define([
                     searchDelegate.searchResults(pathToResource, obj.autocompleteProps(prop, resourceCollectionIndex, true), query, null, queryFilter).then(function(result) {
                         var convertNestedProps = function(item) {
                                 _.each(obj.autocompleteProps(prop, resourceCollectionIndex), function(propName) {
-                                    if(propName.indexOf(".") > -1) {
+                                    if (propName.indexOf(".") > -1) {
                                         item[propName] = eval("item." + propName);
                                     }
                                 });
@@ -113,7 +113,7 @@ define([
                     });
                 },
                 onLoad: function(data) {
-                    if(initialLoad && propertyValue && !_.isEmpty(propertyValue)){
+                    if (initialLoad && propertyValue && !_.isEmpty(propertyValue)){
                         this.addOption(propertyValue);
                         this.setValue(propertyValue._id);
                         initialLoad = false;
@@ -121,7 +121,7 @@ define([
                 }
             };
 
-        if(autocompleteField[0].selectize) {
+        if (autocompleteField[0].selectize) {
             autocompleteField[0].selectize = null;
             autocompleteField.next().remove();
         }
@@ -135,7 +135,7 @@ define([
                 return eval("schema." + field.replace("/",".properties."));
             };
 
-            if(schema && propField() && propField().title && propField().title.length) {
+            if (schema && propField() && propField().title && propField().title.length) {
                 return propField().title;
             } else {
                 return field;
@@ -147,7 +147,7 @@ define([
         var args = resourcePath.split("/"),
             routeName = (args[0] !== "system") ? "adminEditManagedObjectView" : "adminEditSystemObjectView";
 
-        if(args.length >= 3) {
+        if (args.length >= 3) {
             eventManager.sendEvent(constants.ROUTE_REQUEST, {routeName: routeName, args: args});
         }
     };
@@ -172,13 +172,13 @@ define([
             }
 
             if (prop.type === "array" && prop.items) {
-                if(prop.items.type === "relationship" && _.has(properties,key)) {
+                if (prop.items.type === "relationship" && _.has(properties,key)) {
                     prop.items.type = "string";
                     prop.items.typeRelationship = true;
                 }
             }
 
-            if(prop.type === "relationship" && _.has(properties,key)) {
+            if (prop.type === "relationship" && _.has(properties,key)) {
                 prop.type = "string";
                 prop.typeRelationship = true;
             }
@@ -216,7 +216,7 @@ define([
                 prop = obj.getFieldsToExpand(prop.properties);
             }
 
-            if(prop.type === "relationship") {
+            if (prop.type === "relationship") {
                 if (prop.resourceCollection && prop.resourceCollection.length) {
                     _.map(prop.resourceCollection, function (resourceCollection) {
                         addFields(key, resourceCollection.query.fields);

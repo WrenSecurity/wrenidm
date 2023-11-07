@@ -44,7 +44,7 @@ define([
                 this.data.processDefinitions = processDefinitions;
 
                 this.parentRender(function() {
-                    if(processDefinitions.length === 0) {
+                    if (processDefinitions.length === 0) {
                         $("#processList").html('<li class="list-group-item"><h5 class="text-center">' +$.t("openidm.ui.admin.tasks.StartProcessDashboardView.noProcesses") +'</h5></li>');
                     } else {
                         $("#processBadge").html(processDefinitions.length);
@@ -89,7 +89,7 @@ define([
             startProcessView.render(id, "", function() {
                 $("#processContent [disabled]:hidden").filter(function(){return $(this).siblings(":visible").length === 0;}).parent().hide();
 
-                if($("#processContent").html() === "") {
+                if ($("#processContent").html() === "") {
                     $("#processContent").html($.t("openidm.ui.admin.tasks.StartProcessDashboardView.noDataRequired"));
                 }
             });

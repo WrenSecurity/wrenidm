@@ -23,10 +23,10 @@ define([
     "org/forgerock/openidm/ui/admin/authentication/ProvidersView"
 
 ], function($, _,
-            AuthenticationAbstractView,
-            SessionModuleView,
-            AuthenticationModuleView,
-            ProvidersView) {
+        AuthenticationAbstractView,
+        SessionModuleView,
+        AuthenticationModuleView,
+        ProvidersView) {
 
     var AuthenticationView = AuthenticationAbstractView.extend({
         template: "templates/admin/authentication/AuthenticationTemplate.html",

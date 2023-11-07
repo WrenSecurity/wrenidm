@@ -33,21 +33,21 @@ define([
     "org/forgerock/openidm/ui/admin/util/LinkQualifierUtils",
     "org/forgerock/openidm/ui/admin/mapping/util/MappingUtils"
 ], function($, _,
-            MappingAdminAbstractView,
-            eventManager,
-            validatorsManager,
-            router,
-            constants,
-            ModuleLoader,
-            nav,
-            reconDelegate,
-            dateUtil,
-            syncDelegate,
-            connectorUtils,
-            ReconDetailsView,
-            tabdrop,
-            LinkQualifierUtil,
-            mappingUtils) {
+        MappingAdminAbstractView,
+        eventManager,
+        validatorsManager,
+        router,
+        constants,
+        ModuleLoader,
+        nav,
+        reconDelegate,
+        dateUtil,
+        syncDelegate,
+        connectorUtils,
+        ReconDetailsView,
+        tabdrop,
+        LinkQualifierUtil,
+        mappingUtils) {
 
     var MappingBaseView = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/MappingTemplate.html",
@@ -72,7 +72,7 @@ define([
 
             this.$el.find("#syncStatusDetails").toggle();
 
-            if(this.$el.find("#syncStatusDetails:visible").length) {
+            if (this.$el.find("#syncStatusDetails:visible").length) {
                 this.model.syncOpen = true;
                 this.loadReconDetails(this.model.syncDetails);
             } else {
@@ -175,7 +175,7 @@ define([
             //if this.data.mapping does not exist we know this view has not been loaded
             //if this.data.mapping.name is set and it has a different name we want to refresh this view
             //there are rare occasions when this.data.mapping exists but it has actually not been rendered yet hence the last condition
-            if(!this.data.mapping || this.data.mapping.name !== args[0] || this.$el.find("#mappingContent").length === 0){
+            if (!this.data.mapping || this.data.mapping.name !== args[0] || this.$el.find("#mappingContent").length === 0){
                 this.model.syncDetails = null;
                 syncConfig = syncDelegate.mappingDetails(args[0]);
 
@@ -232,7 +232,7 @@ define([
                         }
 
                         LinkQualifierUtil.checkLinkQualifier(this.data.mapping).then(_.bind(function(result){
-                            if(this.data.mapping.recon){
+                            if (this.data.mapping.recon){
                                 this.data.recon = this.data.mapping.recon;
                                 this.setRecon(this.data.recon);
                                 this.model.syncDetails = this.data.recon;
@@ -311,7 +311,7 @@ define([
             if (reconStatus.progress.source.existing.total !== "?"  && reconStatus.stage === "ACTIVE_RECONCILING_SOURCE") {
                 processed = parseInt(reconStatus.progress.source.existing.processed, 10);
                 total = parseInt(reconStatus.progress.source.existing.total, 10);
-            } else if(reconStatus.progress.target.existing.total !== "?" && reconStatus.stage === "ACTIVE_RECONCILING_TARGET") {
+            } else if (reconStatus.progress.target.existing.total !== "?" && reconStatus.stage === "ACTIVE_RECONCILING_TARGET") {
                 total = parseInt(reconStatus.progress.target.existing.total, 10);
                 processed = parseInt(reconStatus.progress.target.existing.processed, 10);
             } else {
@@ -327,13 +327,13 @@ define([
 
             this.$el.find("#syncLabel").html($.t("templates.mapping.reconAnalysis.inProgress"));
 
-            if(total !== 0 && processed !== 0) {
+            if (total !== 0 && processed !== 0) {
                 this.$el.find("#syncMessage").html(reconStatus.stageDescription + " - <span class='bold-message'>" + processed + "/" + total + "</span>");
             } else {
                 this.$el.find("#syncMessage").html(reconStatus.stageDescription);
             }
 
-            if(this.$el.find("#syncStatusDetails:visible").length) {
+            if (this.$el.find("#syncStatusDetails:visible").length) {
                 this.loadReconDetails(this.model.syncDetails);
             }
         },
@@ -348,12 +348,12 @@ define([
             this.data.recon = recon;
             this.setRecon(this.data.recon);
 
-            if(this.data.recon.state === "CANCELED"){
+            if (this.data.recon.state === "CANCELED"){
                 this.data.syncCanceled = true;
                 this.setSyncCanceled(true);
                 this.data.syncLabel = $.t("templates.mapping.reconAnalysis.status");
                 this.data.syncStatus = $.t("templates.mapping.lastSyncCanceled");
-            } else if(this.data.recon.state === "FAILED"){
+            } else if (this.data.recon.state === "FAILED"){
                 this.data.syncLabel = $.t("templates.mapping.reconAnalysis.status");
                 this.data.syncStatus = $.t("templates.mapping.lastSyncFailed");
                 this.data.syncStatus += $.t("templates.mapping.lastSyncFailedProgress",{ processed: recon.progress.source.existing.processed, total: recon.progress.source.existing.total});

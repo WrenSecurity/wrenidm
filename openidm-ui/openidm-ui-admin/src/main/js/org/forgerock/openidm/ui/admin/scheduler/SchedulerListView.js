@@ -30,18 +30,18 @@ define([
     "org/forgerock/openidm/ui/admin/util/SchedulerUtils",
     "backgrid-paginator"
 ], function($, _,
-            handlebars,
-            AdminAbstractView,
-            eventManager,
-            constants,
-            SchedulerCollection,
-            ConnectorDelegate,
-            AdminUtils,
-            Backgrid,
-            BackgridUtils,
-            scheduler,
-            SchedulerUtils
-        ) {
+        handlebars,
+        AdminAbstractView,
+        eventManager,
+        constants,
+        SchedulerCollection,
+        ConnectorDelegate,
+        AdminUtils,
+        Backgrid,
+        BackgridUtils,
+        scheduler,
+        SchedulerUtils
+) {
     var SchedulerListView = AdminAbstractView.extend({
         template: "templates/admin/scheduler/SchedulerListViewTemplate.html",
         events: {
@@ -213,7 +213,7 @@ define([
             this.$el.find(".subFilters").hide();
             this.$el.find("#persistedSchedulesNote").show();
 
-            switch(typeFilter) {
+            switch (typeFilter) {
                 case "reconciliation":
                     this.$el.find("#mappingSubfilter").show();
                     break;
@@ -280,7 +280,7 @@ define([
             var queryFilter = "persisted eq true",//we only want persisted schedules by default
                 orClauseArray;
 
-            switch(filters.typeFilter) {
+            switch (filters.typeFilter) {
                 case "liveSync":
                     queryFilter += " and invokeContext/action/ eq 'liveSync'";
                     if (connectors) {

@@ -15,38 +15,38 @@
  */
 
 define(["lodash", "moment", "moment-timezone", "org/forgerock/openidm/ui/admin/scheduler/AbstractSchedulerView"],
-function(_, moment, momentTimezone, AbstractSchedulerView) {
+    function(_, moment, momentTimezone, AbstractSchedulerView) {
 
-    var AddSchedulerView;
+        var AddSchedulerView;
 
-    AddSchedulerView = AbstractSchedulerView.extend({
-        template: "templates/admin/scheduler/AddSchedulerViewTemplate.html",
-        isNew: true,
-        render: function(args, callback) {
-            this.data.schedule = {
-                "schedule": "0 0 * * * ?",
-                "enabled": false,
-                "persisted": true,
-                "type": "cron",
-                "misfirePolicy": "fireAndProceed",
-                "invokeService": "sync",
-                "invokeLogLevel": "info",
-                "timeZone": null,
-                "startTime": null,
-                "endTime": null,
-                "concurrentExecution": false,
-                "invokeContext": {
-                    "action": "reconcile"
-                }
-            };
-            this.schedule = _.cloneDeep(this.data.schedule);
-            _.bindAll(this);
+        AddSchedulerView = AbstractSchedulerView.extend({
+            template: "templates/admin/scheduler/AddSchedulerViewTemplate.html",
+            isNew: true,
+            render: function(args, callback) {
+                this.data.schedule = {
+                    "schedule": "0 0 * * * ?",
+                    "enabled": false,
+                    "persisted": true,
+                    "type": "cron",
+                    "misfirePolicy": "fireAndProceed",
+                    "invokeService": "sync",
+                    "invokeLogLevel": "info",
+                    "timeZone": null,
+                    "startTime": null,
+                    "endTime": null,
+                    "concurrentExecution": false,
+                    "invokeContext": {
+                        "action": "reconcile"
+                    }
+                };
+                this.schedule = _.cloneDeep(this.data.schedule);
+                _.bindAll(this);
 
-            this.renderForm();
-        },
+                this.renderForm();
+            },
 
-        resetSchedule: _.noop
+            resetSchedule: _.noop
+        });
+
+        return new AddSchedulerView();
     });
-
-    return new AddSchedulerView();
-});

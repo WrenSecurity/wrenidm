@@ -39,7 +39,7 @@ define([
 
         formSubmit: function(event) {
             event.preventDefault();
-            if(validatorsManager.formValidated(this.$el)) {
+            if (validatorsManager.formValidated(this.$el)) {
                 var params = form2js(this.$el.attr("id"), '.', false), param;
                 delete params.saveButton;
                 delete params.requeueButton;
@@ -107,9 +107,9 @@ define([
             if (typeof definition.formGenerationTemplate === "string") {
                 return definition.formGenerationTemplate;
             }
-            for(i = 0; i < formPropertyHandlers.length; i++) {
+            for (i = 0; i < formPropertyHandlers.length; i++) {
                 property = formPropertyHandlers[i];
-                if(property._id === "_formGenerationTemplate") {
+                if (property._id === "_formGenerationTemplate") {
                     return task.formProperties[i][property._id];
                 }
             }

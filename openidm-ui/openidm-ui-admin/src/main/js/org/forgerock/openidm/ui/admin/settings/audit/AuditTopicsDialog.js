@@ -27,14 +27,14 @@ define([
     "jsonEditor",
     "bootstrap-tabdrop"
 ], function($, _,
-            AuditAdminAbstractView,
-            uiUtils,
-            conf,
-            InlineScriptEditor,
-            constants,
-            ValidatorsManager,
-            BootstrapDialog,
-            JSONEditor) {
+        AuditAdminAbstractView,
+        uiUtils,
+        conf,
+        InlineScriptEditor,
+        constants,
+        ValidatorsManager,
+        BootstrapDialog,
+        JSONEditor) {
 
     var AuditTopicsDialog = AuditAdminAbstractView.extend({
         template: "templates/admin/settings/audit/AuditTopicsDialogTemplate.html",
@@ -139,7 +139,7 @@ define([
 
                             if (_.has(event, "filter") && _.has(event.filter, "fields")) {
                                 _.each(event.filter.fields, function(field, index) {
-                                    if(field.name === "") {
+                                    if (field.name === "") {
                                         event.filter.fields.splice(index, 1);
                                     }
                                 }, this);
@@ -332,7 +332,7 @@ define([
         validationSuccessful: function (event) {
             AuditAdminAbstractView.prototype.validationSuccessful(event);
 
-            if(ValidatorsManager.formValidated(this.$el.find("#auditEventsForm"))) {
+            if (ValidatorsManager.formValidated(this.$el.find("#auditEventsForm"))) {
                 this.$el.parentsUntil(".model-content").find("#submitAuditEvent").prop('disabled', false);
 
                 this.data.defaults.eventName = this.$el.find("#eventName").val().trim();
@@ -378,7 +378,7 @@ define([
                 this.data.defaults.event.filter = {};
                 this.data.defaults.event.filter.fields = [];
 
-            } else if(!_.has(this.data.defaults.event.filter, "fields")) {
+            } else if (!_.has(this.data.defaults.event.filter, "fields")) {
                 this.data.defaults.event.filter.fields = [];
             }
 

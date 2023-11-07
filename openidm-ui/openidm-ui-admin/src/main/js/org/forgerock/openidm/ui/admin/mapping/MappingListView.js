@@ -34,21 +34,21 @@ define([
     "dragula",
     "org/forgerock/openidm/ui/admin/mapping/util/MappingUtils"
 ], function($, _, handlebars,
-            Backbone,
-            AdminAbstractView,
-            eventManager,
-            configDelegate,
-            constants,
-            reconDelegate,
-            dateUtil,
-            syncDelegate,
-            connectorUtils,
-            UIUtils,
-            Backgrid,
-            BackgridUtils,
-            AutoScroll,
-            dragula,
-            mappingUtils) {
+        Backbone,
+        AdminAbstractView,
+        eventManager,
+        configDelegate,
+        constants,
+        reconDelegate,
+        dateUtil,
+        syncDelegate,
+        connectorUtils,
+        UIUtils,
+        Backgrid,
+        BackgridUtils,
+        AutoScroll,
+        dragula,
+        mappingUtils) {
 
     var MappingListView = AdminAbstractView.extend({
         template: "templates/admin/mapping/MappingListTemplate.html",
@@ -72,7 +72,7 @@ define([
         ],
         mappingDetail: function(e){
             var button = $(e.target).closest("button");
-            if(!button.hasClass("card-button")){
+            if (!button.hasClass("card-button")){
                 e.preventDefault();
 
                 eventManager.sendEvent(constants.ROUTE_REQUEST, {routeName: "propertiesView", args: [$(e.target).closest(".mapping-config-body").attr("mapping")]});
@@ -82,7 +82,7 @@ define([
         toggleButtonChange: function(event) {
             var target = $(event.target);
 
-            if(target.hasClass("fa")) {
+            if (target.hasClass("fa")) {
                 target = target.parents(".btn");
             }
 
@@ -128,11 +128,11 @@ define([
                         this.data.mappingConfig[index].targetConnector = mappingInfo.targetConnector;
                         this.data.mappingConfig[index].sourceConnector = mappingInfo.sourceConnector;
 
-                        if(!this.data.mappingConfig[index].sourceConnector) {
+                        if (!this.data.mappingConfig[index].sourceConnector) {
                             this.data.mappingConfig[index].sourceConnector = {};
                         }
 
-                        if(!this.data.mappingConfig[index].targetConnector) {
+                        if (!this.data.mappingConfig[index].targetConnector) {
                             this.data.mappingConfig[index].targetConnector = {};
                         }
 
@@ -298,7 +298,7 @@ define([
         syncType: function(type) {
             var tempType = type.split("/");
 
-            if(tempType[0] === "managed") {
+            if (tempType[0] === "managed") {
                 type = "managed";
             } else {
                 type = tempType[1];
@@ -333,14 +333,14 @@ define([
                     managedName = location.split("/")[1];
 
                     _.each(managedDetails.objects, (managedObject) => {
-                        if(managedObject.name === managedName) {
+                        if (managedObject.name === managedName) {
                             managedCheck = true;
                         }
                     });
 
                     resource.displayName = $.t("templates.managed.managedObjectType");
 
-                    if(managedCheck) {
+                    if (managedCheck) {
                         resource.url = "#managed/edit/" +location.split("/")[1] +"/";
                     } else {
                         resource.isMissing = true;
@@ -359,9 +359,9 @@ define([
                 alternateEl,
                 mappingIndex;
 
-            if(selectedEl.length > 0) {
+            if (selectedEl.length > 0) {
                 _.each(this.$el.find(".backgrid tbody tr"), function(row, index) {
-                    if($(row).attr("data-mapping-title") === selectedEl.attr("mapping")) {
+                    if ($(row).attr("data-mapping-title") === selectedEl.attr("mapping")) {
                         alternateEl = $(row);
                         mappingIndex = index;
                     }
@@ -370,7 +370,7 @@ define([
                 selectedEl = $(event.currentTarget).parents("tr");
 
                 _.each(this.$el.find(".mapping-config-body"), function(card, index) {
-                    if($(card).attr("mapping") === selectedEl.attr("data-mapping-title")) {
+                    if ($(card).attr("mapping") === selectedEl.attr("data-mapping-title")) {
                         alternateEl = $(card);
                         mappingIndex = index;
                     }
@@ -385,7 +385,7 @@ define([
                 selectedEl.remove();
                 alternateEl.remove();
 
-                if(this.$el.find(".backgrid tbody tr").length === 0) {
+                if (this.$el.find(".backgrid tbody tr").length === 0) {
                     this.$el.find("#noMappingCards").toggleClass("hidden", false);
                     this.$el.find(".backgrid tbody").append("<tr class='empty'><td colspan='5'>" +$.t("templates.mapping.noResourceTitle") +"</td></tr>");
                 }
@@ -402,20 +402,20 @@ define([
                     total,
                     processed;
 
-                if(recon){
-                    if(recon.state === "CANCELED") {
+                if (recon){
+                    if (recon.state === "CANCELED") {
                         text = $.t("templates.mapping.lastSyncCanceled");
                         type = "DANGER";
-                    } else if(recon.state === "FAILED") {
+                    } else if (recon.state === "FAILED") {
                         text = $.t("templates.mapping.lastSyncFailed");
                         type = "DANGER";
-                    } else if(recon.state === "ACTIVE") {
+                    } else if (recon.state === "ACTIVE") {
                         text = $.t("templates.mapping.inProgress") + ": ";
 
                         if (recon.progress.source.existing.total !== "?"  && recon.stage === "ACTIVE_RECONCILING_SOURCE") {
                             processed = parseInt(recon.progress.source.existing.processed, 10);
                             total = parseInt(recon.progress.source.existing.total, 10);
-                        } else if(recon.progress.target.existing.total !== "?" && recon.stage === "ACTIVE_RECONCILING_TARGET") {
+                        } else if (recon.progress.target.existing.total !== "?" && recon.stage === "ACTIVE_RECONCILING_TARGET") {
                             total = parseInt(recon.progress.target.existing.total, 10);
                             processed = parseInt(recon.progress.target.existing.processed, 10);
                         } else {
@@ -423,7 +423,7 @@ define([
                             processed = 0;
                         }
 
-                        if(total !== 0 && processed !== 0) {
+                        if (total !== 0 && processed !== 0) {
                             text +=  recon.stageDescription + " - <span class='bold-message'>" + processed + "/" + total + "</span>";
                         } else {
                             text += recon.stageDescription;
@@ -473,9 +473,9 @@ define([
         filterMappings: function(event) {
             var search = $(event.target).val().toLowerCase();
 
-            if(search.length > 0) {
+            if (search.length > 0) {
                 _.each(this.$el.find(".mapping-config-body"), function(card) {
-                    if($(card).attr("mapping").toLowerCase().indexOf(search) > -1) {
+                    if ($(card).attr("mapping").toLowerCase().indexOf(search) > -1) {
                         $(card).fadeIn();
                     } else {
                         $(card).fadeOut();
@@ -483,7 +483,7 @@ define([
                 }, this);
 
                 _.each(this.$el.find(".backgrid tbody tr"), function(row) {
-                    if($(row).attr("data-mapping-title").toLowerCase().indexOf(search) > -1) {
+                    if ($(row).attr("data-mapping-title").toLowerCase().indexOf(search) > -1) {
                         $(row).fadeIn();
                     } else {
                         $(row).fadeOut();

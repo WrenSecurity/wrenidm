@@ -30,17 +30,17 @@ define([
     "org/forgerock/openidm/ui/admin/util/BackgridUtils",
     "org/forgerock/commons/ui/common/util/UIUtils"
 ], function($, _, Backbone,
-            AdminAbstractView,
-            eventManager,
-            constants,
-            RepoDelegate,
-            router,
-            ConnectorDelegate,
-            connectorUtils,
-            ConfigDelegate,
-            Backgrid,
-            BackgridUtils,
-            UIUtils) {
+        AdminAbstractView,
+        eventManager,
+        constants,
+        RepoDelegate,
+        router,
+        ConnectorDelegate,
+        connectorUtils,
+        ConfigDelegate,
+        Backgrid,
+        BackgridUtils,
+        UIUtils) {
     var ManagedListView = AdminAbstractView.extend({
         template: "templates/admin/managed/ManagedListViewTemplate.html",
         events: {
@@ -114,7 +114,7 @@ define([
                                     var icon = this.model.attributes.iconClass,
                                         display;
 
-                                    if(this.model.attributes.schema && this.model.attributes.schema.icon)  {
+                                    if (this.model.attributes.schema && this.model.attributes.schema.icon)  {
                                         icon = "fa " +this.model.attributes.schema.icon;
                                     } else {
                                         icon = "fa fa-database";
@@ -170,7 +170,7 @@ define([
         toggleButtonChange: function(event) {
             var target = $(event.target);
 
-            if(target.hasClass("fa")) {
+            if (target.hasClass("fa")) {
                 target = target.parents(".btn");
             }
 
@@ -184,9 +184,9 @@ define([
                 alternateItem,
                 tempManaged = _.clone(this.data.currentManagedObjects);
 
-            if(selectedItem.length > 0) {
+            if (selectedItem.length > 0) {
                 _.each(this.$el.find(".backgrid tbody tr"), function(row) {
-                    if($(row).attr("data-managed-title") === selectedItem.attr("data-managed-title")) {
+                    if ($(row).attr("data-managed-title") === selectedItem.attr("data-managed-title")) {
                         alternateItem = $(row);
                     }
                 });
@@ -194,7 +194,7 @@ define([
                 selectedItem = $(event.currentTarget).parents("tr");
 
                 _.each(this.$el.find(".card-spacer"), function(card) {
-                    if($(card).attr("data-managed-title") === selectedItem.attr("data-managed-title")) {
+                    if ($(card).attr("data-managed-title") === selectedItem.attr("data-managed-title")) {
                         alternateItem = $(card);
                     }
                 });
@@ -228,9 +228,9 @@ define([
         filterManagedObjects: function(event) {
             var search = $(event.target).val().toLowerCase();
 
-            if(search.length > 0) {
+            if (search.length > 0) {
                 _.each(this.$el.find(".card-spacer"), function(card) {
-                    if($(card).attr("data-managed-title").toLowerCase().indexOf(search) > -1) {
+                    if ($(card).attr("data-managed-title").toLowerCase().indexOf(search) > -1) {
                         $(card).fadeIn();
                     } else {
                         $(card).fadeOut();
@@ -238,7 +238,7 @@ define([
                 }, this);
 
                 _.each(this.$el.find(".backgrid tbody tr"), function(row) {
-                    if($(row).attr("data-managed-title").toLowerCase().indexOf(search) > -1) {
+                    if ($(row).attr("data-managed-title").toLowerCase().indexOf(search) > -1) {
                         $(row).fadeIn();
                     } else {
                         $(row).fadeOut();

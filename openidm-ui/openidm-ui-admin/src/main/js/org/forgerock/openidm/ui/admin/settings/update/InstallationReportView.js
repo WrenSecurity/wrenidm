@@ -26,14 +26,14 @@ define([
     "org/forgerock/commons/ui/common/main/SpinnerManager",
     "org/forgerock/openidm/ui/admin/delegates/MaintenanceDelegate"
 ], function($, _, Handlebars,
-            AdminAbstractView,
-            TreeGridUtils,
-            UIUtils,
-            DateUtil,
-            Constants,
-            SpinnerManager,
-            MaintenanceDelegate
-        ) {
+        AdminAbstractView,
+        TreeGridUtils,
+        UIUtils,
+        DateUtil,
+        Constants,
+        SpinnerManager,
+        MaintenanceDelegate
+) {
 
     var InstallationReportView = AdminAbstractView.extend({
         template: "templates/admin/settings/update/InstallationReportTemplate.html",
@@ -82,32 +82,32 @@ define([
             }
 
             MaintenanceDelegate.getLogDetails(this.model.runningID)
-            .then(function(logData) {
-                this.model.response.files = logData.files;
+                .then(function(logData) {
+                    this.model.response.files = logData.files;
 
-                UIUtils.preloadPartial("partials/settings/_updateStatePopover.html").then(_.bind(function() {
-                    this.data.treeGrid = TreeGridUtils.filepathToTreegrid("filePath", this.formatFiles(), ["filePath", "actionTaken"]);
+                    UIUtils.preloadPartial("partials/settings/_updateStatePopover.html").then(_.bind(function() {
+                        this.data.treeGrid = TreeGridUtils.filepathToTreegrid("filePath", this.formatFiles(), ["filePath", "actionTaken"]);
 
-                    if (this.model.response) {
-                        this.data.responseJSON = JSON.stringify(this.model.response);
-                    }
-
-                    this.parentRender(_.bind(function() {
-                        SpinnerManager.hideSpinner();
-
-                        this.$el.find('[data-toggle="popover"]').popover({
-                            placement: 'top',
-                            container: 'body',
-                            title: ''
-                        });
-
-                        if (callback) {
-                            callback();
+                        if (this.model.response) {
+                            this.data.responseJSON = JSON.stringify(this.model.response);
                         }
-                    }, this));
-                }, this));
 
-            }.bind(this));
+                        this.parentRender(_.bind(function() {
+                            SpinnerManager.hideSpinner();
+
+                            this.$el.find('[data-toggle="popover"]').popover({
+                                placement: 'top',
+                                container: 'body',
+                                title: ''
+                            });
+
+                            if (callback) {
+                                callback();
+                            }
+                        }, this));
+                    }, this));
+
+                }.bind(this));
 
         },
 

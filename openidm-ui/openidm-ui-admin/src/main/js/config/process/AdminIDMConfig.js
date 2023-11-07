@@ -89,13 +89,13 @@ define([
                 "org/forgerock/commons/ui/common/util/URIUtils"
             ],
             processDescription: function(event,
-                                         Router,
-                                         Constants,
-                                         MaintenanceDelegate,
-                                         SchedulerDelegate,
-                                         Navigation,
-                                         AdminRoutesConfig,
-                                         URIUtils) {
+                    Router,
+                    Constants,
+                    MaintenanceDelegate,
+                    SchedulerDelegate,
+                    Navigation,
+                    AdminRoutesConfig,
+                    URIUtils) {
 
                 MaintenanceDelegate.getStatus().then(function (response) {
                     if (response.maintenanceEnabled) {
@@ -225,11 +225,11 @@ define([
                     });
 
                     _.each(managedConfig.objects, function(managed) {
-                        if(!managed.schema) {
+                        if (!managed.schema) {
                             managed.schema = {};
                         }
 
-                        if(!managed.schema.icon) {
+                        if (!managed.schema.icon) {
                             managed.schema.icon = "fa-cube";
                         }
 

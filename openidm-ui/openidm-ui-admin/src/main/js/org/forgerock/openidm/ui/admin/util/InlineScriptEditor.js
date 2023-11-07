@@ -27,14 +27,14 @@ define([
     "org/forgerock/openidm/ui/admin/delegates/ScriptDelegate",
     "org/forgerock/openidm/ui/admin/util/WorkflowWidget"
 ], function($, _, JSONEditor,
-            AbstractView,
-            validatorsManager,
-            codeMirror,
-            groovyMode,
-            jsMode,
-            placeHolder,
-            ScriptDelegate,
-            WorkflowWidget) {
+        AbstractView,
+        validatorsManager,
+        codeMirror,
+        groovyMode,
+        jsMode,
+        placeHolder,
+        ScriptDelegate,
+        WorkflowWidget) {
     var seInstance = {},
         InlineScriptEditor = AbstractView.extend({
             template: "templates/admin/util/ScriptEditorView.html",
@@ -104,7 +104,7 @@ define([
                 }
 
                 if (!this.model.disablePassedVariable && this.model.scriptData) {
-                    if(args.scriptData.globals === null) {
+                    if (args.scriptData.globals === null) {
                         args.scriptData.globals = {};
                     }
 
@@ -123,7 +123,7 @@ define([
                         mode = "javascript";
                     }
 
-                    if(this.model.showPreview) {
+                    if (this.model.showPreview) {
                         this.$el.find(".preview-pane .preview-button").bind("click", _.bind(this.previewScript, this));
                     }
 
@@ -137,13 +137,13 @@ define([
 
 
                     if (this.data.scriptData) {
-                        if(this.data.scriptData.file === "workflow/triggerWorkflowGeneric.js") {
+                        if (this.data.scriptData.file === "workflow/triggerWorkflowGeneric.js") {
                             workflowName = this.data.scriptData.globals.workflowName;
                             workflowParams = this.data.scriptData.globals.params;
                         }
 
                         //This will now catch if a user passes in an empty object, null, or empty string for the script data select
-                        if(_.isUndefined(this.data.scriptData.type)) {
+                        if (_.isUndefined(this.data.scriptData.type)) {
                             this.$el.find(".script-type").val("text/javascript");
                         } else {
                             this.$el.find(".script-type").val(this.data.scriptData.type);
@@ -195,7 +195,7 @@ define([
 
                         if (!this.data.disableValidation) {
 
-                            if(cm.getValue().length > 0) {
+                            if (cm.getValue().length > 0) {
                                 this.model.codeMirrorValid = true;
                             } else {
                                 this.model.codeMirrorValid = false;
@@ -246,7 +246,7 @@ define([
                         this.addPassedVariable(key, value);
                     }, this);
 
-                    if(this.cmBox.getValue().length > 0) {
+                    if (this.cmBox.getValue().length > 0) {
                         this.model.codeMirrorValid = true;
                     }
 
@@ -377,20 +377,20 @@ define([
                     if (currentSelection === "file-code") {
                         scriptObject.file = this.$el.find("input[type='text']").val();
 
-                        if(scriptObject.file.length === 0) {
+                        if (scriptObject.file.length === 0) {
                             emptyCheck = true;
                         }
 
                     } else {
                         scriptObject.source = this.$el.find("textarea").val();
 
-                        if(scriptObject.source.length === 0) {
+                        if (scriptObject.source.length === 0) {
                             emptyCheck = true;
                         }
                     }
 
                     _.each(this.model.editors, function (jsonEditor) {
-                        if(jsonEditor.row.find(".passed-variable-name input").val().length > 0) {
+                        if (jsonEditor.row.find(".passed-variable-name input").val().length > 0) {
                             scriptObject.globals[jsonEditor.row.find(".passed-variable-name input").val()] = jsonEditor.editor.getValue();
                         }
                     }, this);
@@ -400,7 +400,7 @@ define([
                     if (emptyCheck) {
                         return null;
                     } else {
-                        if(this.model.setScript) {
+                        if (this.model.setScript) {
                             this.model.setScript({"scriptObject":scriptObject, "hookType":currentSelection});
                         }
 
@@ -434,7 +434,7 @@ define([
                     this.validationResult = this.workflow.isValid();
                 }
 
-                if(this.model.validationCallback) {
+                if (this.model.validationCallback) {
                     if (this.$el.find(".scriptFilePath:visible").length > 0 && this.validationResult) {
                         this.model.validationCallback(true);
                     } else if (this.model.codeMirrorValid) {
@@ -482,7 +482,7 @@ define([
                     this.$el.find(".inline-code").toggleClass("code-mirror-disabled", false);
                     codeMirror.refresh();
 
-                    if(this.model.autoFocus) {
+                    if (this.model.autoFocus) {
                         codeMirror.focus();
                     }
                 } else {
@@ -490,7 +490,7 @@ define([
                     this.cmBox.setOption("readOnly", "nocursor");
                     this.$el.find(".inline-code").toggleClass("code-mirror-disabled", true);
 
-                    if(this.model.autoFocus) {
+                    if (this.model.autoFocus) {
                         filePath.focus();
                     }
                 }
@@ -528,7 +528,7 @@ define([
 
                 field.attr("style", "");
 
-                if(name) {
+                if (name) {
                     field.find(".passed-variable-name input").val(name);
                 }
 
@@ -550,7 +550,7 @@ define([
                     }
                 }, this));
 
-                if(value) {
+                if (value) {
                     editor.setValue(value);
                 }
 

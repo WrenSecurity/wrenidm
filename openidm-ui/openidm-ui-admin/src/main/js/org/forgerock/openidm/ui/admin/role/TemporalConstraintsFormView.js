@@ -22,9 +22,9 @@ define([
     "org/forgerock/openidm/ui/admin/role/util/TemporalConstraintsUtils",
     "bootstrap-datetimepicker"
 ], function($, _, Handlebars,
-            AdminAbstractView,
-            TemporalConstraintsUtils,
-            Datetimepicker) {
+        AdminAbstractView,
+        TemporalConstraintsUtils,
+        Datetimepicker) {
     var TemporalConstraintsFormView = AdminAbstractView.extend({
         template: "templates/admin/role/TemporalConstraintsFormView.html",
         events: {
@@ -68,7 +68,7 @@ define([
             this.parentRender(_.bind(function(){
                 this.showForm(true);
 
-                if(callback) {
+                if (callback) {
                     callback();
                 }
             },this));

@@ -25,13 +25,13 @@ define([
     "org/forgerock/commons/ui/common/main/Router",
     "org/forgerock/openidm/ui/admin/managed/schema/SchemaEditorView"
 ], function($, _,
-            AdminAbstractView,
-            ConfigDelegate,
-            EventManager,
-            Constants,
-            RepoDelegate,
-            Router,
-            SchemaEditorView) {
+        AdminAbstractView,
+        ConfigDelegate,
+        EventManager,
+        Constants,
+        RepoDelegate,
+        Router,
+        SchemaEditorView) {
 
     var AbstractManagedView = AdminAbstractView.extend({
         data: {},
@@ -56,24 +56,25 @@ define([
                     this.data.repoConfig = RepoDelegate.addManagedObjectToOrientClasses(this.data.repoConfig, managedObject.name);
                     promises.push(RepoDelegate.updateEntity(this.data.repoConfig._id, this.data.repoConfig));
                     break;
-                case "jdbc":
+                case "jdbc": {
                     let resourceMapping = RepoDelegate.findGenericResourceMappingForRoute(this.data.repoConfig, "managed/"+managedObject.name);
                     if (resourceMapping && resourceMapping.searchableDefault !== true) {
                         let searchablePropertiesList = _(managedObject.schema.properties)
-                                                    .pairs()
-                                                    .map((prop) => {
-                                                        if (prop[1].searchable) {
-                                                            return prop[0];
-                                                        }
-                                                    })
-                                                    .filter()
-                                                    .value();
+                            .pairs()
+                            .map((prop) => {
+                                if (prop[1].searchable) {
+                                    return prop[0];
+                                }
+                            })
+                            .filter()
+                            .value();
                         // modifies this.data.repoConfig via object reference in resourceMapping
                         RepoDelegate.syncSearchablePropertiesForGenericResource(resourceMapping, searchablePropertiesList);
 
                         promises.push(RepoDelegate.updateEntity(this.data.repoConfig._id, this.data.repoConfig));
                     }
                     break;
+                }
             }
 
             $.when.apply($, promises).then(_.bind(function() {
@@ -92,7 +93,7 @@ define([
             var found = false;
 
             _.each(managedList, function(managedObject){
-                if(managedObject.name === name){
+                if (managedObject.name === name){
                     found = true;
                 }
             }, this);
@@ -178,7 +179,7 @@ define([
                 }
 
                 if (_.indexOf(managedObject.schema.order, "preferences") === -1) {
-                    if(_.isUndefined(managedObject.schema.order)) {
+                    if (_.isUndefined(managedObject.schema.order)) {
                         managedObject.schema.order = [];
                     }
 

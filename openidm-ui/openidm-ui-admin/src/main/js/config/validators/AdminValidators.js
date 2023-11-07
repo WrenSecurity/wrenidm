@@ -70,7 +70,7 @@ define([
                 var inputs = input.parent().parent().find("input"),
                     secondInput;
 
-                if(inputs.length !== 2) {
+                if (inputs.length !== 2) {
                     callback([$.t("templates.scriptEditor.bothRequired")]);
                     return;
                 }
@@ -87,7 +87,7 @@ define([
 
                 secondInput = inputs.not(input);
 
-                if(secondInput.hasClass("field-error")) {
+                if (secondInput.hasClass("field-error")) {
                     secondInput.trigger("blur");
                 }
 

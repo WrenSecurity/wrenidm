@@ -29,13 +29,13 @@ define([
     "org/forgerock/openidm/ui/admin/delegates/MaintenanceDelegate",
     "org/forgerock/openidm/ui/admin/delegates/ClusterDelegate"
 ], function($, _, Handlebars, Backgrid, BootstrapDialog, Backbone,
-            AdminAbstractView,
-            InfoDelegate,
-            BackgridUtils,
-            DateUtil,
-            Constants,
-            MaintenanceDelegate,
-            ClusterDelegate) {
+        AdminAbstractView,
+        InfoDelegate,
+        BackgridUtils,
+        DateUtil,
+        Constants,
+        MaintenanceDelegate,
+        ClusterDelegate) {
 
     var HistoryView = AdminAbstractView.extend({
         template: "templates/admin/settings/update/HistoryTemplate.html",

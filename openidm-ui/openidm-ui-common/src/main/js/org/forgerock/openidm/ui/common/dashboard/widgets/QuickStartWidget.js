@@ -24,11 +24,11 @@ define([
     "org/forgerock/commons/ui/common/util/BackgridUtils",
     "faiconpicker"
 ], function($, _, Backbone,
-            AbstractWidget,
-            eventManager,
-            Backgrid,
-            BackgridUtils,
-            faiconpicker) {
+        AbstractWidget,
+        eventManager,
+        Backgrid,
+        BackgridUtils,
+        faiconpicker) {
     var widgetInstance = {},
         Widget = AbstractWidget.extend({
             template: "templates/dashboard/widget/QuickStartWidgetTemplate.html",
@@ -44,7 +44,7 @@ define([
                 _.each(this.data.cards, function(card) {
                     card.name = $.t(card.name);
 
-                    if(card.event) {
+                    if (card.event) {
                         this.events["click #" + card.uid] = function(e) {
                             e.preventDefault();
                             eventManager.sendEvent(card.event);
@@ -53,7 +53,7 @@ define([
                 }, this);
 
                 this.parentRender(_.bind(function() {
-                    if(callback) {
+                    if (callback) {
                         callback();
                     }
                 }, this));
@@ -102,27 +102,27 @@ define([
                                     this.model.destroy();
                                 }
                             },
-                                {
-                                    className: "fa fa-pencil grid-icon pull-right",
-                                    callback: function() {
-                                        _this.model.editedQuickCard = this.model;
-                                        _this.model.editedElement = this.el;
+                            {
+                                className: "fa fa-pencil grid-icon pull-right",
+                                callback: function() {
+                                    _this.model.editedQuickCard = this.model;
+                                    _this.model.editedElement = this.el;
 
-                                        _this.clearQuickLinkForm(dialogRef);
+                                    _this.clearQuickLinkForm(dialogRef);
 
-                                        dialogRef.$modalBody.find("#quickLinkName").val(this.model.attributes.name);
-                                        dialogRef.$modalBody.find("#quickLinkHref").val(this.model.attributes.href);
-                                        dialogRef.$modalBody.find("#quickLinkIcon").val(this.model.attributes.icon);
+                                    dialogRef.$modalBody.find("#quickLinkName").val(this.model.attributes.name);
+                                    dialogRef.$modalBody.find("#quickLinkHref").val(this.model.attributes.href);
+                                    dialogRef.$modalBody.find("#quickLinkIcon").val(this.model.attributes.icon);
 
-                                        dialogRef.$modalBody.find(".fr-edit-well-header").html($.t("dashboard.quickStart.updateQuicklink"));
-                                        dialogRef.$modalBody.find("#createQuickLink").html("Update");
+                                    dialogRef.$modalBody.find(".fr-edit-well-header").html($.t("dashboard.quickStart.updateQuicklink"));
+                                    dialogRef.$modalBody.find("#createQuickLink").html("Update");
 
-                                        dialogRef.$modalBody.find(".iconpicker-container .input-group-addon i").attr("class", "fa " +this.model.attributes.icon);
+                                    dialogRef.$modalBody.find(".iconpicker-container .input-group-addon i").attr("class", "fa " +this.model.attributes.icon);
 
-                                        dialogRef.$modalBody.find("#addQuickLink").hide();
-                                        dialogRef.$modalBody.find("#quickLinkAddHolder").show();
-                                    }
-                                }]),
+                                    dialogRef.$modalBody.find("#addQuickLink").hide();
+                                    dialogRef.$modalBody.find("#quickLinkAddHolder").show();
+                                }
+                            }]),
                             sortable: false,
                             editable: false
                         }
@@ -149,7 +149,7 @@ define([
                 });
 
                 dialogRef.$modalBody.find("#createQuickLink").bind("click", function(){
-                    if(!_.isNull(_this.model.editedQuickCard)) {
+                    if (!_.isNull(_this.model.editedQuickCard)) {
                         _this.model.editedQuickCard.attributes.name = dialogRef.$modalBody.find("#quickLinkName").val();
                         _this.model.editedQuickCard.attributes.href = dialogRef.$modalBody.find("#quickLinkHref").val();
                         _this.model.editedQuickCard.attributes.icon = dialogRef.$modalBody.find("#quickLinkIcon").val();

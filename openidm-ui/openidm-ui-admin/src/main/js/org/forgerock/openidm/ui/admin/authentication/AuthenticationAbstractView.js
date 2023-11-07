@@ -26,14 +26,14 @@ define([
     "org/forgerock/commons/ui/common/util/Constants",
     "org/forgerock/commons/ui/common/util/ModuleLoader"
 ], function($, _,
-            JSONEditor,
-            Form2js,
-            AdminAbstractView,
-            InlineScriptEditor,
-            ConfigDelegate,
-            EventManager,
-            Constants,
-            ModuleLoader) {
+        JSONEditor,
+        Form2js,
+        AdminAbstractView,
+        InlineScriptEditor,
+        ConfigDelegate,
+        EventManager,
+        Constants,
+        ModuleLoader) {
 
     var authenticationDataChanges = {},
         authenticationData = {},

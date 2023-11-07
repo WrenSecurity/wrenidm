@@ -23,10 +23,10 @@ define([
     "org/forgerock/openidm/ui/common/util/oAuthUtils"
 
 ], function($, _,
-            AuthenticationAbstractView,
-            ProvidersModuleDialogView,
-            SocialDelegate,
-            OAuthUtils) {
+        AuthenticationAbstractView,
+        ProvidersModuleDialogView,
+        SocialDelegate,
+        OAuthUtils) {
 
     var ProvidersView = AuthenticationAbstractView.extend({
         template: "templates/admin/authentication/ProvidersTemplate.html",

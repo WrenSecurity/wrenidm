@@ -127,9 +127,9 @@ define([
         }).then(function (reconId) {
 
             return obj.waitForAll([reconId._id], suppressSpinner, progressCallback, delayTime)
-                      .then(function (reconArray) {
-                          return reconArray[0];
-                      }) ;
+                .then(function (reconArray) {
+                    return reconArray[0];
+                }) ;
         });
 
     };
@@ -184,7 +184,7 @@ define([
                 "serviceUrl": "/openidm/audit/recon",
                 "url":  "?_queryFilter=" + encodeURIComponent(queryFilter)
             }).then(function(qry){
-                if(qry.result.length){
+                if (qry.result.length){
                     _.each(qry.result, function(link){
                         linkPromArray.push(getTargetObj(link));
                     });

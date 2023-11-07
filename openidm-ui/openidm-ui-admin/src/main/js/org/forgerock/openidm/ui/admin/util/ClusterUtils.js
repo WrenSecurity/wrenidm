@@ -25,12 +25,12 @@ define([
     "moment",
     "org/forgerock/commons/ui/common/util/UIUtils"
 ], function ($, _,handlebars,
-    ClusterDelegate,
-    SchedulerDelegate,
-    SchedulerUtils,
-    BootstrapDialog,
-    moment,
-    UIUtils
+        ClusterDelegate,
+        SchedulerDelegate,
+        SchedulerUtils,
+        BootstrapDialog,
+        moment,
+        UIUtils
 ) {
 
     var obj = {};

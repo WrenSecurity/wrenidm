@@ -24,11 +24,11 @@ define([
     "org/forgerock/openidm/ui/common/delegates/ConfigDelegate",
     "org/forgerock/commons/ui/common/main/ValidatorsManager"
 ], function($, _, form2js,
-            AdminAbstractView,
-            eventManager,
-            constants,
-            ConfigDelegate,
-            validatorsManager) {
+        AdminAbstractView,
+        eventManager,
+        constants,
+        ConfigDelegate,
+        validatorsManager) {
 
     var EmailConfigView = AdminAbstractView.extend({
         template: "templates/admin/settings/EmailConfigTemplate.html",

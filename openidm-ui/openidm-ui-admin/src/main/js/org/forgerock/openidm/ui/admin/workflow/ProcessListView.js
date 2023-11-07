@@ -22,11 +22,11 @@ define([
     "org/forgerock/openidm/ui/admin/workflow/ProcessHistoryView",
     "org/forgerock/commons/ui/common/main/AbstractCollection"
 ], function(_,
-            AdminAbstractView,
-            ActiveProcessesView,
-            ProcessDefinitionsView,
-            ProcessHistoryView,
-            AbstractCollection) {
+        AdminAbstractView,
+        ActiveProcessesView,
+        ProcessDefinitionsView,
+        ProcessHistoryView,
+        AbstractCollection) {
     var ProcessListView = AdminAbstractView.extend({
         template: "templates/admin/workflow/ProcessListViewTemplate.html",
         events: {

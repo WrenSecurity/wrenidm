@@ -23,11 +23,11 @@ define([
     "org/forgerock/openidm/ui/admin/mapping/util/MappingUtils",
     "org/forgerock/openidm/ui/admin/mapping/behaviors/SingleRecordReconciliationGridView"
 ], function ($, _,
-             MappingAdminAbstractView,
-             searchDelegate,
-             conf,
-             mappingUtils,
-             SingleRecordReconciliationGridView) {
+        MappingAdminAbstractView,
+        searchDelegate,
+        conf,
+        mappingUtils,
+        SingleRecordReconciliationGridView) {
 
     var SingleRecordReconciliationView = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/behaviors/SingleRecordReconciliationTemplate.html",
@@ -41,7 +41,7 @@ define([
         refreshSourceRecord: function(e){
             e.preventDefault();
 
-            if(conf.globalData.testSyncSource){
+            if (conf.globalData.testSyncSource){
                 searchDelegate.searchResults(this.data.mapping.source,["_id"],conf.globalData.testSyncSource._id,"eq").then(_.bind(function(qry){
                     conf.globalData.testSyncSource = qry[0];
                     this.data.showChangedPropertyMessage = false;
@@ -52,7 +52,7 @@ define([
         removeSourceRecord: function(e){
             e.preventDefault();
 
-            if(conf.globalData.testSyncSource){
+            if (conf.globalData.testSyncSource){
                 delete conf.globalData.testSyncSource;
                 this.data.showChangedPropertyMessage = false;
                 this.data.showSampleSource = false;

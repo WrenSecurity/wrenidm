@@ -20,8 +20,8 @@ define([
     "org/forgerock/commons/ui/common/main/Configuration",
     "org/forgerock/commons/ui/common/main/EventManager"
 ], function(Constants,
-            AbstractDelegate,
-            configuration) {
+        AbstractDelegate,
+        configuration) {
 
     var obj = new AbstractDelegate(Constants.host + "/" + Constants.context + "/config/ui/configuration");
 
@@ -35,7 +35,7 @@ define([
             url: "",
             headers: headers
         }).then(function(data) {
-            if(successCallback) {
+            if (successCallback) {
                 successCallback(data.configuration);
             }
             return data.configuration;

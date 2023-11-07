@@ -28,16 +28,16 @@ define([
     "backgrid",
     "org/forgerock/commons/ui/common/util/UIUtils"
 ], function($, _,
-            AdminAbstractView,
-            ResourceDelegate,
-            AbstractModel,
-            AbstractCollection,
-            eventManager,
-            constants,
-            BackgridUtils,
-            router,
-            Backgrid,
-            UIUtils) {
+        AdminAbstractView,
+        ResourceDelegate,
+        AbstractModel,
+        AbstractCollection,
+        eventManager,
+        constants,
+        BackgridUtils,
+        router,
+        Backgrid,
+        UIUtils) {
     var ActiveProcessesView = AdminAbstractView.extend({
         template: "templates/admin/workflow/ActiveProcessViewTemplate.html",
         events: {
@@ -202,7 +202,7 @@ define([
 
                 this.$el.find("#processAssignedTo")[0].selectize.setValue("anyone", true);
 
-                if(callback) {
+                if (callback) {
                     callback();
                 }
             }, this));
@@ -217,17 +217,17 @@ define([
         reloadGrid: function() {
             var filterString = "";
 
-            if(this.model.userFilter !== "anyone") {
+            if (this.model.userFilter !== "anyone") {
                 filterString = "_queryId=filtered-query&startUserId=" + this.model.userFilter;
 
-                if(this.model.processTypeFilter !== "all") {
+                if (this.model.processTypeFilter !== "all") {
                     filterString = filterString + "&processDefinitionKey=" +this.model.processTypeFilter;
                 }
             } else if (this.model.processTypeFilter !== "all") {
                 filterString = "_queryId=filtered-query&processDefinitionKey=" + this.model.processTypeFilter;
             }
 
-            if(filterString.length > 0) {
+            if (filterString.length > 0) {
                 this.model.processes.url = "/openidm/workflow/processinstance?" + filterString;
             } else {
                 this.model.processes.url = "/openidm/workflow/processinstance?_queryId=query-all-ids";

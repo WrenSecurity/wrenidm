@@ -25,11 +25,11 @@ define([
     obj.evalScript = function(script, additionalGlobals) {
         var scriptDetails = _.cloneDeep(script);
 
-        if(_.isUndefined(scriptDetails.globals) || _.isNull(scriptDetails.globals)) {
+        if (_.isUndefined(scriptDetails.globals) || _.isNull(scriptDetails.globals)) {
             scriptDetails.globals = {};
         }
 
-        if(additionalGlobals) {
+        if (additionalGlobals) {
             scriptDetails.globals = _.extend(scriptDetails.globals, additionalGlobals);
         }
 

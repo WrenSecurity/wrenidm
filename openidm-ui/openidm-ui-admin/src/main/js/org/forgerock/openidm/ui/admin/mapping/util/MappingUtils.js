@@ -28,16 +28,16 @@ define([
     "org/forgerock/openidm/ui/admin/util/AdminUtils",
     "org/forgerock/openidm/ui/admin/delegates/SchedulerDelegate"
 ], function($, _,
-             Handlebars,
-             searchDelegate,
-             configDelegate,
-             resourceDelegate,
-             UIUtils,
-             router,
-             constants,
-             selectize,
-             AdminUtils,
-             schedulerDelegate) {
+        Handlebars,
+        searchDelegate,
+        configDelegate,
+        resourceDelegate,
+        UIUtils,
+        router,
+        constants,
+        selectize,
+        AdminUtils,
+        schedulerDelegate) {
 
     var obj = {};
 
@@ -47,10 +47,10 @@ define([
         _.each(props, _.bind(function(prop, i){
             var objRepEl = $("<span>"),
                 wrapper = $("<div>");
-            if(objToRep[prop]){
+            if (objToRep[prop]){
                 objRepEl.text(_.escape(objToRep[prop])).attr("title", prop);
             }
-            if(i === 0){
+            if (i === 0){
                 objRepEl.addClass("objectRepresentationHeader");
             } else {
                 objRepEl.addClass("objectRepresentation");
@@ -81,7 +81,7 @@ define([
                         counter = 0;
 
                     _.forIn(fields, function(value, key) {
-                        if(counter === 0) {
+                        if (counter === 0) {
                             $(element).append('<div class="fr-search-primary">' +selectizeEscape(value) +'</div>');
                         } else {
                             $(element).append('<div class="fr-search-secondary text-muted">' +selectizeEscape(value) +'</div>');
@@ -104,7 +104,7 @@ define([
                 }
 
                 searchDelegate.searchResults(mapping.source, autocompleteProps, query).then(function(response) {
-                    if(response) {
+                    if (response) {
                         searchList = response;
                         callback([response]);
                     } else {

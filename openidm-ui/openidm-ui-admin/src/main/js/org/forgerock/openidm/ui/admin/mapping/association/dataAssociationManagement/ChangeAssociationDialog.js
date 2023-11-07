@@ -26,14 +26,14 @@ define([
     "bootstrap-dialog",
     "org/forgerock/openidm/ui/admin/util/LinkQualifierUtils"
 ], function($, _,
-            MappingAdminAbstractView,
-            conf,
-            uiUtils,
-            searchDelegate,
-            mappingUtils,
-            syncDelegate,
-            BootstrapDialog,
-            LinkQualifierUtil) {
+        MappingAdminAbstractView,
+        conf,
+        uiUtils,
+        searchDelegate,
+        mappingUtils,
+        syncDelegate,
+        BootstrapDialog,
+        LinkQualifierUtil) {
 
     var ChangeAssociationDialog = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/association/dataAssociationManagement/ChangeAssociationDialogTemplate.html",

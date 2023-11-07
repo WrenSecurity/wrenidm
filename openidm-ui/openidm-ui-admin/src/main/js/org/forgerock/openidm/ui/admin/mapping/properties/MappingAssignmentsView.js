@@ -20,8 +20,8 @@ define([
     "org/forgerock/openidm/ui/admin/mapping/util/MappingAdminAbstractView",
     "org/forgerock/openidm/ui/common/delegates/ResourceDelegate"
 ], function($, _,
-            MappingAdminAbstractView,
-            ResourceDelegate) {
+        MappingAdminAbstractView,
+        ResourceDelegate) {
 
     var MappingAssignmentsView = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/properties/MappingAssignmentsViewTemplate.html",
@@ -40,7 +40,7 @@ define([
                 this.data.assignments = assignments.result;
 
                 this.parentRender(_.bind(function () {
-                    if(this.data.assignments.length > 0) {
+                    if (this.data.assignments.length > 0) {
                         //Needs to be above the view scope to open the parent panel
                         $("a[href='#assignmentsBody']").collapse("show");
                         $("#assignmentsBody").toggleClass("in", true);

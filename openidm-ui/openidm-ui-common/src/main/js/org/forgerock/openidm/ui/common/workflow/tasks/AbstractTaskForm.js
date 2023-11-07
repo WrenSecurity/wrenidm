@@ -31,7 +31,7 @@ define([
         },
 
         postRender: function(callback) {
-            if(callback) {
+            if (callback) {
                 callback();
             }
         },

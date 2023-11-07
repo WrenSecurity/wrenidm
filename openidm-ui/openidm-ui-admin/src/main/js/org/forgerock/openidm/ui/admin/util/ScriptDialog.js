@@ -50,7 +50,7 @@ define([
                 cssClass: "script-large-dialog",
                 onshown : function (dialogRef) {
                     args.element = _this.$el;
-                    if(!args.disableValidation) {
+                    if (!args.disableValidation) {
                         args.validationCallback = _.bind(function (result) {
                             if (result) {
                                 $("#scriptDialogOkay").prop("disabled", false);
@@ -61,7 +61,7 @@ define([
                     }
 
                     _this.scriptEditor = InlineScriptEditor.generateScriptEditor(args, _.bind(function(){
-                        if(callback) {
+                        if (callback) {
                             callback();
                         }
                     },  _this));

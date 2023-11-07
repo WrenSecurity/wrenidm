@@ -21,9 +21,9 @@ define([
     "org/forgerock/openidm/ui/common/delegates/ConfigDelegate"
 
 ], function(_,
-            AdminAbstractView,
-            SyncDelegate,
-            ConfigDelegate) {
+        AdminAbstractView,
+        SyncDelegate,
+        ConfigDelegate) {
 
     var currentMapping = {},
         syncConfig = {},
@@ -34,7 +34,7 @@ define([
 
         MappingAdminAbstractView = AdminAbstractView.extend({
             getCurrentMapping: function() {
-                if(currentMapping.recon) {
+                if (currentMapping.recon) {
                     delete currentMapping.recon;
                 }
 
@@ -75,7 +75,7 @@ define([
             },
 
             setCurrentMapping: function(mapping) {
-                if(mapping.recon) {
+                if (mapping.recon) {
                     delete mapping.recon;
                 }
 

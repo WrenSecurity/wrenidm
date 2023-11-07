@@ -28,10 +28,10 @@ define([
     obj.checkLinkQualifier = function (mapping) {
         var linkQualifierPromise = $.Deferred();
 
-        if(mapping.linkQualifiers !== undefined) {
+        if (mapping.linkQualifiers !== undefined) {
 
-            if(mapping.linkQualifiers.type) {
-                if(this.model.linkQualifier[mapping.name] !== null &&  this.model.linkQualifier[mapping.name] !== undefined) {
+            if (mapping.linkQualifiers.type) {
+                if (this.model.linkQualifier[mapping.name] !== null &&  this.model.linkQualifier[mapping.name] !== undefined) {
                     linkQualifierPromise.resolve(this.model.linkQualifier[mapping.name]);
                 } else {
                     ScriptDelegate.evalLinkQualifierScript(mapping.linkQualifiers).then(_.bind(function(result){

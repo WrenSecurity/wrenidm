@@ -48,11 +48,11 @@ define([
         if (isJsonEditor) {
             return {
                 "name": node.getAttribute('name')
-                            .match(/(\[.*?\])/g)
-                            .map(function (field) {
-                                return field.replace(/\[|\]/g, '');
-                            })
-                            .join("."),
+                    .match(/(\[.*?\])/g)
+                    .map(function (field) {
+                        return field.replace(/\[|\]/g, '');
+                    })
+                    .join("."),
                 "value": node.value
             };
         } else {
@@ -79,9 +79,9 @@ define([
                     // and bind validation handlers for each property found.
                     _.each(allEntityPolicies.properties, function (property) {
                         var input = containerElement.hasClass("jsonEditor") ?
-                                    // could be improved to support more complex properties
-                                    containerElement.find("[name$='\\[" + property.name + "\\]']") :
-                                    containerElement.find("[name='" + property.name + "']"),
+                            // could be improved to support more complex properties
+                                containerElement.find("[name$='\\[" + property.name + "\\]']") :
+                                containerElement.find("[name='" + property.name + "']"),
                             filteredPolicies = _.filter(property.policies, function (policy) {
                                 return obj.excludedClientSidePolicies.indexOf(policy.policyId) === -1;
                             }),
@@ -116,13 +116,13 @@ define([
     */
     obj.processPolicyFailures = function (failures) {
         return _(failures)
-                .filter(function (policyFailure) {
-                    return obj.excludedClientSideRequirements.indexOf(policyFailure.policyRequirement) === -1;
-                })
-                .map(function (policyFailure) {
-                    return $.t("common.form.validation." + policyFailure.policyRequirement, policyFailure.params);
-                })
-                .value();
+            .filter(function (policyFailure) {
+                return obj.excludedClientSideRequirements.indexOf(policyFailure.policyRequirement) === -1;
+            })
+            .map(function (policyFailure) {
+                return $.t("common.form.validation." + policyFailure.policyRequirement, policyFailure.params);
+            })
+            .value();
     };
 
     /**

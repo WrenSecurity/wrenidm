@@ -22,11 +22,11 @@ define([
     "org/forgerock/openidm/ui/common/delegates/ConfigDelegate",
     "org/forgerock/commons/ui/common/main/ValidatorsManager"
 ], function(_,
-            AdminAbstractView,
-            eventManager,
-            constants,
-            ConfigDelegate,
-            validatorsManager) {
+        AdminAbstractView,
+        eventManager,
+        constants,
+        ConfigDelegate,
+        validatorsManager) {
 
     var SelfServiceView = AdminAbstractView.extend({
         template: "templates/admin/settings/SelfServiceTemplate.html",

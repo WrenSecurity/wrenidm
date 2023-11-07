@@ -23,7 +23,7 @@ define([
     var obj = _.extend({}, commonBackgridUtils);
 
     obj.queryFilter = function (data) {
-        if(data === undefined) { data = {}; }
+        if (data === undefined) { data = {}; }
 
         var params = [],
             additionalFilters = data._queryFilter || [],

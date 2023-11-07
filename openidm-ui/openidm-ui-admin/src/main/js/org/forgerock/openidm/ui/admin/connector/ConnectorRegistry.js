@@ -34,7 +34,7 @@ define([
     };
 
     obj.getConnectorModule = function (type) {
-        if(_.isUndefined(this.configuration[type])) {
+        if (_.isUndefined(this.configuration[type])) {
             return ModuleLoader.load("org/forgerock/openidm/ui/admin/connector/ConnectorTypeView");
         } else {
             return ModuleLoader.load(this.configuration[type]);

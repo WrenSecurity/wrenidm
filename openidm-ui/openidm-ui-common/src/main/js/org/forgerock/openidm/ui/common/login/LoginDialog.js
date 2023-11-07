@@ -23,11 +23,11 @@ define([
     "org/forgerock/openidm/ui/common/login/ProviderLoginDialog",
     "org/forgerock/openidm/ui/common/delegates/SocialDelegate"
 ], function( $, _,
-             AbstractView,
-             CommonsLoginDialog,
-             Configuration,
-             ProviderLoginDialog,
-             SocialDelegate) {
+        AbstractView,
+        CommonsLoginDialog,
+        Configuration,
+        ProviderLoginDialog,
+        SocialDelegate) {
 
     var LoginDialog = AbstractView.extend({
         render: function (options) {

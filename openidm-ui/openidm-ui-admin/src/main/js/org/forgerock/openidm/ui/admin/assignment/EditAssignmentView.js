@@ -34,21 +34,21 @@ define([
     "org/forgerock/openidm/ui/common/resource/RelationshipArrayView",
     "selectize"
 ], function($, _, handlebars,
-            form2js,
-            JSONEditor,
-            AdminAbstractView,
-            ValidatorsManager,
-            ConfigDelegate,
-            ResourceDelegate,
-            ConnectorDelegate,
-            EventManager,
-            Constants,
-            InlineScriptEditor,
-            UIUtils,
-            AdminUtils,
-            resourceDelegate,
-            RelationshipArrayView,
-            selectize) {
+        form2js,
+        JSONEditor,
+        AdminAbstractView,
+        ValidatorsManager,
+        ConfigDelegate,
+        ResourceDelegate,
+        ConnectorDelegate,
+        EventManager,
+        Constants,
+        InlineScriptEditor,
+        UIUtils,
+        AdminUtils,
+        resourceDelegate,
+        RelationshipArrayView,
+        selectize) {
     var EditAssignmentView = AdminAbstractView.extend({
         template: "templates/admin/assignment/EditAssignmentViewTemplate.html",
         element: "#assignmentHolder",
@@ -96,7 +96,7 @@ define([
                     return this.data.resource.mapping === mapping.name;
                 }, this);
 
-                if(this.data.mapping.linkQualifiers) {
+                if (this.data.mapping.linkQualifiers) {
                     this.data.showLinkQualifier = true;
                 }
 
@@ -108,7 +108,7 @@ define([
 
                     this.data.resourcePropertiesList = _.chain(properties).keys().sortBy().value();
 
-                    if(connector) {
+                    if (connector) {
                         this.model.connector = connector;
                     }
 
@@ -122,7 +122,7 @@ define([
                 ValidatorsManager.bindValidators(this.$el.find("#assignmentDetailsForm"));
                 ValidatorsManager.validateAllFields(this.$el);
 
-                if(this.data.showLinkQualifier) {
+                if (this.data.showLinkQualifier) {
                     this.model.linkQualifierSelectize = this.$el.find('#linkQualifiers').selectize({
                         persist: false,
                         create: false,
@@ -131,7 +131,7 @@ define([
 
                     this.model.linkQualifierSelectize[0].selectize.clear();
 
-                    if(this.data.resource.linkQualifiers) {
+                    if (this.data.resource.linkQualifiers) {
                         this.model.linkQualifierSelectize[0].selectize.setValue(this.data.resource.linkQualifiers);
                     }
                 }
@@ -163,7 +163,7 @@ define([
 
                 this.showRolesTab();
 
-                if(callback) {
+                if (callback) {
                     callback();
                 }
             },this));
@@ -175,16 +175,16 @@ define([
                 ldapGroup = null,
                 index = this.$el.find("#assignmentAttributesList .list-group-item").index(container);
 
-            if(value !== "ldapGroups") {
+            if (value !== "ldapGroups") {
                 this.model.schemaEditors[index] = this.createJSONEditor($(event.target));
             } else {
                 _.each(this.model.connector.objectTypes, function(objectType, key) {
-                    if(objectType.id === "__GROUP__") {
+                    if (objectType.id === "__GROUP__") {
                         ldapGroup = key;
                     }
                 });
 
-                if(ldapGroup) {
+                if (ldapGroup) {
                     ConnectorDelegate.queryConnector(this.model.connector.name +"/" +ldapGroup).then(_.bind(function(groups){
                         container.find(".attribute-value").empty();
                         container.find(".attribute-value").append($(handlebars.compile("{{> assignment/_LDAPGroup}}")(groups)));
@@ -222,7 +222,7 @@ define([
                 tempIndex;
 
 
-            if(attribute) {
+            if (attribute) {
                 this.model.assignmentAttributes.push(attribute);
                 currentAttribute = attribute.value;
                 newAttr.find(".select-attribute").val(attribute.name);
@@ -233,14 +233,14 @@ define([
 
             this.$el.find("#assignmentAttributesList").append(newAttr);
 
-            if(attribute && attribute.name === "ldapGroups") {
+            if (attribute && attribute.name === "ldapGroups") {
                 _.each(this.model.connector.objectTypes, function(objectType, key) {
-                    if(objectType.id === "__GROUP__") {
+                    if (objectType.id === "__GROUP__") {
                         ldapGroup = key;
                     }
                 });
 
-                if(ldapGroup) {
+                if (ldapGroup) {
                     tempIndex = this.model.schemaEditors.length;
 
                     this.model.schemaEditors.push({});
@@ -374,13 +374,13 @@ define([
                 onUnassignment = this.model.onUnassignment.generateScript(),
                 resourceObject = _.clone(this.data.resource);
 
-            if(_.isNull(onAssignment)) {
+            if (_.isNull(onAssignment)) {
                 delete resourceObject.onAssignment;
             } else {
                 resourceObject.onAssignment = onAssignment;
             }
 
-            if(_.isNull(onUnassignment)) {
+            if (_.isNull(onUnassignment)) {
                 delete resourceObject.onUnassignment;
             } else {
                 resourceObject.onUnassignment = onUnassignment;
@@ -402,7 +402,7 @@ define([
             _.each(this.model.schemaEditors, _.bind(function(editor, index){
                 this.model.assignmentAttributes[index].name = $(selectAttribute[index]).val();
 
-                if(editor.schema) {
+                if (editor.schema) {
                     this.model.assignmentAttributes[index].value = editor.getValue();
                 } else {
                     this.model.assignmentAttributes[index].value = editor.val();

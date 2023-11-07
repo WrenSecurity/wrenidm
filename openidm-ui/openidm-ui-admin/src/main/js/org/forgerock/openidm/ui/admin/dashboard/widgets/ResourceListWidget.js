@@ -24,11 +24,11 @@ define([
     "org/forgerock/openidm/ui/common/delegates/ConfigDelegate",
     "org/forgerock/openidm/ui/admin/util/ConnectorUtils"
 ], function($, _, bootstrap,
-            AbstractWidget,
-            SyncDelegate,
-            ConnectorDelegate,
-            ConfigDelegate,
-            ConnectorUtils) {
+        AbstractWidget,
+        SyncDelegate,
+        ConnectorDelegate,
+        ConfigDelegate,
+        ConnectorUtils) {
     var widgetInstance = {},
         Widget = AbstractWidget.extend({
             template: "templates/admin/dashboard/widgets/ResourceListWidgetTemplate.html",
@@ -56,7 +56,7 @@ define([
                         this.data.managedObjects = managedObjects.objects.slice(0, 4);
 
                         this.parentRender(_.bind(function(){
-                            if(callback) {
+                            if (callback) {
                                 callback();
                             }
                         }, this));

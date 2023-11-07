@@ -24,12 +24,12 @@ define([
     "org/forgerock/commons/ui/common/util/UIUtils",
     "bootstrap-dialog"
 ], function ($, _,
-             MappingAdminAbstractView,
-             searchDelegate,
-             conf,
-             SingleRecordReconciliationGridView,
-             uiUtils,
-             BootstrapDialog) {
+        MappingAdminAbstractView,
+        searchDelegate,
+        conf,
+        SingleRecordReconciliationGridView,
+        uiUtils,
+        BootstrapDialog) {
 
     var TestSyncDialog = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/association/dataAssociationManagement/TestSyncDialogTemplate.html",

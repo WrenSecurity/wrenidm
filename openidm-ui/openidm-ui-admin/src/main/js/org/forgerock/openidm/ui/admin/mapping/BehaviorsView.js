@@ -29,17 +29,17 @@ define([
     "org/forgerock/openidm/ui/admin/mapping/util/MappingUtils"
 
 ], function(_,
-            MappingAdminAbstractView,
-            eventManager,
-            constants,
-            ConfigDelegate,
-            SchedulerDelegate,
-            Scheduler,
-            PoliciesView,
-            SituationalEventScriptsView,
-            ReconciliationScriptView,
-            SingleRecordReconciliationView,
-            mappingUtils) {
+        MappingAdminAbstractView,
+        eventManager,
+        constants,
+        ConfigDelegate,
+        SchedulerDelegate,
+        Scheduler,
+        PoliciesView,
+        SituationalEventScriptsView,
+        ReconciliationScriptView,
+        SingleRecordReconciliationView,
+        mappingUtils) {
 
     var BehaviorsView = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/BehaviorsTemplate.html",
@@ -61,7 +61,7 @@ define([
             this.data.hideSingleRecordRecon = mappingUtils.readOnlySituationalPolicy(this.mapping.policies);
             this.data.borderHide = false;
 
-            if(this.data.hideSingleRecordRecon || !this.getRecon()) {
+            if (this.data.hideSingleRecordRecon || !this.getRecon()) {
                 this.data.borderHide = true;
             }
 

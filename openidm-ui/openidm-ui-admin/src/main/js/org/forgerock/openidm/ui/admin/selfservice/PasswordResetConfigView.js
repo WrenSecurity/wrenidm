@@ -166,9 +166,9 @@ define([
         filterPropertiesList: function (properties, type, details) {
             var cleanedList = [];
 
-            if(type === "resetStage") {
+            if (type === "resetStage") {
                 _.each(properties, (prop, index) => {
-                    if(_.has(details[prop], "encryption") || _.has(details[prop], "hashed")) {
+                    if (_.has(details[prop], "encryption") || _.has(details[prop], "hashed")) {
                         cleanedList.push(prop);
                     }
                 });

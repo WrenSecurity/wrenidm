@@ -66,13 +66,13 @@ define([
                         this.data.process = process.toJSON();
                         this.data.assignee = assignee.toJSON();
 
-                        if(formTemplate.length) {
+                        if (formTemplate.length) {
                             this.data.showForm = true;
 
                             this.data.taskForm = Handlebars.compile(formTemplate[0]._formGenerationTemplate)(this.data.task);
                         }
 
-                        if(!this.data.showForm && this.data.process.formGenerationTemplate) {
+                        if (!this.data.showForm && this.data.process.formGenerationTemplate) {
                             this.data.showForm = true;
 
                             this.data.taskForm = Handlebars.compile(this.data.process.formGenerationTemplate)(this.data.task);

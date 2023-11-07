@@ -24,11 +24,11 @@ define([
     "org/forgerock/openidm/ui/admin/role/MembersDialog"
 ],
 function ($, _, Handlebars,
-    AbstractView,
-    RelationshipArrayView,
-    ResourceCollectionSearchDialog,
-    MembersDialog
-  ) {
+        AbstractView,
+        RelationshipArrayView,
+        ResourceCollectionSearchDialog,
+        MembersDialog
+) {
     var MembersView = new RelationshipArrayView();
 
     //overriding the render function here to remove the checkboxes from grid rows

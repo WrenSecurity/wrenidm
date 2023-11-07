@@ -29,7 +29,7 @@ define([
             this.$el.find("input[name=taskName]").val(this.task.name);
             this.$el.find("input[name=createTime]").val(DateUtil.formatDate(this.task.createTime));
 
-            if(this.$el.find("input[name=assignee]").val() === "null") {
+            if (this.$el.find("input[name=assignee]").val() === "null") {
                 this.$el.find("input[name=assignee]").val("");
             }
 

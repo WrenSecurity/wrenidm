@@ -29,16 +29,16 @@ define([
     "org/forgerock/openidm/ui/admin/delegates/ExternalAccessDelegate"
 
 ], function($, _,
-            AdminUtils,
-            UIUtils,
-            ValidatorsManager,
-            Configuration,
-            EventManager,
-            Constants,
-            ConfigDelegate,
-            BootstrapDialog,
-            AuthenticationAbstractView,
-            ExternalAccessDelegate) {
+        AdminUtils,
+        UIUtils,
+        ValidatorsManager,
+        Configuration,
+        EventManager,
+        Constants,
+        ConfigDelegate,
+        BootstrapDialog,
+        AuthenticationAbstractView,
+        ExternalAccessDelegate) {
 
     var ProvidersModuleDialogView = AuthenticationAbstractView.extend({
         template: "templates/admin/authentication/ProvidersModuleDialogViewTemplate.html",

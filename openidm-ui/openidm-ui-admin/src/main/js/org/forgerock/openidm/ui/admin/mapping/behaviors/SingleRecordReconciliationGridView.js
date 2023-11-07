@@ -23,11 +23,11 @@ define([
     "org/forgerock/commons/ui/common/main/Configuration",
     "org/forgerock/commons/ui/common/components/Messages"
 ], function ($, _,
-             MappingAdminAbstractView,
-             reconDelegate,
-             searchDelegate,
-             conf,
-             messagesManager) {
+        MappingAdminAbstractView,
+        reconDelegate,
+        searchDelegate,
+        conf,
+        messagesManager) {
     var SingleRecordReconciliationGridView = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/behaviors/SingleRecordReconciliationGridTemplate.html",
         data: {},
@@ -94,7 +94,7 @@ define([
 
                         if (targetObjectId && targetObjectId.replace(this.data.mapping.target + "/", "") !== "null") {
                             searchDelegate.searchResults(this.data.mapping.target,["_id"],targetObjectId.replace(this.data.mapping.target + "/", ""),"eq").then(function(qry){
-                                if(qry.length){
+                                if (qry.length){
                                     targetProm.resolve(qry[0]);
                                 }
                             });

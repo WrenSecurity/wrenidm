@@ -127,7 +127,7 @@ define([
         },
 
         reloadGrid: function(event, callback){
-            if(event) {
+            if (event) {
                 event.preventDefault();
             }
             this.render(this.args, callback);
@@ -204,7 +204,7 @@ define([
             }
 
             _.each(relationshipProp.properties._refProperties.properties, _.bind(function(col,colName){
-                if(colName !== "_id"){
+                if (colName !== "_id"){
                     cols.push({
                         "name": "/_refProperties/" + colName,
                         "label": col.title || col.label || colName,
@@ -222,7 +222,7 @@ define([
             return cols;
         },
         toggleActions: function() {
-            if(this.data.selectedItems.length === 0) {
+            if (this.data.selectedItems.length === 0) {
                 this.$el.find('.remove-relationships-btn').prop('disabled',true);
             } else {
                 this.$el.find('.remove-relationships-btn').prop('disabled',false);
@@ -245,7 +245,7 @@ define([
             this.parentRender(function() {
 
                 this.buildRelationshipArrayGrid(this.getCols(), args.onGridChange).then(function () {
-                    if(callback) {
+                    if (callback) {
                         callback();
                     }
                 });
@@ -502,7 +502,7 @@ define([
 
                     //Declare the nodes
                     node = svg.selectAll("g.node").data(nodes, function(data) {
-                        if(!data.id) {
+                        if (!data.id) {
                             data.id = ++i;
                         }
 

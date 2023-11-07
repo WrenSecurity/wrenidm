@@ -22,11 +22,11 @@ define([
     "org/forgerock/openidm/ui/admin/mapping/association/ReconciliationQueryFiltersView",
     "org/forgerock/openidm/ui/admin/mapping/association/AssociationRuleView"
 ], function(_,
-            MappingAdminAbstractView,
-            DataAssociationManagementView,
-            IndividualRecordValidationView,
-            ReconciliationQueryFiltersView,
-            AssociationRuleView) {
+        MappingAdminAbstractView,
+        DataAssociationManagementView,
+        IndividualRecordValidationView,
+        ReconciliationQueryFiltersView,
+        AssociationRuleView) {
 
     var AssociationView = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/AssociationTemplate.html",

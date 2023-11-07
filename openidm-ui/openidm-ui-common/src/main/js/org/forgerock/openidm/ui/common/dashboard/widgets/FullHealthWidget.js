@@ -21,9 +21,9 @@ define([
     "org/forgerock/openidm/ui/common/dashboard/widgets/MemoryUsageWidget",
     "org/forgerock/openidm/ui/common/dashboard/widgets/CPUUsageWidget"
 ], function($, _,
-            AbstractWidget,
-            MemoryUsageWidget,
-            CPUUsageWidget) {
+        AbstractWidget,
+        MemoryUsageWidget,
+        CPUUsageWidget) {
     var widgetInstance = {},
         Widget = AbstractWidget.extend({
             template: "templates/dashboard/widget/DashboardTripleWidgetTemplate.html",
@@ -62,7 +62,7 @@ define([
                         }
                     });
 
-                    if(callback) {
+                    if (callback) {
                         callback();
                     }
                 }, this));

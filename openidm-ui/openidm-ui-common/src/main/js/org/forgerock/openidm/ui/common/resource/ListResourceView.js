@@ -34,21 +34,21 @@ define([
     "backgrid-paginator",
     "backgrid-selectall"
 ], function($,
-            _,
-            Handlebars,
-            AbstractView,
-            eventManager,
-            constants,
-            cookieHelper,
-            uiUtils,
-            Backgrid,
-            BackgridUtils,
-            resourceDelegate,
-            messagesManager,
-            AbstractModel,
-            AbstractCollection,
-            ResourceCollection
-        ) {
+        _,
+        Handlebars,
+        AbstractView,
+        eventManager,
+        constants,
+        cookieHelper,
+        uiUtils,
+        Backgrid,
+        BackgridUtils,
+        resourceDelegate,
+        messagesManager,
+        AbstractModel,
+        AbstractCollection,
+        ResourceCollection
+) {
     var ListResourceView = AbstractView.extend({
         template: "templates/admin/resource/ListResourceViewTemplate.html",
         model: {},
@@ -63,7 +63,7 @@ define([
         },
 
         reloadGrid: function(event){
-            if(event) {
+            if (event) {
                 event.preventDefault();
             }
             this.render(this.data.args);
@@ -97,9 +97,9 @@ define([
 
                 this.schema = schema;
 
-                if(schema !== "invalidObject"){
+                if (schema !== "invalidObject"){
                     this.data.validObject = true;
-                    if(schema){
+                    if (schema){
                         this.data.pageTitle = this.data.objectName;
                         if (schema.title && !this.data.isSystemResource) {
                             this.data.pageTitle = schema.title;
@@ -107,12 +107,12 @@ define([
 
                         setCols = _.bind(function(properties, parentProp) {
                             _.each(properties, _.bind(function(col,colName){
-                                if(col.type === "object") {
+                                if (col.type === "object") {
                                     setCols(col.properties, colName);
                                 } else {
-                                    if(col.searchable || this.data.isSystemResource){
+                                    if (col.searchable || this.data.isSystemResource){
                                         //if _id is in the schema properties and is searchable add it
-                                        if(colName === "_id") {
+                                        if (colName === "_id") {
 
                                             unorderedCols.push(
                                                 {
@@ -127,7 +127,7 @@ define([
                                                 }
                                             );
                                         } else {
-                                            if(parentProp) {
+                                            if (parentProp) {
                                                 colName = parentProp + "/" + colName;
                                             }
                                             unorderedCols.push(
@@ -152,7 +152,7 @@ define([
                         _.each(schema.order,function(prop){
                             var col = _.findWhere(unorderedCols, { name : prop });
 
-                            if(col){
+                            if (col){
                                 cols.push(col);
                             }
                         });
@@ -171,9 +171,9 @@ define([
                     } else {
                         this.data.pageTitle = this.data.objectName;
                         $.get(this.getURL() + '?_queryFilter=true&_pageSize=1').then(function(qry){
-                            if(qry.result[0]){
+                            if (qry.result[0]){
                                 _.each(_.keys(qry.result[0]),function(col){
-                                    if(col !== "_id"){
+                                    if (col !== "_id"){
                                         cols.push(
                                             {
                                                 "name": col,
@@ -205,7 +205,7 @@ define([
             return this.data.objectName.replace("/","_");
         },
         toggleDeleteSelected: function() {
-            if(this.data.selectedItems.length === 0) {
+            if (this.data.selectedItems.length === 0) {
                 this.$el.find('#deleteSelected').prop('disabled',true);
             } else {
                 this.$el.find('#deleteSelected').prop('disabled',false);
@@ -248,7 +248,7 @@ define([
 
                     this.buildResourceListGrid(cols);
 
-                    if(callback) {
+                    if (callback) {
                         callback();
                     }
                 });
@@ -277,7 +277,7 @@ define([
                 }
             }
 
-            if(cols.length !== 0) {
+            if (cols.length !== 0) {
                 if (defaultSystemResourceSortKey) {
                     state = BackgridUtils.getState(defaultSystemResourceSortKey);
                 } else {
@@ -312,7 +312,7 @@ define([
 
                         args.push(this.model.id);
 
-                        if(this.model.id) {
+                        if (this.model.id) {
                             eventManager.sendEvent(constants.ROUTE_REQUEST, {routeName: routeName, args: args});
                         }
                     }

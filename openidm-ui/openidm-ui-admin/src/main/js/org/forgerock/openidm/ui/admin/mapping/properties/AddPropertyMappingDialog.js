@@ -27,15 +27,15 @@ define([
     "bootstrap-dialog",
     "selectize"
 ], function($, _,
-            MappingAdminAbstractView,
-            conf,
-            uiUtils,
-            eventManager,
-            constants,
-            EditPropertyMappingDialog,
-            AdminUtils,
-            BootstrapDialog,
-            selectize) {
+        MappingAdminAbstractView,
+        conf,
+        uiUtils,
+        eventManager,
+        constants,
+        EditPropertyMappingDialog,
+        AdminUtils,
+        BootstrapDialog,
+        selectize) {
 
     var AddPropertyMappingDialog = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/properties/AddPropertyMappingDialogTemplate.html",
@@ -101,7 +101,7 @@ define([
                         persist: false,
                         create: true,
                         onChange: _.bind(function(value) {
-                            if(value.length > 0) {
+                            if (value.length > 0) {
                                 this.model.dialog.$modalFooter.find("#scriptDialogUpdate").prop("disabled", false).focus();
                             } else {
                                 this.model.dialog.$modalFooter.find("#scriptDialogUpdate").prop("disabled", true);
@@ -141,16 +141,16 @@ define([
                         dialogRef.close();
                     }
                 },
-                    {
-                        label: $.t("common.form.add"),
-                        id:"scriptDialogUpdate",
-                        cssClass: 'btn-primary',
-                        hotkey: 13,
-                        action: _.bind(function(dialogRef) {
-                            this.formSubmit();
-                            dialogRef.close();
-                        },_this)
-                    }
+                {
+                    label: $.t("common.form.add"),
+                    id:"scriptDialogUpdate",
+                    cssClass: 'btn-primary',
+                    hotkey: 13,
+                    action: _.bind(function(dialogRef) {
+                        this.formSubmit();
+                        dialogRef.close();
+                    },_this)
+                }
                 ]
             });
         }

@@ -19,7 +19,7 @@ define([
     "underscore",
     "handlebars"
 ], function ($, _,
-             handlebars) {
+        handlebars) {
 
     var obj = {};
 

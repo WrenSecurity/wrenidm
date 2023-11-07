@@ -35,10 +35,10 @@ define([
                         typeof response.detail === "object" && (response.message === "Failed policy validation" || response.message === "Policy validation failed")) {
 
                         errors = _.chain(response.detail.failedPolicyRequirements)
-                                    .groupBy('property')
-                                    .pairs()
-                                    .map(function (a) {
-                                        return " - " + a[0] + ": " +
+                            .groupBy('property')
+                            .pairs()
+                            .map(function (a) {
+                                return " - " + a[0] + ": " +
                                             _.chain(a[1])
                                                 .pluck('policyRequirements')
                                                 .map(function (pr) {
@@ -48,9 +48,9 @@ define([
                                                 })
                                                 .value()
                                                 .join(", ");
-                                    })
-                                    .value()
-                                    .join(" <br/> ");
+                            })
+                            .value()
+                            .join(" <br/> ");
 
                     }
 

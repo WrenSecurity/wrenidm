@@ -31,7 +31,7 @@ define([
         constants,
         eventManager,
         ChangesPending
-    ) {
+) {
     const AdvancedView = MappingAdminAbstractView.extend({
         events: {
             "click .save-mapping": "saveMapping",

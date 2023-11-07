@@ -21,9 +21,9 @@ define([
     "org/forgerock/openidm/ui/admin/util/ScriptDialog",
     "org/forgerock/commons/ui/common/util/UIUtils"
 ], function($, _,
-            AdminAbstractView,
-            ScriptDialog,
-            UIUtils) {
+        AdminAbstractView,
+        ScriptDialog,
+        UIUtils) {
     var scriptListInstance = {},
         ScriptList = AdminAbstractView.extend({
             template: "templates/admin/util/ScriptList.html",
@@ -78,7 +78,7 @@ define([
             reRender: function() {
                 this.render(this.data);
 
-                if(this.$el.find(".scriptSelection option").length === 0) {
+                if (this.$el.find(".scriptSelection option").length === 0) {
                     this.$el.find(".scriptSelection").prop('disabled', true);
                     this.$el.find(".addScriptButton").prop('disabled', true);
                 }

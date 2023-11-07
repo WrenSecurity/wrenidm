@@ -53,7 +53,7 @@ define([
         },
 
         hideDetails: function(event) {
-            if(event) {
+            if (event) {
                 event.preventDefault();
             }
 
@@ -82,10 +82,10 @@ define([
                 parent.find(".details-link .fa").toggleClass("fa-caret-down", true);
             }
 
-            if(id) {
+            if (id) {
                 task = this.getTaskFromCacheById(id);
 
-                if(task) {
+                if (task) {
                     eventManager.sendEvent("showTaskDetailsRequest", {
                         "task": task,
                         "definition": task.taskDefinition,
@@ -99,11 +99,11 @@ define([
         getTaskFromCacheById: function(id) {
             var processName, process, i;
 
-            for(processName in this.tasks) {
+            for (processName in this.tasks) {
                 process = this.tasks[processName];
 
-                for(i = 0; i < process.tasks.length; i++) {
-                    if(process.tasks[i]._id === id) {
+                for (i = 0; i < process.tasks.length; i++) {
+                    if (process.tasks[i]._id === id) {
                         return process.tasks[i];
                     }
                 }
@@ -127,11 +127,11 @@ define([
 
         getParamForTask: function(paramName, taskId) {
             var processName, taskName, taskType, task, i, process;
-            for(processName in this.tasks) {
+            for (processName in this.tasks) {
                 process = this.tasks[processName];
-                for(taskName in process) {
+                for (taskName in process) {
                     taskType = process[taskName];
-                    for(i = 0; i < taskType.tasks.length; i++) {
+                    for (i = 0; i < taskType.tasks.length; i++) {
                         task = taskType.tasks[i];
                         if (task._id === taskId) {
                             return task.variables[paramName];
@@ -142,7 +142,7 @@ define([
         },
 
         render: function(category, element, callback) {
-            if(!element) {
+            if (!element) {
                 this.setElement($("#tasksMenu"));
             } else {
                 this.setElement(element);
@@ -154,16 +154,16 @@ define([
             this.$el.prev().show();
             this.$el.show();
 
-            if(category === "all") {
+            if (category === "all") {
                 workflowManager.getAllTaskUsingEndpoint(conf.loggedUser.id, _.bind(this.displayTasks, this), _.bind(this.errorHandler, this));
-            } else if(category === "assigned") {
+            } else if (category === "assigned") {
                 workflowManager.getMyTaskUsingEndpoint(conf.loggedUser.id, _.bind(this.displayTasks, this), _.bind(this.errorHandler, this));
             }
         },
 
         errorHandler: function() {
             this.$el.html('');
-            if(this.category === "assigned") {
+            if (this.category === "assigned") {
                 this.$el.append('<li class="list-group-item"><h5 class="text-center">' + $.t("openidm.ui.admin.tasks.TasksMenuView.noTasksAssigned") + '</h5></li>');
             } else {
                 this.$el.append('<li class="list-group-item"><h5 class="text-center">' + $.t("openidm.ui.admin.tasks.TasksMenuView.noTasksInGroupQueue") + '</h5>');
@@ -189,7 +189,7 @@ define([
             this.tasks = tasks;
             this.$el.html('');
 
-            for(processName in tasks) {
+            for (processName in tasks) {
                 types++;
 
                 process = tasks[processName];
@@ -204,7 +204,7 @@ define([
                     tasks: []
                 });
 
-                for(i = 0; i < process.tasks.length; i++) {
+                for (i = 0; i < process.tasks.length; i++) {
                     taskGroup = data.taskGroup[data.taskGroup.length - 1];
 
                     taskGroup.tasks.push(process.tasks[i]);
@@ -217,7 +217,7 @@ define([
 
             this.refreshAssignedSelectors();
 
-            if(this.callback) {
+            if (this.callback) {
                 this.callback();
             }
         },
@@ -260,25 +260,25 @@ define([
 
                 task = this.getTaskFromCacheById($(target).closest("tr").find("input[name=taskId]").val());
 
-                if(task) {
-                    for(i = 0; i < task.usersToAssign.users.length; i++) {
+                if (task) {
+                    for (i = 0; i < task.usersToAssign.users.length; i++) {
                         user = task.usersToAssign.users[i];
 
-                        if($(target).find("option[value='"+ user.username +"']").length === 0 && user.username !== conf.loggedUser.get("userName")) {
+                        if ($(target).find("option[value='"+ user.username +"']").length === 0 && user.username !== conf.loggedUser.get("userName")) {
                             $(target).append('<option value="'+ user.username +'">'+ user.displayableName +'</option');
                         }
                     }
                 }
 
-                if(conf.loggedUser.get("userName") === assignedUser) {
+                if (conf.loggedUser.get("userName") === assignedUser) {
                     $(target).val('me');
 
-                    if(conf.loggedUser.has("givenName")) {
+                    if (conf.loggedUser.has("givenName")) {
                         $(target).find('option[value=me]').html(conf.loggedUser.get("givenName") + ' ' + conf.loggedUser.get("sn"));
                     } else {
                         $(target).find('option[value=me]').html(conf.loggedUser.get("userName"));
                     }
-                } else if(assignedUser !== "null") {
+                } else if (assignedUser !== "null") {
                     $(target).val(assignedUser);
                 }
             }, this));
@@ -291,12 +291,12 @@ define([
         },
 
         getActions: function(task) {
-            if(this.category === 'all') {
+            if (this.category === 'all') {
                 return '<select name="assignedUser" class="select-static-medium"><option value="null">' + $.t("common.task.unassigned")
                     + '</option><option value="me">' + $.t("common.task.assignToMe")
                     + '</option></select> <a href="#" class="button choosable choosable-static detailsLink">' + $.t("common.form.details")
                     + '</a>';
-            } else if(this.category === 'assigned') {
+            } else if (this.category === 'assigned') {
                 return '<a href="#" class="button choosable choosable-static detailsLink">' + $.t("common.form.details") + '</a>';
             }
         },
@@ -309,20 +309,20 @@ define([
             newAssignee = $(event.target).val();
             assignee = $(event.target).parents(".list-group-item").find("input[name=assignedUser]").val();
 
-            if(newAssignee === "me") {
+            if (newAssignee === "me") {
                 newAssignee = conf.loggedUser.get("userName");
             }
 
-            if(!assignee) {
+            if (!assignee) {
                 assignee = "null";
             }
 
-            if(id && newAssignee !== assignee) {
+            if (id && newAssignee !== assignee) {
                 workflowManager.assignTaskToUser(id, newAssignee, _.bind(function() {
                     $(event.target).parent().parent().find("input[name=assignedUser]").val(newAssignee);
                     eventManager.sendEvent("refreshMyTasksMenu");
                 }, this), function() {
-                    if(assignee === conf.loggedUser.get("userName")) {
+                    if (assignee === conf.loggedUser.get("userName")) {
                         $(event.target).val("me");
                     } else {
                         $(event.target).val(assignee);
@@ -334,7 +334,7 @@ define([
         approveTask: function(id, callback) {
             event.preventDefault();
 
-            if(id) {
+            if (id) {
                 workflowManager.completeTask(id, {"decision": "accept"}, _.bind(function() {
                     callback(this);
                 }, this), function() {
@@ -346,7 +346,7 @@ define([
         denyTask: function(id, callback, denyReason) {
             event.preventDefault();
 
-            if(id) {
+            if (id) {
                 workflowManager.completeTask(id, {"decision": "reject", "reason": denyReason}, _.bind(function() {
                     callback(this);
                 }, this), function() {
@@ -356,7 +356,7 @@ define([
         },
 
         requeueTask: function(id, callback) {
-            if(id) {
+            if (id) {
                 workflowManager.assignTaskToUser(id, null, _.bind(function() {
                     callback(this);
                 }, this), function() {

@@ -22,10 +22,10 @@ define([
     "org/forgerock/commons/ui/common/main/Configuration",
     "org/forgerock/commons/ui/common/main/ValidatorsManager"
 ], function($, _,
-            AbstractProcessForm,
-            userDelegate,
-            conf,
-            validatorsManager) {
+        AbstractProcessForm,
+        userDelegate,
+        conf,
+        validatorsManager) {
     var SendNotificationProcess = AbstractProcessForm.extend({
 
         template: "templates/workflow/processes/customview/SendNotificationTemplate.html",

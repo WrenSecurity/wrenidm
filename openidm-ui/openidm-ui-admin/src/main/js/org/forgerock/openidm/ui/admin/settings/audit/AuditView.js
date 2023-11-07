@@ -24,11 +24,11 @@ define([
     "org/forgerock/openidm/ui/admin/settings/audit/ExceptionFormatterView",
     "org/forgerock/commons/ui/common/util/Constants"
 ], function ($, _, AuditAdminAbstractView,
-             AuditEventHandlersView,
-             AuditTopicsView,
-             AuditFilterPoliciesView,
-             ExceptionFormatterView,
-             constants) {
+        AuditEventHandlersView,
+        AuditTopicsView,
+        AuditFilterPoliciesView,
+        ExceptionFormatterView,
+        constants) {
 
     var AuditView = AuditAdminAbstractView.extend({
         template: "templates/admin/settings/audit/AuditTemplate.html",

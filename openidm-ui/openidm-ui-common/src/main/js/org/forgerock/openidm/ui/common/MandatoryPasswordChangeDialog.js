@@ -100,7 +100,7 @@ define([
         },
 
         customValidate: function () {
-            if(validatorsManager.formValidated(this.$el.find("#passwordChange")) || validatorsManager.formValidated(this.$el.find("#securityDataChange"))) {
+            if (validatorsManager.formValidated(this.$el.find("#passwordChange")) || validatorsManager.formValidated(this.$el.find("#securityDataChange"))) {
                 this.model.dialog.$modalFooter.find("#submitPasswordChange").prop('disabled', false);
             }
             else {

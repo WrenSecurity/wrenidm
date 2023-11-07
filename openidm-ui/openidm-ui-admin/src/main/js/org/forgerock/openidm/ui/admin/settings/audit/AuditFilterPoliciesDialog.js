@@ -24,11 +24,11 @@ define([
     "org/forgerock/commons/ui/common/main/ValidatorsManager",
     "selectize"
 ], function($, _,
-            AuditAdminAbstractView,
-            UIUtils,
-            Conf,
-            BootstrapDialog,
-            ValidatorsManager) {
+        AuditAdminAbstractView,
+        UIUtils,
+        Conf,
+        BootstrapDialog,
+        ValidatorsManager) {
 
     var AuditFilterPoliciesDialog = AuditAdminAbstractView.extend({
         template: "templates/admin/settings/audit/AuditFilterPoliciesDialogTemplate.html",
@@ -126,7 +126,7 @@ define([
         validationSuccessful: function (event) {
             AuditAdminAbstractView.prototype.validationSuccessful(event);
 
-            if(ValidatorsManager.formValidated(this.$el.find("#submitAuditFilters"))) {
+            if (ValidatorsManager.formValidated(this.$el.find("#submitAuditFilters"))) {
                 this.$el.parentsUntil(".model-content").find("#submitAuditFilters").prop('disabled', false);
             }
         },

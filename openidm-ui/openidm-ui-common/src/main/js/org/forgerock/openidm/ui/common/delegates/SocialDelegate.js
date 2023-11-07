@@ -22,10 +22,10 @@ define([
     "org/forgerock/commons/ui/common/util/Constants",
     "org/forgerock/commons/ui/common/util/OAuth"
 ], function($, _,
-    AbstractDelegate,
-    Configuration,
-    Constants,
-    OAuth) {
+        AbstractDelegate,
+        Configuration,
+        Constants,
+        OAuth) {
 
     var obj = new AbstractDelegate(Constants.host + "/openidm/identityProviders");
 
@@ -65,18 +65,18 @@ define([
 
     obj.availableProviders = function() {var headers = {},
         promise = $.Deferred();
-        obj.serviceCall({
-            url: "?_action=availableProviders",
-            type: "post",
-            errorsHandlers: {
-                "notfound": {status: 404}
-            }
-        }).then((results) => {
-            promise.resolve(results);
-        }, () => {
-            promise.resolve({providers:[]});
-        });
-        return promise;
+    obj.serviceCall({
+        url: "?_action=availableProviders",
+        type: "post",
+        errorsHandlers: {
+            "notfound": {status: 404}
+        }
+    }).then((results) => {
+        promise.resolve(results);
+    }, () => {
+        promise.resolve({providers:[]});
+    });
+    return promise;
     };
 
     obj.getAuthToken = function (provider, code, redirect_uri) {

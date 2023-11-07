@@ -23,12 +23,12 @@ define([
     "org/forgerock/commons/ui/common/util/Constants",
     "org/forgerock/openidm/ui/admin/mapping/util/QueryFilterEditor"
 ], function($,
-            _,
-            Handlebars,
-            MappingAdminAbstractView,
-            eventManager,
-            constants,
-            QueryFilterEditor) {
+        _,
+        Handlebars,
+        MappingAdminAbstractView,
+        eventManager,
+        constants,
+        QueryFilterEditor) {
 
     var ReconQueryFilterEditor = QueryFilterEditor.extend({
             // template: "templates/admin/mapping/util/MappingSetupFilter.html",
@@ -136,8 +136,8 @@ define([
                     .value();
 
                 _.each(this.model.queryEditors, function (qe) {
-                    let fullEntryName = qe.query + "FullEntry",
-                        fullEntryValue = this.$el.find("input[name='" + fullEntryName + "Radios']:checked").val();
+                    let fullEntryName = qe.query + "FullEntry";
+                    let fullEntryValue = this.$el.find("input[name='" + fullEntryName + "Radios']:checked").val();
                     // set query filter value
                     this.model.mapping[qe.query] = queries[qe.query];
 

@@ -54,7 +54,7 @@ define([
             url: processDefinitionsEndpointUrl,
             type: "GET",
             success: function(data) {
-                if(successCallback) {
+                if (successCallback) {
                     successCallback(data.processes);
                 }
             },
@@ -106,9 +106,9 @@ define([
             url: endpointUrl + "?_queryId=gettasksview&userId=" + userId,
             type: "GET",
             success: function(data) {
-                if(_.isEmpty(data.result[0])) {
+                if (_.isEmpty(data.result[0])) {
                     errorCallback();
-                } else if(successCallback) {
+                } else if (successCallback) {
                     successCallback(data.result[0]);
                 }
             },
@@ -121,9 +121,9 @@ define([
             url: endpointUrl + "?_queryId=gettasksview&userId=" + userId + "&viewType=assignee",
             type: "GET",
             success: function(data) {
-                if(_.isEmpty(data.result[0])) {
+                if (_.isEmpty(data.result[0])) {
                     errorCallback();
-                } else if(successCallback) {
+                } else if (successCallback) {
                     successCallback(data.result[0]);
                 }
             },

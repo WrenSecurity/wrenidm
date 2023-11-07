@@ -156,7 +156,7 @@ define([
             var arrayComponents = $(".connector-array-component");
 
             _.each(arrayComponents, function(component){
-                if($(component).find(".remove-btn").length === 1) {
+                if ($(component).find(".remove-btn").length === 1) {
                     $(component).find(".input-group-addon").hide();
                 } else {
                     $(component).find(".input-group-addon").show();
@@ -171,7 +171,7 @@ define([
                 field_type,
                 field;
 
-            if($(clickedEle).not("button")){
+            if ($(clickedEle).not("button")){
                 clickedEle = $(clickedEle).closest("button");
             }
 
@@ -193,7 +193,7 @@ define([
             var clickedEle = event.target,
                 field_type;
 
-            if($(clickedEle).not("button")){
+            if ($(clickedEle).not("button")){
                 clickedEle = $(clickedEle).closest("button");
             }
 
@@ -201,7 +201,7 @@ define([
 
             $(clickedEle).parents(".form-group").remove();
 
-            if($('#' + field_type + 'Wrapper').find('.field').size() === 1){
+            if ($('#' + field_type + 'Wrapper').find('.field').size() === 1){
                 $('#' + field_type + 'Wrapper').find('.input-group-addon').hide();
             }
 

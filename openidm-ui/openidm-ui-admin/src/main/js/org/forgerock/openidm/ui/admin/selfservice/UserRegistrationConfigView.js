@@ -32,19 +32,19 @@ define([
     "org/forgerock/openidm/ui/common/util/oAuthUtils",
     "bootstrap-tabdrop"
 ], function($, _,
-            handlebars,
-            form2js,
-            AdminAbstractView,
-            ConfigDelegate,
-            SiteConfigurationDelegate,
-            UiUtils,
-            AdminUtils,
-            EventManager,
-            Constants,
-            SelfServiceStageDialogView,
-            SocialDelegate,
-            AttributesGridView,
-            OAuthUtils) {
+        handlebars,
+        form2js,
+        AdminAbstractView,
+        ConfigDelegate,
+        SiteConfigurationDelegate,
+        UiUtils,
+        AdminUtils,
+        EventManager,
+        Constants,
+        SelfServiceStageDialogView,
+        SocialDelegate,
+        AttributesGridView,
+        OAuthUtils) {
 
     var UserRegistrationConfigView = AdminAbstractView.extend({
         template: "templates/admin/selfservice/UserRegistrationConfigTemplate.html",
@@ -263,7 +263,7 @@ define([
                         _.each(selfServiceConfig.stageConfigs, function (stage) {
                             this.$el.find(".wide-card[data-type='" + stage.name + "']").toggleClass("disabled", false);
 
-                            if(stage.name === "userDetails") {
+                            if (stage.name === "userDetails") {
                                 this.$el.find(".wide-card[data-type='userDetails']").toggleClass("active", true);
                             } else if (stage.name === "socialUserDetails") {
                                 this.$el.find(".wide-card[data-type='socialUserDetails'] .section-check").prop("checked", true).trigger("change");
@@ -389,9 +389,9 @@ define([
                         "timezone": "UTC−08:00",
                         "active": true,
                         "rawProfile" : { }
-                    };
+                    },
 
-                var _this = this;
+                    _this = this;
                 AttributesGridView.render({
                     usesDragIcon: false,
                     usesLinkQualifier: false,
@@ -428,10 +428,10 @@ define([
                 return false;
             }
 
-            if($(event.target).parents(".checkbox").length === 0 && cardDetails.editable === "true") {
-                if(cardDetails.type === "userDetails") {
+            if ($(event.target).parents(".checkbox").length === 0 && cardDetails.editable === "true") {
+                if (cardDetails.type === "userDetails") {
                     _.each(this.model.saveConfig.stageConfigs, (stage) => {
-                        if(stage.name === "userDetails") {
+                        if (stage.name === "userDetails") {
                             currentData.identityEmailField = stage.identityEmailField;
                         } else if (stage.name === "selfRegistration") {
                             currentData.identityServiceUrl = stage.identityServiceUrl;
@@ -519,11 +519,11 @@ define([
         },
 
         activateStage: function(emailServiceAvailable, card, type) {
-            if(type === "userDetails") {
+            if (type === "userDetails") {
                 $(card).toggleClass("disabled");
                 $(card).toggleClass("active", true);
             } else {
-                if(type !== "emailValidation") {
+                if (type !== "emailValidation") {
                     $(card).find(".section-check").prop("checked", true).trigger("change");
                 } else {
                     if (emailServiceAvailable === true) {
@@ -544,7 +544,7 @@ define([
                 removeConfig = false,
                 emailCheck;
 
-            if(check.is(":checked")) {
+            if (check.is(":checked")) {
                 this.model.saveConfig.stageConfigs = this.setSwitchOn(card, this.model.saveConfig.stageConfigs, this.model.configList, this.model.configDefault.stageConfigs, cardDetails.type);
             } else {
                 this.model.saveConfig.stageConfigs = this.setSwitchOff(card, this.model.saveConfig.stageConfigs, this.model.configList, cardDetails.type);
@@ -632,12 +632,12 @@ define([
 
             configItem = _.find(configList, function(config) { return config.type ===  type; });
 
-            if(configItem) {
+            if (configItem) {
                 configItem.toggledOn = true;
             }
 
-            if(type !== "socialUserDetails") {
-                if(_.filter(stages, {"name" : type}).length === 0) {
+            if (type !== "socialUserDetails") {
+                if (_.filter(stages, {"name" : type}).length === 0) {
                     saveOrder = this.findPosition(configList, type);
                     defaultLocation = _.findIndex(defaultStages, function (stage) {
                         return stage.name === type;
@@ -650,7 +650,7 @@ define([
                     return stage.name === "userDetails";
                 });
 
-                if(!_.isUndefined(currentStage)) {
+                if (!_.isUndefined(currentStage)) {
                     currentStage.name = "socialUserDetails";
                 }
 
@@ -680,11 +680,11 @@ define([
 
             configItem = _.find(configList, function(config) { return config.type ===  type; });
 
-            if(configItem) {
+            if (configItem) {
                 configItem.toggledOn = false;
             }
 
-            if(type !== "socialUserDetails") {
+            if (type !== "socialUserDetails") {
                 return _.reject(stages, function (stage) {
                     return stage.name === type;
                 });
@@ -712,11 +712,11 @@ define([
             var position = 0;
 
             _.each(orderedList, (item) => {
-                if(item.type === type) {
+                if (item.type === type) {
                     return false;
                 }
 
-                if(item.toggledOn) {
+                if (item.toggledOn) {
                     position++;
                 }
             });

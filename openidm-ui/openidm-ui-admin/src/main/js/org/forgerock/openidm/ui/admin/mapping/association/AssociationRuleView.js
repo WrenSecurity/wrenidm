@@ -26,14 +26,14 @@ define([
     "org/forgerock/openidm/ui/admin/util/LinkQualifierUtils",
     "org/forgerock/openidm/ui/admin/util/InlineScriptEditor"
 ], function($, _,
-            MappingAdminAbstractView,
-            eventManager,
-            constants,
-            CorrelationQueryDialog,
-            SaveChangesView,
-            BootstrapDialog,
-            LinkQualifierUtils,
-            InlineScriptEditor) {
+        MappingAdminAbstractView,
+        eventManager,
+        constants,
+        CorrelationQueryDialog,
+        SaveChangesView,
+        BootstrapDialog,
+        LinkQualifierUtils,
+        InlineScriptEditor) {
 
     var AssociationRuleView = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/association/AssociationRuleTemplate.html",
@@ -69,7 +69,7 @@ define([
             this.model.addedLinkQualifiers = _.union(_.pluck(this.model.mapping.correlationQuery, "linkQualifier"), _.pluck(this.model.changes, "linkQualifier"));
 
             // Legacy Support
-            if(_.has(this.model.mapping, "correlationQuery") && !_.isArray(this.model.mapping.correlationQuery)) {
+            if (_.has(this.model.mapping, "correlationQuery") && !_.isArray(this.model.mapping.correlationQuery)) {
                 this.model.mapping.correlationQuery.linkQualifier = "default";
                 this.model.mapping.correlationQuery = [this.model.mapping.correlationQuery];
             }
@@ -120,7 +120,7 @@ define([
                 if ((_.has(this.model.mapping, "correlationQuery") && this.model.mapping.correlationQuery.length > 0) || this.model.changes.length > 0) {
                     this.$el.find(".correlationQueryType").val("queries");
 
-                    if(this.model.mapping.correlationQuery === undefined) {
+                    if (this.model.mapping.correlationQuery === undefined) {
                         this.model.mapping.correlationQuery = [];
                     }
 
@@ -170,7 +170,7 @@ define([
             }  else if (this.$el.find(".correlationQueryType").val() === "script") {
                 this.$el.find(".correlationQueryChangesMsg").hide();
 
-                if(this.correlationScript.generateScript()) {
+                if (this.correlationScript.generateScript()) {
                     showWarning = false;
                 }
             }
@@ -312,7 +312,7 @@ define([
                     delete this.model.mapping.correlationScript;
                 }
 
-            } else if($(".correlationQueryType").val() === "script") {
+            } else if ($(".correlationQueryType").val() === "script") {
                 scriptDetails = this.correlationScript.generateScript();
 
                 if (_.has(this.model.mapping, "correlationQuery")) {
@@ -377,7 +377,7 @@ define([
                 _this = this;
 
             _.each(this.model.changes, function(change){
-                switch(change.changes) {
+                switch (change.changes) {
                     case "add":
                         changes[0].values.push(change.linkQualifier);
                         break;

@@ -28,16 +28,16 @@ define([
     "org/forgerock/commons/ui/common/main/Router",
     "backgrid"
 ], function($, _,
-            AdminAbstractView,
-            ResourceDelegate,
-            uiUtils,
-            AbstractModel,
-            AbstractCollection,
-            eventManager,
-            constants,
-            BackgridUtils,
-            router,
-            Backgrid) {
+        AdminAbstractView,
+        ResourceDelegate,
+        uiUtils,
+        AbstractModel,
+        AbstractCollection,
+        eventManager,
+        constants,
+        BackgridUtils,
+        router,
+        Backgrid) {
     var ProcessHistoryView = AdminAbstractView.extend({
         template: "templates/admin/workflow/ProcessHistoryViewTemplate.html",
         events: {
@@ -196,7 +196,7 @@ define([
 
                 this.$el.find("#processHistoryAssignedTo")[0].selectize.setValue("anyone", true);
 
-                if(callback) {
+                if (callback) {
                     callback();
                 }
             }, this));
@@ -211,10 +211,10 @@ define([
         reloadGrid: function() {
             var filterString = "_queryId=filtered-query&finished=true";
 
-            if(this.model.userFilter !== "anyone") {
+            if (this.model.userFilter !== "anyone") {
                 filterString = filterString +"&startUserId=" + this.model.userFilter;
 
-                if(this.model.processTypeFilter !== "all") {
+                if (this.model.processTypeFilter !== "all") {
                     filterString = filterString + "&processDefinitionKey=" +this.model.processTypeFilter;
                 }
             } else if (this.model.processTypeFilter !== "all") {

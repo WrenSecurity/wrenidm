@@ -27,14 +27,14 @@ define([
     "org/forgerock/openidm/ui/admin/role/MembersView"
 ],
 function ($, _, Handlebars,
-    AbstractView,
-    GenericEditResourceView,
-    ValidatorsManager,
-    UserQueryFilterEditor,
-    TemporalConstraintsUtils,
-    TemporalConstraintsFormView,
-    MembersView
-  ) {
+        AbstractView,
+        GenericEditResourceView,
+        ValidatorsManager,
+        UserQueryFilterEditor,
+        TemporalConstraintsUtils,
+        TemporalConstraintsFormView,
+        MembersView
+) {
     var EditRoleView = function () {
         return AbstractView.apply(this, arguments);
     };
@@ -113,7 +113,7 @@ function ($, _, Handlebars,
          */
         delete this.queryEditor;
 
-        if(this.oldObject.condition !== undefined) {
+        if (this.oldObject.condition !== undefined) {
             this.queryEditor = this.renderEditor();
         }
     };

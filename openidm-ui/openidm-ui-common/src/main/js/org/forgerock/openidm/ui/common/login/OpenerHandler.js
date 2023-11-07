@@ -20,8 +20,8 @@ define([
     "handlebars",
     "org/forgerock/commons/ui/common/main/Router"
 ], function($, _,
-            Handlebars,
-            Router) {
+        Handlebars,
+        Router) {
 
     var OpenerLoginView = function () {},
         obj;
@@ -33,7 +33,7 @@ define([
             moduleName,
             type = args[0];
 
-        if(type.includes("bind/")) {
+        if (type.includes("bind/")) {
             type = "bind";
         }
 
@@ -50,7 +50,7 @@ define([
                 break;
         }
 
-        if(!_.isNull(moduleName)) {
+        if (!_.isNull(moduleName)) {
             opener.require([moduleName], function(module){
                 module.oauthReturn(params);
 

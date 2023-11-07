@@ -35,8 +35,8 @@ define([
             return configDelegate.readEntity("managed").then(function(managed){
                 var managedObject = _.findWhere(managed.objects,{ name: objectName });
 
-                if(managedObject){
-                    if(managedObject.schema){
+                if (managedObject){
+                    if (managedObject.schema){
                         managedObject.schema.allSchemas = managed.objects;
                         return managedObject.schema;
                     } else {
@@ -50,9 +50,9 @@ define([
             return obj.getProvisioner(objectType, objectName).then(function(prov){
                 var schema;
 
-                if(prov.objectTypes){
+                if (prov.objectTypes){
                     schema = prov.objectTypes[objectName2];
-                    if(schema){
+                    if (schema){
                         schema.title = objectName;
                         return schema;
                     } else {
@@ -104,7 +104,7 @@ define([
 
         return obj.serviceCall(callParams).fail(function(err){
             var response = err.responseJSON;
-            if(response.code === 409) {
+            if (response.code === 409) {
                 messagesManager.messages.addMessage({"type": "error", "message": response.message});
             }
         });
@@ -118,7 +118,7 @@ define([
     obj.getServiceUrl = function(args) {
         var url = "/" + constants.context + "/" + args[0] + "/" + args[1];
 
-        if(args[0] === "system") {
+        if (args[0] === "system") {
             url += "/" + args[2];
         }
 

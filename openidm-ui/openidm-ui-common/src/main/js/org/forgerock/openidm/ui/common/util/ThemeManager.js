@@ -54,11 +54,11 @@ define([
         var prom = $.Deferred();
         //check to see if the config file has been loaded already
         //if so use what is already there if not load it
-        if(conf.globalData.themeConfig){
+        if (conf.globalData.themeConfig){
             prom.resolve(conf.globalData.themeConfig);
             return prom;
         }
-        else{
+        else {
             return configDelegate.readEntity("ui/themeconfig");
         }
     };

@@ -21,9 +21,9 @@ define([
     "org/forgerock/openidm/ui/admin/settings/audit/AuditTopicsDialog",
     "org/forgerock/commons/ui/common/components/ChangesPending"
 ], function($, _,
-            AuditAdminAbstractView,
-            AuditTopicsDialog,
-            ChangesPending) {
+        AuditAdminAbstractView,
+        AuditTopicsDialog,
+        ChangesPending) {
 
     var AuditTopicsView = AuditAdminAbstractView.extend({
         template: "templates/admin/settings/audit/AuditTopicsTemplate.html",

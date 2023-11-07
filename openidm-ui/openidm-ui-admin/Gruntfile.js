@@ -25,7 +25,6 @@ module.exports = function(grunt) {
             forgeRockCommonsDirectory + "/src/main/resources"
         ],
         deployDirectory: "admin/default",
-        eslintFormatter: require.resolve("eslint-formatter-warning-summary"),
         lessPlugins: [new (require("less-plugin-clean-css"))({})],
         copyLibs: [
             // JS - npm
@@ -64,7 +63,7 @@ module.exports = function(grunt) {
             { src: "node_modules/codemirror/mode/groovy/groovy.js", dest: "target/www/libs/codemirror/mode/groovy/groovy.js" },
             { src: "node_modules/codemirror/mode/javascript/javascript.js", dest: "target/www/libs/codemirror/mode/javascript/javascript.js" },
             { src: "node_modules/codemirror/mode/xml/xml.js", dest: "target/www/libs/codemirror/mode/xml/xml.js" },
-            { src: "node_modules/codemirror/lib/codemirror.css", dest: "target/www/css/codemirror/codemirror.css" },
-        ],
+            { src: "node_modules/codemirror/lib/codemirror.css", dest: "target/www/css/codemirror/codemirror.css" }
+        ]
     });
 };

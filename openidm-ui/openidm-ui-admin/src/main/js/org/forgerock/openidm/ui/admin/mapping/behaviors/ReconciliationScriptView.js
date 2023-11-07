@@ -19,7 +19,7 @@ define([
     "underscore",
     "org/forgerock/openidm/ui/admin/mapping/util/MappingScriptsView"
 ], function($, _,
-            MappingScriptsView) {
+        MappingScriptsView) {
     var ReconciliationScriptView = MappingScriptsView.extend({
         element: "#reconQueryView",
         noBaseTemplate: true,

@@ -25,13 +25,13 @@ define([
     "org/forgerock/openidm/ui/admin/delegates/ScriptDelegate",
     "org/forgerock/openidm/ui/admin/util/LinkQualifierUtils"
 ], function($, _,
-            MappingAdminAbstractView,
-            ConfigDelegate,
-            Constants,
-            EventManager,
-            inlineScriptEditor,
-            ScriptDelegate,
-            LinkQualifierUtils) {
+        MappingAdminAbstractView,
+        ConfigDelegate,
+        Constants,
+        EventManager,
+        inlineScriptEditor,
+        ScriptDelegate,
+        LinkQualifierUtils) {
 
     var LinkQualifiersView = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/properties/LinkQualifiersTemplate.html",
@@ -69,7 +69,7 @@ define([
                 var scriptData = "",
                     linkQualifiers;
 
-                if(this.model.mapping.linkQualifiers !== undefined && this.model.mapping.linkQualifiers.type !== undefined) {
+                if (this.model.mapping.linkQualifiers !== undefined && this.model.mapping.linkQualifiers.type !== undefined) {
                     scriptData = this.model.mapping.linkQualifiers;
 
                     this.$el.find("#linkQualifierTabs").find('.active').removeClass('active');
@@ -84,7 +84,7 @@ define([
                     this.populateScriptLinkQualifier(linkQualifiers);
                 }
 
-                if(scriptData && scriptData.globals && scriptData.globals.returnAll) {
+                if (scriptData && scriptData.globals && scriptData.globals.returnAll) {
                     delete scriptData.globals.returnAll;
                 }
 
@@ -98,7 +98,7 @@ define([
                         "placeHolder" : "if(returnAll){ ['test', 'admin'] } else { /* script */ }"
                     },
                     _.bind(function(){
-                        if(callback) {
+                        if (callback) {
                             callback();
                         }
                     }, this));
@@ -108,7 +108,7 @@ define([
                 }, this));
 
                 this.$el.find("#linkQualifierTabs a").on("shown.bs.tab", _.bind(function (e) {
-                    if($(e.target).attr("id") === "scriptQualifierTab") {
+                    if ($(e.target).attr("id") === "scriptQualifierTab") {
                         this.linkQualifierScript.refresh();
                     }
                 }, this));
@@ -116,7 +116,7 @@ define([
         },
 
         populateScriptLinkQualifier : function (data) {
-            if(_.isArray(data) === true) {
+            if (_.isArray(data) === true) {
                 _.each(data, function(linkQualifier){
                     this.$el.find("#scriptLinkQualifierList").append('<button disabled="true" type="button" class="removeLinkQualifier btn btn-primary">'
                         + '<span class="linkQualifier">' +linkQualifier  +'</span>'
@@ -145,7 +145,7 @@ define([
                 this.data.linkQualifiers = _.without(this.data.linkQualifiers, $(e.target).closest(".removeLinkQualifier").find(".linkQualifier").text());
                 $(e.target).closest(".removeLinkQualifier").remove();
 
-                if(this.$el.find("#staticLinkQualifierList .removeLinkQualifier").length === 1) {
+                if (this.$el.find("#staticLinkQualifierList .removeLinkQualifier").length === 1) {
                     this.data.doNotDelete = true;
                     this.$el.find("#staticLinkQualifierList .removeLinkQualifier").prop("disabled", true);
                 }
@@ -166,7 +166,7 @@ define([
 
                 this.$el.find(".newLinkQualifier").val("");
 
-                if(this.$el.find("#staticLinkQualifierList .removeLinkQualifier").length > 1) {
+                if (this.$el.find("#staticLinkQualifierList .removeLinkQualifier").length > 1) {
                     this.$el.find(".removeLinkQualifier").prop("disabled", false);
                     this.data.doNotDelete = false;
                 }
@@ -188,7 +188,7 @@ define([
 
             this.model.scriptError = false;
 
-            if(currentTab === "staticQualifierTab") {
+            if (currentTab === "staticQualifierTab") {
                 this.saveDeclarative();
             } else {
                 this.saveScript();
@@ -211,11 +211,11 @@ define([
 
             scriptDetails = this.linkQualifierScript.generateScript();
 
-            if(scriptDetails !== null) {
+            if (scriptDetails !== null) {
                 ScriptDelegate.evalLinkQualifierScript(scriptDetails).then(_.bind(function (result) {
-                    if(_.isArray(result)) {
+                    if (_.isArray(result)) {
                         _.each(result, function(item) {
-                            if(!_.isString(item)) {
+                            if (!_.isString(item)) {
                                 this.model.scriptError = true;
                                 this.model.errorMessage = $.t("templates.mapping.validLinkQualifierScript");
                             }
@@ -225,7 +225,7 @@ define([
                         this.model.errorMessage = $.t("templates.mapping.linkQualifierNotArray");
                     }
 
-                    if(!this.model.scriptError) {
+                    if (!this.model.scriptError) {
                         this.model.scriptResult = result;
 
                         this.model.mapping.linkQualifiers = this.linkQualifierScript.generateScript();

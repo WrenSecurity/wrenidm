@@ -18,7 +18,7 @@ define([
     "jquery",
     "org/forgerock/commons/ui/common/util/DateUtil"
 ], function ($,
-             dateUtil) {
+        dateUtil) {
 
     var obj = {};
 
@@ -28,7 +28,7 @@ define([
 
     obj.generateTemplateFromFormProperties = function(definition, formValues) {
         var property, formTemplate = "", formFieldType, formFieldDescription, i;
-        for(i = 0; i < definition.formProperties.length; i++) {
+        for (i = 0; i < definition.formProperties.length; i++) {
             formFieldDescription = definition.formProperties[i];
             formFieldDescription.value = obj.getValueForKey(formFieldDescription._id, formValues);
             if (formFieldDescription._id !== '_formGenerationTemplate') {
@@ -44,7 +44,7 @@ define([
         if (!formValues) {
             return null;
         }
-        for(i = 0; i < formValues.length; i++) {
+        for (i = 0; i < formValues.length; i++) {
             formValueEntry = formValues[i];
             if (formValueEntry[key]) {
                 return formValueEntry[key];

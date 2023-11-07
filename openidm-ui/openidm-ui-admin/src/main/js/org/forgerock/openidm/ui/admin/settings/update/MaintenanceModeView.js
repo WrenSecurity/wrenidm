@@ -22,10 +22,10 @@ define([
     "org/forgerock/openidm/ui/admin/delegates/SchedulerDelegate",
     "org/forgerock/openidm/ui/admin/delegates/MaintenanceDelegate"
 ], function($, _,
-            AdminAbstractView,
-            Constants,
-            SchedulerDelegate,
-            MaintenanceDelegate) {
+        AdminAbstractView,
+        Constants,
+        SchedulerDelegate,
+        MaintenanceDelegate) {
 
     var VersionsView = AdminAbstractView.extend({
         template: "templates/admin/settings/update/MaintenanceModeTemplate.html",
@@ -88,9 +88,9 @@ define([
                                     }, this), 300);
 
                                 }, this),
-                                    _.bind(function() {
-                                        this.model.error();
-                                    }, this)
+                                _.bind(function() {
+                                    this.model.error();
+                                }, this)
                                 );
 
                             } else {

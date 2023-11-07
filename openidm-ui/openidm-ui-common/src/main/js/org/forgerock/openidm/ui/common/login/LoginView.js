@@ -26,13 +26,13 @@ define([
     "org/forgerock/commons/ui/common/util/OAuth",
     "org/forgerock/commons/ui/common/main/Router"
 ], function($, _, Handlebars,
-            SocialDelegate,
-            Configuration,
-            Constants,
-            EventManager,
-            commonLoginView,
-            OAuth,
-            Router) {
+        SocialDelegate,
+        Configuration,
+        Constants,
+        EventManager,
+        commonLoginView,
+        OAuth,
+        Router) {
 
     var LoginView = function () {},
         obj;

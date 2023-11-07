@@ -34,20 +34,20 @@ define([
     "backgrid-paginator",
     "backgrid-selectall"
 ], function($, _,
-            MappingAdminAbstractView,
-            conf,
-            reconDelegate,
-            dateUtil,
-            syncDelegate,
-            configDelegate,
-            mappingUtils,
-            changeAssociationDialog,
-            TestSyncDialog,
-            Backgrid,
-            BackgridUtils,
-            AbstractCollection,
-            ServiceInvoker,
-            Messages) {
+        MappingAdminAbstractView,
+        conf,
+        reconDelegate,
+        dateUtil,
+        syncDelegate,
+        configDelegate,
+        mappingUtils,
+        changeAssociationDialog,
+        TestSyncDialog,
+        Backgrid,
+        BackgridUtils,
+        AbstractCollection,
+        ServiceInvoker,
+        Messages) {
 
     var DataAssociationManagementView = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/association/DataAssociationManagementTemplate.html",
@@ -73,10 +73,10 @@ define([
 
             this.data.reconAvailable = false;
             this.parentRender(_.bind(function() {
-                if(this.data.recon && !this.getSyncCanceled()){
+                if (this.data.recon && !this.getSyncCanceled()){
                     this.renderReconResults(null, callback);
 
-                } else if(callback) {
+                } else if (callback) {
                     callback();
                 }
 
@@ -141,7 +141,7 @@ define([
 
             _.chain(rows)
                 .map(_.bind(function(row) {
-                    if(row.sourceObject) {
+                    if (row.sourceObject) {
                         row._id = row.sourceObject._id;
                     } else {
                         row._id = "";
@@ -193,7 +193,7 @@ define([
                     }, this))
                     .value();
                 this.parentRender(_.bind(function () {
-                    if(selectedSituation){
+                    if (selectedSituation){
                         $("#situationSelection",this.$el).val(selectedSituation.join(","));
                     }
                     renderGrid($("#analysisGridContainer"), callback);
@@ -303,7 +303,7 @@ define([
                         var params = [];
 
                         _.forIn(options.data, function (val, key) {
-                            switch(key) {
+                            switch (key) {
                                 case "per_page":
                                     key = "rows";
                                     break;

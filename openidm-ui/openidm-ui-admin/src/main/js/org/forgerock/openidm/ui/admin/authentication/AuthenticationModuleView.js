@@ -25,13 +25,13 @@ define([
     "org/forgerock/openidm/ui/admin/authentication/AuthenticationModuleDialogView",
     "org/forgerock/openidm/ui/admin/util/BackgridUtils"
 ], function($, _,
-            Backbone,
-            Backgrid,
-            Handlebars,
-            Constants,
-            AuthenticationAbstractView,
-            AuthenticationModuleDialogView,
-            BackgridUtils) {
+        Backbone,
+        Backgrid,
+        Handlebars,
+        Constants,
+        AuthenticationAbstractView,
+        AuthenticationModuleDialogView,
+        BackgridUtils) {
 
     var AuthenticationModuleView = AuthenticationAbstractView.extend({
         template: "templates/admin/authentication/AuthenticationModuleTemplate.html",

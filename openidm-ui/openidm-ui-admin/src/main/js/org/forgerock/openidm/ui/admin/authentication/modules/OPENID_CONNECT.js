@@ -23,10 +23,10 @@ define([
     "libs/codemirror/lib/codemirror",
     "libs/codemirror/mode/xml/xml"
 ], function($, _,
-            Form2js,
-            AuthenticationAbstractView,
-            ExternalAccessDelegate,
-            codemirror) {
+        Form2js,
+        AuthenticationAbstractView,
+        ExternalAccessDelegate,
+        codemirror) {
 
     var OpenIDConnectView = AuthenticationAbstractView.extend({
         template: "templates/admin/authentication/modules/OPENID_CONNECT.html",

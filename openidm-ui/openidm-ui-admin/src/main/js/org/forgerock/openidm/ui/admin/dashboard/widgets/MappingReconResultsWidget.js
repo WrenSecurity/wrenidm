@@ -27,13 +27,13 @@ define([
     "org/forgerock/openidm/ui/admin/delegates/SyncDelegate",
     "moment"
 ], function($, _, bootstrap, handlebars,
-            dimple,
-            form2js,
-            AbstractWidget,
-            ReconDelegate,
-            DateUtil,
-            SyncDelegate,
-            moment) {
+        dimple,
+        form2js,
+        AbstractWidget,
+        ReconDelegate,
+        DateUtil,
+        SyncDelegate,
+        moment) {
     var widgetInstance = {},
         Widget = AbstractWidget.extend({
             template: "templates/admin/dashboard/widgets/MappingReconResultsWidgetTemplate.html",
@@ -76,11 +76,11 @@ define([
                         return mapping.recon;
                     });
 
-                    if(!currentMapping && this.data.sync.mappings) {
+                    if (!currentMapping && this.data.sync.mappings) {
                         currentMapping = this.data.sync.mappings[0];
                     }
 
-                    if(currentMapping) {
+                    if (currentMapping) {
                         if (currentMapping.recon) {
                             currentMapping.recon.convertedTime = DateUtil.formatDate(currentMapping.recon.ended, "MMMM dd, yyyy HH:mm");
                             currentMapping.recon.convertedDuration = moment.utc(currentMapping.recon.duration).format("HH:mm:ss:SSS");
@@ -110,20 +110,20 @@ define([
                 this.data.showPopover = false;
 
                 _.each(this.data.sync.mappings, function(mapping){
-                    if(mapping.name !== this.data.mapping.name && mapping.recon) {
+                    if (mapping.name !== this.data.mapping.name && mapping.recon) {
                         list.append('<li data-order="' + orderCounter + '" class="recon-list-item">' + mapping.name  + '</li>');
                     }
                     orderCounter++;
                 }, this);
 
-                if(list.find('li').length > 0) {
+                if (list.find('li').length > 0) {
                     this.data.showPopover = true;
                 }
 
                 this.parentRender(_.bind(function(){
                     $(window).unbind("resize.reconBarChart");
 
-                    if(this.data.showPopover) {
+                    if (this.data.showPopover) {
                         this.$el.find(".recon-widget-header .title").popover({
                             content: _.bind(function () {
                                 //Some event clean up here to ensure clicks only fired once
@@ -145,7 +145,7 @@ define([
                     }
 
                     //This piece of code builds and adds the barchart
-                    if(recon && (this.model.barchart === true || this.model.barchart === "true")) {
+                    if (recon && (this.model.barchart === true || this.model.barchart === "true")) {
                         _.each(recon.situationSummary, function(value, key) {
                             this.data.situationDetails.push({
                                 "Situation": this.model.lookup[key],
@@ -187,7 +187,7 @@ define([
                         this.model.typeCategory.titleShape.text("");
                     }
 
-                    if(callback) {
+                    if (callback) {
                         callback();
                     }
                 }, this));
@@ -210,7 +210,7 @@ define([
                     mapping = this.data.sync.mappings[selectedIndex],
                     recon = null;
 
-                if(mapping.recon) {
+                if (mapping.recon) {
                     recon = mapping.recon;
 
                     recon.convertedTime = DateUtil.formatDate(recon.ended,"MMMM dd, yyyy HH:mm");

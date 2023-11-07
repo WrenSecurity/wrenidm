@@ -25,12 +25,12 @@ define([
     "org/forgerock/commons/ui/common/main/EventManager",
     "org/forgerock/commons/ui/common/components/ChangesPending"
 ], function($, _, handlebars,
-            MappingAdminAbstractView,
-            ConfigDelegate,
-            ScriptDialog,
-            constants,
-            eventManager,
-            ChangesPending) {
+        MappingAdminAbstractView,
+        ConfigDelegate,
+        ScriptDialog,
+        constants,
+        eventManager,
+        ChangesPending) {
     var IndividualRecordValidationView = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/association/IndividualRecordValidationViewTemplate.html",
         element: "#objectFiltersView",
@@ -61,13 +61,13 @@ define([
 
             ConfigDelegate.readEntity("managed").then((managed) => {
                 _.each(managed.objects, function(managedObject) {
-                    if(managedObject.name === "user") {
+                    if (managedObject.name === "user") {
                         this.data.preferences = managedObject.schema.properties.preferences.properties;
                         this.model.allPreferences = _.keys(this.data.preferences);
                     }
                 }, this);
 
-                if(!_.isUndefined(this.model.mapping.validSource)
+                if (!_.isUndefined(this.model.mapping.validSource)
                     && this.model.mapping.validSource.file
                     && this.model.mapping.validSource.file === "ui/preferenceCheck.js") {
 
@@ -84,7 +84,7 @@ define([
                         watchedProperties: ["validSource", "validTarget"]
                     });
 
-                    if(this.data.sourceDefinition.hasPreferences) {
+                    if (this.data.sourceDefinition.hasPreferences) {
                         this.setPreferences(this.model.currentPreferences, this.$el.find(".preference-check"));
                     }
                 });
@@ -106,7 +106,7 @@ define([
                 "value" : "allRecords"
             };
 
-            if(_.isUndefined(validationDetails)) {
+            if (_.isUndefined(validationDetails)) {
                 definition.hasScript = false;
             } else if (!_.isUndefined(validationDetails.file) && validationDetails.file === "ui/preferenceCheck.js") {
                 definition.hasPreferences = true;
@@ -135,7 +135,7 @@ define([
                 displayHolder,
                 passedData = {};
 
-            if(type === "source") {
+            if (type === "source") {
                 displayHolder = this.$el.find("#validSourceHolder .definition-holder");
             } else {
                 displayHolder = this.$el.find("#validTargetHolder .definition-holder");
@@ -143,7 +143,7 @@ define([
 
             displayHolder.empty();
 
-            if(value === "userPreferences") {
+            if (value === "userPreferences") {
                 passedData.preferences = this.data.preferences;
 
                 displayHolder.html($(handlebars.compile("{{> mapping/association/_individualPreferences}}")(passedData)));
@@ -177,13 +177,13 @@ define([
             var scriptName,
                 updatedMapping = _.clone(mapping);
 
-            if(type === "source") {
+            if (type === "source") {
                 scriptName = "validSource";
             } else {
                 scriptName = "validTarget";
             }
 
-            if(value === "userPreferences") {
+            if (value === "userPreferences") {
                 updatedMapping[scriptName] = {
                     "type" : "text/javascript",
                     "globals" : {
@@ -201,7 +201,7 @@ define([
                 delete updatedMapping[scriptName];
             }
 
-            if( this.model.changesModule) {
+            if ( this.model.changesModule) {
                 this.model.changesModule.makeChanges(_.clone(updatedMapping));
             }
 
@@ -216,7 +216,7 @@ define([
         setPreferences: function(preferences, checkboxes) {
             _.each(checkboxes, function(element) {
                 _.find(preferences, function(value){
-                    if($(element).val() === value) {
+                    if ($(element).val() === value) {
                         $(element).prop("checked", true);
                     }
 
@@ -238,7 +238,7 @@ define([
                 checked = checkbox.is(":checked"),
                 value = checkbox.val();
 
-            if(checked) {
+            if (checked) {
                 this.model.currentPreferences.push(value);
             } else {
                 this.model.currentPreferences = _.filter(this.model.currentPreferences, function(val) {
@@ -248,7 +248,7 @@ define([
 
             this.model.mapping.validSource.globals.preferences = this.model.currentPreferences;
 
-            if( this.model.changesModule) {
+            if ( this.model.changesModule) {
                 this.model.changesModule.makeChanges(_.clone(this.model.mapping));
             }
         },
@@ -286,7 +286,7 @@ define([
                     "disableValidation" : true
                 };
 
-            if(type === "source") {
+            if (type === "source") {
                 scriptName = "validSource";
                 args.scriptDialogTitle = $.t("templates.mapping.recordValidation.editValidScript", {"script" : "validSource"});
             } else {
@@ -311,13 +311,13 @@ define([
          * Sets the newly saved script to the correct validation event
          */
         setScript: function (script, type, mapping) {
-            if(type === "source") {
+            if (type === "source") {
                 mapping.validSource = script;
             } else {
                 mapping.validTarget = script;
             }
 
-            if( this.model.changesModule) {
+            if ( this.model.changesModule) {
                 this.model.changesModule.makeChanges(_.clone(mapping));
             }
 

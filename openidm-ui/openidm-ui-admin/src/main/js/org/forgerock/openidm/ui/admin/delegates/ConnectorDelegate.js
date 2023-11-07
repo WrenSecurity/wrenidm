@@ -60,7 +60,7 @@ define([
         var deferred = $.Deferred(),
             promise = deferred.promise();
 
-        if(obj.connectorDelegateCache.currentConnectors) {
+        if (obj.connectorDelegateCache.currentConnectors) {
             deferred.resolve(_.clone(obj.connectorDelegateCache.currentConnectors));
         } else {
             obj.serviceCall({

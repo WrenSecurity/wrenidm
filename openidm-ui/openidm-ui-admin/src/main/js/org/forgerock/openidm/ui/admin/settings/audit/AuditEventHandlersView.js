@@ -22,10 +22,10 @@ define([
     "org/forgerock/openidm/ui/admin/delegates/AuditDelegate",
     "org/forgerock/commons/ui/common/components/ChangesPending"
 ], function ($, _,
-             AuditAdminAbstractView,
-             AuditEventHandlersDialog,
-             AuditDelegate,
-             ChangesPending) {
+        AuditAdminAbstractView,
+        AuditEventHandlersDialog,
+        AuditDelegate,
+        ChangesPending) {
 
     var AuditEventHandlersView = AuditAdminAbstractView.extend({
         template: "templates/admin/settings/audit/AuditEventHandlersTemplate.html",

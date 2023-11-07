@@ -35,21 +35,21 @@ define([
     "libs/codemirror/mode/xml/xml",
     "libs/codemirror/addon/display/placeholder"
 ], function($, _,
-            bootstrap,
-            handlebars,
-            form2js,
-            AdminAbstractView,
-            ConfigDelegate,
-            SiteConfigurationDelegate,
-            UiUtils,
-            AdminUtils,
-            EventManager,
-            Constants,
-            BootstrapDialog,
-            selectize,
-            AutoScroll,
-            dragula,
-            codeMirror) {
+        bootstrap,
+        handlebars,
+        form2js,
+        AdminAbstractView,
+        ConfigDelegate,
+        SiteConfigurationDelegate,
+        UiUtils,
+        AdminUtils,
+        EventManager,
+        Constants,
+        BootstrapDialog,
+        selectize,
+        AutoScroll,
+        dragula,
+        codeMirror) {
 
     var AbstractSelfServiceView = AdminAbstractView.extend({
         events: {
@@ -226,7 +226,7 @@ define([
                     }, this);
 
                     if (tempConfig.enabledByDefault) {
-                        if($(card).find(".section-check").length > 0) {
+                        if ($(card).find(".section-check").length > 0) {
                             $(card).find(".section-check").prop("checked", true).trigger("change");
                         } else {
                             $(card).toggleClass("disabled", false);
@@ -311,20 +311,20 @@ define([
                     return defaultStage.name === type;
                 });
 
-            if(check.is(":checked")) {
+            if (check.is(":checked")) {
                 card.toggleClass("disabled", false);
                 card.toggleClass("active", true);
 
                 orderPosition = this.$el.find(".selfservice-holder .wide-card:not(.disabled)").index(card);
 
-                if(_.filter(this.model.saveConfig.stageConfigs, {"name" : type}).length === 0) {
+                if (_.filter(this.model.saveConfig.stageConfigs, {"name" : type}).length === 0) {
                     this.model.saveConfig.stageConfigs.splice(orderPosition, 0, _.clone(this.model.configDefault.stageConfigs[configPosition]));
                 }
             } else {
                 card.toggleClass("active", false);
                 card.toggleClass("disabled", true);
 
-                if(this.$el.find(".section-check:checked").length === 0 && this.$el.find(".all-check:checked").length !== 0) {
+                if (this.$el.find(".section-check:checked").length === 0 && this.$el.find(".all-check:checked").length !== 0) {
                     this.$el.find(".all-check").trigger("click");
                     removeConfig = true;
                 }
@@ -380,11 +380,11 @@ define([
 
             currentData.identityServiceProperties = this.data.identityServiceProperties;
 
-            if(this.filterPropertiesList) {
+            if (this.filterPropertiesList) {
                 currentData.identityServiceProperties = this.filterPropertiesList(currentData.identityServiceProperties, type, this.data.identityServicePropertiesDetails);
             }
 
-            if($(event.target).parents(".checkbox").length === 0 && editable === "true") {
+            if ($(event.target).parents(".checkbox").length === 0 && editable === "true") {
                 this.dialog = BootstrapDialog.show({
                     title: $.t("templates.selfservice." + this.model.serviceType + "." + type + "Title"),
                     type: BootstrapDialog.TYPE_DEFAULT,
@@ -679,12 +679,12 @@ define([
         setOrder: function(start, end) {
             var movedElement = this.model.saveConfig.stageConfigs[start];
 
-            if(start !== end) {
+            if (start !== end) {
                 this.model.saveConfig.stageConfigs.splice(start, 1);
                 this.model.saveConfig.stageConfigs.splice(end, 0, movedElement);
             }
 
-            if(!_.isUndefined(movedElement)){
+            if (!_.isUndefined(movedElement)){
                 this.saveConfig();
             }
         },
@@ -697,7 +697,7 @@ define([
 
             _.each(this.$el.find(".selfservice-holder .wide-card"), function(config) {
                 _.each(tempConfig.stageConfigs, function(stage){
-                    if(stage.name === $(config).attr("data-type")) {
+                    if (stage.name === $(config).attr("data-type")) {
                         stageOrder.push(_.clone(stage));
                     }
                 }, this);

@@ -37,26 +37,26 @@ define([
     "org/forgerock/commons/ui/common/main/Router"
 
 ], function(
-    $,
-    _,
-    form2js,
-    Handlebars,
-    moment,
-    momentTimezone,
-    cron,
-    Datetimepicker,
-    AdminAbstractView,
-    eventManager,
-    ValidatorsManager,
-    constants,
-    SchedulerDelegate,
-    InlineScriptEditor,
-    AdminUtils,
-    ChangesPending,
-    ConnectorDelegate,
-    ConfigDelegate,
-    scheduler,
-    router
+        $,
+        _,
+        form2js,
+        Handlebars,
+        moment,
+        momentTimezone,
+        cron,
+        Datetimepicker,
+        AdminAbstractView,
+        eventManager,
+        ValidatorsManager,
+        constants,
+        SchedulerDelegate,
+        InlineScriptEditor,
+        AdminUtils,
+        ChangesPending,
+        ConnectorDelegate,
+        ConfigDelegate,
+        scheduler,
+        router
 ) {
     /**
      * @exports AbstractSchedulerView
@@ -141,23 +141,23 @@ define([
          * @callback invokeContextCallback
          */
         addInvokeContextInlineScriptEditor(callback) {
-            let element = this.$el.find(".script-editor-container"),
-                options = {
-                    element,
-                    noValidation: true,
-                    onChange: () => { element.trigger("change"); },
-                    onAddPassedVariable: () => { element.trigger("change"); },
-                    onLoadComplete: () => {
+            let element = this.$el.find(".script-editor-container");
+            let options = {
+                element,
+                noValidation: true,
+                onChange: () => { element.trigger("change"); },
+                onAddPassedVariable: () => { element.trigger("change"); },
+                onLoadComplete: () => {
 
-                        this.$el.find(".script-body select").selectize();
-                        let serviceType = this.serviceType(this.data.schedule.invokeService);
-                        this.updateInvokeContextVisibleElement(serviceType);
-                        if (callback) {
-                            callback();
-                        }
-                    },
-                    scriptData: this.data.schedule.invokeContext.script
-                };
+                    this.$el.find(".script-body select").selectize();
+                    let serviceType = this.serviceType(this.data.schedule.invokeService);
+                    this.updateInvokeContextVisibleElement(serviceType);
+                    if (callback) {
+                        callback();
+                    }
+                },
+                scriptData: this.data.schedule.invokeContext.script
+            };
             this.editor = InlineScriptEditor.generateScriptEditor(options);
         },
 
@@ -166,23 +166,23 @@ define([
          * constraints on the pickers
          */
         addDateTimePickers() {
-            let schedule = this.data.schedule,
-                pickerOptions = {
-                    sideBySide: true,
-                    useCurrent: false,
-                    icons: {
-                        time: 'fa fa-clock-o',
-                        date: 'fa fa-calendar',
-                        up: 'fa fa-chevron-up',
-                        down: 'fa fa-chevron-down',
-                        previous: 'fa fa-chevron-left',
-                        next: 'fa fa-chevron-right',
-                        today: 'fa fa-crosshairs',
-                        clear: 'fa fa-trash',
-                        close: 'fa fa-remove'
-                    }
-                },
-                $endTimeInput = this.$el.find("#scheduleEndTime");
+            let schedule = this.data.schedule;
+            let pickerOptions = {
+                sideBySide: true,
+                useCurrent: false,
+                icons: {
+                    time: 'fa fa-clock-o',
+                    date: 'fa fa-calendar',
+                    up: 'fa fa-chevron-up',
+                    down: 'fa fa-chevron-down',
+                    previous: 'fa fa-chevron-left',
+                    next: 'fa fa-chevron-right',
+                    today: 'fa fa-crosshairs',
+                    clear: 'fa fa-trash',
+                    close: 'fa fa-remove'
+                }
+            };
+            let $endTimeInput = this.$el.find("#scheduleEndTime");
 
             this.$el.find(".date-time-picker").each(function(index) {
                 let val = $(this).val();
@@ -209,7 +209,7 @@ define([
         updateInvokeContextVisibleElement(serviceType) {
             this.hide(".invoke-context-part");
             let selector;
-            switch(serviceType) {
+            switch (serviceType) {
                 case "provisioner":
                     this.showLiveSyncOptions();
                     break;
@@ -266,14 +266,14 @@ define([
          * @return {object} data needed by the invokeContextSyncProv partial
          */
         createSourceMappingData(resourceMapping) {
-            let type = resourceMapping.type,
-                action = {mapping: "reconcile", source: "liveSync"},
-                data = {
-                    action: action[type],
-                    type,
-                    resourceMapping: this.schedule.invokeContext[type],
-                    resourceMappingOptions: resourceMapping.options
-                };
+            let type = resourceMapping.type;
+            let action = {mapping: "reconcile", source: "liveSync"};
+            let data = {
+                action: action[type],
+                type,
+                resourceMapping: this.schedule.invokeContext[type],
+                resourceMappingOptions: resourceMapping.options
+            };
 
             return data;
         },
@@ -286,10 +286,10 @@ define([
          * @return {object} domElement
          */
         updateSourceMappingSelect(resourceMapping) {
-            let partial = "scheduler/_invokeContextSyncProv",
-                sourceMappingSelect = ".invoke-context-well-select-container",
-                data = this.createSourceMappingData(resourceMapping),
-                html = this.loadPartial(partial, data);
+            let partial = "scheduler/_invokeContextSyncProv";
+            let sourceMappingSelect = ".invoke-context-well-select-container";
+            let data = this.createSourceMappingData(resourceMapping);
+            let html = this.loadPartial(partial, data);
 
             this.$el.find(sourceMappingSelect).html(html);
             this.show(sourceMappingSelect);
@@ -389,8 +389,8 @@ define([
          * @param {object} event -- triggering event
          */
         formChangeHandler(event) {
-            let prop = $(event.target).attr("name"),
-                value = $(event.target).val();
+            let prop = $(event.target).attr("name");
+            let value = $(event.target).val();
             if ($(event.target).attr("type") === "checkbox") {
                 value = $(event.target).prop("checked");
             }
@@ -409,8 +409,8 @@ define([
          * @param {object} event -- triggering event
          */
         cronChangeHandler(event) {
-            let prop = "schedule",
-                value =  this.getAndSyncCronValue(event);
+            let prop = "schedule";
+            let value =  this.getAndSyncCronValue(event);
 
             this.updateSchedule(prop, value);
         },
@@ -421,8 +421,8 @@ define([
          * @param {object} event -- triggering event
          */
         iseChangeHandler(event) {
-            let prop = "script",
-                value = this.getIseValue();
+            let prop = "script";
+            let value = this.getIseValue();
 
             this.setInvokeContextObject(prop, value);
         },
@@ -435,10 +435,10 @@ define([
         dateTimeChangeHandler(event) {
             event.preventDefault();
             // if start date was picked, end date should be min date updated
-            let $target = $(event.target),
-                localFormat = "YYYY-MM-DD[T]HH:mm:ss",
-                value = moment($target.val()).format(localFormat),
-                name = $target.attr("name");
+            let $target = $(event.target);
+            let localFormat = "YYYY-MM-DD[T]HH:mm:ss";
+            let value = moment($target.val()).format(localFormat);
+            let name = $target.attr("name");
             if (name === "startTime") {
                 $("#scheduleEndTime").data("DateTimePicker").minDate(event.date);
             }
@@ -475,9 +475,9 @@ define([
          * @param {string} invokeService -- specifies the type of default object
          */
         createDefaultInvokeContext(invokeService) {
-            let prop, value;
+            let prop; let value;
 
-            switch(invokeService) {
+            switch (invokeService) {
                 case "sync":
                     prop = "mapping";
                     value = this.$el.find("#select-mapping").val();
@@ -575,8 +575,8 @@ define([
          */
         deleteSchedule(event) {
             event.preventDefault();
-            let dialogText = $("<p>", { "text": $.t("templates.scheduler.schedule") }),
-                scheduleId = this.schedule._id;
+            let dialogText = $("<p>", { "text": $.t("templates.scheduler.schedule") });
+            let scheduleId = this.schedule._id;
 
             AdminUtils.confirmDeleteDialog(dialogText, () => {
                 SchedulerDelegate.deleteSchedule(scheduleId).then(
@@ -640,8 +640,8 @@ define([
          * enables/disables cron builder element based on expression complexity
          */
         addCronEditor() {
-            let defaultCronValue,
-                cronExpr = this.data.schedule.schedule;
+            let defaultCronValue;
+            let cronExpr = this.data.schedule.schedule;
 
             // generate the cron html and add it to the dom
             // this.$el.find(cronEditorContainer).html(loadedPartial);
@@ -696,7 +696,7 @@ define([
                     });
                     this.$el.find(".complexExpression").val(cronExpr);
                     return cronExpr;
-                } catch(err) {
+                } catch (err) {
                     console.log(err);
                     return this.schedule.schedule;
                 }
@@ -800,13 +800,13 @@ define([
          * @param {object} event -- triggering event
          */
         toggleAdvancedLinkText(event) {
-            let action = "text",
-                selector = event.target,
-                expanded = $(event.target).attr("aria-expanded").toString(),
-                swapText = {
-                    "false": "hide",
-                    "true": "show"
-                };
+            let action = "text";
+            let selector = event.target;
+            let expanded = $(event.target).attr("aria-expanded").toString();
+            let swapText = {
+                "false": "hide",
+                "true": "show"
+            };
 
             this.$el.find(event.target).text(
                 $.t("common.form." + swapText[expanded] + "AdvancedOptions")

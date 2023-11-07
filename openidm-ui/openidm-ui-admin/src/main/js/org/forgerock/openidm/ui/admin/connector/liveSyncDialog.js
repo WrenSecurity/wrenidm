@@ -24,13 +24,13 @@ define([
     "org/forgerock/openidm/ui/admin/delegates/SchedulerDelegate",
     "org/forgerock/commons/ui/common/util/UIUtils"
 ], function($, _,
-            BootstrapDialog,
-            AbstractConnectorView,
-            Constants,
-            EventManager,
-            SchedulerDelegate,
-            UIUtils
-        ) {
+        BootstrapDialog,
+        AbstractConnectorView,
+        Constants,
+        EventManager,
+        SchedulerDelegate,
+        UIUtils
+) {
 
     var LiveSyncDialog = AbstractConnectorView.extend({
         template: "templates/admin/connector/liveSyncDialogTemplate.html",

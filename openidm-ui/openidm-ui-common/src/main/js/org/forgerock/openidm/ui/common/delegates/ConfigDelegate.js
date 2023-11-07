@@ -65,13 +65,13 @@ define([
             }
             return Object.getPrototypeOf(obj).readEntity.call(obj,id, successCallback, errorCallback)
                 .then(
-                function (result) {
-                    conf.delegateCache.config[id] = result;
-                    return $.extend(true, {}, result);
-                },
-                function () {
-                    delete conf.delegateCache.config[id];
-                });
+                    function (result) {
+                        conf.delegateCache.config[id] = result;
+                        return $.extend(true, {}, result);
+                    },
+                    function () {
+                        delete conf.delegateCache.config[id];
+                    });
         } else {
             clone = $.extend(true, {}, conf.delegateCache.config[id]);
             promise.resolve(clone);

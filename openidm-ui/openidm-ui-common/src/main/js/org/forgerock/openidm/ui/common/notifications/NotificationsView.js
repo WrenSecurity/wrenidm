@@ -24,12 +24,12 @@ define([
     "org/forgerock/commons/ui/common/main/Configuration",
     "org/forgerock/commons/ui/common/util/DateUtil"
 ], function($, _,
-            AbstractView,
-            notificationDelegate,
-            eventManager,
-            constants,
-            conf,
-            DateUtil) {
+        AbstractView,
+        notificationDelegate,
+        eventManager,
+        constants,
+        conf,
+        DateUtil) {
     var NotificationsView = AbstractView.extend({
         events: {
             "click .list-item-close" : "deleteLink"
@@ -50,7 +50,7 @@ define([
             });
 
             this.parentRender(_.bind(function() {
-                if(callback) {
+                if (callback) {
                     callback();
                 }
             }));
@@ -67,7 +67,7 @@ define([
             notificationDelegate.deleteEntity(notificationId, _.bind(function() {
                 $(event.target).parents(".list-group-item").remove();
 
-                if(this.$el.find(".list-group-item").length === 0) {
+                if (this.$el.find(".list-group-item").length === 0) {
                     this.$el.find(".list-group").html('<li class="list-group-item"><h5 class="text-center">'
                     + $.t("openidm.ui.apps.dashboard.NotificationsView.noNotifications")
                     +"</h5></li>");

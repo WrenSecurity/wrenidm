@@ -21,8 +21,8 @@ define([
     "org/forgerock/openidm/ui/admin/authentication/AuthenticationAbstractView"
 
 ], function($, _,
-            Form2js,
-            AuthenticationAbstractView) {
+        Form2js,
+        AuthenticationAbstractView) {
 
     var TrustedAttributeView = AuthenticationAbstractView.extend({
         template: "templates/admin/authentication/modules/TRUSTED_ATTRIBUTE.html",

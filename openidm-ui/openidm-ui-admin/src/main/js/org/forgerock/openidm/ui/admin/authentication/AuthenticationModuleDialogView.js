@@ -22,9 +22,9 @@ define([
     "org/forgerock/openidm/ui/admin/util/AdminUtils",
     "selectize"
 ], function($, _,
-            BootstrapDialog,
-            AuthenticationAbstractView,
-            AdminUtils) {
+        BootstrapDialog,
+        AuthenticationAbstractView,
+        AdminUtils) {
 
     var AuthenticationModuleDialogView = AuthenticationAbstractView.extend({
         element: "#dialogs",

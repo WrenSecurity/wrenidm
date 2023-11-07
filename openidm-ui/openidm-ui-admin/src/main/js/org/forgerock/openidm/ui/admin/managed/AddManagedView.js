@@ -27,15 +27,15 @@ define([
     "org/forgerock/openidm/ui/admin/delegates/RepoDelegate",
     "org/forgerock/commons/ui/common/main/Router"
 ], function($, _,
-            form2js,
-            faiconpicker,
-            AbstractManagedView,
-            ValidatorsManager,
-            ConfigDelegate,
-            EventManager,
-            Constants,
-            RepoDelegate,
-            Router) {
+        form2js,
+        faiconpicker,
+        AbstractManagedView,
+        ValidatorsManager,
+        ConfigDelegate,
+        EventManager,
+        Constants,
+        RepoDelegate,
+        Router) {
 
     var AddManagedView = AbstractManagedView.extend({
         template: "templates/admin/managed/AddManagedTemplate.html",
@@ -78,7 +78,7 @@ define([
 
             nameCheck = this.checkManagedName(managedObject.name, this.model.managedObjects.objects);
 
-            if(!nameCheck) {
+            if (!nameCheck) {
                 this.model.managedObjects.objects.push(managedObject);
 
                 this.saveManagedObject(managedObject, this.model.managedObjects, true);

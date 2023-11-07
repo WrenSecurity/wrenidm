@@ -29,7 +29,7 @@ define([
         },
         render: function(args, callback) {
             this.parentRender(function(){
-                if(callback){
+                if (callback){
                     callback();
                 }
             });

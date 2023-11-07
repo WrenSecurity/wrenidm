@@ -22,9 +22,9 @@ define([
     "org/forgerock/commons/ui/common/main/EventManager",
     "org/forgerock/commons/ui/common/util/Constants"
 ], function($, _, AdminAbstractView,
-            ConfigDelegate,
-            EventManager,
-            Constants) {
+        ConfigDelegate,
+        EventManager,
+        Constants) {
 
     var auditDataChanges = {},
         auditData = {},

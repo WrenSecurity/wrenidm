@@ -61,7 +61,7 @@ define([
 
             $('#dialogs').append(this.currentDialog);
 
-            if(this.selectedObjectType !== null) {
+            if (this.selectedObjectType !== null) {
                 this.title = this.selectedObjectType +" Object Type Edit";
             }
 
@@ -91,23 +91,23 @@ define([
                         dialogRef.close();
                     }
                 },
-                    {
-                        label: $.t('templates.connector.objectTypes.saveObjectType'),
-                        cssClass: "btn-primary",
-                        id: "saveObjectTypeDialog",
-                        action: function(dialogRef) {
-                            if (callback) {
-                                _this.saveObjectType();
-                                _this.editor.destroy();
-
-                                dialogRef.close();
-
-                                callback(_this.objectTypes);
-                            }
+                {
+                    label: $.t('templates.connector.objectTypes.saveObjectType'),
+                    cssClass: "btn-primary",
+                    id: "saveObjectTypeDialog",
+                    action: function(dialogRef) {
+                        if (callback) {
+                            _this.saveObjectType();
+                            _this.editor.destroy();
 
                             dialogRef.close();
+
+                            callback(_this.objectTypes);
                         }
-                    }]
+
+                        dialogRef.close();
+                    }
+                }]
             });
         },
 
@@ -120,7 +120,7 @@ define([
 
             if (this.editor && !_.isEmpty(objectType.objectName)) {
 
-                if(this.selectedObjectType !== null) {
+                if (this.selectedObjectType !== null) {
                     delete this.objectTypes[this.selectedObjectType];
                 }
 
