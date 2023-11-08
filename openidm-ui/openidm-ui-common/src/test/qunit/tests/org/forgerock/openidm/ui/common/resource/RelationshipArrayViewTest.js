@@ -22,11 +22,11 @@ define([
                 },
                 "propertyValue" : undefined,
                 "onChange" : (value, oldValue, newText, isFinalPromise) => {
-                    return _this2.createRelationship(value).then(function () {
+                    return this.createRelationship(value).then(() => {
                         if (isFinalPromise) {
-                            _this2.args.showChart = _this2.data.showChart;
-                            _this2.render(_this2.args);
-                            messagesManager.messages.addMessage({"message": $.t("templates.admin.ResourceEdit.addSuccess",{ objectTitle: _this2.data.prop.title })});
+                            this.args.showChart = this.data.showChart;
+                            this.render(this.args);
+                            messagesManager.messages.addMessage({"message": $.t("templates.admin.ResourceEdit.addSuccess",{ objectTitle: this.data.prop.title })});
                         }
                     });
                 },
@@ -44,9 +44,9 @@ define([
 
         //reset onchange and multiSelect for test when editing a relatioship
         expectedOpts.onChange = (value, oldValue, newText) => {
-            return _this2.updateRelationship(value, oldValue).then( () => {
-                _this2.render(_this2.args);
-                messagesManager.messages.addMessage({"message": $.t("templates.admin.ResourceEdit.editSuccess",{ objectTitle: _this2.data.prop.title })});
+            return this.updateRelationship(value, oldValue).then(() => {
+                this.render(this.args);
+                messagesManager.messages.addMessage({"message": $.t("templates.admin.ResourceEdit.editSuccess",{ objectTitle: this.data.prop.title })});
             });
         };
         expectedOpts.multiSelect = false;
