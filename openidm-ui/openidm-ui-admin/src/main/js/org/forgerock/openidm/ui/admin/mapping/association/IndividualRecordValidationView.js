@@ -61,7 +61,9 @@ define([
 
             ConfigDelegate.readEntity("managed").then((managed) => {
                 _.each(managed.objects, function(managedObject) {
-                    if(managedObject.name === "user") {
+                    if((managedObject.name === "user")
+                        && managedObject.schema.properties.preferences
+                        && managedObject.schema.properties.preferences.properties) {
                         this.data.preferences = managedObject.schema.properties.preferences.properties;
                         this.model.allPreferences = _.keys(this.data.preferences);
                     }
