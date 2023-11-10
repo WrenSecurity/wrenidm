@@ -30,16 +30,16 @@ define([
     "org/forgerock/openidm/ui/admin/util/BackgridUtils",
     "org/forgerock/commons/ui/common/util/UIUtils"
 ], function($, _, Backbone, bootstrap,
-            AdminAbstractView,
-            eventManager,
-            constants,
-            router,
-            ConnectorDelegate,
-            connectorUtils,
-            ConfigDelegate,
-            Backgrid,
-            BackgridUtils,
-            UIUtils) {
+        AdminAbstractView,
+        eventManager,
+        constants,
+        router,
+        ConnectorDelegate,
+        connectorUtils,
+        ConfigDelegate,
+        Backgrid,
+        BackgridUtils,
+        UIUtils) {
     var ConnectorListView = AdminAbstractView.extend({
         template: "templates/admin/connector/ConnectorListViewTemplate.html",
         events: {
@@ -155,7 +155,7 @@ define([
 
                     this.$el.find("#connectorGrid").append(connectorGrid.render().el);
 
-                    if(this.$el.find(".resource-unavailable").length !== 0) {
+                    if (this.$el.find(".resource-unavailable").length !== 0) {
                         this.$el.find(".resource-unavailable").popover({
                             content: function () {
                                 return '<span class="text-danger">' +$(this).attr("data-title") +'</span>';
@@ -167,7 +167,7 @@ define([
                         });
                     }
 
-                    if(this.$el.find(".resource-disabled").length !== 0) {
+                    if (this.$el.find(".resource-disabled").length !== 0) {
                         this.$el.find(".resource-disabled").popover({
                             content: function () {
                                 return '<span class="text-warning">' +$(this).attr("data-title") +'</span>';
@@ -189,7 +189,7 @@ define([
         },
 
         pruneObjectTypes: function(connector) {
-            if(!connector.ok) {
+            if (!connector.ok) {
                 connector.objectTypes = [];
             }
             return connector;
@@ -201,7 +201,7 @@ define([
          * @param {string} version - Takes both a range and normal version string to be checked
          */
         versionCheck: function(version) {
-            if(version.indexOf("(") !== -1 || version.indexOf(")") !== -1 || version.indexOf("[") !== -1 || version.indexOf("]") !== -1) {
+            if (version.indexOf("(") !== -1 || version.indexOf(")") !== -1 || version.indexOf("[") !== -1 || version.indexOf("]") !== -1) {
                 version = version.replace(/\[|\)|\(|\]/g,'');
                 version = version.split(",");
                 version = version[0].split(".");
@@ -211,7 +211,7 @@ define([
                 version = version[0] +"." +version[1];
             }
 
-            if(version >= 1.4) {
+            if (version >= 1.4) {
                 return true;
             } else {
                 return false;
@@ -226,9 +226,9 @@ define([
                 connectorName,
                 connectorIndex;
 
-            if(selectedItem.length > 0) {
+            if (selectedItem.length > 0) {
                 _.each(this.$el.find(".backgrid tbody tr"), function(row) {
-                    if($(row).attr("data-connector-title") === selectedItem.attr("data-connector-title")) {
+                    if ($(row).attr("data-connector-title") === selectedItem.attr("data-connector-title")) {
                         alternateItem = $(row);
                     }
                 });
@@ -236,14 +236,14 @@ define([
                 selectedItem = $(event.currentTarget).parents("tr");
 
                 _.each(this.$el.find(".card-spacer"), function(card) {
-                    if($(card).attr("data-connector-title") === selectedItem.attr("data-connector-title")) {
+                    if ($(card).attr("data-connector-title") === selectedItem.attr("data-connector-title")) {
                         alternateItem = $(card);
                     }
                 });
             }
 
             _.each(tempConnector, function(connectorObject, index){
-                if(connectorObject.cleanUrlName === selectedItem.attr("data-connector-title")) {
+                if (connectorObject.cleanUrlName === selectedItem.attr("data-connector-title")) {
                     connectorPath = this.data.currentConnectors[index].config;
                     connectorName = this.data.currentConnectors[index].name;
                     connectorIndex = index;
@@ -255,7 +255,7 @@ define([
                 selectedItem.remove();
                 alternateItem.remove();
 
-                if(this.$el.find(".backgrid tbody tr").length === 0) {
+                if (this.$el.find(".backgrid tbody tr").length === 0) {
                     this.$el.find(".backgrid tbody").append("<tr class='empty'><td colspan='3'>" +$.t("templates.connector.noResourceTitle") +"</td></tr>");
                 }
             });
@@ -264,7 +264,7 @@ define([
         toggleButtonChange: function(event) {
             var target = $(event.target);
 
-            if(target.hasClass("fa")) {
+            if (target.hasClass("fa")) {
                 target = target.parents(".btn");
             }
 
@@ -275,9 +275,9 @@ define([
         filterConnectors: function(event) {
             var search = $(event.target).val().toLowerCase();
 
-            if(search.length > 0) {
+            if (search.length > 0) {
                 _.each(this.$el.find(".card-spacer"), function(card) {
-                    if($(card).attr("data-type").toLowerCase().indexOf(search) > -1 || $(card).attr("data-name").toLowerCase().indexOf(search) > -1) {
+                    if ($(card).attr("data-type").toLowerCase().indexOf(search) > -1 || $(card).attr("data-name").toLowerCase().indexOf(search) > -1) {
                         $(card).fadeIn();
                     } else {
                         $(card).fadeOut();
@@ -285,7 +285,7 @@ define([
                 }, this);
 
                 _.each(this.$el.find(".backgrid tbody tr"), function(row) {
-                    if($(row).attr("data-type").toLowerCase().indexOf(search) > -1 || $(row).attr("data-name").toLowerCase().indexOf(search) > -1) {
+                    if ($(row).attr("data-type").toLowerCase().indexOf(search) > -1 || $(row).attr("data-name").toLowerCase().indexOf(search) > -1) {
                         $(row).fadeIn();
                     } else {
                         $(row).fadeOut();

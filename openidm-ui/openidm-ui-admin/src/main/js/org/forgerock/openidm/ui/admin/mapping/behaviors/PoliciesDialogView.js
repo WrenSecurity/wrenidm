@@ -25,13 +25,13 @@ define([
     "org/forgerock/openidm/ui/admin/util/WorkflowWidget",
     "bootstrap-dialog"
 ], function($, _,
-            AbstractView,
-            conf,
-            uiUtils,
-            InlineScriptEditor,
-            LinkQualifierFilterEditor,
-            WorkflowWidget,
-            BootstrapDialog) {
+        AbstractView,
+        conf,
+        uiUtils,
+        InlineScriptEditor,
+        LinkQualifierFilterEditor,
+        WorkflowWidget,
+        BootstrapDialog) {
 
     var PoliciesDialogView = AbstractView.extend({
         template: "templates/admin/mapping/behaviors/PoliciesDialogTemplate.html",

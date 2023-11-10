@@ -70,7 +70,7 @@ define([
 
             this.data.connectorDefaults = args.connectorDefaults;
 
-            if(!this.model.defaultLdap) {
+            if (!this.model.defaultLdap) {
                 this.model.defaultLdap = _.clone(this.data.connectorDefaults);
             }
 
@@ -81,8 +81,8 @@ define([
 
             this.template = base + args.connectorType +".html";
 
-            if(!this.data.editState) {
-                if(args.ldapType) {
+            if (!this.data.editState) {
+                if (args.ldapType) {
                     this.model.ldapType = args.ldapType;
                     this.$el.find("#ldapTemplateType").val(args.ldapType);
                 } else {
@@ -90,13 +90,13 @@ define([
                 }
             }
 
-            if(!_.isUndefined(this.data.connectorDefaults.configurationProperties.baseContexts) && !_.isUndefined(this.data.connectorDefaults.configurationProperties.baseContextsToSynchronize)) {
+            if (!_.isUndefined(this.data.connectorDefaults.configurationProperties.baseContexts) && !_.isUndefined(this.data.connectorDefaults.configurationProperties.baseContextsToSynchronize)) {
                 this.data.baseContextsSameResults = this.compareBaseContext(this.data.connectorDefaults.configurationProperties.baseContexts, this.data.connectorDefaults.configurationProperties.baseContextsToSynchronize);
             } else {
                 this.data.baseContextsSameResults = true;
             }
 
-            if(this.data.editState) {
+            if (this.data.editState) {
                 securityDelegate.getPublicKeyCert("truststore", "openidm_" +args.connectorDefaults.name).then(_.bind(function(cert){
                     this.data.publicKey = cert;
                     this.ldapParentRender(args, _.bind(function(){
@@ -107,7 +107,7 @@ define([
             } else {
                 this.ldapParentRender(args, _.bind(function(){
                     this.fieldButtonCheck();
-                    if(callback) {
+                    if (callback) {
                         callback();
                     }
                 }, this));
@@ -117,10 +117,10 @@ define([
             var sameResults = true,
                 compare;
 
-            if(base.length === sync.length) {
+            if (base.length === sync.length) {
                 compare = _.difference(base, sync);
 
-                if(compare.length !== 0) {
+                if (compare.length !== 0) {
                     sameResults = false;
                 }
             } else {
@@ -131,22 +131,22 @@ define([
         },
         ldapParentRender : function(args, callback) {
             this.parentRender(_.bind(function() {
-                if(!this.data.editState) {
+                if (!this.data.editState) {
                     this.$el.find("#ldapTemplateType").val(this.model.ldapType);
                 }
 
-                if(args.animate) {
+                if (args.animate) {
                     $("#connectorDetails").slideDown("slow", function() {});
                 } else {
                     $("#connectorDetails").show();
                 }
 
-                if(this.data.connectorDefaults.configurationProperties.ssl){
+                if (this.data.connectorDefaults.configurationProperties.ssl){
                     this.$el.find("#toggleCert").show();
                 }
 
                 validatorsManager.bindValidators(this.$el, "config/provisioner.openicf/ldap", _.bind(function () {
-                    if(this.$el.find("#syncBaseContext")) {
+                    if (this.$el.find("#syncBaseContext")) {
                         this.$el.find("#baseContextsToSynchronizeHolder input").attr("data-validator", "");
                         this.$el.find("#baseContextsToSynchronizeHolder input").attr("data-validation-status", "");
                         this.$el.find("#baseContextsToSynchronizeHolder input").unbind("blur");
@@ -155,7 +155,7 @@ define([
                     validatorsManager.validateAllFields(this.$el);
                 }, this));
 
-                if(callback){
+                if (callback){
                     callback();
                 }
             }, this));
@@ -166,7 +166,7 @@ define([
 
             uiUtils.jqConfirm($.t("templates.connector.ldapConnector.ldapTypeChange"),
                 _.bind(function(){
-                    if(value === "baseConfig") {
+                    if (value === "baseConfig") {
                         this.data.generic = true;
                         this.render({
                             "animate": false,
@@ -243,7 +243,7 @@ define([
         toggleCert: function (event) {
             var _this = this;
 
-            if(event){
+            if (event){
                 event.preventDefault();
             }
 
@@ -261,32 +261,32 @@ define([
                         dialogRef.close();
                     }
                 },
-                    {
-                        label: $.t('common.form.save'),
-                        id: "sslSaveButton",
-                        cssClass: "btn-primary",
-                        action: function(dialogRef) {
-                            var saveBtn = dialogRef.$modalFooter.find("#sslSaveButton"),
-                                certField;
+                {
+                    label: $.t('common.form.save'),
+                    id: "sslSaveButton",
+                    cssClass: "btn-primary",
+                    action: function(dialogRef) {
+                        var saveBtn = dialogRef.$modalFooter.find("#sslSaveButton"),
+                            certField;
 
-                            if (!saveBtn.prop("disabled")) {
-                                certField = _this.$el.find("#certContainer").find('.certificate');
+                        if (!saveBtn.prop("disabled")) {
+                            certField = _this.$el.find("#certContainer").find('.certificate');
 
-                                certField.text($('#certificateContainerClone').find('textarea').val());
-                                certField.val(certField.text()); // seems to be necessary for IE
+                            certField.text($('#certificateContainerClone').find('textarea').val());
+                            certField.val(certField.text()); // seems to be necessary for IE
 
-                                validatorsManager.validateAllFields(_this.$el);
-                            }
-
-                            dialogRef.close();
+                            validatorsManager.validateAllFields(_this.$el);
                         }
+
+                        dialogRef.close();
                     }
+                }
                 ]
             });
         },
 
         connectorSaved: function(patch, connectorConfig, connector) {
-            if(this.$el.find("#syncBaseContext").is(":checked")) {
+            if (this.$el.find("#syncBaseContext").is(":checked")) {
                 patch.push(
                     {
                         "operation" : "remove",
@@ -300,7 +300,7 @@ define([
                 );
             }
 
-            if(this.$el.find("#ssl").is(":checked") && this.$el.find("#certContainer").find('.certificate').val().length === 0 && connector.data.publicKey.length > 0) {
+            if (this.$el.find("#ssl").is(":checked") && this.$el.find("#certContainer").find('.certificate').val().length === 0 && connector.data.publicKey.length > 0) {
                 securityDelegate.deleteCert("truststore", "openidm_" +connectorConfig.name);
                 connector.data.publicKey = "";
             } else if (this.$el.find("#ssl").is(":checked") && (connector.data.publicKey !== this.$el.find("#certContainer").find('.certificate').val())) {
@@ -312,11 +312,11 @@ define([
         },
 
         connectorCreate: function(details) {
-            if(this.$el.find("#syncBaseContext").is(":checked")) {
+            if (this.$el.find("#syncBaseContext").is(":checked")) {
                 details.configurationProperties.baseContextsToSynchronize = details.configurationProperties.baseContexts;
             }
 
-            if(this.$el.find("#ssl").is(":checked") && this.$el.find("#certContainer").find('.certificate').val().length > 0) {
+            if (this.$el.find("#ssl").is(":checked") && this.$el.find("#certContainer").find('.certificate').val().length > 0) {
                 securityDelegate.uploadCert("truststore", "openidm_" +details.name, this.$el.find("#certContainer").find('.certificate').val());
             }
 

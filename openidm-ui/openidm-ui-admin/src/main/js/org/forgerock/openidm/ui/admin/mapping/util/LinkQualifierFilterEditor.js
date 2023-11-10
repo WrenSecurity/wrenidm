@@ -21,9 +21,9 @@ define([
     "org/forgerock/openidm/ui/admin/delegates/ScriptDelegate",
     "org/forgerock/openidm/ui/admin/util/LinkQualifierUtils"
 ], function ($, _,
-             QueryFilterEditor,
-             ScriptDelegate,
-             LinkQualifierUtils) {
+        QueryFilterEditor,
+        ScriptDelegate,
+        LinkQualifierUtils) {
 
     var LinkQualifierFilterEditor = QueryFilterEditor.extend({
         events: {
@@ -110,7 +110,7 @@ define([
                     parentHolder = $(currentSelect).closest(".node"),
                     tempValue;
 
-                if($(currentSelect).val() === "/linkQualifier") {
+                if ($(currentSelect).val() === "/linkQualifier") {
                     tempValue = parentHolder.find(".value").val();
                     parentHolder.find(".value").replaceWith(_this.createLinkQualifierCombo());
                     parentHolder.find(".value").val(tempValue);
@@ -123,7 +123,7 @@ define([
                 $(currentSelect)[0].selectize.setValue($(currentSelect).val());
 
                 $(currentSelect)[0].selectize.on('option_add', function(value, data){
-                    if(_this.model.previousSelectizeAdd !== value) {
+                    if (_this.model.previousSelectizeAdd !== value) {
                         _this.model.previousSelectizeAdd = "/object/" + value;
 
                         $(currentSelect)[0].selectize.removeOption(value);
@@ -136,7 +136,7 @@ define([
                     var value = $(this).val(),
                         parent = $(this).closest(".node");
 
-                    if(value === "/linkQualifier") {
+                    if (value === "/linkQualifier") {
                         parent.find(".value").replaceWith(_this.createLinkQualifierCombo());
                     } else {
                         parent.find(".value").replaceWith('<input type="text" class="value form-control">');
@@ -153,7 +153,7 @@ define([
                 displayValue;
 
             _.each(this.model.sourceProps, function(source) {
-                if(source !== undefined) {
+                if (source !== undefined) {
                     baseElement.append('<option value="/object/' +source +'">' +source +'</option>');
                 }
             });
@@ -162,7 +162,7 @@ define([
                 tempValue = $(this).val();
                 appendElement = baseElement.clone();
 
-                if(tempValue.length > 0 && appendElement.find("option[value='/object/" +tempValue  +"']").length === 0 && appendElement.find("option[value='" +tempValue  +"']").length === 0) {
+                if (tempValue.length > 0 && appendElement.find("option[value='/object/" +tempValue  +"']").length === 0 && appendElement.find("option[value='" +tempValue  +"']").length === 0) {
                     displayValue = tempValue.replace("/object/", "");
 
                     appendElement.append('<option value="' +tempValue +'">' +displayValue +'</option>');

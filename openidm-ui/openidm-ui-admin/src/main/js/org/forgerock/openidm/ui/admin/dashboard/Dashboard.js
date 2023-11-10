@@ -32,20 +32,20 @@ define([
     "org/forgerock/commons/ui/common/util/AutoScroll",
     "dragula"
 ], function($, _,
-            BootstrapDialog,
-            Handlebars,
-            AdminAbstractView,
-            DashboardWidgetLoader,
-            Configuration,
-            Router,
-            ConfigDelegate,
-            EventManager,
-            Constants,
-            ValidatorsManager,
-            SiteConfigurationDelegate,
-            UIUtils,
-            AutoScroll,
-            dragula) {
+        BootstrapDialog,
+        Handlebars,
+        AdminAbstractView,
+        DashboardWidgetLoader,
+        Configuration,
+        Router,
+        ConfigDelegate,
+        EventManager,
+        Constants,
+        ValidatorsManager,
+        SiteConfigurationDelegate,
+        UIUtils,
+        AutoScroll,
+        dragula) {
 
     var DashboardView = AdminAbstractView.extend({
         template: "templates/admin/dashboard/DashboardTemplate.html",
@@ -125,7 +125,7 @@ define([
                             $(window).unbind("resize");
                         } else {
                             _.each(this.model.loadedWidgets, function(dashboardHolder){
-                                if(dashboardHolder.model.widget.resize){
+                                if (dashboardHolder.model.widget.resize){
                                     dashboardHolder.model.widget.resize();
                                 }
                             }, this);

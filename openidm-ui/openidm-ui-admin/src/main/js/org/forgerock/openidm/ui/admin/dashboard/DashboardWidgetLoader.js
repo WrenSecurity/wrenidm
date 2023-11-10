@@ -31,19 +31,19 @@ define([
     "org/forgerock/openidm/ui/admin/dashboard/widgets/RelationshipWidget",
     "org/forgerock/openidm/ui/admin/dashboard/widgets/ClusterStatusWidget"
 ], function($, _,
-            AdminAbstractView,
-            eventManager,
-            constants,
-            conf,
-            MemoryUsageWidget,
-            CPUUsageWidget,
-            FullHealthWidget,
-            MappingReconResultsWidget,
-            ResourceListWidget,
-            QuickStartWidget,
-            FrameWidget,
-            RelationshipWidget,
-            ClusterStatusWidget) {
+        AdminAbstractView,
+        eventManager,
+        constants,
+        conf,
+        MemoryUsageWidget,
+        CPUUsageWidget,
+        FullHealthWidget,
+        MappingReconResultsWidget,
+        ResourceListWidget,
+        QuickStartWidget,
+        FrameWidget,
+        RelationshipWidget,
+        ClusterStatusWidget) {
     var dwlInstance = {},
         widgetList = {
             lifeCycleMemoryHeap: {

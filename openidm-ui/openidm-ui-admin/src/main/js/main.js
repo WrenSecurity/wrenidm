@@ -179,9 +179,9 @@ require([
     "placeholder",
     "selectize"
 ], function(
-    Constants,
-    EventManager,
-    JSONEditor) {
+        Constants,
+        EventManager,
+        JSONEditor) {
 
     EventManager.sendEvent(Constants.EVENT_DEPENDENCIES_LOADED);
 

@@ -24,11 +24,11 @@ define([
     "org/forgerock/openidm/ui/admin/util/BackgridUtils",
     "org/forgerock/openidm/ui/admin/delegates/MaintenanceDelegate"
 ], function($, _, Handlebars,
-            Backgrid,
-            Backbone,
-            AdminAbstractView,
-            BackgridUtils,
-            MaintenanceDelegate) {
+        Backgrid,
+        Backbone,
+        AdminAbstractView,
+        BackgridUtils,
+        MaintenanceDelegate) {
     var RepoUpdatesView = AdminAbstractView.extend({
         template: "templates/admin/settings/update/RepoUpdateTemplate.html",
         element: "#repoUpdatesView",

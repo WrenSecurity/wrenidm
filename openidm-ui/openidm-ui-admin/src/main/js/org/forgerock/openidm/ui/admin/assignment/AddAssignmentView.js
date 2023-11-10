@@ -25,13 +25,13 @@ define([
     "org/forgerock/commons/ui/common/main/EventManager",
     "org/forgerock/commons/ui/common/util/Constants"
 ], function($, _,
-            form2js,
-            AdminAbstractView,
-            ValidatorsManager,
-            ConfigDelegate,
-            ResourceDelegate,
-            EventManager,
-            Constants) {
+        form2js,
+        AdminAbstractView,
+        ValidatorsManager,
+        ConfigDelegate,
+        ResourceDelegate,
+        EventManager,
+        Constants) {
     var AddAssignmentView = AdminAbstractView.extend({
         template: "templates/admin/assignment/AddAssignmentViewTemplate.html",
         element: "#assignmentHolder",
@@ -54,7 +54,7 @@ define([
                 this.parentRender(_.bind(function(){
                     ValidatorsManager.bindValidators(this.$el.find("#addAssignmentForm"));
 
-                    if(callback) {
+                    if (callback) {
                         callback();
                     }
                 },this));

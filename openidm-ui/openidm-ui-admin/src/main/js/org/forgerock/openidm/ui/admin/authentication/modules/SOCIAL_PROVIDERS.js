@@ -21,9 +21,9 @@ define([
     "org/forgerock/openidm/ui/admin/authentication/AuthenticationAbstractView",
     "org/forgerock/openidm/ui/common/delegates/SocialDelegate"
 ], function($, _,
-            Form2js,
-            AuthenticationAbstractView,
-            SocialDelegate) {
+        Form2js,
+        AuthenticationAbstractView,
+        SocialDelegate) {
 
     var SocialProvidersView = AuthenticationAbstractView.extend({
         template: "templates/admin/authentication/modules/SOCIAL_PROVIDERS.html",

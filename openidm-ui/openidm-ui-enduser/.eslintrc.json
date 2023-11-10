@@ -1,0 +1,35 @@
+{
+    "root": true,
+    "extends": "@wrensecurity/eslint-config",
+    "parser": "@babel/eslint-parser",
+    "env": {
+        "amd": true,
+        "browser": true,
+        "qunit": true,
+        "es6": true
+    },
+    "rules": {
+        "arrow-parens": ["error", "always"],
+        "arrow-spacing": "error",
+        "indent": ["error", 4, {
+            "FunctionDeclaration": {
+                "parameters": 2
+            },
+            "FunctionExpression": {
+                "parameters": 2
+            },
+            "SwitchCase": 1,
+            "VariableDeclarator": 1
+        }],
+        "no-alert": "error",
+        "no-catch-shadow": "error",
+        "no-empty-character-class": "error",
+        "no-extend-native": "error",
+        "no-mixed-spaces-and-tabs": "error",
+        "no-multiple-empty-lines": "error",
+        "no-multi-str": "error",
+        "no-native-reassign": "error",
+        "no-unused-vars": "warn", // Temporarily changed to warning due to many inconsistencies
+        "no-void": "error"
+    }
+}

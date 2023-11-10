@@ -42,25 +42,25 @@ define([
         var operator = (comparisonOperator) ? comparisonOperator : "sw",
             queryFilter,
             conditions = _(props)
-            .reject(function(p){ return !p; })
-            .map(function(p){
-                var op = operator;
+                .reject(function(p){ return !p; })
+                .map(function(p){
+                    var op = operator;
 
-                if(p === "_id" && op !== "neq"){
-                    op = "eq";
-                }
+                    if (p === "_id" && op !== "neq"){
+                        op = "eq";
+                    }
 
-                if(op !== "pr") {
-                    return p + ' ' + op + ' "' + encodeURIComponent(searchString) + '"';
-                } else {
-                    return p + ' pr';
-                }
-            })
-            .value();
+                    if (op !== "pr") {
+                        return p + ' ' + op + ' "' + encodeURIComponent(searchString) + '"';
+                    } else {
+                        return p + ' pr';
+                    }
+                })
+                .value();
 
         queryFilter = "(" + conditions.join(" or (") + new Array(conditions.length).join(")") +")";
 
-        if(additionalQuery) {
+        if (additionalQuery) {
             queryFilter = "(" +queryFilter+" and (" +additionalQuery +"))";
         }
 

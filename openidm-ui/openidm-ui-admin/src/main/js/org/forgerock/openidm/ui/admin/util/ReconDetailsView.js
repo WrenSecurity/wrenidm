@@ -20,8 +20,8 @@ define([
     "org/forgerock/commons/ui/common/main/AbstractView",
     "moment"
 ], function($, _,
-            AbstractView,
-            moment) {
+        AbstractView,
+        moment) {
 
     var ReconDetailsView = AbstractView.extend({
         template: "templates/admin/util/ReconDetailsTemplate.html",
@@ -34,7 +34,7 @@ define([
         render: function (syncDetails, callback) {
             this.data.syncDetails = syncDetails;
 
-            if(syncDetails) {
+            if (syncDetails) {
                 this.data.timeDisplay = moment.utc(syncDetails.duration).format("HH:mm:ss:SSS");
             }
 
@@ -47,7 +47,7 @@ define([
                     title: ''
                 });
 
-                if(callback) {
+                if (callback) {
                     callback();
                 }
 

@@ -29,17 +29,17 @@ define([
     "org/forgerock/commons/ui/common/main/AbstractDelegate",
     "bootstrap-tabdrop"
 ], function(_,
-            $,
-            Handlebars,
-            AdminAbstractView,
-            AuditView,
-            SelfServiceView,
-            EmailConfigView,
-            UpdateView,
-            Router,
-            Constants,
-            EventManager,
-            AbstractDelegate) {
+        $,
+        Handlebars,
+        AdminAbstractView,
+        AuditView,
+        SelfServiceView,
+        EmailConfigView,
+        UpdateView,
+        Router,
+        Constants,
+        EventManager,
+        AbstractDelegate) {
 
     var SettingsView = AdminAbstractView.extend({
         template: "templates/admin/settings/SettingsTemplate.html",

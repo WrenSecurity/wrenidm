@@ -24,11 +24,11 @@ define([
             ],
             "validator": function(el, input, callback) {
                 var v = $(input).val();
-                if(v === "") {
+                if (v === "") {
                     callback($.t("common.form.validation.required"));
                     return;
                 }
-                if(!v.match(/^([0-9]+)$/)) {
+                if (!v.match(/^([0-9]+)$/)) {
                     callback($.t("common.form.validation.shouldBeLong"));
                     return;
                 }
@@ -41,7 +41,7 @@ define([
             ],
             "validator": function(el, input, callback) {
                 var v = $(input).val();
-                if(v !== "" && !v.match(/^([0-9]+)$/)) {
+                if (v !== "" && !v.match(/^([0-9]+)$/)) {
                     callback($.t("common.form.validation.shouldBeLong"));
                     return;
                 }
@@ -55,11 +55,11 @@ define([
             ],
             "validator": function(el, input, callback, dateUtil) {
                 var valueToReplace, date, v = $(input).val(), dateFormat = $(input).parent().find('[name=dateFormat]').val();
-                if(v === "") {
+                if (v === "") {
                     callback($.t("common.form.validation.required"));
                     return;
                 }
-                if(!dateUtil.isDateStringValid(v, dateFormat)) {
+                if (!dateUtil.isDateStringValid(v, dateFormat)) {
                     callback($.t("common.form.validation.wrongDateFormat") + " (" + dateFormat + ")");
                     return;
                 } else {
@@ -82,7 +82,7 @@ define([
             ],
             "validator": function(el, input, callback, dateUtil) {
                 var valueToReplace, date, v = $(input).val(), dateFormat = $(input).parent().find('[name=dateFormat]').val();
-                if(v !== ""){
+                if (v !== ""){
                     if (!dateUtil.isDateStringValid(v, dateFormat)) {
                         callback($.t("common.form.validation.wrongDateFormat") + " (" + dateFormat + ")");
                         return;
@@ -105,11 +105,11 @@ define([
             ],
             "validator": function(el, input, callback) {
                 var v = $(input).val();
-                if(v === "") {
+                if (v === "") {
                     callback($.t("common.form.validation.required"));
                     return;
                 }
-                if(v.length > 255) {
+                if (v.length > 255) {
                     callback($.t("common.form.validation.shouldBeNotMoreThen256"));
                     return;
                 }

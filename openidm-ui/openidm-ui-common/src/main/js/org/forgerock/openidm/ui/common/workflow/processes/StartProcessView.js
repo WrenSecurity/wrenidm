@@ -29,17 +29,17 @@ define([
     "org/forgerock/commons/ui/common/util/DateUtil",
     "org/forgerock/commons/ui/common/util/ModuleLoader"
 ], function($, _,
-            form2js,
-            AbstractView,
-            validatorsManager,
-            eventManager,
-            constants,
-            workflowManager,
-            formManager,
-            templateStartProcessForm,
-            formGenerationUtils,
-            dateUtil,
-            ModuleLoader) {
+        form2js,
+        AbstractView,
+        validatorsManager,
+        eventManager,
+        constants,
+        workflowManager,
+        formManager,
+        templateStartProcessForm,
+        formGenerationUtils,
+        dateUtil,
+        ModuleLoader) {
     var StartProcessView = AbstractView.extend({
         template: "templates/workflow/processes/StartProcessTemplate.html",
 
@@ -52,7 +52,7 @@ define([
         },
 
         hideDetails: function(event) {
-            if(event) {
+            if (event) {
                 event.preventDefault();
             }
 
@@ -67,7 +67,7 @@ define([
         formSubmit: function(event) {
             event.preventDefault();
 
-            if(validatorsManager.formValidated(this.$el)) {
+            if (validatorsManager.formValidated(this.$el)) {
                 var params = form2js(this.$el.attr("id"), '.', false), param, typeName, paramValue, date, dateFormat;
                 delete params.startProcessButton;
                 for (param in params) {
@@ -126,9 +126,9 @@ define([
             if (typeof definition.formGenerationTemplate === "string") {
                 return definition.formGenerationTemplate;
             }
-            for(i = 0; i < definition.formProperties.length; i++) {
+            for (i = 0; i < definition.formProperties.length; i++) {
                 property = definition.formProperties[i];
-                if(property._id === "_formGenerationTemplate") {
+                if (property._id === "_formGenerationTemplate") {
                     return property.defaultExpression.expressionText;
                 }
             }

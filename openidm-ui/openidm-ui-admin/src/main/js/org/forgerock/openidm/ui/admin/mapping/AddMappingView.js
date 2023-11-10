@@ -29,15 +29,15 @@ define([
     "org/forgerock/openidm/ui/admin/MapResourceView"
 
 ], function($, _, bootstrap,
-            AdminAbstractView,
-            eventManager,
-            constants,
-            router,
-            ConnectorDelegate,
-            uiUtils,
-            connectorUtils,
-            ConfigDelegate,
-            MapResourceView) {
+        AdminAbstractView,
+        eventManager,
+        constants,
+        router,
+        ConnectorDelegate,
+        uiUtils,
+        connectorUtils,
+        ConfigDelegate,
+        MapResourceView) {
 
     var MappingAddView = AdminAbstractView.extend({
         template: "templates/admin/mapping/AddMappingTemplate.html",
@@ -100,24 +100,24 @@ define([
                             this.$el.find(".add-resource-button").prop("disabled", false);
                         }, this),
                         "addCallback" : _.bind(function(source, target){
-                            if(source && target) {
+                            if (source && target) {
                                 this.$el.find(".add-resource-button").prop("disabled", true);
                             }
                         }, this)},
-                        _.bind(function(){
-                            if(args.length > 0) {
-                                preselectResult = this.preselectMappingCard(args, this.data.currentConnectors, this.data.currentManagedObjects);
+                    _.bind(function(){
+                        if (args.length > 0) {
+                            preselectResult = this.preselectMappingCard(args, this.data.currentConnectors, this.data.currentManagedObjects);
 
 
-                                if(preselectResult !== null) {
-                                    MapResourceView.addMapping(preselectResult);
-                                }
+                            if (preselectResult !== null) {
+                                MapResourceView.addMapping(preselectResult);
                             }
+                        }
 
-                            if (callback) {
-                                callback();
-                            }
-                        }, this));
+                        if (callback) {
+                            callback();
+                        }
+                    }, this));
 
                 }, this));
             }, this));
@@ -131,7 +131,7 @@ define([
             var connector = _.clone(displayConnector),
                 splitConfig;
 
-            if(connector.objectTypes) {
+            if (connector.objectTypes) {
                 connector.objectTypes = _.chain(connector.objectTypes)
                     .filter(function(objectTypes){
                         return objectTypes !== "__ALL__";
@@ -141,7 +141,7 @@ define([
                     })
                     .value();
 
-                if(connector.objectTypes.length > 2) {
+                if (connector.objectTypes.length > 2) {
                     connector.displayObjectType = connector.objectTypes[0] +", " +connector.objectTypes[1]+ ", (" +(connector.objectTypes.length - 2) +" " +$.t("templates.mapping.more") +")";
                 } else {
                     connector.displayObjectType = connector.objectTypes.join(", ");
@@ -165,12 +165,12 @@ define([
         preselectMappingCard: function(selected, connectors, managedObjects) {
             var resourceData = null;
 
-            if(selected[0] === "connector") {
+            if (selected[0] === "connector") {
                 resourceData =  _.find(connectors, function(connector) {
                     return selected[1] === connector.name;
                 });
 
-                if(resourceData !== null) {
+                if (resourceData !== null) {
                     resourceData.resourceType = selected[0];
                 }
             } else {
@@ -178,7 +178,7 @@ define([
                     return selected[1] === managed.name;
                 });
 
-                if(resourceData !== null) {
+                if (resourceData !== null) {
                     resourceData.resourceType = selected[0];
                 }
             }
@@ -196,7 +196,7 @@ define([
                 resourceType = resourceSelected.attr("data-resource-type"),
                 resourceLocation = null;
 
-            if(resourceType === "connector") {
+            if (resourceType === "connector") {
                 resourceLocation = this.$el.find("#resourceConnectorContainer .resource-body").index(resourceSelected);
             } else {
                 resourceLocation = this.$el.find("#resourceManagedContainer .resource-body").index(resourceSelected);
@@ -216,7 +216,7 @@ define([
         addResourceMapping: function(resourceType, resourceLocation, connectors, managedObjects) {
             var resourceData = null;
 
-            if(resourceType === "connector") {
+            if (resourceType === "connector") {
                 resourceData = connectors[resourceLocation];
                 resourceData.resourceType = resourceType;
             } else {

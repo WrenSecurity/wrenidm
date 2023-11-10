@@ -24,11 +24,11 @@ define([
     "org/forgerock/openidm/ui/admin/managed/schema/util/SchemaUtils",
     "org/forgerock/commons/ui/common/main/Router"
 ], function($, _,
-    JSONEditor,
-    AdminAbstractView,
-    RelationshipTypeView,
-    SchemaUtils,
-    Router
+        JSONEditor,
+        AdminAbstractView,
+        RelationshipTypeView,
+        SchemaUtils,
+        Router
 ) {
     var SchemaEditorView = AdminAbstractView.extend({
         template: "templates/admin/managed/schema/SchemaEditorViewTemplate.html",
@@ -112,8 +112,8 @@ define([
         */
         getRelationshipElements: function () {
             return this.$el.find("[data-schemaPath$='type']")
-                                            .find("select:eq(0):not([id]) option[value=Relationship]:selected")
-                                            .parent().parent();
+                .find("select:eq(0):not([id]) option[value=Relationship]:selected")
+                .parent().parent();
         },
 
         replaceRelationshipElements: function() {
@@ -168,7 +168,7 @@ define([
             _.each(this.model.relationshipTypeViewMap, (relationshipTypeView,propName) => {
                 var prop = managedSchema.properties[propName];
 
-                if(prop.items) {
+                if (prop.items) {
                     prop.items = _.extend(prop.items,relationshipTypeView.getValue());
                 } else {
                     prop = _.extend(prop,relationshipTypeView.getValue());
@@ -561,7 +561,7 @@ define([
 
                             //for some reason val is only "undefined" for string types
                             //every other type works as expected
-                            if(val === "undefined") {
+                            if (val === "undefined") {
                                 //set itemType here to it's correct type
                                 val = "string";
                             }
@@ -583,7 +583,7 @@ define([
 
                             //for some reason itemType is only "undefined" for string types
                             //every other type works as expected
-                            if(val.itemType === "undefined") {
+                            if (val.itemType === "undefined") {
                                 //set itemType here to it's correct type
                                 val.itemType = "string";
                             }

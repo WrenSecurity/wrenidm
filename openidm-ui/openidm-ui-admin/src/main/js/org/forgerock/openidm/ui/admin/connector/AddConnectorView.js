@@ -30,17 +30,17 @@ define([
     "org/forgerock/openidm/ui/common/delegates/ConfigDelegate"
 
 ], function($, _,
-            form2js,
-            AbstractConnectorView,
-            eventManager,
-            validatorsManager,
-            constants,
-            ConnectorDelegate,
-            ConnectorType,
-            ConnectorRegistry,
-            connectorUtils,
-            router,
-            ConfigDelegate) {
+        form2js,
+        AbstractConnectorView,
+        eventManager,
+        validatorsManager,
+        constants,
+        ConnectorDelegate,
+        ConnectorType,
+        ConnectorRegistry,
+        connectorUtils,
+        router,
+        ConfigDelegate) {
 
     var AddEditConnectorView = AbstractConnectorView.extend({
         template: "templates/admin/connector/AddConnectorTemplate.html",

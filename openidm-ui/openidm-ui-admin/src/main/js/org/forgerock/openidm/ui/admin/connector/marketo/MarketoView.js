@@ -19,7 +19,7 @@ define([
     "underscore",
     "org/forgerock/openidm/ui/admin/connector/ConnectorTypeAbstractView"
 ], function($, _,
-            ConnectorTypeAbstractView) {
+        ConnectorTypeAbstractView) {
 
     var MarketoView = ConnectorTypeAbstractView.extend({
         connectorSaved: function(patch, connectorDetails) {
@@ -69,11 +69,11 @@ define([
             return patch;
         },
         connectorCreate : function(details) {
-            if(_.isNull(details.configurationProperties.scriptRoots)){
+            if (_.isNull(details.configurationProperties.scriptRoots)){
                 details.configurationProperties.scriptRoots = ["jar:file:connectors/marketo-connector-" +details.connectorRef.bundleVersion +".jar!/script/marketo/"];
             }
 
-            if(_.isNull(details.configurationProperties.clientSecret) && _.isObject(details.configurationProperties.clientSecret)){
+            if (_.isNull(details.configurationProperties.clientSecret) && _.isObject(details.configurationProperties.clientSecret)){
                 details.configurationProperties.clientSecret = details.configurationProperties.clientSecret;
             }
 

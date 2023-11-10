@@ -60,7 +60,7 @@ define([
                 return connector.name === sourceName;
             }, this);
 
-            if(targetName === "managed") {
+            if (targetName === "managed") {
                 details.targetIcon = obj.getIcon("managedobject");
             } else {
                 if (details.targetConnector) {
@@ -69,7 +69,7 @@ define([
                     details.targetIcon = obj.getIcon("missing");
                 }
             }
-            if(sourceName === "managed") {
+            if (sourceName === "managed") {
                 details.sourceIcon = obj.getIcon("managedobject");
             } else {
                 if (details.sourceConnector) {
@@ -88,7 +88,7 @@ define([
 
     obj.getIcon = function (type) {
         var iconClass = iconMapping[type];
-        if(!iconClass) {
+        if (!iconClass) {
             iconClass = iconMapping["default"];
         }
         return {

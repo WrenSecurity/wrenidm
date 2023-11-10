@@ -23,11 +23,11 @@ define([
     "org/forgerock/openidm/ui/admin/delegates/ConnectorDelegate",
     "org/forgerock/commons/ui/common/util/ModuleLoader"
 ], function ($, _,
-             Handlebars,
-             AbstractConfigurationAware,
-             ConfigDelegate,
-             ConnectorDelegate,
-             ModuleLoader) {
+        Handlebars,
+        AbstractConfigurationAware,
+        ConfigDelegate,
+        ConnectorDelegate,
+        ModuleLoader) {
 
     var obj = {};
 
@@ -73,17 +73,17 @@ define([
             properties,
             propertiesPromise = $.Deferred();
 
-        if(type[0] === "system") {
+        if (type[0] === "system") {
             ConnectorDelegate.currentConnectors().then(_.bind(function(connectors) {
                 connectorUrl = _.find(connectors, function(connector) {
                     return connector.name === type[1];
                 }, this);
 
-                if(connectorUrl && connectorUrl.config && connectorUrl.config.length > 0) {
+                if (connectorUrl && connectorUrl.config && connectorUrl.config.length > 0) {
                     connectorUrl = connectorUrl.config.split("/");
 
                     ConfigDelegate.readEntity(connectorUrl[1] +"/" +connectorUrl[2]).then(_.bind(function(config) {
-                        if(required) {
+                        if (required) {
                             properties = _.pick(config.objectTypes[type[2]].properties, function(property) {
                                 return property.required === true;
                             });
@@ -103,14 +103,14 @@ define([
                     return managedObject.name === type[1];
                 }, this);
 
-                if(properties.schema && properties.schema.properties) {
-                    if(required) {
+                if (properties.schema && properties.schema.properties) {
+                    if (required) {
 
                         properties = _.pick(properties.schema.properties, function(value, key) {
                             var found = false;
 
                             _.each(properties.schema.required, function(field) {
-                                if(field === key) {
+                                if (field === key) {
                                     found = true;
                                 }
                             });
@@ -164,7 +164,7 @@ define([
                         cssClass: btnType,
                         id: "frConfirmationDialogBtnDelete",
                         action: function(dialog) {
-                            if(confirmCallback) {
+                            if (confirmCallback) {
                                 confirmCallback();
                             }
                             dialog.close();
@@ -185,15 +185,15 @@ define([
      */
     obj.filteredPropertiesList = function(availableProps, existingFields) {
         return _.chain(availableProps)
-                    .omit((prop, key) => {
-                        return prop.type !== "string" ||
+            .omit((prop, key) => {
+                return prop.type !== "string" ||
                                key === "_id" ||
                                _.has(prop, "encryption") ||
                                _.contains(existingFields, key);
-                    })
-                    .keys()
-                    .sortBy()
-                    .value();
+            })
+            .keys()
+            .sortBy()
+            .value();
     };
 
     /**

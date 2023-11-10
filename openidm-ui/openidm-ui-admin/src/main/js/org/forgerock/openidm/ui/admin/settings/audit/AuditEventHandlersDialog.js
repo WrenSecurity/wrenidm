@@ -29,14 +29,14 @@ define([
     "bootstrap-tabdrop",
     "selectize"
 ], function($, _, AuditAdminAbstractView,
-            AuditDelegate,
-            uiUtils,
-            conf,
-            InlineScriptEditor,
-            constants,
-            ValidatorsManager,
-            BootstrapDialog,
-            JSONEditor) {
+        AuditDelegate,
+        uiUtils,
+        conf,
+        InlineScriptEditor,
+        constants,
+        ValidatorsManager,
+        BootstrapDialog,
+        JSONEditor) {
 
     var AuditEventHandlersDialog = AuditAdminAbstractView.extend({
         template: "templates/admin/settings/audit/AuditEventHandlersDialogTemplate.html",
@@ -162,7 +162,7 @@ define([
                                 (
                                     !_.has(this.data.eventHandler.config, "formatting.delimiterChar") ||
                                     !this.data.eventHandler.config.formatting.delimiterChar
-                                 )
+                                )
                             ) {
                                 this.data.eventHandler.config = this.data.eventHandler.config || {};
                                 this.data.eventHandler.config.formatting = this.data.eventHandler.config.formatting || {};
@@ -202,7 +202,7 @@ define([
                             (
                                 !_.has(this.data.eventHandler.config, "security.signatureInterval") ||
                                 !this.data.eventHandler.config.security.signatureInterval
-                             )
+                            )
                         ) {
                             this.data.eventHandler.config = this.data.eventHandler.config || {};
                             this.data.eventHandler.config.security = this.data.eventHandler.config.security || {};
@@ -235,7 +235,7 @@ define([
                         items: this.data.selectedTopics
                     });
 
-                    if(_.isEmpty(schema.properties)) {
+                    if (_.isEmpty(schema.properties)) {
                         this.$el.find(".jsonEditorContainer").hide();
                     }
 
@@ -250,7 +250,7 @@ define([
         validationSuccessful: function (event) {
             AuditAdminAbstractView.prototype.validationSuccessful(event);
 
-            if(ValidatorsManager.formValidated(this.$el.find("#auditEventHandlersForm"))) {
+            if (ValidatorsManager.formValidated(this.$el.find("#auditEventHandlersForm"))) {
                 this.$el.parentsUntil(".model-content").find("#submitAuditEventHandlers").prop('disabled', false);
             }
         },

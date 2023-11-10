@@ -28,7 +28,6 @@ module.exports = function(grunt) {
             forgeRockUserDirectory + "/src/main/resources"
         ],
         deployDirectory: "selfservice/default",
-        eslintFormatter: require.resolve("eslint-formatter-warning-summary"),
         lessPlugins: [new (require("less-plugin-clean-css"))({})],
         copyLibs: [
             // JS - npm

@@ -27,14 +27,14 @@ define([
     "org/forgerock/openidm/ui/admin/delegates/SiteConfigurationDelegate"
 
 ], function($, _,
-            AdminAbstractView,
-            Configuration,
-            Router,
-            ValidatorsManager,
-            ConfigDelegate,
-            EventManager,
-            Constants,
-            SiteConfigurationDelegate) {
+        AdminAbstractView,
+        Configuration,
+        Router,
+        ValidatorsManager,
+        ConfigDelegate,
+        EventManager,
+        Constants,
+        SiteConfigurationDelegate) {
 
     var DashboardView = AdminAbstractView.extend({
         template: "templates/admin/dashboard/NewDashboardTemplate.html",

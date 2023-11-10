@@ -89,9 +89,9 @@ define([
             _.each(this.model.mapping.properties, function(property) {
                 // Link qualifier must match selected link qualifier
                 if ( (_.has(property, "condition") && _.has(property.condition, "linkQualifier") && property.condition.linkQualifier === this.model.linkQualifier) ||
-                        // Or if there is a condition there cannot be a linkQualifier
+                // Or if there is a condition there cannot be a linkQualifier
                     (_.has(property, "condition") && !_.has(property.condition, "linkQualifier") ) ||
-                        // Or there cannot be any condition
+                // Or there cannot be any condition
                     (!_.has(property, "condition") ) ) {
                     this.data.fieldNames.push(property.target);
                 }

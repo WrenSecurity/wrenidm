@@ -25,13 +25,13 @@ define([
     "org/forgerock/openidm/ui/common/dashboard/DashboardWidgetLoader",
     "org/forgerock/openidm/ui/common/delegates/ConfigDelegate"
 ], function($, _,
-            AbstractView,
-            eventManager,
-            constants,
-            conf,
-            tasksDashboard,
-            DashboardWidgetLoader,
-            ConfigDelegate) {
+        AbstractView,
+        eventManager,
+        constants,
+        conf,
+        tasksDashboard,
+        DashboardWidgetLoader,
+        ConfigDelegate) {
     var Dashboard = AbstractView.extend({
         template: "templates/dashboard/DashboardTemplate.html",
         model: {
@@ -90,7 +90,7 @@ define([
         },
 
         loadWorkflow: function(roles, callback) {
-            if(_.indexOf(roles, 'ui-admin') !== -1) {
+            if (_.indexOf(roles, 'ui-admin') !== -1) {
                 tasksDashboard.data.mode = "openidm-admin";
                 tasksDashboard.render([], callback);
             } else {

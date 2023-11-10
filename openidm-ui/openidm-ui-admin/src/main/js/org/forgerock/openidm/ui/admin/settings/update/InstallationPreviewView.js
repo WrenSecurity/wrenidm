@@ -28,15 +28,15 @@ define([
     "org/forgerock/commons/ui/common/main/SpinnerManager",
     "org/forgerock/openidm/ui/admin/delegates/MaintenanceDelegate"
 ], function($, _, Handlebars,
-            Backbone,
-            Bootstrap,
-            BootstrapDialog,
-            AdminAbstractView,
-            TreeGridUtils,
-            UIUtils,
-            Constants,
-            SpinnerManager,
-            MaintenanceDelegate) {
+        Backbone,
+        Bootstrap,
+        BootstrapDialog,
+        AdminAbstractView,
+        TreeGridUtils,
+        UIUtils,
+        Constants,
+        SpinnerManager,
+        MaintenanceDelegate) {
 
     var InstallPreviewView = AdminAbstractView.extend({
         template: "templates/admin/settings/update/InstallationPreviewTemplate.html",

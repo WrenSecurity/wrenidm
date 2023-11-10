@@ -26,12 +26,12 @@ define([
     "org/forgerock/commons/ui/common/main/ValidatorsManager",
     "org/forgerock/commons/ui/common/util/UIUtils"
 ], function($, _, form2js, Handlebars,
-    AnonymousProcessView,
-    OAuth,
-    Router,
-    CommonSelfRegistrationView,
-    ValidatorsManager,
-    UIUtils) {
+        AnonymousProcessView,
+        OAuth,
+        Router,
+        CommonSelfRegistrationView,
+        ValidatorsManager,
+        UIUtils) {
 
     var SelfRegistrationView = AnonymousProcessView.extend({
         baseEntity: "selfservice/registration",
@@ -107,11 +107,11 @@ define([
             }
 
             UIUtils.compileTemplate(templateUrl, stateData)
-            .then(function (renderedTemplate) {
-                processStatePromise.resolve(renderedTemplate);
-            }, _.bind(function () {
-                this.loadGenericTemplate(stateData, baseTemplateUrl, response, processStatePromise);
-            }, this));
+                .then(function (renderedTemplate) {
+                    processStatePromise.resolve(renderedTemplate);
+                }, _.bind(function () {
+                    this.loadGenericTemplate(stateData, baseTemplateUrl, response, processStatePromise);
+                }, this));
         }
     });
 

@@ -49,7 +49,7 @@ define([
         LinkedView,
         router,
         ValidatorsManager
-    ) {
+) {
     var EditResourceView = AbstractView.extend({
         template: "templates/admin/resource/EditResourceViewTemplate.html",
         tabViewOverrides : {},
@@ -88,7 +88,7 @@ define([
                     readUrl = this.data.serviceUrl +"/" + objectId;
                 }
 
-                if(objectId){
+                if (objectId){
                     resourceReadPromise = serviceInvoker.restCall({
                         url: readUrl
                     });
@@ -104,25 +104,25 @@ define([
 
                     this.data.schema = schema;
 
-                    if(this.data.isSystemResource) {
+                    if (this.data.isSystemResource) {
                         this.data.objectTitle = this.objectName;
                     }
 
-                    if(!this.data.newObject) {
-                        if(this.data.isSystemResource) {
+                    if (!this.data.newObject) {
+                        if (this.data.isSystemResource) {
                             displayField = _.chain(schema.properties)
-                                            .map(function(val, key) { val.name = key; return val; })
-                                            .where({ nativeName: "__NAME__" })
-                                            .value();
+                                .map(function(val, key) { val.name = key; return val; })
+                                .where({ nativeName: "__NAME__" })
+                                .value();
 
-                            if(displayField) {
+                            if (displayField) {
                                 displayField = displayField[0].name;
                             } else {
                                 displayField = _.keys(schema.properties)[0];
                             }
                         } else {
                             _.map(schema.order, function (propName) {
-                                if(!displayField && schema.properties[propName].viewable) {
+                                if (!displayField && schema.properties[propName].viewable) {
                                     displayField = propName;
                                 }
                             });
@@ -148,14 +148,14 @@ define([
                                     this.showPendingChanges();
                                 }, this));
 
-                                if(!this.data.newObject) {
+                                if (!this.data.newObject) {
                                     this.linkedView = new LinkedView();
                                     this.linkedView.element = "#linkedView";
 
                                     this.linkedView.render({id: resource._id, resourcePath: this.data.objectType + "/" + this.objectName + "/" });
                                 }
 
-                                if(callback) {
+                                if (callback) {
                                     callback();
                                 }
                             }, this)
@@ -173,7 +173,7 @@ define([
 
             filteredProperties = resourceCollectionUtils.convertRelationshipTypes(_.omit(schema.properties,function(p) { return !p.viewable; }));
 
-            if(!_.isEmpty(filteredProperties)){
+            if (!_.isEmpty(filteredProperties)){
                 filteredObject = _.pick(filteredObject, _.keys(filteredProperties));
             }
 
@@ -188,7 +188,7 @@ define([
                 formHorizontal: true
             };
 
-            if(schema.order){
+            if (schema.order){
                 _.each(schema.order, _.bind(function(prop){
                     schema.properties[prop].propertyOrder = propCount++;
 
@@ -201,7 +201,7 @@ define([
                             _.set(filteredObject, [prop, key], null);
                         });
 
-                    } else if(schema.properties[prop].viewable && !_.has(filteredObject, prop)){
+                    } else if (schema.properties[prop].viewable && !_.has(filteredObject, prop)){
                         filteredObject[prop] = null;
                     }
                 }, this));
@@ -234,21 +234,21 @@ define([
             var changedFields = [],
                 newValue = _.extend({},this.oldObject, this.getFormValue());
 
-            if(_.isEqual(newValue, this.oldObject)) {
+            if (_.isEqual(newValue, this.oldObject)) {
                 this.$el.find("#saveBtn").attr("disabled", true);
                 this.$el.find("#resetBtn").attr("disabled", true);
                 this.$el.find("#resourceChangesPending").hide();
             } else {
-                if(!this.data.newObject) {
+                if (!this.data.newObject) {
                     _.each(newValue, _.bind(function(val,key) {
                         var relationshipType = this.data.schema.properties[key] && this.data.schema.properties[key].typeRelationship,
                             hasVal = !!(val && val.toString().length);
-                        if(
-                                (!this.oldObject[key] && hasVal) ||
+                        if (
+                            (!this.oldObject[key] && hasVal) ||
                                 (!relationshipType && (this.oldObject[key] && !_.isEqual(this.oldObject[key], val))) ||
                                 (relationshipType && hasVal && !_.isEqual(JSON.parse(val), this.oldObject[key]))
-                          ) {
-                            if(this.data.schema.properties && this.data.schema.properties[key] && this.data.schema.properties[key].title && this.data.schema.properties[key].title.length) {
+                        ) {
+                            if (this.data.schema.properties && this.data.schema.properties[key] && this.data.schema.properties[key].title && this.data.schema.properties[key].title.length) {
                                 changedFields.push(this.data.schema.properties[key].title);
                             } else {
                                 changedFields.push(key);
@@ -256,7 +256,7 @@ define([
                         }
                     }, this));
 
-                    if(changedFields.length) {
+                    if (changedFields.length) {
                         this.$el.find("#changedFields").html("<br/>- " + changedFields.join("<br/>- "));
 
                         this.$el.find("#saveBtn").removeAttr("disabled");
@@ -324,7 +324,7 @@ define([
         getFormValue : function() {
             var formVal = this.editor.getValue();
 
-            if(!this.data.newObject){
+            if (!this.data.newObject){
                 /*
                 The following _.each() was placed here to account for JSONEditor.setValue()
                 turning a property that exists but has a null value into an empty text field.
@@ -364,7 +364,7 @@ define([
                     messagesManager.messages.addMessage({"message": $.t(msg,{ objectTitle: this.data.objectTitle })});
                     this.data.editedObject = editedObject;
 
-                    if(this.data.newObject) {
+                    if (this.data.newObject) {
                         this.data.args.push(editedObject._id);
                         eventManager.sendEvent(constants.EVENT_CHANGE_VIEW, {route: router.configuration.routes[editRouteName], args: this.data.args, callback: callback});
                     } else {
@@ -372,7 +372,7 @@ define([
                     }
                 }, this);
 
-            if(e) {
+            if (e) {
                 e.preventDefault();
             }
 
@@ -380,7 +380,7 @@ define([
                 return false;
             }
 
-            if(this.data.newObject){
+            if (this.data.newObject){
                 formVal = _.omit(formVal,function (val) { return val === "" || val === null; });
                 resourceDelegate.createResource(this.data.serviceUrl, formVal._id, formVal, successCallback);
             } else {
@@ -404,7 +404,7 @@ define([
         backToList: function(e){
             var routeName = (!this.data.isSystemResource) ? "adminListManagedObjectView" : "adminListSystemObjectView";
 
-            if(e){
+            if (e){
                 e.preventDefault();
             }
 
@@ -476,7 +476,7 @@ define([
                     }
 
                     if (prop.type === "array") {
-                        if(prop.items.resourceCollection && _.has(filteredObject,key)) {
+                        if (prop.items.resourceCollection && _.has(filteredObject,key)) {
                             prop.parentObjectId =  _this.objectId;
                             prop.relationshipUrl = _this.data.objectType + "/" + _this.objectName + "/" + _this.objectId + "/" + prop.propName;
                             prop.typeRelationship = true;

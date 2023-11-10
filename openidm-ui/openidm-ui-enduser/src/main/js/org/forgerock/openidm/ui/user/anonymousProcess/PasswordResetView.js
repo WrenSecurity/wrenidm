@@ -23,9 +23,9 @@ define([
     "org/forgerock/commons/ui/user/anonymousProcess/PasswordResetView",
     "org/forgerock/commons/ui/common/main/ValidatorsManager"
 ], function($, _, form2js, Handlebars,
-    AnonymousProcessView,
-    CommonPasswordResetView,
-    ValidatorsManager) {
+        AnonymousProcessView,
+        CommonPasswordResetView,
+        ValidatorsManager) {
 
     var PasswordResetView = AnonymousProcessView.extend({
         baseEntity: "selfservice/reset"

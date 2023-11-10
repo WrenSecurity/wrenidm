@@ -30,18 +30,18 @@ define([
     "org/forgerock/openidm/ui/admin/util/BackgridUtils",
     "org/forgerock/commons/ui/common/util/UIUtils"
 ], function($, _,
-    handlebars,
-    AbstractView,
-    conf,
-    constants,
-    uiUtils,
-    BootstrapDialog,
-    AdminUtils,
-    SchemaUtils,
-    Backbone,
-    Backgrid,
-    BackgridUtils,
-    UIUtils
+        handlebars,
+        AbstractView,
+        conf,
+        constants,
+        uiUtils,
+        BootstrapDialog,
+        AdminUtils,
+        SchemaUtils,
+        Backbone,
+        Backgrid,
+        BackgridUtils,
+        UIUtils
 ) {
     var EditResourceCollectionDialog = AbstractView.extend({
         template: "templates/admin/managed/schema/dataTypes/EditResourceCollectionDialogTemplate.html",
@@ -87,7 +87,7 @@ define([
                     this.data.currentValue = _.cloneDeep(this.parent.data.currentValue.resourceCollection[args.resourceCollectionIndex]);
 
                     //if this resource collection's value is not in the list of available resources add it
-                    if(!_.contains(this.data.resources, this.data.currentValue.path)) {
+                    if (!_.contains(this.data.resources, this.data.currentValue.path)) {
                         this.data.resources.push(this.data.currentValue.path);
                     }
                 }
@@ -144,15 +144,15 @@ define([
                 this.setTextFields();
             }
             uiUtils.renderTemplate(
-                    this.template,
-                    this.currentDialog,
-                    _.extend({}, conf.globalData, this.data),
-                    _.bind(function(){
-                        this.setupResourceTypeField();
-                        this.setupResourcePropertiesGrid(this.data.currentValue.path.split("/"), this.data.currentValue.query.fields);
-                    }, this),
-                    "replace"
-                );
+                this.template,
+                this.currentDialog,
+                _.extend({}, conf.globalData, this.data),
+                _.bind(function(){
+                    this.setupResourceTypeField();
+                    this.setupResourcePropertiesGrid(this.data.currentValue.path.split("/"), this.data.currentValue.query.fields);
+                }, this),
+                "replace"
+            );
         },
         setupResourceTypeField: function() {
             var autocompleteField = this.currentDialog.find(".resourceSelectionDropdown"),
@@ -182,36 +182,36 @@ define([
 
             AdminUtils.findPropertiesList(path).then( (availableProps) => {
                 var cols = [
-                    {
-                        name: "name",
-                        label: $.t("templates.managed.schemaEditor.propertyName"),
-                        cell: "string",
-                        sortable: false,
-                        editable: false
-                    },
-                    {
-                        label: "",
-                        cell: BackgridUtils.ButtonCell([
-                            {
-                                className: "fa fa-times grid-icon col-sm-1 pull-right",
-                                callback: function(e){
-                                    var itemIndex = SchemaUtils.getClickedRowIndex(e);
-                                    this.data.currentValue.query.fields.splice(itemIndex, 1);
-                                    this.data.currentValue.query.sortKeys.splice(itemIndex, 1);
-                                    this.loadTemplate(true);
-                                }
-                            },
-                            {
+                        {
+                            name: "name",
+                            label: $.t("templates.managed.schemaEditor.propertyName"),
+                            cell: "string",
+                            sortable: false,
+                            editable: false
+                        },
+                        {
+                            label: "",
+                            cell: BackgridUtils.ButtonCell([
+                                {
+                                    className: "fa fa-times grid-icon col-sm-1 pull-right",
+                                    callback: function(e){
+                                        var itemIndex = SchemaUtils.getClickedRowIndex(e);
+                                        this.data.currentValue.query.fields.splice(itemIndex, 1);
+                                        this.data.currentValue.query.sortKeys.splice(itemIndex, 1);
+                                        this.loadTemplate(true);
+                                    }
+                                },
+                                {
                                 // No callback necessary, the row click will trigger the edit
-                                className: "fa fa-pencil grid-icon col-sm-1 pull-right"
-                            },
-                            {
-                                className: "dragToSort fa fa-arrows grid-icon col-sm-1 pull-right"
-                            }
-                        ]),
-                        sortable: false,
-                        editable: false
-                    }
+                                    className: "fa fa-pencil grid-icon col-sm-1 pull-right"
+                                },
+                                {
+                                    className: "dragToSort fa fa-arrows grid-icon col-sm-1 pull-right"
+                                }
+                            ]),
+                            sortable: false,
+                            editable: false
+                        }
                     ],
                     propertiesGrid,
                     newRow,

@@ -24,12 +24,12 @@ define([
     "org/forgerock/commons/ui/common/main/Configuration",
     "org/forgerock/openidm/ui/common/util/Constants"
 ], function ($, _,
-             UserModel,
-             eventManager,
-             AbstractConfigurationAware,
-             serviceInvoker,
-             conf,
-             Constants) {
+        UserModel,
+        eventManager,
+        AbstractConfigurationAware,
+        serviceInvoker,
+        conf,
+        Constants) {
     var obj = new AbstractConfigurationAware();
 
     obj.login = function(params, successCallback, errorCallback) {
@@ -81,8 +81,8 @@ define([
 
     obj.getLoggedUser = function(successCallback, errorCallback) {
         return (new UserModel()).getProfile().then(successCallback, function(e) {
-            if(e.responseJSON && e.responseJSON.detail && e.responseJSON.detail.failureReasons && e.responseJSON.detail.failureReasons.length){
-                if(_.where(e.responseJSON.detail.failureReasons,{ isAlive: false }).length){
+            if (e.responseJSON && e.responseJSON.detail && e.responseJSON.detail.failureReasons && e.responseJSON.detail.failureReasons.length){
+                if (_.where(e.responseJSON.detail.failureReasons,{ isAlive: false }).length){
                     conf.globalData.authenticationUnavailable = true;
                 }
             }

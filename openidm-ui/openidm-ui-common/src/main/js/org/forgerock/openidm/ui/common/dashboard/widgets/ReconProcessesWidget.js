@@ -24,12 +24,12 @@ define([
     "org/forgerock/commons/ui/common/main/Configuration",
     "org/forgerock/openidm/ui/common/delegates/SystemHealthDelegate"
 ], function($, _,
-            dimple,
-            AbstractWidget,
-            eventManager,
-            constants,
-            conf,
-            SystemHealthDelegate) {
+        dimple,
+        AbstractWidget,
+        eventManager,
+        constants,
+        conf,
+        SystemHealthDelegate) {
     var widgetInstance = {},
         Widget = AbstractWidget.extend({
             template: "templates/dashboard/widget/DashboardSingleWidgetTemplate.html",
@@ -81,7 +81,7 @@ define([
                     this.reconUsagePolling();
 
                     window.onresize = _.bind(function () {
-                        if(this.model.reconChart) {
+                        if (this.model.reconChart) {
                             this.model.reconChart.draw(0, true);
                         }
                     }, this);
@@ -107,7 +107,7 @@ define([
 
                     this.model.reconChart.data = _.clone(this.model.chartData);
 
-                    if(this.model.reconChart.data.length > 1) {
+                    if (this.model.reconChart.data.length > 1) {
                         this.$el.find(".dashboard-loading-message").hide();
 
                         this.model.y.overrideMin = 0;
@@ -116,7 +116,7 @@ define([
                         this.model.reconChart.draw(this.model.drawTime);
                     }
 
-                    if(window.location.hash === "#dashboard/" || window.location.hash === "") {
+                    if (window.location.hash === "#dashboard/" || window.location.hash === "") {
                         this.model.pollTimer = _.delay(_.bind(function(){
                             this.reconUsagePolling();
                         }, this), this.model.refreshSpeed);

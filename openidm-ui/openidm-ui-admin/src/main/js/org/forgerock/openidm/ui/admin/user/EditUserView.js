@@ -27,15 +27,15 @@ define([
     "org/forgerock/commons/ui/common/main/EventManager",
     "org/forgerock/commons/ui/common/util/Constants"],
 function ($, _,
-          Handlebars,
-          AbstractView,
-          GenericEditResourceView,
-          ValidatorsManager,
-          MembersView,
-          ConfigDelegate,
-          ResourceDelegate,
-          EventManager,
-          Constants) {
+        Handlebars,
+        AbstractView,
+        GenericEditResourceView,
+        ValidatorsManager,
+        MembersView,
+        ConfigDelegate,
+        ResourceDelegate,
+        EventManager,
+        Constants) {
 
     var EditUserView = function () {
         return AbstractView.apply(this, arguments);

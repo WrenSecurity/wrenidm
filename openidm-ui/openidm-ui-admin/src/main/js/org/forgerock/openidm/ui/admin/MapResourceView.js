@@ -27,13 +27,13 @@ define([
     "bootstrap-dialog"
 
 ], function($, _, handlebars,
-            AbstractView,
-            eventManager,
-            constants,
-            router,
-            ConfigDelegate,
-            ValidatorsManager,
-            BootstrapDialog) {
+        AbstractView,
+        eventManager,
+        constants,
+        router,
+        ConfigDelegate,
+        ValidatorsManager,
+        BootstrapDialog) {
     var MapResourceView = AbstractView.extend({
         template: "templates/admin/MapResourceView.html",
         noBaseTemplate: true,
@@ -96,7 +96,7 @@ define([
                 }, this));
         },
         addMapping: function(mappingObj) {
-            if(!this.sourceAdded) {
+            if (!this.sourceAdded) {
                 this.sourceDetails = mappingObj;
                 this.displayDetails("mappingSource", this.sourceDetails);
                 this.sourceAdded = true;
@@ -106,13 +106,13 @@ define([
                 this.targetAdded = true;
             }
 
-            if(this.sourceAdded && this.targetAdded) {
+            if (this.sourceAdded && this.targetAdded) {
                 this.$el.find("#createMapping").prop("disabled", false);
             } else {
                 this.$el.find("#createMapping").prop("disabled", true);
             }
 
-            if(this.addCallback) {
+            if (this.addCallback) {
                 this.addCallback(this.sourceAdded, this.targetAdded);
             }
         },
@@ -134,10 +134,10 @@ define([
             this.targetDetails.saveName = generateMappingInfo.target;
             this.sourceDetails.saveName =  generateMappingInfo.source;
 
-            while(!mappingName) {
+            while (!mappingName) {
                 nameCheck = this.checkMappingName(tempName);
 
-                if(nameCheck) {
+                if (nameCheck) {
                     mappingName = tempName;
                 } else {
                     tempName = cleanName + counter;
@@ -250,7 +250,7 @@ define([
 
             ConfigDelegate[this.syncExist ? "updateEntity" : "createEntity" ]("sync", completeMapping).then(_.bind(function() {
 
-                if(callback) {
+                if (callback) {
                     callback();
                 }
 
@@ -271,12 +271,12 @@ define([
                 var safe = true;
 
                 _.each(linksFound, function(link) {
-                    if(link.links === available.name) {
+                    if (link.links === available.name) {
                         safe = false;
                     }
                 }, this);
 
-                if(safe) {
+                if (safe) {
                     returnedLinks.push(available);
                 } else {
                     safe = true;
@@ -308,22 +308,22 @@ define([
 
             tempName = this.properCase(targetDetails.name);
 
-            if(targetDetails.resourceType === "connector") {
+            if (targetDetails.resourceType === "connector") {
                 tempObjectType = targetObjectType.charAt(0).toUpperCase() +targetObjectType.substring(1);
                 targetName = "system" + tempName +tempObjectType;
                 mappingTarget = "system/" + targetDetails.name +"/" +targetObjectType;
-            } else{
+            } else {
                 targetName = "managed" + tempName;
                 mappingTarget = "managed/" + targetDetails.name;
             }
 
             tempName = this.properCase(sourceDetails.name);
 
-            if(sourceDetails.resourceType === "connector") {
+            if (sourceDetails.resourceType === "connector") {
                 tempObjectType = sourceObjectType.charAt(0).toUpperCase() + sourceObjectType.substring(1);
                 sourceName = "system" +tempName +tempObjectType;
                 mappingSource = "system/" + sourceDetails.name +"/" +sourceObjectType;
-            } else{
+            } else {
                 sourceName = "managed" + tempName;
                 mappingSource = "managed/" + sourceDetails.name;
             }
@@ -338,7 +338,7 @@ define([
         properCase: function(name) {
             var tempName;
 
-            if(name.length > 1) {
+            if (name.length > 1) {
                 tempName = name.charAt(0).toUpperCase() + name.substring(1).toLowerCase();
             } else {
                 tempName = name.charAt(0).toUpperCase();
@@ -362,24 +362,24 @@ define([
             this.sourceAdded = currentTargetAdded;
             this.targetAdded = currentSourceAdded;
 
-            if(currentTarget !== null) {
+            if (currentTarget !== null) {
                 this.displayDetails("mappingSource", currentTarget);
             }
 
-            if(currentSource !== null) {
+            if (currentSource !== null) {
                 this.displayDetails("mappingTarget", currentSource);
             }
 
-            if(this.sourceAdded && this.targetAdded) {
+            if (this.sourceAdded && this.targetAdded) {
                 $("#createMapping").prop("disabled", false);
             }
 
-            if(this.addCallback) {
+            if (this.addCallback) {
                 this.addCallback(this.sourceAdded, this.targetAdded);
             }
         },
         displayDetails: function(id, details) {
-            if(details.resourceType === "connector") {
+            if (details.resourceType === "connector") {
                 this.$el.find("#"+id +" .resource-small-icon").attr('class', "resource-small-icon " +details.iconClass);
 
                 this.$el.find("#"+id +" .resource-type-name").html(details.displayName);
@@ -395,7 +395,7 @@ define([
                 }, this);
 
             } else {
-                if(!details.schema || !details.schema.icon) {
+                if (!details.schema || !details.schema.icon) {
                     this.$el.find("#" + id + " .resource-small-icon").attr('class', "resource-small-icon " +details.iconClass);
                 } else {
                     this.$el.find("#" + id + " .resource-small-icon").attr('class','resource-small-icon fa ' +details.schema.icon);
@@ -423,7 +423,7 @@ define([
             this.$el.find("#" +id +" .select-resource").prop("disabled", true);
             this.$el.find("#createMapping").prop("disabled", true);
 
-            if(id === "mappingSource") {
+            if (id === "mappingSource") {
                 this.sourceAdded = false;
                 this.sourceDetails = null;
             } else {

@@ -21,9 +21,9 @@ define([
     "org/forgerock/openidm/ui/admin/assignment/AddAssignmentView",
     "org/forgerock/openidm/ui/admin/assignment/EditAssignmentView"
 ], function($, _,
-            AdminAbstractView,
-            AddAssignmentView,
-            EditAssignmentView) {
+        AdminAbstractView,
+        AddAssignmentView,
+        EditAssignmentView) {
     var AssignmentView = AdminAbstractView.extend({
         template: "templates/common/EmptyTemplate.html",
 
@@ -31,13 +31,13 @@ define([
             this.parentRender(_.bind(function(){
                 this.$el.append('<div id="assignmentHolder"></div>');
 
-                if(args.length === 2) {
+                if (args.length === 2) {
                     AddAssignmentView.render(args);
                 } else {
                     EditAssignmentView.render(args);
                 }
 
-                if(callback) {
+                if (callback) {
                     callback();
                 }
             },this));

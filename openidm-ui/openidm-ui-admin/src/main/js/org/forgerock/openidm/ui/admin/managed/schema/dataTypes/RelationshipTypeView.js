@@ -26,14 +26,14 @@ define([
     "org/forgerock/openidm/ui/admin/managed/schema/dataTypes/EditResourceCollectionDialog",
     "org/forgerock/openidm/ui/admin/managed/schema/util/SchemaUtils"
 ], function($, _,
-    handlebars,
-    JSONEditor,
-    Backbone,
-    Backgrid,
-    BackgridUtils,
-    AdminAbstractView,
-    EditResourceCollectionDialog,
-    SchemaUtils
+        handlebars,
+        JSONEditor,
+        Backbone,
+        Backgrid,
+        BackgridUtils,
+        AdminAbstractView,
+        EditResourceCollectionDialog,
+        SchemaUtils
 ) {
 
     var RelationshipTypeView = AdminAbstractView.extend({

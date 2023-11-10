@@ -87,18 +87,18 @@ define([
             };
 
             return _.chain(roles)
-                    .filter(function (r) {
-                        return _.has(Configuration.globalData.roles, getRoleFromRef(r));
-                    })
-                    .map(function (r) {
-                        if (Configuration.globalData.roles[getRoleFromRef(r)] === "ui-user") {
-                            return ["ui-user","ui-self-service-user"];
-                        } else {
-                            return Configuration.globalData.roles[getRoleFromRef(r)];
-                        }
-                    })
-                    .flatten()
-                    .value();
+                .filter(function (r) {
+                    return _.has(Configuration.globalData.roles, getRoleFromRef(r));
+                })
+                .map(function (r) {
+                    if (Configuration.globalData.roles[getRoleFromRef(r)] === "ui-user") {
+                        return ["ui-user","ui-self-service-user"];
+                    } else {
+                        return Configuration.globalData.roles[getRoleFromRef(r)];
+                    }
+                })
+                .flatten()
+                .value();
         },
         parse: function (response) {
             if (_.has(response, "password")) {
@@ -193,35 +193,35 @@ define([
                     }
                 }
             })
-            .fail(() => {
-                this.logout();
-            })
-            .then(_.bind(function (sessionDetails) {
-                this.id = sessionDetails.authorization.id;
-                this.url = "/" + Constants.context + "/" + sessionDetails.authorization.component;
-                this.component = sessionDetails.authorization.component;
-                this.protectedAttributeList = sessionDetails.authorization.protectedAttributeList || [];
-                this.logoutUrl = sessionDetails.authorization.logoutUrl;
-                this.baseEntity = this.component + "/" + this.id;
-                this.uiroles = this.getUIRoles(sessionDetails.authorization.roles);
-                this.provider =  sessionDetails.authorization.provider;
+                .fail(() => {
+                    this.logout();
+                })
+                .then(_.bind(function (sessionDetails) {
+                    this.id = sessionDetails.authorization.id;
+                    this.url = "/" + Constants.context + "/" + sessionDetails.authorization.component;
+                    this.component = sessionDetails.authorization.component;
+                    this.protectedAttributeList = sessionDetails.authorization.protectedAttributeList || [];
+                    this.logoutUrl = sessionDetails.authorization.logoutUrl;
+                    this.baseEntity = this.component + "/" + this.id;
+                    this.uiroles = this.getUIRoles(sessionDetails.authorization.roles);
+                    this.provider =  sessionDetails.authorization.provider;
 
-                if(sessionDetails.authorization.provider) {
-                    this.provider = sessionDetails.authorization.provider;
-                } else {
-                    this.provider = null;
-                }
+                    if (sessionDetails.authorization.provider) {
+                        this.provider = sessionDetails.authorization.provider;
+                    } else {
+                        this.provider = null;
+                    }
 
-                if(sessionDetails.authorization.moduleId === "oAuth" || sessionDetails.authorization.moduleId === "OpenIdConnect") {
-                    this.userNamePasswordLogin = false;
-                } else {
-                    this.userNamePasswordLogin = true;
-                }
+                    if (sessionDetails.authorization.moduleId === "oAuth" || sessionDetails.authorization.moduleId === "OpenIdConnect") {
+                        this.userNamePasswordLogin = false;
+                    } else {
+                        this.userNamePasswordLogin = true;
+                    }
 
-                return this.fetch().then(_.bind(function () {
-                    return this;
+                    return this.fetch().then(_.bind(function () {
+                        return this;
+                    }, this));
                 }, this));
-            }, this));
         },
         getProtectedAttributes: function () {
             return this.protectedAttributeList;

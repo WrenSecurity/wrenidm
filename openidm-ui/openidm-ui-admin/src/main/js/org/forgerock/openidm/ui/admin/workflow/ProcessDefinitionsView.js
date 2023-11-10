@@ -23,11 +23,11 @@ define([
     "backgrid",
     "org/forgerock/openidm/ui/admin/util/BackgridUtils"
 ], function($, _,
-            AdminAbstractView,
-            AbstractModel,
-            AbstractCollection,
-            Backgrid,
-            BackgridUtils) {
+        AdminAbstractView,
+        AbstractModel,
+        AbstractCollection,
+        Backgrid,
+        BackgridUtils) {
     var ProcessDefinitionsView = AdminAbstractView.extend({
         template: "templates/admin/workflow/ProcessDefinitionsViewTemplate.html",
         events: {
@@ -72,7 +72,7 @@ define([
 
                     this.model.processes.getFirstPage();
 
-                    if(callback) {
+                    if (callback) {
                         callback();
                     }
                 }, this));

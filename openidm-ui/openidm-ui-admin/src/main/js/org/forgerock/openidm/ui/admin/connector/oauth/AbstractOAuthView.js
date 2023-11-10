@@ -52,7 +52,7 @@ define([
 
             mergedResult.configurationProperties.domain = window.location.protocol+"//"+window.location.host;
 
-            if(this.cleanResult) {
+            if (this.cleanResult) {
                 mergedResult = this.cleanResult(mergedResult);
             }
 
@@ -70,7 +70,7 @@ define([
             this.data.editState = args.editState;
             this.data.systemType = args.systemType;
 
-            if(this.connectorSpecificChanges) {
+            if (this.connectorSpecificChanges) {
                 this.connectorSpecificChanges(this.data.connectorDefaults);
             }
 
@@ -78,7 +78,7 @@ define([
 
                 validatorsManager.bindValidators(this.$el);
 
-                if(callback){
+                if (callback){
                     callback();
                 }
             }, this));
@@ -92,11 +92,11 @@ define([
         },
 
         cleanSpacing : function(mergedResult) {
-            if(mergedResult.configurationProperties.clientId) {
+            if (mergedResult.configurationProperties.clientId) {
                 mergedResult.configurationProperties.clientId = mergedResult.configurationProperties.clientId.trim();
             }
 
-            if(mergedResult.configurationProperties.clientSecret && _.isString(mergedResult.configurationProperties.clientSecret)) {
+            if (mergedResult.configurationProperties.clientSecret && _.isString(mergedResult.configurationProperties.clientSecret)) {
                 mergedResult.configurationProperties.clientSecret = mergedResult.configurationProperties.clientSecret.trim();
             }
 

@@ -25,13 +25,13 @@ define([
     "org/forgerock/commons/ui/common/util/Constants",
     "org/forgerock/commons/ui/common/components/Navigation"
 ], function($, _,
-            AbstractDelegate,
-            conf,
-            commonSiteConfigurationDelegate,
-            ConfigDelegate,
-            eventManager,
-            Constants,
-            Navigation) {
+        AbstractDelegate,
+        conf,
+        commonSiteConfigurationDelegate,
+        ConfigDelegate,
+        eventManager,
+        Constants,
+        Navigation) {
 
     var SiteConfigurationDelegate = function (url) {
             AbstractDelegate.call(this, url);

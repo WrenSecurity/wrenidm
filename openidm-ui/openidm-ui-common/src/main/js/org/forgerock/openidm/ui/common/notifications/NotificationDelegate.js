@@ -27,7 +27,7 @@ define([
         obj.serviceCall({
             url: "",
             success: function (data) {
-                if(successCallback) {
+                if (successCallback) {
                     successCallback(data);
                 }
             },

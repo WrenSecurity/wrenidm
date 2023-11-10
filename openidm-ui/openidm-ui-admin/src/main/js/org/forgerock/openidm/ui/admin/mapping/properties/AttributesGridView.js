@@ -33,19 +33,19 @@ define([
     "org/forgerock/openidm/ui/admin/util/BackgridUtils",
     "org/forgerock/commons/ui/common/util/UIUtils"
 ], function($, _, Handlebars, Backbone,
-            AdminAbstractView,
-            eventManager,
-            conf,
-            constants,
-            mappingUtils,
-            ScriptDelegate,
-            FilterEvaluator,
-            QueryFilterEditor,
-            AddPropertyMappingDialog,
-            EditPropertyMappingDialog,
-            Backgrid,
-            BackgridUtils,
-            UIUtils) {
+        AdminAbstractView,
+        eventManager,
+        conf,
+        constants,
+        mappingUtils,
+        ScriptDelegate,
+        FilterEvaluator,
+        QueryFilterEditor,
+        AddPropertyMappingDialog,
+        EditPropertyMappingDialog,
+        Backgrid,
+        BackgridUtils,
+        UIUtils) {
 
     var AttributesGridView = AdminAbstractView.extend({
         template: "templates/admin/mapping/properties/AttributesGridTemplate.html",
@@ -241,13 +241,13 @@ define([
             this.model.attributes = new Attributes();
 
             _.each(attributes, function(attribute) {
-                if(evalResults !== null) {
+                if (evalResults !== null) {
                     tempResults = evalResults[evalCounter];
                 } else {
                     tempResults = null;
                 }
 
-                if(conf.globalData.sampleSource !== undefined && conf.globalData.sampleSource.IDMSampleMappingName === this.model.mapping.name && conf.globalData.sampleSource[attribute.source]) {
+                if (conf.globalData.sampleSource !== undefined && conf.globalData.sampleSource.IDMSampleMappingName === this.model.mapping.name && conf.globalData.sampleSource[attribute.source]) {
                     tempSample = conf.globalData.sampleSource[attribute.source];
                 } else {
                     tempSample = null;
@@ -305,8 +305,8 @@ define([
                                 var locals = {},
                                     attribute = this.model.attributes.attribute;
 
-                                if(attribute.condition) {
-                                    if(_.isObject(attribute.condition)) {
+                                if (attribute.condition) {
+                                    if (_.isObject(attribute.condition)) {
                                         if (attribute.condition.source){
                                             locals.conditionIcon = attribute.condition.source;
                                         } else {
@@ -317,8 +317,8 @@ define([
                                     }
                                 }
 
-                                if(attribute.transform) {
-                                    if(_.isObject(attribute.transform)) {
+                                if (attribute.transform) {
+                                    if (_.isObject(attribute.transform)) {
                                         if (attribute.transform.source) {
                                             locals.transformIcon = attribute.transform.source;
                                         } else {
@@ -348,11 +348,11 @@ define([
                                 var locals = {},
                                     attributes = this.model.attributes;
 
-                                if(attributes.attribute.target) {
+                                if (attributes.attribute.target) {
                                     locals.title = attributes.attribute.target;
                                 }
 
-                                if(!attributes.evalResult || !attributes.evalResult.conditionResults || attributes.evalResult.conditionResults.result) {
+                                if (!attributes.evalResult || !attributes.evalResult.conditionResults || attributes.evalResult.conditionResults.result) {
                                     if (attributes.evalResult && attributes.evalResult.transformResults){
                                         locals.textMuted = attributes.evalResult.transformResults;
                                     } else if (attributes.sample !== null) {
@@ -530,46 +530,46 @@ define([
             if (sampleDetails.hasCondition) {
                 if (_.isString(sampleDetails.condition)) {
                     ScriptDelegate.parseQueryFilter(sampleDetails.condition)
-                    .then(function (queryFilterTree) {
-                        var qfe = new QueryFilterEditor();
+                        .then(function (queryFilterTree) {
+                            var qfe = new QueryFilterEditor();
 
-                        return FilterEvaluator.evaluate(
-                            qfe.transform(queryFilterTree),
-                            {
-                                "linkQualifier": globals.linkQualifier,
-                                "object": sampleSource
-                            }
-                        );
-                    })
-                    .then(function (filterCheck) {
-                        if (filterCheck) {
-                            if (sampleDetails.hasTransform) {
-                                ScriptDelegate.evalScript(sampleDetails.transform, globals).then(function(transformResults) {
+                            return FilterEvaluator.evaluate(
+                                qfe.transform(queryFilterTree),
+                                {
+                                    "linkQualifier": globals.linkQualifier,
+                                    "object": sampleSource
+                                }
+                            );
+                        })
+                        .then(function (filterCheck) {
+                            if (filterCheck) {
+                                if (sampleDetails.hasTransform) {
+                                    ScriptDelegate.evalScript(sampleDetails.transform, globals).then(function(transformResults) {
+                                        samplePromise.resolve({
+                                            conditionResults: {
+                                                result: true
+                                            },
+                                            transformResults: transformResults
+                                        });
+                                    }, function(e) {
+                                        eventManager.sendEvent(constants.EVENT_DISPLAY_MESSAGE_REQUEST, "mappingEvalError");
+                                    });
+                                } else {
                                     samplePromise.resolve({
                                         conditionResults: {
                                             result: true
-                                        },
-                                        transformResults: transformResults
+                                        }
                                     });
-                                }, function(e) {
-                                    eventManager.sendEvent(constants.EVENT_DISPLAY_MESSAGE_REQUEST, "mappingEvalError");
-                                });
+                                }
                             } else {
                                 samplePromise.resolve({
                                     conditionResults: {
-                                        result: true
-                                    }
+                                        result: false
+                                    },
+                                    transformResults: ""
                                 });
                             }
-                        } else {
-                            samplePromise.resolve({
-                                conditionResults: {
-                                    result: false
-                                },
-                                transformResults: ""
-                            });
-                        }
-                    });
+                        });
                 } else {
                     ScriptDelegate.evalScript(sampleDetails.condition, { "linkQualifier": globals.linkQualifier, "object": sampleSource}).then(function(conditionResults) {
                         if (sampleDetails.hasTransform && conditionResults === true) {

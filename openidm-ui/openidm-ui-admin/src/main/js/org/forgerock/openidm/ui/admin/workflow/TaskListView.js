@@ -29,17 +29,17 @@ define([
     "org/forgerock/openidm/ui/admin/util/WorkflowUtils",
     "backgrid"
 ], function($, _,
-            AdminAbstractView,
-            ModuleLoader,
-            ResourceDelegate,
-            AbstractModel,
-            AbstractCollection,
-            CustomCells,
-            EventManager,
-            Constants,
-            Router,
-            WorkflowUtils,
-            Backgrid) {
+        AdminAbstractView,
+        ModuleLoader,
+        ResourceDelegate,
+        AbstractModel,
+        AbstractCollection,
+        CustomCells,
+        EventManager,
+        Constants,
+        Router,
+        WorkflowUtils,
+        Backgrid) {
 
     var TaskListView = AdminAbstractView.extend({
         template: "templates/admin/workflow/TaskListViewTemplate.html",
@@ -145,9 +145,9 @@ define([
                     create: false,
                     preload: true,
                     onChange: _.bind(function(value) {
-                        if(value === "anyone") {
+                        if (value === "anyone") {
                             Tasks.url = "/openidm/workflow/taskinstance?_queryId=filtered-query";
-                        } else if(value === "unassigned") {
+                        } else if (value === "unassigned") {
                             Tasks.url = "/openidm/workflow/taskinstance?_queryId=filtered-query&unassigned=true";
                         } else {
                             Tasks.url = "/openidm/workflow/taskinstance?_queryId=filtered-query&assignee=" + value;
@@ -203,7 +203,7 @@ define([
 
                 this.$el.find("#taskAssignedTo")[0].selectize.setValue("anyone");
 
-                if(callback) {
+                if (callback) {
                     callback();
                 }
 

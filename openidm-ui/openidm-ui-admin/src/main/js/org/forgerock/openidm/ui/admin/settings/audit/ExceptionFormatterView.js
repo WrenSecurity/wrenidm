@@ -23,10 +23,10 @@ define([
     "org/forgerock/openidm/ui/admin/util/InlineScriptEditor",
     "org/forgerock/commons/ui/common/components/ChangesPending"
 ], function($, _, AuditAdminAbstractView,
-            eventManager,
-            constants,
-            InlineScriptEditor,
-            ChangesPending) {
+        eventManager,
+        constants,
+        InlineScriptEditor,
+        ChangesPending) {
 
     var ExceptionFormatterView = AuditAdminAbstractView.extend({
         template: "templates/admin/settings/audit/ExceptionFormatterTemplate.html",

@@ -29,17 +29,17 @@ define([
     "org/forgerock/commons/ui/common/main/EventManager",
     "org/forgerock/commons/ui/common/main/AbstractView"
 ], function( $, _,
-             Handlebars,
-             BootstrapDialog,
-             SocialDelegate,
-             Router,
-             OAuth,
-             OAuthUtils,
-             UIUtils,
-             Configuration,
-             Constants,
-             EventManager,
-             AbstractView) {
+        Handlebars,
+        BootstrapDialog,
+        SocialDelegate,
+        Router,
+        OAuth,
+        OAuthUtils,
+        UIUtils,
+        Configuration,
+        Constants,
+        EventManager,
+        AbstractView) {
     var ProviderLoginDialog = AbstractView.extend({
         template: "templates/login/ProviderLoginDialog.html",
         element: "#dialogs",
@@ -59,7 +59,7 @@ define([
                 "action" : $.t("templates.socialIdentities.signIn")
             };
 
-            if(!_.isUndefined(userDetails.provider) && !_.isNull(userDetails.provider)) {
+            if (!_.isUndefined(userDetails.provider) && !_.isNull(userDetails.provider)) {
                 this.model.currentProviders = _.filter(configuredProviders.providers, (obj) => {
                     return obj.name === userDetails.provider;
                 });

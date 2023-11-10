@@ -28,16 +28,16 @@ define([
     "org/forgerock/openidm/ui/common/dashboard/widgets/QuickStartWidget",
     "org/forgerock/openidm/ui/common/dashboard/widgets/FullHealthWidget"
 ], function($, _,
-            AbstractView,
-            eventManager,
-            constants,
-            conf,
-            SystemHealthDelegate,
-            MemoryUsageWidget,
-            ReconProcessesWidget,
-            CPUUsageWidget,
-            QuickStartWidget,
-            FullHealthWidget) {
+        AbstractView,
+        eventManager,
+        constants,
+        conf,
+        SystemHealthDelegate,
+        MemoryUsageWidget,
+        ReconProcessesWidget,
+        CPUUsageWidget,
+        QuickStartWidget,
+        FullHealthWidget) {
     var dwlInstance = {},
         DashboardWidgetLoader = AbstractView.extend({
             template: "templates/dashboard/DashboardWidgetLoaderTemplate.html",

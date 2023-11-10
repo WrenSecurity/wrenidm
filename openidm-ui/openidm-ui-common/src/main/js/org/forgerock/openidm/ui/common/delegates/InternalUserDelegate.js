@@ -29,7 +29,7 @@ define([
         return obj.readEntity(id).then(function(user) {
             var i, v;
 
-            for(i = 0; i < patchDefinitionObject.length; i++) {
+            for (i = 0; i < patchDefinitionObject.length; i++) {
                 v = patchDefinitionObject[i];
 
                 // replace any leading slashes to translate basic JSON Pointer

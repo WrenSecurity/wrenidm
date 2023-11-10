@@ -84,14 +84,14 @@ define([
 
         return promise.then(function (data) {
             var properyFailures = _(data.failedPolicyRequirements)
-                    .filter(function (failedReq) {
-                        return failedReq.property === args.property;
-                    })
-                    .map(function (failedReq) {
-                        return failedReq.policyRequirements;
-                    })
-                    .flatten()
-                    .value();
+                .filter(function (failedReq) {
+                    return failedReq.property === args.property;
+                })
+                .map(function (failedReq) {
+                    return failedReq.policyRequirements;
+                })
+                .flatten()
+                .value();
 
             if (!properyFailures.length) {
                 return {"result": true };
@@ -102,11 +102,11 @@ define([
                 };
             }
         })
-        .done(function (result) {
-            if (callback) {
-                callback(result);
-            }
-        });
+            .done(function (result) {
+                if (callback) {
+                    callback(result);
+                }
+            });
 
     };
 

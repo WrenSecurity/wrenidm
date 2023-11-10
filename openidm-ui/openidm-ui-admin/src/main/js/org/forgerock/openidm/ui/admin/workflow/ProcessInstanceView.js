@@ -28,16 +28,16 @@ define([
     "org/forgerock/openidm/ui/admin/util/BackgridUtils",
     "org/forgerock/commons/ui/common/util/UIUtils"
 ], function($, _,
-            AbstractView,
-            eventManager,
-            router,
-            constants,
-            AbstractModel,
-            messagesManager,
-            AbstractCollection,
-            Backgrid,
-            BackgridUtils,
-            UIUtils) {
+        AbstractView,
+        eventManager,
+        router,
+        constants,
+        AbstractModel,
+        messagesManager,
+        AbstractCollection,
+        Backgrid,
+        BackgridUtils,
+        UIUtils) {
 
     var ProcessInstanceModel = AbstractModel.extend({ url: "/openidm/workflow/processinstance" }),
         ProcessDefinitionModel = AbstractModel.extend({ url: "/openidm/workflow/processdefinition" }),
@@ -107,7 +107,7 @@ define([
 
                             this.buildTasksGrid();
 
-                            if(callback) {
+                            if (callback) {
                                 callback();
                             }
                         },this));

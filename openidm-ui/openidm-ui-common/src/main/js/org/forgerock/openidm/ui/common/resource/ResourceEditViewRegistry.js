@@ -34,7 +34,7 @@ define([
     };
 
     obj.getEditViewModule = function (resource) {
-        if(_.isUndefined(this.configuration["resource-" + resource])) {
+        if (_.isUndefined(this.configuration["resource-" + resource])) {
             return ModuleLoader.load("org/forgerock/openidm/ui/common/resource/GenericEditResourceView");
         } else {
             return ModuleLoader.load(this.configuration["resource-" + resource]);

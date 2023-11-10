@@ -21,13 +21,13 @@ define(["jquery", "lodash", "moment", "moment-timezone",
     "org/forgerock/openidm/ui/admin/util/ClusterUtils",
     "org/forgerock/openidm/ui/admin/delegates/ClusterDelegate"
 ], function($, _,
-    moment,
-    momentTimezone,
-    AbstractSchedulerView,
-    SchedulerDelegate,
-    SchedulerUtils,
-    ClusterUtils,
-    ClusterDelegate
+        moment,
+        momentTimezone,
+        AbstractSchedulerView,
+        SchedulerDelegate,
+        SchedulerUtils,
+        ClusterUtils,
+        ClusterDelegate
 ) {
 
     var EditSchedulerView;

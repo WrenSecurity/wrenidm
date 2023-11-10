@@ -112,14 +112,14 @@ define([
         },
         loadTemplate: function () {
             uiUtils.renderTemplate(
-                    this.template,
-                    this.currentDialog,
-                    _.extend({}, conf.globalData, this.data),
-                    _.bind(function(){
-                        this.setupResourceTypeField(this.propertyValuePath);
-                    }, this),
-                    "replace"
-                );
+                this.template,
+                this.currentDialog,
+                _.extend({}, conf.globalData, this.data),
+                _.bind(function(){
+                    this.setupResourceTypeField(this.propertyValuePath);
+                }, this),
+                "replace"
+            );
         },
         setRefProperties: function () {
             var properties,

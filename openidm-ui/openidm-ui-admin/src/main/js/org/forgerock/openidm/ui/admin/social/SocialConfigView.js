@@ -33,20 +33,20 @@ define([
     "libs/codemirror/lib/codemirror",
     "libs/codemirror/mode/xml/xml"
 ], function($, _,
-            handlebars,
-            form2js,
-            AdminAbstractView,
-            ConfigDelegate,
-            SocialDelegate,
-            EventManager,
-            Constants,
-            AdminUtils,
-            SiteConfigurationDelegate,
-            UIUtils,
-            UserRegistrationConfigView,
-            BootstrapDialog,
-            selectize,
-            codemirror) {
+        handlebars,
+        form2js,
+        AdminAbstractView,
+        ConfigDelegate,
+        SocialDelegate,
+        EventManager,
+        Constants,
+        AdminUtils,
+        SiteConfigurationDelegate,
+        UIUtils,
+        UserRegistrationConfigView,
+        BootstrapDialog,
+        selectize,
+        codemirror) {
     var SocialConfigView = AdminAbstractView.extend({
         template: "templates/admin/social/SocialConfigTemplate.html",
         events: {
@@ -130,13 +130,13 @@ define([
                 this.parentRender(() => {
                     var messageResult = this.getMessageState(currentProviders.length, this.model.userRegistration, this.model.AuthModuleEnabled);
 
-                    if(messageResult.login) {
+                    if (messageResult.login) {
                         this.$el.find("#socialNoAuthWarningMessage").show();
                     } else {
                         this.$el.find("#socialNoAuthWarningMessage").hide();
                     }
 
-                    if(messageResult.registration) {
+                    if (messageResult.registration) {
                         this.$el.find("#socialNoRegistrationWarningMessage").show();
                     } else {
                         this.$el.find("#socialNoRegistrationWarningMessage").hide();
@@ -160,7 +160,7 @@ define([
                 messageDisplay.registration = false;
             } else if (_.isNull(userRegistration) && providerCount > 0) {
                 messageDisplay.registration = true;
-            } else if(providerCount > 0 &&
+            } else if (providerCount > 0 &&
                 userRegistration &&
                 userRegistration.stageConfigs[0].name === "userDetails") {
                 messageDisplay.registration = true;
@@ -252,13 +252,13 @@ define([
 
                 messageResult = this.getMessageState(providerCount, this.model.userRegistration, this.model.AuthModuleEnabled);
 
-                if(messageResult.login) {
+                if (messageResult.login) {
                     this.$el.find("#socialNoAuthWarningMessage").show();
                 } else {
                     this.$el.find("#socialNoAuthWarningMessage").hide();
                 }
 
-                if(messageResult.registration) {
+                if (messageResult.registration) {
                     this.$el.find("#socialNoRegistrationWarningMessage").show();
                 } else {
                     this.$el.find("#socialNoRegistrationWarningMessage").hide();
@@ -383,7 +383,7 @@ define([
                         this.model.iconCode.refresh();
                     },
                     onclose: (dialogRef) => {
-                        if(this.model.iconCode) {
+                        if (this.model.iconCode) {
                             this.model.iconCode = null;
                         }
                     },
@@ -402,15 +402,15 @@ define([
                                 var formData = form2js("socialDialogForm", ".", true),
                                     saveData = this.generateSaveData(formData, providerConfig);
 
-                                if(this.model.iconCode) {
+                                if (this.model.iconCode) {
                                     saveData.icon = this.model.iconCode.getValue();
                                 }
 
-                                if(saveData.client_id && saveData.client_id.length) {
+                                if (saveData.client_id && saveData.client_id.length) {
                                     saveData.client_id = saveData.client_id.trim();
                                 }
 
-                                if(saveData.client_secret && saveData.client_secret.length) {
+                                if (saveData.client_secret && saveData.client_secret.length) {
                                     saveData.client_secret = saveData.client_secret.trim();
                                 }
 
@@ -443,7 +443,7 @@ define([
 
             _.extend(currentData, formData);
 
-            if(_.isNull(currentData.client_secret)) {
+            if (_.isNull(currentData.client_secret)) {
                 currentData.client_secret = secret;
             }
 
@@ -482,8 +482,8 @@ define([
          * @param {object} managedConfig the full managed config value
          */
         addBindUnbindBehavior: function (managedConfig) {
-            let updatedManagedConfig = _.cloneDeep(managedConfig),
-                managedUser = _.find(updatedManagedConfig.objects, (o) => o.name === "user");
+            let updatedManagedConfig = _.cloneDeep(managedConfig);
+            let managedUser = _.find(updatedManagedConfig.objects, (o) => o.name === "user");
 
             if (!_.has(managedUser, "actions")) {
                 managedUser.actions = {};
@@ -508,8 +508,8 @@ define([
          * @param {object} managedConfig the full managed config value
          */
         removeBindUnbindBehavior: function (managedConfig) {
-            let updatedManagedConfig = _.cloneDeep(managedConfig),
-                managedUser = _.find(updatedManagedConfig.objects, (o) => o.name === "user");
+            let updatedManagedConfig = _.cloneDeep(managedConfig);
+            let managedUser = _.find(updatedManagedConfig.objects, (o) => o.name === "user");
 
             if (_.has(managedUser, "actions.unbind")) {
                 delete managedUser.actions.unbind;
@@ -528,11 +528,11 @@ define([
          * @param {object} managedConfig the full managed config value
          */
         addManagedObjectForIDP : (provider, managedConfig) => {
-            let updatedManagedConfig = _.cloneDeep(managedConfig),
-                managedUser = _.find(updatedManagedConfig.objects, (o) => o.name === "user"),
-                // take the top three properties from the schema config as the default
-                // representative values for the resourceCollection; if no schema available, use _id
-                fields = (provider.schema && provider.schema.order) ? provider.schema.order.slice(0,3) : ["_id"];
+            let updatedManagedConfig = _.cloneDeep(managedConfig);
+            let managedUser = _.find(updatedManagedConfig.objects, (o) => o.name === "user");
+            // take the top three properties from the schema config as the default
+            // representative values for the resourceCollection; if no schema available, use _id
+            let fields = (provider.schema && provider.schema.order) ? provider.schema.order.slice(0,3) : ["_id"];
 
             managedUser.schema.properties.idps.items.resourceCollection.push({
                 "path" : "managed/" + provider.name,
@@ -615,9 +615,9 @@ define([
          * @param {object} managedConfig the full managed config value
          */
         removeManagedObjectForIDP : (provider, managedConfig) => {
-            let updatedManagedConfig = _.cloneDeep(managedConfig),
-                managedUser = _.find(updatedManagedConfig.objects, (o) => o.name === "user"),
-                idps = managedUser.schema.properties.idps;
+            let updatedManagedConfig = _.cloneDeep(managedConfig);
+            let managedUser = _.find(updatedManagedConfig.objects, (o) => o.name === "user");
+            let idps = managedUser.schema.properties.idps;
 
             // idps may be undefined if all of them have been removed
             if (idps) {
@@ -635,8 +635,8 @@ define([
          * @param {object} managedConfig the full managed config value
          */
         addIDPsProperty : (managedConfig) => {
-            let updatedManagedConfig = _.cloneDeep(managedConfig),
-                managedUser = _.find(updatedManagedConfig.objects, (o) => o.name === "user");
+            let updatedManagedConfig = _.cloneDeep(managedConfig);
+            let managedUser = _.find(updatedManagedConfig.objects, (o) => o.name === "user");
 
             managedUser.schema.properties.idps = {
                 "title" : "Identity Providers",
@@ -674,8 +674,8 @@ define([
          * @param {object} managedConfig the full managed config value
          */
         removeIDPsProperty : (managedConfig) => {
-            let updatedManagedConfig = _.cloneDeep(managedConfig),
-                managedUser = _.find(updatedManagedConfig.objects, (o) => o.name === "user");
+            let updatedManagedConfig = _.cloneDeep(managedConfig);
+            let managedUser = _.find(updatedManagedConfig.objects, (o) => o.name === "user");
 
             managedUser.schema.order = _.filter(managedUser.schema.order, (o) => o !== "idps");
 

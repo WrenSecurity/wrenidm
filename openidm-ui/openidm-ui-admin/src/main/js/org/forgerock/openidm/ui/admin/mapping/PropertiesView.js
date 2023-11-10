@@ -29,16 +29,16 @@ define([
     "org/forgerock/openidm/ui/admin/util/AdminUtils"
 
 ], function($, _,
-            MappingAdminAbstractView,
-            LinkQualifiersView,
-            MappingAssignmentsView,
-            AttributesGridView,
-            EventManager,
-            Constants,
-            LinkQualifierUtil,
-            ConnectorDelegate,
-            ConfigDelegate,
-            AdminUtils) {
+        MappingAdminAbstractView,
+        LinkQualifiersView,
+        MappingAssignmentsView,
+        AttributesGridView,
+        EventManager,
+        Constants,
+        LinkQualifierUtil,
+        ConnectorDelegate,
+        ConfigDelegate,
+        AdminUtils) {
 
     var PropertiesView = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/PropertiesTemplate.html",

@@ -174,10 +174,7 @@ module.exports = function(grunt, options) {
             lint: {
                 src: [
                     mavenSrcPath + "/**/*.js"
-                ],
-                options: {
-                    format: options.eslintFormatter
-                }
+                ]
             }
         },
         less: {

@@ -106,7 +106,7 @@ define([
                         this.$el.find('a[data-toggle="tab"]').on('shown.bs.tab', _.bind(function(e){
                             var currentTab = $(e.target).text();
 
-                            if(currentTab === "Advanced") {
+                            if (currentTab === "Advanced") {
                                 this.$el.find(".complexExpression").val(this.cron.cron("convertCronVal", this.cron.cron("value")));
                             }
                         }, this));
@@ -155,7 +155,7 @@ define([
                         this.$el.find(".misfirePolicy").val(this.defaults.misfirePolicy);
                     }
 
-                    if(callback) {
+                    if (callback) {
                         callback();
                     }
                 }, this));
@@ -205,9 +205,9 @@ define([
 
                     if (this.data.scheduleType === "Reconciliation" && this.$el.find("#advancedTab").hasClass("active")) {
                         schedule.schedule = this.$el.find(".complexExpression").val();
-                    } else if(this.data.scheduleType === "Reconciliation") {
+                    } else if (this.data.scheduleType === "Reconciliation") {
                         schedule.schedule = this.cron.cron("convertCronVal", this.cron.cron("value"));
-                    } else if(this.data.scheduleType === "LiveSync") {
+                    } else if (this.data.scheduleType === "LiveSync") {
                         schedule.schedule = "0/" + this.$el.find(".liveSyncSchedule").val() + " * * * * ?";
                     }
 

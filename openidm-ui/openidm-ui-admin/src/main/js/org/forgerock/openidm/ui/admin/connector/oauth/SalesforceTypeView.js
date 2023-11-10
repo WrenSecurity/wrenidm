@@ -71,13 +71,13 @@ define([
         getToken: function(mergedResult, oAuthCode) {
             return ExternalAccessDelegate.getToken(mergedResult.configurationProperties.clientId,
                 oAuthCode,
-                    window.location.protocol+"//"+window.location.host + "/admin/oauth.html",
+                window.location.protocol+"//"+window.location.host + "/admin/oauth.html",
                 mergedResult.configurationProperties.loginUrl,
                 mergedResult._id.replace("/", "_"));
         },
 
         setToken: function(refeshDetails, connectorDetails, connectorLocation, urlArgs) {
-            if(refeshDetails.refresh_token !== undefined) {
+            if (refeshDetails.refresh_token !== undefined) {
                 connectorDetails.configurationProperties.refreshToken = refeshDetails.refresh_token;
                 connectorDetails.enabled = true;
             } else {
@@ -105,8 +105,8 @@ define([
         },
 
         connectorSpecificChanges: function(connectorDetails) {
-            if(connectorDetails.configurationProperties.loginUrl) {
-                if(this.data.urlTypes[0].value === connectorDetails.configurationProperties.loginUrl) {
+            if (connectorDetails.configurationProperties.loginUrl) {
+                if (this.data.urlTypes[0].value === connectorDetails.configurationProperties.loginUrl) {
                     this.data.urlTypes[0].selected = true;
                 } else if (this.data.urlTypes[1].value === connectorDetails.configurationProperties.loginUrl) {
                     this.data.urlTypes[1].selected = true;
@@ -119,7 +119,7 @@ define([
         },
 
         connectorSpecificValidation: function() {
-            if(this.data.connectorDefaults.configurationProperties.loginUrl &&
+            if (this.data.connectorDefaults.configurationProperties.loginUrl &&
                 this.data.connectorDefaults.configurationProperties.loginUrl === this.$el.find("#OAuthurl").val()) {
                 return false;
             } else {
@@ -131,7 +131,7 @@ define([
             var radio = event.target,
                 id = $(event.target).prop("id");
 
-            if(id === "productionRadio" || id === "sandboxRadio") {
+            if (id === "productionRadio" || id === "sandboxRadio") {
                 $("#OAuthurl").prop('readonly', true);
             } else {
                 $("#OAuthurl").prop('readonly', false);

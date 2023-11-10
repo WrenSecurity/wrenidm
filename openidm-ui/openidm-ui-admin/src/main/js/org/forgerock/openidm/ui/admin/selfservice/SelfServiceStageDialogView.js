@@ -28,14 +28,14 @@ define([
     "libs/codemirror/mode/xml/xml",
     "libs/codemirror/addon/display/placeholder"
 ], function($, _,
-            boostrap,
-            handlebars,
-            form2js,
-            AdminAbstractView,
-            UiUtils,
-            AdminUtils,
-            BootstrapDialog,
-            codeMirror) {
+        boostrap,
+        handlebars,
+        form2js,
+        AdminAbstractView,
+        UiUtils,
+        AdminUtils,
+        BootstrapDialog,
+        codeMirror) {
 
     var SelfServiceStageDialogView = AdminAbstractView.extend({
         element: "#dialogs",
@@ -151,7 +151,7 @@ define([
                                 var formData = form2js("configDialogForm", ".", true),
                                     tempData;
 
-                                if(args.type === "userDetails") {
+                                if (args.type === "userDetails") {
                                     tempData = _.filter(args.stageConfigs, {"name" : "userDetails"})[0];
                                     tempData.identityEmailField = formData.identityEmailField;
 
@@ -229,11 +229,11 @@ define([
                 translationMapGroup
                     .find("ul")
                     .append(
-                    handlebars.compile("{{> selfservice/_translationItem useCodeMirror="+ useCodeMirror +"}}")({
-                        locale: locale.val(),
-                        text: text
-                    })
-                );
+                        handlebars.compile("{{> selfservice/_translationItem useCodeMirror="+ useCodeMirror +"}}")({
+                            locale: locale.val(),
+                            text: text
+                        })
+                    );
 
                 if (useCodeMirror) {
                     codeMirror.fromTextArea(

@@ -27,15 +27,15 @@ define([
     "org/forgerock/commons/ui/common/main/EventManager",
     "org/forgerock/commons/ui/common/util/URIUtils"
 ], function($, _,
-            handlebars,
-            form2js,
-            AbstractView,
-            BootstrapDialog,
-            Constants,
-            Configuration,
-            ConfigDelegate,
-            EventManager,
-            URIUtils) {
+        handlebars,
+        form2js,
+        AbstractView,
+        BootstrapDialog,
+        Constants,
+        Configuration,
+        ConfigDelegate,
+        EventManager,
+        URIUtils) {
     var AbstractWidget = AbstractView.extend({
         noBaseTemplate: true,
         partials : [
@@ -70,7 +70,7 @@ define([
                 currentDashboard = URIUtils.getCurrentFragment().split("/")[1];
 
 
-            if(this.model.overrideTemplate) {
+            if (this.model.overrideTemplate) {
                 currentTemplate = this.model.overrideTemplate;
             }
 
@@ -81,7 +81,7 @@ define([
                 size: BootstrapDialog.SIZE_WIDE,
                 message: $(handlebars.compile("{{>"  +currentTemplate +"}}")(currentConf.adminDashboards[currentDashboard].widgets[widgetLocation])),
                 onshown: function (dialogRef) {
-                    if(self.customSettingsLoad) {
+                    if (self.customSettingsLoad) {
                         self.customSettingsLoad(dialogRef);
                     }
                 },
@@ -97,7 +97,7 @@ define([
                         cssClass: "btn-primary",
                         id: "saveUserConfig",
                         action: function (dialogRef) {
-                            if(_.isUndefined(self.customSettingsSave)) {
+                            if (_.isUndefined(self.customSettingsSave)) {
                                 var formData = form2js("widgetConfigForm", ".", true);
 
                                 _.extend(currentConf.adminDashboards[currentDashboard].widgets[widgetLocation], formData);

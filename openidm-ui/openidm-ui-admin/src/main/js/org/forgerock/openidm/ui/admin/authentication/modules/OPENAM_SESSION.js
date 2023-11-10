@@ -19,7 +19,7 @@ define([
     "lodash",
     "org/forgerock/openidm/ui/admin/authentication/AuthenticationAbstractView"
 ], function($, _,
-            AuthenticationAbstractView) {
+        AuthenticationAbstractView) {
 
     var OpenAMSessionView = AuthenticationAbstractView.extend({
         template: "templates/admin/authentication/modules/OPENAM_SESSION.html",

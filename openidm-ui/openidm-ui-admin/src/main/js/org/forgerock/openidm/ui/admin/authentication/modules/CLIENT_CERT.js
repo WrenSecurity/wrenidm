@@ -22,9 +22,9 @@ define([
     "org/forgerock/openidm/ui/admin/authentication/AuthenticationAbstractView"
 
 ], function($, _,
-            Form2js,
-            JSONEditor,
-            AuthenticationAbstractView) {
+        Form2js,
+        JSONEditor,
+        AuthenticationAbstractView) {
 
     var ClientCertView = AuthenticationAbstractView.extend({
         template: "templates/admin/authentication/modules/CLIENT_CERT.html",

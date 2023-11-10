@@ -29,16 +29,16 @@ define([
     "org/forgerock/commons/ui/common/util/UIUtils",
     "org/forgerock/openidm/ui/common/UserModel"
 ], function($, _, bootstrap,
-    BootstrapDialog,
-    AbstractUserProfileTab,
-    Configuration,
-    Constants,
-    EventManager,
-    OAuth,
-    Router,
-    SocialDelegate,
-    UIUtils,
-    UserModel
+        BootstrapDialog,
+        AbstractUserProfileTab,
+        Configuration,
+        Constants,
+        EventManager,
+        OAuth,
+        Router,
+        SocialDelegate,
+        UIUtils,
+        UserModel
 ) {
     var SocialIdentitiesView = AbstractUserProfileTab.extend({
         template: "templates/profile/SocialIdentitiesTab.html",

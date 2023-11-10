@@ -34,22 +34,22 @@ define([
     "selectize",
     "jsonEditor"
 ], function($, _,
-            MappingAdminAbstractView,
-            syncDelegate,
-            validatorsManager,
-            conf,
-            uiUtils,
-            eventManager,
-            constants,
-            spinner,
-            inlineScriptEditor,
-            LinkQualifierFilterEditor,
-            QueryFilterEditor,
-            AdminUtils,
-            BootstrapDialog,
-            tabdrop,
-            selectize,
-            JSONEditor) {
+        MappingAdminAbstractView,
+        syncDelegate,
+        validatorsManager,
+        conf,
+        uiUtils,
+        eventManager,
+        constants,
+        spinner,
+        inlineScriptEditor,
+        LinkQualifierFilterEditor,
+        QueryFilterEditor,
+        AdminUtils,
+        BootstrapDialog,
+        tabdrop,
+        selectize,
+        JSONEditor) {
 
     var EditPropertyMappingDialog = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/properties/EditPropertyMappingDialogTemplate.html",
@@ -77,7 +77,7 @@ define([
             this.$el.find(".toggle-view-btn").not(event.target).toggleClass("active", false);
 
             if (type === "conditionalFilter") {
-                if(this.conditionFilterEditor === null) {
+                if (this.conditionFilterEditor === null) {
 
                     if (this.data.usesLinkQualifier) {
                         this.conditionFilterEditor = new LinkQualifierFilterEditor();
@@ -160,7 +160,7 @@ define([
             if (this.transform_script_editor !== undefined) {
                 propertyObj.transform = this.transform_script_editor.generateScript();
 
-                if(propertyObj.transform === null) {
+                if (propertyObj.transform === null) {
                     delete propertyObj.transform;
                 } else if (!propertyObj.source) {
                     propertyObj.source = "";
@@ -231,7 +231,7 @@ define([
                 this.data.sampleSourceTooltip = null;
             }
 
-            if((_.isUndefined(this.data.property.source) || this.data.property.source.length === 0) && this.data.sampleSourceTooltip !== null) {
+            if ((_.isUndefined(this.data.property.source) || this.data.property.source.length === 0) && this.data.sampleSourceTooltip !== null) {
                 this.data.showSampleTooltip = false;
             } else {
                 this.data.showSampleTooltip = true;
@@ -275,19 +275,19 @@ define([
                                 create: false
                             });
 
-                            if(_this.data.property.source) {
+                            if (_this.data.property.source) {
                                 _this.$el.find("#sourcePropertySelect")[0].selectize.setValue(_this.data.property.source);
 
                                 _this.$el.find("#sourcePropertySelect").on("change", function() {
                                     let sourceProperty =  _this.$el.find("#sourcePropertySelect")[0].selectize.getValue();
 
-                                    if(sourceProperty.length > 0) {
+                                    if (sourceProperty.length > 0) {
                                         _this.currentDialog.find(".source-name").html(sourceProperty);
                                         _this.currentDialog.find(".fa-eye").hide();
                                     } else {
                                         _this.currentDialog.find(".source-name").html("Complete User Object");
 
-                                        if(_this.data.sampleSourceTooltip) {
+                                        if (_this.data.sampleSourceTooltip) {
                                             _this.currentDialog.find(".fa-eye").show();
                                         }
                                     }
@@ -297,14 +297,14 @@ define([
                             _this.currentDialog.find(".nav-tabs").tabdrop();
 
                             _this.currentDialog.find(".nav-tabs").on("shown.bs.tab", function (e) {
-                                if($(e.target).attr("href") === "#Transformation_Script"){
+                                if ($(e.target).attr("href") === "#Transformation_Script"){
                                     _this.transform_script_editor.refresh();
                                 } else if ($(e.target).attr("href") === "#Condition_Script") {
                                     _this.conditional_script_editor.refresh();
                                 }
                             });
 
-                            if(callback){
+                            if (callback){
                                 callback();
                             }
 
@@ -327,7 +327,7 @@ define([
                                 schema:schema
                             });
 
-                            if(_this.data.property.default !== undefined) {
+                            if (_this.data.property.default !== undefined) {
                                 _this.data.defaultEditor.setValue(_this.data.property.default);
                             }
 
@@ -341,15 +341,15 @@ define([
                         dialogRef.close();
                     }
                 },
-                    {
-                        label: $.t("common.form.update"),
-                        id:"scriptDialogUpdate",
-                        cssClass: 'btn-primary',
-                        action: _.bind(function(dialogRef) {
-                            this.formSubmit();
-                            dialogRef.close();
-                        },_this)
-                    }]
+                {
+                    label: $.t("common.form.update"),
+                    id:"scriptDialogUpdate",
+                    cssClass: 'btn-primary',
+                    action: _.bind(function(dialogRef) {
+                        this.formSubmit();
+                        dialogRef.close();
+                    },_this)
+                }]
             });
         },
 
@@ -416,7 +416,7 @@ define([
                 "placeHolder" : "source.givenName.toLowerCase() + \" .\" + source.sn.toLowerCase()"
             });
 
-            if(!_.isString(_this.data.property.condition)) {
+            if (!_.isString(_this.data.property.condition)) {
                 conditionData = _this.data.property.condition;
             }
 
@@ -450,7 +450,7 @@ define([
 
                 isValid = _this.validateMapping();
 
-                if(isValid && initialRender !== "true" && $('#propertyMappingDialogForm').size() === 0){
+                if (isValid && initialRender !== "true" && $('#propertyMappingDialogForm').size() === 0){
                     _this.formSubmit();
                 }
             });

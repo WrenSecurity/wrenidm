@@ -24,12 +24,12 @@ define([
     "org/forgerock/commons/ui/common/main/Configuration",
     "org/forgerock/openidm/ui/common/delegates/SystemHealthDelegate"
 ], function($, _,
-            dimple,
-            AbstractWidget,
-            eventManager,
-            constants,
-            conf,
-            SystemHealthDelegate) {
+        dimple,
+        AbstractWidget,
+        eventManager,
+        constants,
+        conf,
+        SystemHealthDelegate) {
     var widgetInstance = {},
         Widget = AbstractWidget.extend({
             template : "templates/dashboard/widget/DashboardSingleWidgetTemplate.html",
@@ -55,8 +55,8 @@ define([
                     color = this.model.defaultChartColor,
                     percentClass = "text-primary";
 
-                if(percent !== "N/A") {
-                    if(percent > this.model.dangerThreshold) {
+                if (percent !== "N/A") {
+                    if (percent > this.model.dangerThreshold) {
                         color =  this.model.dangerChartColor;
                         percentClass = "danger";
                     } else if (percent > this.model.warningThreshold) {
@@ -93,7 +93,7 @@ define([
 
                 this.events["click .refresh-health-info"] = "refresh";
 
-                if(args.widget.simpleWidget) {
+                if (args.widget.simpleWidget) {
                     this.data.simpleWidget = true;
                 } else {
                     this.data.simpleWidget = false;
@@ -119,7 +119,7 @@ define([
                             data,
                             percent;
 
-                        if(this.data.widgetType === "lifeCycleMemoryHeap") {
+                        if (this.data.widgetType === "lifeCycleMemoryHeap") {
                             widgetData = widgetData.heapMemoryUsage;
                         } else {
                             widgetData = widgetData.nonHeapMemoryUsage;
@@ -129,7 +129,7 @@ define([
 
                         svg.push(dimple.newSvg(this.$el.find(".widget-chart")[0], this.model.canvasWidth, this.model.canvasHeight));
 
-                        if(widgetData.max === -1) {
+                        if (widgetData.max === -1) {
                             percent = "N/A";
 
                             data = [
@@ -175,7 +175,7 @@ define([
             },
 
             refresh: function(event) {
-                if(event) {
+                if (event) {
                     event.preventDefault();
                 }
 
@@ -183,13 +183,13 @@ define([
                     var percent,
                         usedCpu = this.$el.find(".used-memory");
 
-                    if(this.data.widgetType === "lifeCycleMemoryHeap") {
+                    if (this.data.widgetType === "lifeCycleMemoryHeap") {
                         widgetData = widgetData.heapMemoryUsage;
                     } else {
                         widgetData = widgetData.nonHeapMemoryUsage;
                     }
 
-                    if(widgetData.max === -1) {
+                    if (widgetData.max === -1) {
                         percent = "N/A";
 
                         this.model.chart.data = [
@@ -223,7 +223,7 @@ define([
                         this.$el.find(".percent").toggleClass("danger", false);
                         this.$el.find(".percent").toggleClass("warning", false);
 
-                        if(percent > this.model.dangerThreshold) {
+                        if (percent > this.model.dangerThreshold) {
                             usedCpu.attr("fill", this.model.dangerChartColor);
                             usedCpu.css("fill", this.model.dangerChartColor);
 

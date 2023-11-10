@@ -32,18 +32,18 @@ define([
     "org/forgerock/openidm/ui/admin/delegates/MaintenanceDelegate"
 
 ], function($, _, Backgrid,
-            AdminAbstractView,
-            AbstractModel,
-            AbstractCollection,
-            Constants,
-            VersionsView,
-            HistoryView,
-            InstallationPreviewView,
-            MaintenanceModeView,
-            InstallView,
-            InstallationReportView,
-            RepoUpdateView,
-            MaintenanceDelegate) {
+        AdminAbstractView,
+        AbstractModel,
+        AbstractCollection,
+        Constants,
+        VersionsView,
+        HistoryView,
+        InstallationPreviewView,
+        MaintenanceModeView,
+        InstallView,
+        InstallationReportView,
+        RepoUpdateView,
+        MaintenanceDelegate) {
 
     var UpdateView = AdminAbstractView.extend({
         template: "templates/admin/settings/UpdateTemplate.html",
@@ -68,47 +68,47 @@ define([
                     case "version":
                         MaintenanceDelegate.getStatus()
 
-                        .then(_.bind(function(maintenanceData) {
-                            MaintenanceDelegate.getUpdateLogs({excludeFields: ['files']})
-                            .then(_.bind(function(updateLogData) {
-                                var runningUpdate = _.findWhere(updateLogData.result, {"status": "IN_PROGRESS"});
+                            .then(_.bind(function(maintenanceData) {
+                                MaintenanceDelegate.getUpdateLogs({excludeFields: ['files']})
+                                    .then(_.bind(function(updateLogData) {
+                                        var runningUpdate = _.findWhere(updateLogData.result, {"status": "IN_PROGRESS"});
 
-                                // There isn't a running install and OpenIDM is in maintenance mode
-                                if (maintenanceData.maintenanceEnabled === true && updateLogData.result.length === 0) {
-                                    this.render({"step": "exitMaintenanceMode"});
+                                        // There isn't a running install and OpenIDM is in maintenance mode
+                                        if (maintenanceData.maintenanceEnabled === true && updateLogData.result.length === 0) {
+                                            this.render({"step": "exitMaintenanceMode"});
 
-                                // OpenIDM is performing an update
-                                } else if (!_.isUndefined(runningUpdate)) {
-                                    this.render({"step": "install", "runningID": runningUpdate._id});
+                                            // OpenIDM is performing an update
+                                        } else if (!_.isUndefined(runningUpdate)) {
+                                            this.render({"step": "install", "runningID": runningUpdate._id});
 
-                                // The user wishes to begin a new update, show them which version they have
-                                } else {
-                                    VersionsView.render({
-                                        "errorMsg": args.errorMessage,
-                                        "archiveSelected": _.bind(function (model) {
-                                            this.render({"step": "enterMaintenanceMode", "model": model});
-                                        }, this)
-                                    }, function() {
-                                        this.$el.find('#versionHistoryGroup').toggleClass('hidden');
-                                    }.bind(this));
-                                    if (updateLogData.resultCount > 0 ) {
-                                        HistoryView.render({
-                                            "errorMsg": args.errorMessage,
-                                            "previousUpdates": updateLogData.result,
-                                            "viewDetails": _.bind(function (runningID, response, version, isHistoricalInstall) {
-                                                this.render({
-                                                    "step": "installationReport",
-                                                    "runningID": runningID,
-                                                    "response": response,
-                                                    "version": version,
-                                                    "isHistoricalInstall": true
-                                                });
-                                            }, this)
-                                        }, _.noop);
-                                    }
-                                }
+                                            // The user wishes to begin a new update, show them which version they have
+                                        } else {
+                                            VersionsView.render({
+                                                "errorMsg": args.errorMessage,
+                                                "archiveSelected": _.bind(function (model) {
+                                                    this.render({"step": "enterMaintenanceMode", "model": model});
+                                                }, this)
+                                            }, function() {
+                                                this.$el.find('#versionHistoryGroup').toggleClass('hidden');
+                                            }.bind(this));
+                                            if (updateLogData.resultCount > 0 ) {
+                                                HistoryView.render({
+                                                    "errorMsg": args.errorMessage,
+                                                    "previousUpdates": updateLogData.result,
+                                                    "viewDetails": _.bind(function (runningID, response, version, isHistoricalInstall) {
+                                                        this.render({
+                                                            "step": "installationReport",
+                                                            "runningID": runningID,
+                                                            "response": response,
+                                                            "version": version,
+                                                            "isHistoricalInstall": true
+                                                        });
+                                                    }, this)
+                                                }, _.noop);
+                                            }
+                                        }
+                                    }, this));
                             }, this));
-                        }, this));
                         break;
 
                     /*
@@ -243,7 +243,7 @@ define([
                         }, _.noop);
 
                         break;
-                    
+
                     default:
                         this.render({"step": "version", "errorMessage": "Update state unfound."});
                         break;

@@ -24,11 +24,11 @@ define([
     "org/forgerock/openidm/ui/admin/delegates/SchedulerDelegate"
 
 ], function($, _,
-            MappingAdminAbstractView,
-            eventManager,
-            constants,
-            ConfigDelegate,
-            SchedulerDelegate) {
+        MappingAdminAbstractView,
+        eventManager,
+        constants,
+        ConfigDelegate,
+        SchedulerDelegate) {
 
     var ScheduleView = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/scheduling/LiveSyncTemplate.html",
@@ -109,7 +109,7 @@ define([
                     this.$el.find(".managedSourceMessage").hide();
                 }
 
-                if(promises.length !== 0) {
+                if (promises.length !== 0) {
                     $.when.apply($, promises).then(_.bind(function () {
                         this.$el.find(".schedule-input-body").show();
 

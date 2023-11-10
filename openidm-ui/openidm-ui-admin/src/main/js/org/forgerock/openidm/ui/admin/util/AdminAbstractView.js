@@ -19,7 +19,7 @@ define([
     "underscore",
     "org/forgerock/commons/ui/common/main/AbstractView"
 ], function($, _,
-            AbstractView) {
+        AbstractView) {
     var AdminAbstractView = AbstractView.extend({
 
         compareObjects: function(property, obj1, obj2) {

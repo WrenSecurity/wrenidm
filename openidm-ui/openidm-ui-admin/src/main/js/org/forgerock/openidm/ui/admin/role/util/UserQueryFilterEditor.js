@@ -21,9 +21,9 @@ define([
     "org/forgerock/openidm/ui/admin/delegates/ScriptDelegate",
     "org/forgerock/openidm/ui/common/delegates/ResourceDelegate"
 ], function ($, _,
-             QueryFilterEditor,
-             ScriptDelegate,
-             ResourceDelegate) {
+        QueryFilterEditor,
+        ScriptDelegate,
+        ResourceDelegate) {
 
     var UserQueryFilterEditor = QueryFilterEditor.extend({
         events: {
@@ -120,7 +120,7 @@ define([
                 $(newSelect)[0].selectize.setValue($(newSelect).val());
 
                 $(newSelect)[0].selectize.on('option_add', function(value, data){
-                    if(_this.model.previousSelectizeAdd !== value) {
+                    if (_this.model.previousSelectizeAdd !== value) {
                         _this.model.previousSelectizeAdd = "/" + value;
 
                         $(newSelect)[0].selectize.removeOption(value);
@@ -136,12 +136,12 @@ define([
                 displayValue;
 
             _.each(this.model.sourceProps, function(source) {
-                if(source !== undefined) {
+                if (source !== undefined) {
                     baseElement.append('<option value="/' +source +'">' +source +'</option>');
                 }
             });
 
-            if(tempValue.length > 0 && baseElement.find("option[value='/" +tempValue  +"']").length === 0 && baseElement.find("option[value='/" +tempValue  +"']").length === 0) {
+            if (tempValue.length > 0 && baseElement.find("option[value='/" +tempValue  +"']").length === 0 && baseElement.find("option[value='/" +tempValue  +"']").length === 0) {
                 displayValue = tempValue.replace("/", "");
 
                 baseElement.append('<option value="/' +tempValue +'">' +displayValue +'</option>');

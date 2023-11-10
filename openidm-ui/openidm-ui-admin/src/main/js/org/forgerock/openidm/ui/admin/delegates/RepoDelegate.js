@@ -56,7 +56,7 @@ define([
     obj.addManagedObjectToOrientClasses = function(config, managedObjectName) {
         var orientClasses = config.dbStructure.orientdbClass;
 
-        if(_.isUndefined(orientClasses["managed_" + managedObjectName])) {
+        if (_.isUndefined(orientClasses["managed_" + managedObjectName])) {
             orientClasses["managed_" + managedObjectName] = {
                 "index" : [
                     {

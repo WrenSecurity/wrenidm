@@ -21,10 +21,10 @@ define([
     "org/forgerock/openidm/ui/admin/mapping/scheduling/LiveSyncView",
     "org/forgerock/openidm/ui/admin/delegates/SchedulerDelegate"
 ], function(_,
-            MappingAdminAbstractView,
-            SchedulerView,
-            LiveSyncView,
-            SchedulerDelegate) {
+        MappingAdminAbstractView,
+        SchedulerView,
+        LiveSyncView,
+        SchedulerDelegate) {
 
     var ScheduleView = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/ScheduleTemplate.html",

@@ -42,7 +42,7 @@ define([
                     //This second loop is to ensure that null returned first level values actually display in JSON editor
                     //Without this it will not display the textfields
                     _.each(resource.content, function(attribute, key){
-                        if(attribute === null) {
+                        if (attribute === null) {
                             this.data.linkedData.linkedTo[index].content[key] = "";
                         }
                     }, this);
@@ -52,7 +52,7 @@ define([
                 this.parentRender(_.bind(function() {
                     this.loadEditor("all");
 
-                    if(callback) {
+                    if (callback) {
                         callback();
                     }
                 }, this));
@@ -66,7 +66,7 @@ define([
 
             cleanName = cleanName.join("/");
 
-            if(linkQualifier) {
+            if (linkQualifier) {
                 cleanName = cleanName +" - " +linkQualifier;
             }
 
@@ -83,11 +83,11 @@ define([
             var linkToResource = "#resource/",
                 resourceId,
                 displayEditor = _.bind(function (selection) {
-                    if(this.editors[selection]) {
+                    if (this.editors[selection]) {
                         this.editors[selection].destroy();
                     }
     
-                    if(this.data.linkedData.linkedTo.length > 0) {
+                    if (this.data.linkedData.linkedTo.length > 0) {
     
                         this.$el.closest(".container").find("#linkedSystemsTabHeader").show();
     
@@ -99,7 +99,7 @@ define([
     
                             resourceDelegate.getSchema(this.data.linkedData.linkedTo[selection].resourceName.split("/")).then(_.bind(function(schema) {
                                 var propCount = 0;
-                                if(schema.order) {
+                                if (schema.order) {
                                     _.each(schema.order, function(prop) {
                                         schema.properties[prop].propertyOrder = propCount++;
                                     });
@@ -131,7 +131,7 @@ define([
                                 }
 
                                 _.each(this.data.linkedData.linkedTo[selection].content, function(value, key) {
-                                    if(_.isArray(value) && value.length === 0) {
+                                    if (_.isArray(value) && value.length === 0) {
                                         this.data.linkedData.linkedTo[selection].content[key] = undefined;
                                     }
                                 }, this);

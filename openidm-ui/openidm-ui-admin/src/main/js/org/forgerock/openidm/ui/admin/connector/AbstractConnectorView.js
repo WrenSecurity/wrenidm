@@ -27,14 +27,14 @@ define([
     "org/forgerock/commons/ui/common/main/Router"
 
 ], function($, _,
-            AdminAbstractView,
-            eventManager,
-            validatorsManager,
-            constants,
-            ConnectorDelegate,
-            ConnectorType,
-            ConnectorRegistry,
-            router) {
+        AdminAbstractView,
+        eventManager,
+        validatorsManager,
+        constants,
+        ConnectorDelegate,
+        ConnectorType,
+        ConnectorRegistry,
+        router) {
 
     var AddEditConnectorView = AdminAbstractView.extend({
         data: {
@@ -44,7 +44,7 @@ define([
         //Find the major version. If a range is used it will select the newest version of a connector template available
         //A bad main version will kill the connector edit process
         findMainVersion: function(version){
-            if(version.length > 0) {
+            if (version.length > 0) {
                 version = version.split(".");
                 version = version[0] + "." + version[1];
 
@@ -58,7 +58,7 @@ define([
         //Finds the minor version.
         //A bad minor version will NOT kill the connector editing process since we primarily rely on major version for everything except for JAR selection
         findMinorVersion: function(version) {
-            if(version.length > 0) {
+            if (version.length > 0) {
                 version = version.split(".");
                 version = version[2] + "." + version[3];
 
@@ -88,14 +88,14 @@ define([
 
 
             //If for some reason no connector data
-            if(_.isUndefined(connectorData)) {
+            if (_.isUndefined(connectorData)) {
                 eventManager.sendEvent(constants.EVENT_DISPLAY_MESSAGE_REQUEST, "connectorsNotAvailable");
                 eventManager.sendEvent(constants.EVENT_CHANGE_VIEW, {route: router.configuration.routes.connectorView});
             } else {
                 mainVersion = this.findMainVersion(connectorData.bundleVersion);
 
                 //Checking to ensure we don't reload the page if a minor version is changed
-                if(this.data.currentMainVersion === null || (parseFloat(this.data.currentMainVersion) !== parseFloat(mainVersion)) || this.data.connectorTypeName !== selectedValue.attr('connectorTypeName')) {
+                if (this.data.currentMainVersion === null || (parseFloat(this.data.currentMainVersion) !== parseFloat(mainVersion)) || this.data.connectorTypeName !== selectedValue.attr('connectorTypeName')) {
                     this.data.connectorTypeName = selectedValue.attr('connectorTypeName');
                     this.data.systemType = selectedValue.attr('systemType');
                     this.data.currentMainVersion = this.findMainVersion(connectorData.bundleVersion);
@@ -112,27 +112,27 @@ define([
                     ).then(_.bind(function(connectorTypeRef, connectorDefaults){
                         this.connectorTypeRef = connectorTypeRef;
 
-                        if(this.connectorTypeRef.oAuthConnector) {
+                        if (this.connectorTypeRef.oAuthConnector) {
                             this.oAuthConnector = true;
                         } else {
                             this.oAuthConnector = false;
                         }
 
                         this.connectorTypeRef.render({"connectorType": connectorTemplate,
-                                "animate": true,
-                                "connectorDefaults": connectorDefaults[0],
-                                "editState" : this.data.editState,
-                                "systemType" : this.data.systemType },
-                            _.bind(function(){
-                                this.setSubmitFlow();
+                            "animate": true,
+                            "connectorDefaults": connectorDefaults[0],
+                            "editState" : this.data.editState,
+                            "systemType" : this.data.systemType },
+                        _.bind(function(){
+                            this.setSubmitFlow();
 
-                                validatorsManager.validateAllFields(this.$el);
-                                this.$el.find("#connectorName").focus();
-                                if(_.isFunction(callback)){
-                                    callback();
-                                }
+                            validatorsManager.validateAllFields(this.$el);
+                            this.$el.find("#connectorName").focus();
+                            if (_.isFunction(callback)){
+                                callback();
+                            }
 
-                            }, this));
+                        }, this));
                     }, this));
                 } else {
                     //Set the bundle version on a minor version change so it saves
@@ -200,8 +200,8 @@ define([
             ];
 
             _.each(transformErrors, function(e){
-                if(err.indexOf(e.searchString) > -1){
-                    if(e.replaceAll) {
+                if (err.indexOf(e.searchString) > -1){
+                    if (e.replaceAll) {
                         err = $.t(e.replaceString);
                     } else {
                         err = err.replace(e.searchString,$.t(e.replaceString));
@@ -215,14 +215,14 @@ define([
         setSubmitFlow: function() {
             var connectorSpecificCheck = false;
 
-            if(this.connectorTypeRef.connectorSpecificValidation) {
+            if (this.connectorTypeRef.connectorSpecificValidation) {
                 connectorSpecificCheck = this.connectorTypeRef.connectorSpecificValidation();
             }
 
             this.$el.find("#submitConnector").unbind("click");
 
-            if(this.oAuthConnector) {
-                if(this.connectorTypeRef.data.connectorDefaults.configurationProperties.clientId !== this.$el.find("#clientId").val() ||
+            if (this.oAuthConnector) {
+                if (this.connectorTypeRef.data.connectorDefaults.configurationProperties.clientId !== this.$el.find("#clientId").val() ||
                     this.$el.find("#clientSecret").val().length > 0 ||
                     this.connectorTypeRef.data.connectorDefaults.configurationProperties.refreshToken === null || connectorSpecificCheck) {
 

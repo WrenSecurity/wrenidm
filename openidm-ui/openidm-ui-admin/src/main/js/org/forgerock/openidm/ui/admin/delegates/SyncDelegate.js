@@ -42,7 +42,7 @@ define([
             params.target = true;
         }
 
-        if(linkType) {
+        if (linkType) {
             params.linkType = linkType;
         }
 
@@ -149,11 +149,11 @@ define([
     obj.translateToTarget = function(sourceObject, syncMappingConfig) {
 
         return _.chain(syncMappingConfig.properties)
-                .map(function (p) {
-                    return obj.translatePropertyToTarget(sourceObject, p);
-                })
-                .object()
-                .value();
+            .map(function (p) {
+                return obj.translatePropertyToTarget(sourceObject, p);
+            })
+            .object()
+            .value();
 
     };
 
@@ -176,12 +176,12 @@ define([
                 });
             };
 
-        if(mapping){
+        if (mapping){
             url = "?mapping=" + mapping;
         }
 
         doServiceCall().fail(function (xhr) {
-            if(xhr.status === 404){
+            if (xhr.status === 404){
                 configDelegate.createEntity("endpoint/mappingDetails", {
                     "context" : "endpoint/mappingDetails",
                     "type" : "text/javascript",

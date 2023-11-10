@@ -34,22 +34,22 @@ define([
     "bootstrap-tabdrop",
     "org/forgerock/openidm/ui/admin/managed/schema/SchemaEditorView"
 ], function($, _,
-            handlebars,
-            form2js,
-            JSONEditor,
-            AbstractManagedView,
-            EventManager,
-            validatorsManager,
-            Constants,
-            Router,
-            ConfigDelegate,
-            RepoDelegate,
-            ScriptList,
-            ModuleLoader,
-            UIUtils,
-            faiconpicker,
-            tabdrop,
-            SchemaEditorView) {
+        handlebars,
+        form2js,
+        JSONEditor,
+        AbstractManagedView,
+        EventManager,
+        validatorsManager,
+        Constants,
+        Router,
+        ConfigDelegate,
+        RepoDelegate,
+        ScriptList,
+        ModuleLoader,
+        UIUtils,
+        faiconpicker,
+        tabdrop,
+        SchemaEditorView) {
 
     var EditManagedView = AbstractManagedView.extend({
         template: "templates/admin/managed/EditManagedTemplate.html",
@@ -104,12 +104,12 @@ define([
                 this.data.repoConfig = repoConfig;
 
                 _.each(managedObjects.objects, _.bind(function(managedObject, iterator) {
-                    if(managedObject.name === args[0]) {
+                    if (managedObject.name === args[0]) {
                         this.data.currentManagedObject = managedObject;
                         this.data.currentManagedObjectIndex = iterator;
                         this.splitSchemaAndProperties();
 
-                        if(this.data.currentManagedObject.schema) {
+                        if (this.data.currentManagedObject.schema) {
                             this.data.noSchema = _.isEmpty(this.data.currentManagedObject.schema.properties);
                         } else {
                             this.data.noSchema = true;
@@ -129,7 +129,7 @@ define([
                 //Select events are the events currently available for the select
                 this.data.selectEvents = _.difference(this.model.eventList, eventKeys);
 
-                if(this.data.currentManagedObject.properties) {
+                if (this.data.currentManagedObject.properties) {
                     _.each(this.data.currentManagedObject.properties, function (property) {
                         eventKeys = _.chain(property)
                             .keys()
@@ -228,7 +228,7 @@ define([
 
                     this.$el.find(".nav-tabs").tabdrop();
 
-                    if(this.data.currentManagedObject.properties) {
+                    if (this.data.currentManagedObject.properties) {
                         _.each(this.data.currentManagedObject.properties, function (property, index) {
                             this.setPropertyHashToggle(index);
                         }, this);
@@ -250,9 +250,9 @@ define([
 
             nameCheck = this.checkManagedName(data.name, this.data.managedObjects.objects);
 
-            if(!nameCheck || data.name === this.data.currentManagedObject.name) {
+            if (!nameCheck || data.name === this.data.currentManagedObject.name) {
 
-                if(_.isUndefined(this.data.currentManagedObject.schema)) {
+                if (_.isUndefined(this.data.currentManagedObject.schema)) {
                     this.data.currentManagedObject.schema = {};
                 }
 
@@ -344,7 +344,7 @@ define([
             var scriptList = this.model.managedScripts.getScripts();
 
             _.each(this.model.eventList, function(val) {
-                if(scriptList[val]) {
+                if (scriptList[val]) {
                     this.data.currentManagedObject[val] = scriptList[val];
                 } else {
                     delete this.data.currentManagedObject[val];
@@ -417,7 +417,7 @@ define([
 
             this.propertyHooks.push([]);
 
-            if(!this.data.currentManagedObject.properties) {
+            if (!this.data.currentManagedObject.properties) {
                 this.data.currentManagedObject.properties = [];
             }
 

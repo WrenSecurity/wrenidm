@@ -24,12 +24,12 @@ define([
     "org/forgerock/commons/ui/common/main/Configuration",
     "org/forgerock/openidm/ui/common/delegates/SystemHealthDelegate"
 ], function($, _,
-            dimple,
-            AbstractWidget,
-            eventManager,
-            constants,
-            conf,
-            SystemHealthDelegate) {
+        dimple,
+        AbstractWidget,
+        eventManager,
+        constants,
+        conf,
+        SystemHealthDelegate) {
     var widgetInstance = {},
         Widget = AbstractWidget.extend({
             template: "templates/dashboard/widget/DashboardSingleWidgetTemplate.html",
@@ -54,7 +54,7 @@ define([
 
                 this.events["click .refresh-health-info"] = "refresh";
 
-                if(args.widget.simpleWidget) {
+                if (args.widget.simpleWidget) {
                     this.data.simpleWidget = true;
                 } else {
                     this.data.simpleWidget = false;
@@ -92,7 +92,7 @@ define([
                         this.model.cpuChart.setBounds(this.model.chartX, this.model.chartY, this.model.chartWidth, this.model.chartHeight);
                         this.model.cpuChart.addMeasureAxis("p", "memory");
 
-                        if(percent > this.model.dangerThreshold) {
+                        if (percent > this.model.dangerThreshold) {
                             color = this.model.dangerChartColor;
                             percentClass = "danger";
                         } else if (percent > this.model.warningThreshold) {
@@ -127,7 +127,7 @@ define([
             },
 
             refresh: function(event) {
-                if(event) {
+                if (event) {
                     event.preventDefault();
                 }
 
@@ -139,7 +139,7 @@ define([
                     this.$el.find(".percent").toggleClass("danger", false);
                     this.$el.find(".percent").toggleClass("warning", false);
 
-                    if(percent > this.model.dangerThreshold) {
+                    if (percent > this.model.dangerThreshold) {
                         usedCpu.attr("fill", this.model.dangerChartColor);
                         usedCpu.css("fill", this.model.dangerChartColor);
 
@@ -167,7 +167,7 @@ define([
             },
 
             resize: function() {
-                if(this.model.cpuChart) {
+                if (this.model.cpuChart) {
                     this.model.cpuChart.draw(0, true);
                 }
             },
@@ -175,11 +175,11 @@ define([
             cpuUsageLoad: function() {
                 SystemHealthDelegate.getOsHealth().then(_.bind(function(widgetData){
                     //Temp fix for multi core processing exceeding the availableProcessors
-                    if(widgetData.availableProcessors > widgetData.systemLoadAverage) {
+                    if (widgetData.availableProcessors > widgetData.systemLoadAverage) {
                         widgetData.systemLoadAverage = widgetData.availableProcessors;
                     }
 
-                    if(this.model.cpuChart) {
+                    if (this.model.cpuChart) {
                         this.model.cpuChart.data = [
                             {
                                 "memory" : widgetData.availableProcessors,

@@ -23,10 +23,10 @@ define([
     "org/forgerock/openidm/ui/common/delegates/SocialDelegate",
     "UserProfileView"
 ], function($, _, conf,
-            commonSiteConfigurationDelegate,
-            nav,
-            SocialDelegate,
-            UserProfileView) {
+        commonSiteConfigurationDelegate,
+        nav,
+        SocialDelegate,
+        UserProfileView) {
 
     var obj = Object.create(commonSiteConfigurationDelegate),
         hasKba = false,

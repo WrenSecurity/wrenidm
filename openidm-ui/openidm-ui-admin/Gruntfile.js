@@ -25,7 +25,6 @@ module.exports = function(grunt) {
             forgeRockCommonsDirectory + "/src/main/resources"
         ],
         deployDirectory: "admin/default",
-        eslintFormatter: require.resolve("eslint-formatter-warning-summary"),
         lessPlugins: [new (require("less-plugin-clean-css"))({})],
         copyLibs: [
             // JS - npm
@@ -53,6 +52,7 @@ module.exports = function(grunt) {
             { src: "node_modules/backgrid-paginator/backgrid-paginator.min.css", dest: "target/www/css/backgrid-paginator-0.3.5-min.css" },
             { src: "node_modules/backgrid/lib/backgrid.min.css", dest: "target/www/css/backgrid-0.3.5-min.css" },
             { src: "node_modules/qunit/qunit/qunit.css", dest: "target/www/css/qunit-1.15.0.css" }, // Actually 2.15.0
+            { src: "node_modules/dragula/dist/dragula.min.css", dest: "target/www/css/dragula-3.6.7-min.css" },
 
             // CSS - custom
             { src: "libs/css/bootstrap-datetimepicker-4.14.30-min.css", dest: "target/www/css/bootstrap-datetimepicker-4.14.30-min.css" },
@@ -64,7 +64,7 @@ module.exports = function(grunt) {
             { src: "node_modules/codemirror/mode/groovy/groovy.js", dest: "target/www/libs/codemirror/mode/groovy/groovy.js" },
             { src: "node_modules/codemirror/mode/javascript/javascript.js", dest: "target/www/libs/codemirror/mode/javascript/javascript.js" },
             { src: "node_modules/codemirror/mode/xml/xml.js", dest: "target/www/libs/codemirror/mode/xml/xml.js" },
-            { src: "node_modules/codemirror/lib/codemirror.css", dest: "target/www/css/codemirror/codemirror.css" },
-        ],
+            { src: "node_modules/codemirror/lib/codemirror.css", dest: "target/www/css/codemirror/codemirror.css" }
+        ]
     });
 };

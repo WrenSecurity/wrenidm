@@ -20,7 +20,7 @@ define([
     "bootstrap",
     "org/forgerock/openidm/ui/common/dashboard/widgets/AbstractWidget"
 ], function($, _, bootstrap,
-            AbstractWidget) {
+        AbstractWidget) {
     var widgetInstance = {},
         Widget = AbstractWidget.extend({
             template: "templates/admin/dashboard/widgets/FrameWidgetTemplate.html",
@@ -38,7 +38,7 @@ define([
                 this.parentRender(_.bind(function(){
                     this.$el.parent().find(".widget-section-title .widget-title").text(args.widget.title);
 
-                    if(callback) {
+                    if (callback) {
                         callback();
                     }
                 }, this));

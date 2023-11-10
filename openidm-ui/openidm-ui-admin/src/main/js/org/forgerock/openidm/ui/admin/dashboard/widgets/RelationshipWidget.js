@@ -23,10 +23,10 @@ define([
     "org/forgerock/openidm/ui/common/dashboard/widgets/AbstractWidget",
     "org/forgerock/openidm/ui/common/delegates/ResourceDelegate"
 ], function($, _, bootstrap,
-            selectize,
-            d3,
-            AbstractWidget,
-            ResourceDelegate) {
+        selectize,
+        d3,
+        AbstractWidget,
+        ResourceDelegate) {
     var widgetInstance = {},
         Widget = AbstractWidget.extend({
             template: "templates/admin/dashboard/widgets/RelationshipWidgetTemplate.html",
@@ -107,7 +107,7 @@ define([
                                         counter = 0;
     
                                     _.each(_this.data.searchFields, function(key) {
-                                        if(counter === 0) {
+                                        if (counter === 0) {
                                             $(element).append('<div class="fr-search-primary">' +selectizeEscape(item[key]) +'</div>');
                                         } else {
                                             $(element).append('<div class="fr-search-secondary text-muted">' +selectizeEscape(item[key]) +'</div>');
@@ -136,7 +136,7 @@ define([
                                 }
                                 
                                 ResourceDelegate.searchResource(queryFilter, "managed/" + _this.data.baseObject).then(function(response) {
-                                    if(response && response.result.length > 0) {
+                                    if (response && response.result.length > 0) {
                                         selectizeCallback(response.result);
                                     } else {
                                         selectizeCallback();
@@ -149,7 +149,7 @@ define([
                             _this.getResourceRenderChart();
                         }
     
-                        if(callback) {
+                        if (callback) {
                             callback();
                         }
                     }, this));
@@ -259,7 +259,7 @@ define([
                                 var schema = _.where(_this.data.schema.allSchemas, { name : resourceCollection.path.split("/")[1] }),
                                     relProps = [];
                                 
-                                if(schema[0]) {
+                                if (schema[0]) {
                                     relProps = _this.getRelationshipProps(schema[0].schema.properties);
                                 }
                                 
@@ -462,13 +462,13 @@ define([
              */
             getRelationshipProps : function (properties) {
                 return _.chain(properties)
-                            .map(function (val, key) {
-                                return _.extend(val, { propName: key });
-                            })
-                            .filter(function (prop) {
-                                return prop.type === "relationship" || (prop.type === "array" && prop.items.type === "relationship");
-                            })
-                            .value();
+                    .map(function (val, key) {
+                        return _.extend(val, { propName: key });
+                    })
+                    .filter(function (prop) {
+                        return prop.type === "relationship" || (prop.type === "array" && prop.items.type === "relationship");
+                    })
+                    .value();
             },
             /*
              * builds up a list of resource collection properties to add to the _fields property of a read or query
@@ -486,7 +486,7 @@ define([
                     var schema = _.where(this.data.schema.allSchemas, { name : resourceCollection.path.split("/")[1] }),
                         relProps = [];
                     
-                    if(schema[0]) {
+                    if (schema[0]) {
                         relProps = this.getRelationshipProps(schema[0].schema.properties);
                     }
                     
@@ -657,7 +657,7 @@ define([
                 d3.select(this).select("circle").transition()
                     .duration(250)
                     .attr("r", function(d) {
-                        if(d.id === focalNode) {
+                        if (d.id === focalNode) {
                             return largeNodeSize;
                         } else {
                             return smallNodeSize;
@@ -696,7 +696,7 @@ define([
                 d3.select(this).select("circle").transition()
                     .duration(250)
                     .attr("r", function(d, i) {
-                        if(d.id === focalNode) {
+                        if (d.id === focalNode) {
                             return centerNodeSize;
                         } else {
                             return nodeSize;
@@ -792,7 +792,7 @@ define([
                     .friction(0.2)
                     .linkStrength(9)
                     .linkDistance( function(d) {
-                        if(!d.secondaryNode) {
+                        if (!d.secondaryNode) {
                             if (width < height) {
                                 return (25 + width) * 0.25;
                             } else {

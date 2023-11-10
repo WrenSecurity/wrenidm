@@ -23,10 +23,7 @@ module.exports = function(grunt) {
             lint: {
                 src: [
                     "src/main/js/**/*.js"
-                ],
-                options: {
-                    format: require.resolve("eslint-formatter-warning-summary")
-                }
+                ]
             }
         }
     });

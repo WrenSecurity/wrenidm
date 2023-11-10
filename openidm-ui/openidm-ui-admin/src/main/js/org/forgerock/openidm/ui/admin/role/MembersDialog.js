@@ -24,11 +24,11 @@ define([
     "org/forgerock/openidm/ui/admin/role/TemporalConstraintsFormView"
 ],
 function ($, _, Handlebars,
-    AbstractView,
-    ResourceCollectionSearchDialog,
-    TemporalConstraintsUtils,
-    TemporalConstraintsFormView
-  ) {
+        AbstractView,
+        ResourceCollectionSearchDialog,
+        TemporalConstraintsUtils,
+        TemporalConstraintsFormView
+) {
     var MembersDialog = ResourceCollectionSearchDialog.extend({
         template: "templates/admin/role/MembersSearchDialogTemplate.html",
         setRefProperties : function () {

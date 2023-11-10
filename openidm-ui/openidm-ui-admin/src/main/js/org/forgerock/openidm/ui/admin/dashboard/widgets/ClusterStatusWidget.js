@@ -22,10 +22,10 @@ define([
     "org/forgerock/commons/ui/common/main/Router",
     "org/forgerock/openidm/ui/admin/util/ClusterUtils"
 ], function($, _, bootstrap,
-            AbstractWidget,
-            router,
-            ClusterUtils
-        ) {
+        AbstractWidget,
+        router,
+        ClusterUtils
+) {
     var widgetInstance = {},
         Widget = AbstractWidget.extend({
             template: "templates/admin/dashboard/widgets/ClusterStatusWidgetTemplate.html",
@@ -59,7 +59,7 @@ define([
                     this.data.cluster = _.sortBy(cluster, (o) => { return o.instanceId; });
                     this.parentRender(() => {
                         this.delayDataRefresh();
-                        if(callback) {
+                        if (callback) {
                             callback();
                         }
                     });

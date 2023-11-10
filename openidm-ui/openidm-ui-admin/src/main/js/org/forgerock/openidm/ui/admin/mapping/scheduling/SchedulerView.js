@@ -24,12 +24,12 @@ define([
     "org/forgerock/openidm/ui/admin/delegates/SchedulerDelegate",
     "org/forgerock/openidm/ui/admin/util/Scheduler"
 ], function($, _,
-            MappingAdminAbstractView,
-            eventManager,
-            constants,
-            ConfigDelegate,
-            SchedulerDelegate,
-            Scheduler) {
+        MappingAdminAbstractView,
+        eventManager,
+        constants,
+        ConfigDelegate,
+        SchedulerDelegate,
+        Scheduler) {
 
     var ScheduleView = MappingAdminAbstractView.extend({
         template: "templates/admin/mapping/scheduling/SchedulerTemplate.html",
@@ -79,7 +79,7 @@ define([
                         }, this);
                     }
 
-                    if(promises.length !== 0) {
+                    if (promises.length !== 0) {
                         $.when.apply($, promises).then(_.bind(function () {
                             this.$el.find(".schedule-input-body").show();
 

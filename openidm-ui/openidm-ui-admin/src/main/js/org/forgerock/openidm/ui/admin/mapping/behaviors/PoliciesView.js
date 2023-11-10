@@ -26,14 +26,14 @@ define([
     "bootstrap-dialog"
 
 ], function(
-    $, _,
-    MappingAdminAbstractView,
-    conf,
-    constants,
-    eventManager,
-    ConfigDelegate,
-    PoliciesDialogView,
-    BootstrapDialog) {
+        $, _,
+        MappingAdminAbstractView,
+        conf,
+        constants,
+        eventManager,
+        ConfigDelegate,
+        PoliciesDialogView,
+        BootstrapDialog) {
 
     var PoliciesView = MappingAdminAbstractView.extend({
         element: "#policyPattern",
