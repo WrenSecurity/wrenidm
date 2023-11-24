@@ -427,7 +427,7 @@ public class TableQueries {
             throws SQLException, ResourceException {
         Map<String, Object> replacementTokens = new LinkedHashMap<>();
 
-        String rawQuery = tableHandler.renderQueryFilter(filter, replacementTokens, params);
+        String rawQuery = tableHandler.renderQueryFilter(filter, replacementTokens, params, true);
 
         Map<String, String> replacements = new LinkedHashMap<>();
         replacements.put("_mainTable", mainTableName);

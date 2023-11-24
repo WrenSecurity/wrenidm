@@ -500,8 +500,37 @@ public class MappedTableHandler implements TableHandler {
     }
 
     @Override
-    public String renderQueryFilter(QueryFilter<JsonPointer> filter, Map<String, Object> replacementTokens, Map<String, Object> params) {
-        final String offsetParam = (String) params.get(PAGED_RESULTS_OFFSET);
+    public String renderQueryFilter(QueryFilter<JsonPointer> filter, Map<String, Object> replacementTokens, Map<String, Object> params, boolean count) {
+        if (count) {
+        	return "SELECT COUNT(*) FROM ${_dbSchema}.${_mainTable} obj"
+                    + getFilterString(filter, replacementTokens);
+        } else {
+        	
+        }
+
+    	final String offsetParam = (String) params.get(PAGED_RESULTS_OFFSET);
+        final String pageSizeParam = (String) params.get(PAGE_SIZE);
+        String pageClause = " LIMIT " + pageSizeParam + " OFFSET " + offsetParam;
+
+        // JsonValue-cheat to avoid an unchecked cast
+        final List<SortKey> sortKeys = new JsonValue(params).get(SORT_KEYS).asList(SortKey.class);
+        // Check for sort keys and build up order-by syntax
+        if (sortKeys != null && sortKeys.size() > 0) {
+            pageClause = " ORDER BY " + StringUtils.join(prepareSortKeyStatements(sortKeys), ", ") + pageClause;
+        }
+
+        return "SELECT obj.* FROM ${_dbSchema}.${_mainTable} obj"
+                + getFilterString(filter, replacementTokens)
+                + pageClause;
+    }
+
+    /**
+     * Render SQL string for the full object.
+     * 
+     * @see #renderQueryFilter(QueryFilter, Map, Map, boolean)
+     */
+    protected String renderQueryFilter(QueryFilter<JsonPointer> filter, Map<String, Object> replacementTokens, Map<String, Object> params) {
+    	final String offsetParam = (String) params.get(PAGED_RESULTS_OFFSET);
         final String pageSizeParam = (String) params.get(PAGE_SIZE);
         String pageClause = " LIMIT " + pageSizeParam + " OFFSET " + offsetParam;
 

@@ -429,6 +429,20 @@ abstract class SQLBuilder implements SQLRenderer<String> {
     public abstract String toSQL();
 
     /**
+     * Render the SQL string.
+     * 
+     * @param count whether the query should return row count only
+     * @return rendered SQL string
+     */
+    public String toSQL(boolean count) {
+    	return !count ? toSQL() :
+    		"SELECT COUNT(*) as total "
+    		+ getFromClause()
+    		+ getJoinClause()
+    		+ getWhereClause();
+    }
+    
+    /**
      * Return a string representation of this builder.
      *
      * @return the SQL string created by this builder

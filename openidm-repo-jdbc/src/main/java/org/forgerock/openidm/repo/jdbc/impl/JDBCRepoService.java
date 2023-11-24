@@ -613,7 +613,7 @@ public class JDBCRepoService implements RequestHandler, RepoBootService, Reposit
             final String nextCookie;
 
             // The number of results (if known)
-            final int resultCount;
+            int resultCount = NO_COUNT;
 
             if (pagedResultsRequested) {
                 TableHandler tableHandler = getTableHandler(trimStartingSlash(request.getResourcePath()));
@@ -622,29 +622,42 @@ public class JDBCRepoService implements RequestHandler, RepoBootService, Reposit
                 switch (request.getTotalPagedResultsPolicy()) {
                     case ESTIMATE:
                     case EXACT:
-                        // Get total if -count query is available
-                        final String countQueryId = request.getQueryId() + "-count";
-                        if (tableHandler.queryIdExists(countQueryId)) {
-                            QueryRequest countRequest = Requests.copyOfQueryRequest(request);
-                            countRequest.setQueryId(countQueryId);
-
-                            // Strip pagination parameters
-                            countRequest.setPageSize(0);
-                            countRequest.setPagedResultsOffset(0);
-                            countRequest.setPagedResultsCookie(null);
-
-                            List<ResourceResponse> countResult = query(countRequest);
-
+                    	if (request.getQueryId() != null) {
+	                        // Get total if -count query is available
+	                        final String countQueryId = request.getQueryId() + "-count";
+	                        if (tableHandler.queryIdExists(countQueryId)) {
+	                            QueryRequest countRequest = Requests.copyOfQueryRequest(request);
+	                            countRequest.setQueryId(countQueryId);
+	
+	                            // Strip pagination parameters
+	                            countRequest.setPageSize(0);
+	                            countRequest.setPagedResultsOffset(0);
+	                            countRequest.setPagedResultsCookie(null);
+	
+	                            List<ResourceResponse> countResult = query(countRequest);
+	
+	                            if (countResult != null && !countResult.isEmpty()) {
+	                                resultCount = countResult.get(0).getContent().get("total").asInteger();
+	                            } else {
+	                                logger.debug("Count query {} failed", countQueryId);
+	                                resultCount = NO_COUNT;
+	                            }
+	                        } else {
+	                            logger.debug("Count query with id {} not found", countQueryId);
+	                            resultCount = NO_COUNT;
+	                        }
+                    	} else if (request.getQueryFilter() != null) {
+                            Map<String, Object> params = new HashMap<>();
+                            params.putAll(request.getAdditionalParameters());
+                            params.put(QUERY_FILTER, request.getQueryFilter());
+                            List<ResourceResponse> countResult = query(request.getResourcePath(), params);
                             if (countResult != null && !countResult.isEmpty()) {
                                 resultCount = countResult.get(0).getContent().get("total").asInteger();
                             } else {
-                                logger.debug("Count query {} failed", countQueryId);
+                                logger.debug("Count query {} failed", QUERY_FILTER);
                                 resultCount = NO_COUNT;
                             }
-                        } else {
-                            logger.debug("Count query with id {} not found", countQueryId);
-                            resultCount = NO_COUNT;
-                        }
+                    	}
                         break;
                     case NONE:
                     default:
@@ -681,9 +694,6 @@ public class JDBCRepoService implements RequestHandler, RepoBootService, Reposit
 
     @Override
     public List<ResourceResponse> query(QueryRequest request) throws ResourceException {
-        String fullId = request.getResourcePath();
-        String type = trimStartingSlash(fullId);
-        logger.trace("Full id: {} Extracted type: {}", fullId, type);
         Map<String, Object> params = new HashMap<>();
         params.putAll(request.getAdditionalParameters());
         params.put(QUERY_ID, request.getQueryId());
@@ -692,6 +702,20 @@ public class JDBCRepoService implements RequestHandler, RepoBootService, Reposit
         params.put(PAGE_SIZE, request.getPageSize());
         params.put(PAGED_RESULTS_OFFSET, request.getPagedResultsOffset());
         params.put(SORT_KEYS, request.getSortKeys());
+        return query(request.getResourcePath(), params);
+    }
+
+    /**
+     * Query repository using the provided {@code params}.
+     *
+     * @param fullId repository object ID
+     * @param params query lookup parameters
+     * @return a list containing the query results
+     * @throws ResourceException if an error was encountered during query
+     */
+    private List<ResourceResponse> query(String fullId, Map<String, Object> params) throws ResourceException {
+        String type = trimStartingSlash(fullId);
+        logger.trace("Full id: {} Extracted type: {}", fullId, type);
 
         Connection connection = null;
         try {
@@ -701,8 +725,7 @@ public class JDBCRepoService implements RequestHandler, RepoBootService, Reposit
                         "No handler configured for resource type " + type);
             }
             connection = getConnection();
-            connection.setAutoCommit(true); // Ensure we do not implicitly
-                                            // start transaction isolation
+            connection.setAutoCommit(true); // Ensure we do not implicitly start transaction isolation
 
             List<Map<String, Object>> docs = tableHandler.query(type, params, connection);
             List<ResourceResponse> results = new ArrayList<>();

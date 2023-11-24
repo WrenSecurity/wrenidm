@@ -641,7 +641,7 @@ public class GenericTableHandler implements TableHandler {
      * @return an SQL SELECT statement
      */
     @Override
-    public String renderQueryFilter(QueryFilter<JsonPointer> filter, Map<String, Object> replacementTokens, Map<String, Object> params) {
+    public String renderQueryFilter(QueryFilter<JsonPointer> filter, Map<String, Object> replacementTokens, Map<String, Object> params, boolean count) {
         final int offsetParam = Integer.parseInt((String) params.get(PAGED_RESULTS_OFFSET));
         final int pageSizeParam = Integer.parseInt((String) params.get(PAGE_SIZE));
 
@@ -678,7 +678,7 @@ public class GenericTableHandler implements TableHandler {
         // Check for sort keys and build up order-by syntax
         prepareSortKeyStatements(builder, sortKeys, replacementTokens);
 
-        return builder.toSQL();
+        return builder.toSQL(count);
     }
 
     /**

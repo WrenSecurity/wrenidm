@@ -192,10 +192,12 @@ public interface TableHandler {
      * @param filter the query filter
      * @param replacementTokens a map to store any replacement tokens
      * @param params a map containing query parameters
+     * @param count whether to render a query for total number of matched rows 
      * @return the raw query String
      */
-    public String renderQueryFilter(QueryFilter<JsonPointer> filter, Map<String, Object> replacementTokens, Map<String, Object> params);
-    
+    public String renderQueryFilter(QueryFilter<JsonPointer> filter, Map<String, Object> replacementTokens,
+    		Map<String, Object> params, boolean count);
+
     /**
      * Query if a given exception signifies a well known error type
      * 

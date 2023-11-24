@@ -122,7 +122,7 @@ public class OracleTableHandler extends GenericTableHandler {
     }
 
     @Override
-    public String renderQueryFilter(QueryFilter<JsonPointer> filter, Map<String, Object> replacementTokens, Map<String, Object> params) {
+    public String renderQueryFilter(QueryFilter<JsonPointer> filter, Map<String, Object> replacementTokens, Map<String, Object> params, boolean count) {
         final int offsetParam = Integer.parseInt((String)params.get(PAGED_RESULTS_OFFSET));
         final int pageSizeParam = Integer.parseInt((String)params.get(PAGE_SIZE));
 
@@ -179,6 +179,6 @@ public class OracleTableHandler extends GenericTableHandler {
             builder.orderBy("obj.id", false);
         }
 
-        return builder.toSQL();
+        return builder.toSQL(count);
     }
 }

@@ -26,6 +26,7 @@ package org.forgerock.openidm.repo.jdbc.impl;
 import static org.forgerock.openidm.repo.QueryConstants.PAGED_RESULTS_OFFSET;
 import static org.forgerock.openidm.repo.QueryConstants.PAGE_SIZE;
 import static org.forgerock.openidm.repo.QueryConstants.SORT_KEYS;
+import static org.forgerock.openidm.repo.util.Clauses.where;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,6 +40,7 @@ import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.SortKey;
 import org.forgerock.openidm.repo.jdbc.SQLExceptionHandler;
+import org.forgerock.openidm.repo.util.Clauses;
 import org.forgerock.openidm.repo.util.StringSQLQueryFilterVisitor;
 import org.forgerock.openidm.repo.util.StringSQLRenderer;
 import org.forgerock.openidm.util.ResourceUtil;
@@ -143,30 +145,51 @@ public class PostgreSQLTableHandler extends GenericTableHandler {
     }
 
     @Override
-    public String renderQueryFilter(QueryFilter<JsonPointer> filter, Map<String, Object> replacementTokens, Map<String, Object> params) {
+    public String renderQueryFilter(QueryFilter<JsonPointer> filter, Map<String, Object> replacementTokens, Map<String, Object> params, boolean count) {
         final String offsetParam = (String) params.get(PAGED_RESULTS_OFFSET);
         final String pageSizeParam = (String) params.get(PAGE_SIZE);
-        String pageClause = " LIMIT " + pageSizeParam + " OFFSET " + offsetParam;
+        
+        SQLBuilder builder = new SQLBuilder() {
+            @Override
+            public String toSQL() {
+                return "SELECT " + getColumns().toSQL()
+                        + getFromClause().toSQL()
+                        + getJoinClause().toSQL()
+                        + getWhereClause().toSQL()
+                        + getOrderByClause().toSQL()
+                        + " LIMIT " + pageSizeParam
+                        + " OFFSET " + offsetParam;
+            }
+        };
+
+        builder.addColumn("fullobject::text")
+	        .from("${_dbSchema}.${_mainTable} obj")
+	        .join("${_dbSchema}.objecttypes", "objecttypes")
+	        .on(where("obj.objecttypes_id = objecttypes.id").and("objecttypes.objecttype = ${otype}"))
+	        .where(Clauses.where(filter.accept(new JsonExtractPathQueryFilterVisitor(), replacementTokens).toSQL()));
+
+        // other half of OPENIDM-2773 fix
+        replacementTokens.put("otype", params.get("_resource"));
 
         // JsonValue-cheat to avoid an unchecked cast
         final List<SortKey> sortKeys = new JsonValue(params).get(SORT_KEYS).asList(SortKey.class);
         // Check for sort keys and build up order-by syntax
-        if (sortKeys != null && sortKeys.size() > 0) {
-            List<String> keys = new ArrayList<String>();
-            for (int i = 0; i < sortKeys.size(); i++) {
-                final SortKey sortKey = sortKeys.get(i);
-                final String tokenName = "sortKey" + i;
-                keys.add("json_extract_path_text(fullobject, ${" + tokenName + (sortKey.isAscendingOrder() ? "}) ASC" : "}) DESC"));
-                replacementTokens.put(tokenName, sortKey.getField().toString().substring(1));
-            }
-            pageClause = " ORDER BY " + StringUtils.join(keys, ", ") + pageClause;
-        }
+        prepareSortKeyStatements(builder, sortKeys, replacementTokens);
 
-        replacementTokens.put("otype", params.get("_resource"));
-        return "SELECT fullobject::text"
-                + " FROM ${_dbSchema}.${_mainTable} obj"
-                + " INNER JOIN ${_dbSchema}.objecttypes objtype ON objtype.id = obj.objecttypes_id AND objtype.objecttype = ${otype}"
-                + " WHERE "
-                + filter.accept(new JsonExtractPathQueryFilterVisitor(), replacementTokens).toSQL() + pageClause;
+        return builder.toSQL(count);
     }
+    
+    @Override
+    protected void prepareSortKeyStatements(SQLBuilder builder, List<SortKey> sortKeys, Map<String, Object> replacementTokens) {
+    	if (sortKeys == null) {
+    		return;
+    	}
+        for (int i = 0; i < sortKeys.size(); i++) {
+            final SortKey sortKey = sortKeys.get(i);
+            final String tokenName = "sortKey" + i;
+            builder.orderBy("json_extract_path_text(fullobject, ${" + tokenName + "})", sortKey.isAscendingOrder());
+            replacementTokens.put(tokenName, sortKey.getField().toString().substring(1));
+        }
+    }
+
 }
