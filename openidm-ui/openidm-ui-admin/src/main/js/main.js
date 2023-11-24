@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2023 Wren Security.
  */
 
 require.config({
@@ -28,38 +28,38 @@ require.config({
         }
     },
     paths: {
-        i18next: "libs/i18next-1.7.3-min",
-        backbone: "libs/backbone-1.1.2-min",
-        "backbone.paginator": "libs/backbone.paginator-2.0.2-min",
-        "backbone-relational": "libs/backbone-relational-0.9.0-min",
-        "backgrid": "libs/backgrid-0.3.5-min",
-        "backgrid-filter": "libs/backgrid-filter-0.3.7-min",
-        "backgrid-paginator": "libs/backgrid-paginator-0.3.5-min",
-        "backgrid-selectall": "libs/backgrid-select-all-0.3.5-min",
-        lodash: "libs/lodash-3.10.1-min",
-        js2form: "libs/js2form-2.0-769718a",
-        form2js: "libs/form2js-2.0-769718a",
-        spin: "libs/spin-2.0.1-min",
-        jquery: "libs/jquery-2.1.1-min",
-        cron: "libs/jquery-cron-f831f2",
-        xdate: "libs/xdate-0.8-min",
-        doTimeout: "libs/jquery.ba-dotimeout-1.0-min",
-        handlebars: "libs/handlebars-4.0.5",
-        "bootstrap-tabdrop": "libs/bootstrap-tabdrop-1.0",
-        bootstrap: "libs/bootstrap-3.3.5-custom",
-        "bootstrap-dialog": "libs/bootstrap-dialog-1.34.4-min",
-        "bootstrap-datetimepicker": "libs/bootstrap-datetimepicker-4.14.30-min",
-        placeholder: "libs/jquery.placeholder-2.0.8",
-        selectize : "libs/selectize-0.12.1-min",
-        d3 : "libs/d3-3.5.5-min",
-        moment: "libs/moment-2.8.1-min",
-        "moment-timezone": "libs/moment-timezone-with-data-0.5.4-min",
-        jsonEditor: "libs/jsoneditor-0.7.9-min",
-        "ldapjs-filter": "libs/ldapjs-filter-2253-min",
-        faiconpicker: "libs/fontawesome-iconpicker-1.0.0-min",
-        dimple : "libs/dimple-2.1.2-min",
-        sinon : "libs/sinon-1.15.4",
-        dragula : "libs/dragula-3.6.7-min"
+        i18next: "libs/i18next",
+        backbone: "libs/backbone",
+        "backbone.paginator": "libs/backbone.paginator",
+        "backbone-relational": "libs/backbone-relational",
+        "backgrid": "libs/backgrid",
+        "backgrid-filter": "libs/backgrid-filter",
+        "backgrid-paginator": "libs/backgrid-paginator",
+        "backgrid-selectall": "libs/backgrid-select-all",
+        lodash: "libs/lodash",
+        js2form: "libs/js2form",
+        form2js: "libs/form2js",
+        spin: "libs/spin",
+        jquery: "libs/jquery",
+        cron: "libs/jquery-cron",
+        xdate: "libs/xdate",
+        doTimeout: "libs/jquery.ba-dotimeout",
+        handlebars: "libs/handlebars",
+        "bootstrap-tabdrop": "libs/bootstrap-tabdrop",
+        bootstrap: "libs/bootstrap",
+        "bootstrap-dialog": "libs/bootstrap-dialog",
+        "bootstrap-datetimepicker": "libs/bootstrap-datetimepicker",
+        placeholder: "libs/jquery.placeholder",
+        selectize : "libs/selectize",
+        d3 : "libs/d3",
+        moment: "libs/moment",
+        "moment-timezone": "libs/moment-timezone-with-data",
+        jsonEditor: "libs/jsoneditor",
+        "ldapjs-filter": "libs/ldapjs-filter",
+        faiconpicker: "libs/fontawesome-iconpicker",
+        dimple : "libs/dimple",
+        sinon : "libs/sinon",
+        dragula : "libs/dragula"
     },
 
     shim: {

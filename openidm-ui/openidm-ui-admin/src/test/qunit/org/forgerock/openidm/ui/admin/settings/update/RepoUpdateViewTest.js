@@ -10,7 +10,7 @@ define([
 
     QUnit.test('calls getUpdateFile once per repoUpdate object', function(assert) {
 
-        var stub = sinon.stub(MaintenanceDelegate, "getUpdateFile", function() {
+        var stub = sinon.stub(MaintenanceDelegate, "getUpdateFile").callsFake(function() {
             // phantomJS doesn't support promises - this prevents having to deal with polyfills
             return {then: function(result) { return result; } };
         }),

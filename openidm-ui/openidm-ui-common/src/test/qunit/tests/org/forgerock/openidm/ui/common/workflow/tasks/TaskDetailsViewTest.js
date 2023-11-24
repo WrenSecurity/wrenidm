@@ -11,7 +11,7 @@ define([
 
         $("#qunit-fixture").append(fakeForm);
 
-        sinon.stub(WorkflowDelegate, "completeTask", $.noop);
+        sinon.stub(WorkflowDelegate, "completeTask").callsFake($.noop);
 
         TaskDetailsView.formSubmit.call({
             "$el": fakeForm,

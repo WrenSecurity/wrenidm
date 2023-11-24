@@ -40,7 +40,7 @@ define([
     });
 
     QUnit.test("deleteManagedObject", function (assert) {
-        sinon.stub(RepoDelegate, "updateEntity", function (id, updatedConfig) {
+        sinon.stub(RepoDelegate, "updateEntity").callsFake(function (id, updatedConfig) {
             assert.ok(updatedConfig.dbStructure.orientdbClass.managed_user === undefined, "managed/user properly deleted from orient");
             RepoDelegate.updateEntity.restore();
         });

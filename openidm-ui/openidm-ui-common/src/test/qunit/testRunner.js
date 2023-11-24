@@ -29,7 +29,7 @@
     stashedRequire.original.config({
         baseUrl: '../www',
         paths: {
-            sinon: "libs/sinon-1.15.4"
+            sinon: "libs/sinon"
         }
     });
 
@@ -48,7 +48,7 @@
                 }
             });
 
-            require(["../qunit/tests/main"], function () {
+            require(["../test/main"], function () {
                 QUnit.start();
             });
         })

@@ -1,19 +1,14 @@
 {
-  "name": "openidm-ui-common",
-  "author": "Wren Security <info@wrensecurity.org>",
-  "version": "0.0.1",
+  "name": "@wrensecurity/wrenidm-ui-common",
+  "description": "Wren:IDM Common UI Components",
   "private": true,
   "scripts": {
-    "build": "grunt build"
+    "build": "gulp"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.2",
-    "@babel/eslint-parser": "^7.22.15",
-    "@babel/preset-env": "^7.23.2",
+    "@wrensecurity/commons-ui-build": "file:target/ui-libs/wrensecurity-commons-ui-build-0.0.0.tgz",
     "@wrensecurity/eslint-config": "^0.2.0",
     "eslint": "^8.53.0",
-    "grunt": "^1.6.1",
-    "grunt-cli": "1.2.0",
-    "grunt-eslint": "^24.3.0"
+    "gulp": "^4.0.2"
   }
 }

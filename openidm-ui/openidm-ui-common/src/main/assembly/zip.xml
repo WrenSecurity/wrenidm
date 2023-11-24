@@ -34,7 +34,7 @@
     </formats>
     <fileSets>
         <fileSet>
-            <directory>${basedir}/target/classes</directory>
+            <directory>${basedir}/target/www</directory>
             <outputDirectory>/</outputDirectory>
         </fileSet>
     </fileSets>

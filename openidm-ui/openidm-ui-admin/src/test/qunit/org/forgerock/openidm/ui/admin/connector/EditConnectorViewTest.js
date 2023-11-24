@@ -90,7 +90,7 @@ function (EditConnectorView, _,
     QUnit.test("Testing a connector with pass result", function (assert) {
         var ready = assert.async();
 
-        var connectorPassStub = sinon.stub(EditConnectorView, "connectorPass", function(preTestResult, updatedForm){
+        var connectorPassStub = sinon.stub(EditConnectorView, "connectorPass").callsFake(function(preTestResult, updatedForm){
                 ready();
 
                 assert.equal(preTestResult, true, "Promise correctly resolved and called pass function");
@@ -107,7 +107,7 @@ function (EditConnectorView, _,
     QUnit.test("Testing a connector with fail result", function (assert) {
         var ready = assert.async();
 
-        var connectorFailstub = sinon.stub(EditConnectorView, "connectorFail", function(preTestResult, updatedForm, message){
+        var connectorFailstub = sinon.stub(EditConnectorView, "connectorFail").callsFake(function(preTestResult, updatedForm, message){
                 ready();
 
                 assert.equal(preTestResult, false, "Promise correctly resolved and called fail function");

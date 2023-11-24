@@ -14,7 +14,7 @@ define([
 
         Configuration.globalData = {roles: {}};
         // stub the rest calls invoked by the UserModel to use these simple responses
-        sinon.stub(ServiceInvoker, "restCall", function (options) {
+        sinon.stub(ServiceInvoker, "restCall").callsFake(function (options) {
             options.headers = options.headers || {};
             return $.Deferred().resolve({
                 authenticationId: Constants.HEADER_PARAM_USERNAME,

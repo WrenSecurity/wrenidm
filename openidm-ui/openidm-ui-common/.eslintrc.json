@@ -1,13 +1,25 @@
 {
     "root": true,
     "extends": "@wrensecurity/eslint-config",
-    "parser": "@babel/eslint-parser",
     "env": {
         "amd": true,
         "browser": true,
         "qunit": true,
         "es6": true
     },
+    "overrides": [
+        {
+            "files": [
+                "gulpfile.js"
+            ],
+            "env": {
+                "node": true
+            },
+            "parserOptions": {
+                "ecmaVersion": 2021
+            }
+        }
+    ],
     "rules": {
         "arrow-parens": ["error", "always"],
         "arrow-spacing": "error",

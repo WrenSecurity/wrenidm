@@ -13,7 +13,7 @@
     information: "Portions copyright [year] [name of copyright owner]".
 
     Copyright (c) 2011-2015 ForgeRock AS. All Rights Reserved
-    Portions Copyright 2017-2022 Wren Security.
+    Portions Copyright 2017-2023 Wren Security.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -33,11 +33,19 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.forgerock.commons.ui</groupId>
-            <artifactId>forgerock-ui-commons</artifactId>
-            <version>${forgerock-ui.version}</version>
+            <groupId>org.wrensecurity.commons</groupId>
+            <artifactId>wrensec-ui-commons</artifactId>
+            <version>${wrensec-ui.version}</version>
             <type>zip</type>
-            <classifier>www</classifier>
+            <classifier>base</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wrensecurity.commons</groupId>
+            <artifactId>wrensec-ui-commons</artifactId>
+            <version>${wrensec-ui.version}</version>
+            <type>zip</type>
+            <classifier>build</classifier>
         </dependency>
 
         <dependency>
@@ -55,29 +63,7 @@
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>${basedir}/src/main/js</directory>
-            </resource>
-
-            <resource>
-                <directory>${basedir}/src/main/resources</directory>
-            </resource>
-        </resources>
-
         <plugins>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>resources</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
@@ -86,21 +72,25 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
+
                 <executions>
                     <execution>
-                    <id>unpack</id>
-                    <phase>process-resources</phase>
-                    <goals>
-                        <goal>unpack</goal>
-                    </goals>
+                        <id>unpack</id>
+                        <phase>initialize</phase>
+
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.forgerock.commons.ui</groupId>
-                                    <artifactId>forgerock-ui-commons</artifactId>
-                                    <version>${forgerock-ui.version}</version>
+                                    <groupId>org.wrensecurity.commons</groupId>
+                                    <artifactId>wrensec-ui-commons</artifactId>
+                                    <version>${wrensec-ui.version}</version>
                                     <type>zip</type>
-                                    <classifier>www</classifier>
+                                    <classifier>base</classifier>
+                                    <outputDirectory>${project.build.directory}/ui-compose</outputDirectory>
                                 </artifactItem>
 
                                 <artifactItem>
@@ -109,6 +99,16 @@
                                     <version>${project.version}</version>
                                     <type>zip</type>
                                     <classifier>www</classifier>
+                                    <outputDirectory>${project.build.directory}/ui-compose</outputDirectory>
+                                </artifactItem>
+
+                                <artifactItem>
+                                    <groupId>org.wrensecurity.commons</groupId>
+                                    <artifactId>wrensec-ui-commons</artifactId>
+                                    <version>${wrensec-ui.version}</version>
+                                    <type>zip</type>
+                                    <classifier>build</classifier>
+                                    <outputDirectory>${project.build.directory}/ui-libs</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -120,6 +120,7 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
+
                 <configuration>
                     <instructions>
                         <Import-Package>*</Import-Package>

@@ -157,7 +157,7 @@ define([
 
         $.get("../www/partials/scheduler/_ScheduleTypeDisplay.html", function (partial) {
 
-            sinon.stub(SchedulerListView, "renderTypePartial", function (type, descriptor) {
+            sinon.stub(SchedulerListView, "renderTypePartial").callsFake(function (type, descriptor) {
                 return $(handlebars.compile(partial)({
                     type : type,
                     descriptor : descriptor

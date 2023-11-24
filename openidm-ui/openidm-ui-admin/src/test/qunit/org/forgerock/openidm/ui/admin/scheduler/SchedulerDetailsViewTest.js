@@ -141,7 +141,7 @@ define([
             // bind formChangeHandler to instance so I can use it
             formChangeHandler = _.bind(abstractSchedulerView.formChangeHandler, abstractSchedulerView),
             dateTimeChangeHandler = _.bind(abstractSchedulerView.dateTimeChangeHandler, abstractSchedulerView),
-            updateScheduleSpy = sinon.stub(abstractSchedulerView, "updateSchedule", _.noop),
+            updateScheduleSpy = sinon.stub(abstractSchedulerView, "updateSchedule".callsFake(_.noop),
             setInvokeContextObjectSpy = sinon.spy(abstractSchedulerView, "setInvokeContextObject"),
             // create fake elements to trigger events on
             genericInput = $("<input>", {
@@ -212,7 +212,7 @@ define([
     QUnit.test("#setInvokeContextObject calls #updateSchedule with correct args", function(assert) {
         let spyArgs,
             abstractSchedulerView = new AbstractSchedulerView(),
-            updateScheduleSpy = sinon.stub(abstractSchedulerView, "updateSchedule", _.noop);
+            updateScheduleSpy = sinon.stub(abstractSchedulerView, "updateSchedule").callsFake(_.noop);
 
         // send in prop/value for "source", "script", "mapping"
         abstractSchedulerView.setInvokeContextObject("source", "test source");
