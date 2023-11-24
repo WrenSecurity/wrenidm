@@ -36,7 +36,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.InternalServerErrorException;
@@ -61,10 +60,7 @@ public class OracleTableHandler extends GenericTableHandler {
     @Override
     public void create(String fullId, String type, String localId, Map<String, Object> obj, Connection connection)
             throws SQLException, IOException, InternalServerErrorException {
-        connection.setAutoCommit(true);
         long typeId = getTypeId(type, connection);
-
-        connection.setAutoCommit(false);
 
         PreparedStatement createStatement = null;
         try {

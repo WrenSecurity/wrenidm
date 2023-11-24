@@ -21,6 +21,7 @@ import static org.forgerock.openidm.repo.QueryConstants.PAGED_RESULTS_OFFSET;
 import static org.forgerock.openidm.repo.QueryConstants.PAGE_SIZE;
 import static org.forgerock.openidm.repo.QueryConstants.SORT_KEYS;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,7 +32,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.commons.lang3.StringUtils;
 import org.forgerock.audit.util.JsonValueUtils;
 import org.forgerock.json.JsonPointer;
@@ -40,8 +40,8 @@ import org.forgerock.json.resource.BadRequestException;
 import org.forgerock.json.resource.InternalServerErrorException;
 import org.forgerock.json.resource.NotFoundException;
 import org.forgerock.json.resource.PreconditionFailedException;
-import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.ResourceException;
+import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.SortKey;
 import org.forgerock.openidm.crypto.CryptoService;
 import org.forgerock.openidm.repo.jdbc.Constants;
@@ -56,8 +56,6 @@ import org.forgerock.util.query.QueryFilter;
 import org.forgerock.util.query.QueryFilterVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Handling of tables in a generic (not object specific) layout
@@ -93,8 +91,9 @@ public class MappedTableHandler implements TableHandler {
             Accessor<CryptoService> cryptoServiceAccessor) throws InternalServerErrorException {
 
         // TODO Replace this with a "guarantee" somewhere when/if the provision of this accessor becomes more automatic
-        if (cryptoServiceAccessor == null)
+        if (cryptoServiceAccessor == null) {
             throw new InternalServerErrorException("No CryptoServiceAccessor found!");
+        }
 
         this.tableName = tableName;
         this.dbSchemaName = dbSchemaName;
@@ -423,7 +422,7 @@ public class MappedTableHandler implements TableHandler {
     @Override
     public void delete(String fullId, String type, String localId, String rev, Connection connection)
             throws PreconditionFailedException, InternalServerErrorException, NotFoundException,
-            SQLException, IOException {
+            SQLException {
         logger.debug("Delete with fullid {}", fullId);
 
         // First check if the revision matches and select it for UPDATE
@@ -485,11 +484,13 @@ public class MappedTableHandler implements TableHandler {
     }
 
     // TODO: make common to generic and explicit handlers
+    @Override
     public boolean isErrorType(SQLException ex, ErrorType errorType) {
         return sqlExceptionHandler.isErrorType(ex, errorType);
     }
 
     // TODO: make common to generic and explicit handlers
+    @Override
     public boolean isRetryable(SQLException ex, Connection connection) {
         return sqlExceptionHandler.isRetryable(ex, connection);
     }

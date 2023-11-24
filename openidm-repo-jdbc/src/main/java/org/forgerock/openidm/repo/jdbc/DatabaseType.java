@@ -24,7 +24,7 @@
 package org.forgerock.openidm.repo.jdbc;
 
 /**
- * @version $Revision$ $Date$
+ * Supported database types.
  */
 public enum DatabaseType {
     SQLSERVER, MYSQL, POSTGRESQL, ORACLE, DB2, H2, ANSI_SQL99, ODBC;

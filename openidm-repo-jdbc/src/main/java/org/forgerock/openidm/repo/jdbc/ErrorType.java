@@ -24,7 +24,7 @@
 package org.forgerock.openidm.repo.jdbc;
 
 /**
- * Portable error type identifiers
+ * Portable error type identifiers.
  */
 public enum ErrorType  {
     CONNECTION_FAILURE,

@@ -25,10 +25,9 @@ import org.forgerock.json.resource.InternalServerErrorException;
 
 /**
  * Handles the conversion of ResultSets into Object set results
- *
  */
 public interface ResultSetMapper {
-    
+
     List<Map<String, Object>> mapToObject(ResultSet rs, String queryId, String type, Map<String, Object> params)
             throws SQLException, IOException, InternalServerErrorException;
 

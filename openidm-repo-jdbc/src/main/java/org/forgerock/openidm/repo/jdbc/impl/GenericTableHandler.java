@@ -22,6 +22,8 @@ import static org.forgerock.openidm.repo.QueryConstants.PAGE_SIZE;
 import static org.forgerock.openidm.repo.QueryConstants.SORT_KEYS;
 import static org.forgerock.openidm.repo.util.Clauses.where;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,15 +35,14 @@ import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.InternalServerErrorException;
 import org.forgerock.json.resource.NotFoundException;
 import org.forgerock.json.resource.PreconditionFailedException;
-import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.ResourceException;
+import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.SortKey;
 import org.forgerock.openidm.repo.jdbc.Constants;
 import org.forgerock.openidm.repo.jdbc.ErrorType;
@@ -51,9 +52,6 @@ import org.forgerock.openidm.repo.jdbc.impl.query.TableQueries;
 import org.forgerock.util.query.QueryFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Handling of tables in a generic (not object specific) layout
@@ -82,7 +80,7 @@ public class GenericTableHandler implements TableHandler {
     final TypeReference<LinkedHashMap<String,Object>> typeRef = new TypeReference<LinkedHashMap<String,Object>>() {};
 
     final TableQueries queries;
-    
+
     final GenericResultSetMapper genericResultMapper = new GenericResultSetMapper();
 
     Map<QueryDefinition, String> queryMap;
@@ -569,7 +567,7 @@ public class GenericTableHandler implements TableHandler {
      */
     @Override
     public void delete(String fullId, String type, String localId, String rev, Connection connection)
-            throws PreconditionFailedException, InternalServerErrorException, NotFoundException, SQLException, IOException {
+            throws PreconditionFailedException, InternalServerErrorException, NotFoundException, SQLException {
         logger.debug("Delete with fullid {}", fullId);
 
         PreparedStatement deleteStatement = null;

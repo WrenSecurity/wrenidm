@@ -13,6 +13,7 @@ public class H2TableHandler extends GenericTableHandler {
         super(tableConfig, dbSchemaName, queriesConfig, commandsConfig, maxBatchSize, sqlExceptionHandler);
     }
 
+    @Override
     protected Map<QueryDefinition, String> initializeQueryMap() {
         Map<QueryDefinition, String> result = super.initializeQueryMap();
 

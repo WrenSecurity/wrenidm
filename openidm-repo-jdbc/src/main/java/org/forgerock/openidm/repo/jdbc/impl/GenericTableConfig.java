@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2024 Wren Security.
  */
 package org.forgerock.openidm.repo.jdbc.impl;
 
@@ -22,13 +23,24 @@ import org.forgerock.json.JsonValue;
  * Generic table configuration.
  */
 class GenericTableConfig {
-    public String mainTableName;
-    public String propertiesTableName;
-    public boolean searchableDefault;
-    public GenericPropertiesConfig properties;
 
-    public boolean isSearchable(JsonPointer propPointer) {
+    public final String mainTableName;
 
+    public final String propertiesTableName;
+
+    public final boolean searchableDefault;
+
+    public final GenericPropertiesConfig properties;
+
+    private GenericTableConfig(JsonValue tableConfig) {
+        tableConfig.required();
+        mainTableName = tableConfig.get("mainTable").required().asString();
+        propertiesTableName = tableConfig.get("propertiesTable").required().asString();
+        searchableDefault = tableConfig.get("searchableDefault").defaultTo(Boolean.TRUE).asBoolean();
+        properties = GenericPropertiesConfig.parse(tableConfig.get("properties"));
+    }
+
+    boolean isSearchable(JsonPointer propPointer) {
         // More specific configuration takes precedence
         Boolean explicit = null;
         while (!propPointer.isEmpty() && explicit == null) {
@@ -53,13 +65,7 @@ class GenericTableConfig {
     }
 
     public static GenericTableConfig parse(JsonValue tableConfig) {
-        GenericTableConfig cfg = new GenericTableConfig();
-        tableConfig.required();
-        cfg.mainTableName = tableConfig.get("mainTable").required().asString();
-        cfg.propertiesTableName = tableConfig.get("propertiesTable").required().asString();
-        cfg.searchableDefault = tableConfig.get("searchableDefault").defaultTo(Boolean.TRUE).asBoolean();
-        cfg.properties = GenericPropertiesConfig.parse(tableConfig.get("properties"));
-
-        return cfg;
+        return new GenericTableConfig(tableConfig);
     }
+
 }

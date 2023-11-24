@@ -27,7 +27,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.SortKey;
@@ -79,7 +78,7 @@ public class MSSQLTableHandler extends GenericTableHandler {
         return result;
 
     }
-    
+
     /* (non-Javadoc)
      * @see org.forgerock.openidm.repo.jdbc.impl.TableHandler#update(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.util.Map, java.sql.Connection)
      */
@@ -191,7 +190,11 @@ public class MSSQLTableHandler extends GenericTableHandler {
                             Clause buildNumericValueClause(String propTable, String operand, String placeholder) {
                                 return where(propTable + ".proptype = 'java.lang.Integer'")
                                         .or(propTable + ".proptype = 'java.lang.Double'")
-                                        .and("(CASE ISNUMERIC(propvalue) WHEN 1 THEN CAST(propvalue AS FLOAT) ELSE null END) " + operand + " ${" + placeholder + "}");
+                                        .and("("
+                                                + "CASE ISNUMERIC(" + propTable + ".propvalue) "
+                                                + "WHEN 1 THEN CAST(" + propTable + ".propvalue AS FLOAT) "
+                                                + "ELSE null END"
+                                            + ") " + operand + " ${" + placeholder + "}");
                             }
                         },
                         replacementTokens));
@@ -207,7 +210,6 @@ public class MSSQLTableHandler extends GenericTableHandler {
         } else {
             builder.orderBy("obj.id", false);
         }
-
         return builder.toSQL();
     }
 }

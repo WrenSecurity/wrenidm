@@ -265,7 +265,9 @@ public final class ServerConstants {
      * Key available for token substitution inside the query expression,
      * identifying the resource queried by name. Example use: select * from
      * ${_resource} where ...
+     * @deprecated Use {@code QueryConstants#RESOURCE_NAME} instead
      */
+    @Deprecated
     public final static String RESOURCE_NAME = "_resource";
 
     public static final String LAUNCHER_INSTALL_LOCATION = "launcher.install.location";
