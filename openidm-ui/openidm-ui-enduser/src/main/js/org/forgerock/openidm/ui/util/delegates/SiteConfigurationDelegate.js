@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/commons/ui/common/main/Configuration",
     "org/forgerock/openidm/ui/common/delegates/SiteConfigurationDelegate",
     "org/forgerock/commons/ui/common/components/Navigation",
@@ -51,7 +52,7 @@ define([
     };
 
     obj.checkForDifferences = function(){
-        if (conf.loggedUser && _.contains(conf.loggedUser.uiroles,"ui-admin") && !obj.adminCheck){
+        if (conf.loggedUser && _.includes(conf.loggedUser.uiroles,"ui-admin") && !obj.adminCheck){
             nav.configuration.userBar.unshift({
                 "id": "admin_link",
                 "href": "/admin",
@@ -81,7 +82,7 @@ define([
                     }
                     if (tabList.length) {
                         require(tabList, function () {
-                            _.each(_.toArray(arguments), UserProfileView.registerTab, UserProfileView);
+                            _.each(_.toArray(arguments), _.bind(UserProfileView.registerTab, UserProfileView));
                             promise.resolve();
                         });
                     } else {

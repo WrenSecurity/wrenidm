@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "handlebars",
     "org/forgerock/commons/ui/common/main/AbstractView",
     "org/forgerock/commons/ui/common/main/EventManager",
@@ -267,25 +268,25 @@ define([
                 }),
                 returnedLinks = [];
 
-            _.find(availableLinks, function(available) {
+            _.find(availableLinks, _.bind(function(available) {
                 var safe = true;
 
-                _.each(linksFound, function(link) {
+                _.each(linksFound, _.bind(function(link) {
                     if (link.links === available.name) {
                         safe = false;
                     }
-                }, this);
+                }, this));
 
                 if (safe) {
                     returnedLinks.push(available);
                 } else {
                     safe = true;
                 }
-            }, this);
+            }, this));
 
-            returnedLinks = _.filter(returnedLinks, function(link) {
+            returnedLinks = _.filter(returnedLinks, _.bind(function(link) {
                 return (link.source === this.targetDetails.saveName && link.target === this.sourceDetails.saveName);
-            }, this);
+            }, this));
 
             return returnedLinks;
         },
@@ -390,9 +391,9 @@ define([
                 this.$el.find("#"+id +" .resource-object-type-select").show();
                 this.$el.find("#"+id +" .resource-object-type-select option").remove();
 
-                _.each(details.objectTypes, function(value){
+                _.each(details.objectTypes, _.bind(function(value){
                     this.$el.find("#"+id +" .resource-object-type-select").append("<option value='"+value +"'>" +value  +"</option>");
-                }, this);
+                }, this));
 
             } else {
                 if (!details.schema || !details.schema.icon) {
@@ -434,9 +435,9 @@ define([
             this.removeCallback();
         },
         checkMappingName: function(value) {
-            return !_.find(this.mappingList, function(mapping) {
+            return !_.find(this.mappingList, _.bind(function(mapping) {
                 return value === mapping.name;
-            }, this);
+            }, this));
         },
         validationSuccessful: function (event) {
             AbstractView.prototype.validationSuccessful(event);

@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
@@ -32,7 +33,7 @@ define([
         ]),
 
         render: function (args) {
-            this.data = _.clone(args, true);
+            this.data = _.cloneDeep(args);
             this.data.resources = [ "repo/internal/user" ]; // STATIC and INTERNAL modules only have the single option.
             this.data.customProperties = this.getCustomPropertiesList(this.knownProperties, this.data.config.properties || {});
 

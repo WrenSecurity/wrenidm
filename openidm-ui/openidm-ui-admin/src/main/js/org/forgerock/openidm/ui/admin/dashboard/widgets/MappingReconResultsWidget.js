@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "bootstrap",
     "handlebars",
     "dimple",
@@ -109,12 +110,12 @@ define([
                 this.data.situationDetails = [];
                 this.data.showPopover = false;
 
-                _.each(this.data.sync.mappings, function(mapping){
+                _.each(this.data.sync.mappings, _.bind(function(mapping){
                     if (mapping.name !== this.data.mapping.name && mapping.recon) {
                         list.append('<li data-order="' + orderCounter + '" class="recon-list-item">' + mapping.name  + '</li>');
                     }
                     orderCounter++;
-                }, this);
+                }, this));
 
                 if (list.find('li').length > 0) {
                     this.data.showPopover = true;
@@ -146,13 +147,13 @@ define([
 
                     //This piece of code builds and adds the barchart
                     if (recon && (this.model.barchart === true || this.model.barchart === "true")) {
-                        _.each(recon.situationSummary, function(value, key) {
+                        _.each(recon.situationSummary, _.bind(function(value, key) {
                             this.data.situationDetails.push({
                                 "Situation": this.model.lookup[key],
                                 "Raw Situation": key,
                                 "Records": value
                             });
-                        }, this);
+                        }, this));
 
                         svg = dimple.newSvg(".recon-chart", this.model.svgWidth, this.model.svgHeight);
 

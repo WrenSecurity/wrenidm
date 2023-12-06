@@ -16,7 +16,7 @@
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/commons/ui/common/util/Constants",
     "org/forgerock/commons/ui/common/main/AbstractDelegate",
     "org/forgerock/openidm/ui/common/delegates/ConfigDelegate",
@@ -33,7 +33,7 @@ define([
 
         if (objectType === "managed") {
             return configDelegate.readEntity("managed").then(function(managed){
-                var managedObject = _.findWhere(managed.objects,{ name: objectName });
+                var managedObject = _.find(managed.objects,{ name: objectName });
 
                 if (managedObject){
                     if (managedObject.schema){
@@ -111,7 +111,7 @@ define([
     };
     obj.patchResourceDifferences = function (serviceUrl, queryParameters, oldObject, newObject, successCallback, errorCallback) {
         var patchDefinition = ObjectUtil.generatePatchSet(newObject, oldObject);
-        
+
         return AbstractDelegate.prototype.patchEntity.apply(_.extend({}, AbstractDelegate.prototype, this, {"serviceUrl": serviceUrl}), [queryParameters, patchDefinition, successCallback, errorCallback]);
     };
 

@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "bootstrap",
     "org/forgerock/openidm/ui/admin/util/AdminAbstractView",
     "org/forgerock/commons/ui/common/main/EventManager",
@@ -73,9 +74,9 @@ define([
                     connectors[index].iconSrc = tempIconClass.src;
                 }, this));
 
-                this.data.currentConnectors = _.filter(connectors, function(connector) {
+                this.data.currentConnectors = _.filter(connectors, _.bind(function(connector) {
                     return connector.ok === true;
-                }, this);
+                }, this));
 
                 this.data.currentManagedObjects = _.sortBy(managedObjects.objects, 'name');
 

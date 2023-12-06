@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "handlebars",
     "org/forgerock/commons/ui/common/main/AbstractView",
     "org/forgerock/commons/ui/common/util/Constants",
@@ -184,7 +185,7 @@ define([
                                 return item.charAt(0).toUpperCase() + item.slice(1);
                             }).join(" "),
                             relationshipProp = (_this.data.prop.items) ? _this.data.prop.items : _this.data.prop,
-                            resourceCollection = _.findWhere(relationshipProp.resourceCollection,{ path: propertyValuePath });
+                            resourceCollection = _.find(relationshipProp.resourceCollection,{ path: propertyValuePath });
 
                         if (resourceCollection && resourceCollection.label) {
                             txt = resourceCollection.label;
@@ -331,7 +332,7 @@ define([
 
         onRowSelect: function (model, selected) {
             if (selected) {
-                if (!_.contains(this.data.selectedItems, model.attributes)) {
+                if (!_.includes(this.data.selectedItems, model.attributes)) {
                     this.data.selectedItems.push(model.attributes);
                 }
             } else {

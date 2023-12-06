@@ -56,7 +56,7 @@ define([
                 Router.getLink(Router.currentRoute,
                     [
                         "/continue" +
-                        (this.delegate.token ? ("&token=" + this.delegate.token) : "") +
+                        (this.processDelegate.token ? ("&token=" + this.processDelegate.token) : "") +
                         "&provider=" + $(e.target).parents("[data-oauth=button]").attr("value") +
                         "&redirect_uri=" + OAuth.getRedirectURI()
                     ]

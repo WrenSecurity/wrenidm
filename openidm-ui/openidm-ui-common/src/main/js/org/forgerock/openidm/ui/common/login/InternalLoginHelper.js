@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/common/UserModel",
     "org/forgerock/commons/ui/common/main/EventManager",
     "org/forgerock/commons/ui/common/main/AbstractConfigurationAware",
@@ -82,7 +83,7 @@ define([
     obj.getLoggedUser = function(successCallback, errorCallback) {
         return (new UserModel()).getProfile().then(successCallback, function(e) {
             if (e.responseJSON && e.responseJSON.detail && e.responseJSON.detail.failureReasons && e.responseJSON.detail.failureReasons.length){
-                if (_.where(e.responseJSON.detail.failureReasons,{ isAlive: false }).length){
+                if (_.filter(e.responseJSON.detail.failureReasons,{ isAlive: false }).length){
                     conf.globalData.authenticationUnavailable = true;
                 }
             }

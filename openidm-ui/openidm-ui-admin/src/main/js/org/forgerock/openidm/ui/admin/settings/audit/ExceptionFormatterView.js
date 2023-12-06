@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/settings/audit/AuditAdminAbstractView",
     "org/forgerock/commons/ui/common/main/EventManager",
     "org/forgerock/commons/ui/common/util/Constants",
@@ -51,16 +52,16 @@ define([
                     this.model.changesModule = ChangesPending.watchChanges({
                         element: this.$el.find(".exception-formatter-alert"),
                         undo: true,
-                        watchedObj: _.clone(this.model.auditData, true),
+                        watchedObj: _.cloneDeep(this.model.auditData),
                         watchedProperties: ["exceptionFormatter"],
                         undoCallback: _.bind(function (original) {
-                            _.each(this.model.changesModule.data.watchedProperties, function (prop) {
+                            _.each(this.model.changesModule.data.watchedProperties, _.bind(function (prop) {
                                 if (_.has(original, prop)) {
                                     this.model.auditData[prop] = original[prop];
                                 } else if (_.has(this.model.auditData, prop)) {
                                     delete this.model.auditData[prop];
                                 }
-                            }, this);
+                            }, this));
 
                             this.setProperties(["exceptionFormatter"], this.model.auditData);
 
@@ -100,7 +101,7 @@ define([
         checkChanges: function () {
             this.model.auditData.exceptionFormatter = this.model.exceptionFormatterScript.generateScript();
             this.setProperties(["exceptionFormatter"], this.model.auditData);
-            this.model.changesModule.makeChanges(_.clone(this.model.auditData, true));
+            this.model.changesModule.makeChanges(_.cloneDeep(this.model.auditData));
         }
 
     });

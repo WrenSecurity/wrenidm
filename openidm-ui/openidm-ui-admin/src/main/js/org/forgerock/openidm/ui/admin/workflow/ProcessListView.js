@@ -12,10 +12,11 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/util/AdminAbstractView",
     "org/forgerock/openidm/ui/admin/workflow/ActiveProcessesView",
     "org/forgerock/openidm/ui/admin/workflow/ProcessDefinitionsView",
@@ -47,7 +48,7 @@ define([
                         .map(function (pd) {
                             return _.pick(pd,"name","key");
                         })
-                        .uniq(function (pdm) {
+                        .uniqBy(function (pdm) {
                             return pdm.name;
                         })
                         .value();

@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "handlebars",
     "form2js",
     "jsonEditor",
@@ -130,7 +131,7 @@ define([
                 this.data.selectEvents = _.difference(this.model.eventList, eventKeys);
 
                 if (this.data.currentManagedObject.properties) {
-                    _.each(this.data.currentManagedObject.properties, function (property) {
+                    _.each(this.data.currentManagedObject.properties, _.bind(function (property) {
                         eventKeys = _.chain(property)
                             .keys()
                             .without("name", "encryption", "scope", "type", "secureHash")
@@ -138,7 +139,7 @@ define([
 
                         property.addedEvents = _.intersection(eventKeys, propertiesEventList);
                         property.selectEvents = _.difference(propertiesEventList, eventKeys);
-                    }, this);
+                    }, this));
 
                     this.data.availableProperties = _.keys(_.omit(this.data.currentManagedObject.schema.properties,"_id"));
                     this.data.availableHashes = ["MD5","SHA-1","SHA-256","SHA-384","SHA-512"];
@@ -208,10 +209,10 @@ define([
                         addedEvents:this.data.addedEvents,
                         currentObject: this.data.currentManagedObject,
                         hasWorkflow: true,
-                        workflowContext: _.pluck(SchemaEditorView.data.managedObjectSchema.getValue().properties, "propertyName")
+                        workflowContext: _.map(SchemaEditorView.data.managedObjectSchema.getValue().properties, "propertyName")
                     });
 
-                    _.each(this.$el.find("#managedPropertyWrapper .small-field-block"), function(managedProperty, index) {
+                    _.each(this.$el.find("#managedPropertyWrapper .small-field-block"), _.bind(function(managedProperty, index) {
                         this.propertyHooks.push([]);
 
                         this.model.propertyScripts.push(ScriptList.generateScriptList({
@@ -221,17 +222,17 @@ define([
                             addedEvents:this.data.currentManagedObject.properties[index].addedEvents,
                             currentObject: this.data.currentManagedObject.properties[index],
                             hasWorkflow: true,
-                            workflowContext: _.pluck(SchemaEditorView.data.managedObjectSchema.getValue().properties, "propertyName")
+                            workflowContext: _.map(SchemaEditorView.data.managedObjectSchema.getValue().properties, "propertyName")
                         }));
 
-                    }, this);
+                    }, this));
 
                     this.$el.find(".nav-tabs").tabdrop();
 
                     if (this.data.currentManagedObject.properties) {
-                        _.each(this.data.currentManagedObject.properties, function (property, index) {
+                        _.each(this.data.currentManagedObject.properties, _.bind(function (property, index) {
                             this.setPropertyHashToggle(index);
-                        }, this);
+                        }, this));
                     }
 
                     if (callback) {
@@ -276,7 +277,7 @@ define([
 
             this.data.currentManagedObject.schema = SchemaEditorView.getManagedSchema();
 
-            _.each(data.properties, function (prop, index) {
+            _.each(data.properties, _.bind(function (prop, index) {
                 if (prop.encryption) {
                     prop.encryption = {
                         key: "openidm-sym-default"
@@ -312,7 +313,7 @@ define([
                 if (prop.name) {
                     properties.push(prop);
                 }
-            }, this);
+            }, this));
 
             this.data.currentManagedObject.properties = properties;
 
@@ -343,13 +344,13 @@ define([
 
             var scriptList = this.model.managedScripts.getScripts();
 
-            _.each(this.model.eventList, function(val) {
+            _.each(this.model.eventList, _.bind(function(val) {
                 if (scriptList[val]) {
                     this.data.currentManagedObject[val] = scriptList[val];
                 } else {
                     delete this.data.currentManagedObject[val];
                 }
-            }, this);
+            }, this));
 
             this.saveManagedObject(this.data.currentManagedObject, this.data.managedObjects);
         },

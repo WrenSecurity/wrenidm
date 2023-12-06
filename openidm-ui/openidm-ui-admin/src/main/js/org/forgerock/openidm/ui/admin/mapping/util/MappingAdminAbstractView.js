@@ -12,10 +12,11 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/util/AdminAbstractView",
     "org/forgerock/openidm/ui/admin/delegates/SyncDelegate",
     "org/forgerock/openidm/ui/common/delegates/ConfigDelegate"
@@ -38,15 +39,15 @@ define([
                     delete currentMapping.recon;
                 }
 
-                return _.clone(currentMapping, true);
+                return _.cloneDeep(currentMapping);
             },
 
             getSyncConfig: function() {
-                return _.clone(syncConfig, true);
+                return _.cloneDeep(syncConfig);
             },
 
             getRecon: function() {
-                return _.clone(recon, true);
+                return _.cloneDeep(recon);
             },
 
             getSyncNow: function() {
@@ -54,7 +55,7 @@ define([
             },
 
             getSyncCanceled: function() {
-                return _.clone(syncCanceled, true);
+                return _.cloneDeep(syncCanceled);
             },
 
             getMappingName: function() {

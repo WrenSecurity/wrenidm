@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "jsonEditor",
     "org/forgerock/commons/ui/common/main/AbstractView",
     "org/forgerock/openidm/ui/common/delegates/ResourceDelegate",
@@ -36,18 +37,18 @@ define([
                 this.data.linkedData = linkedData;
                 this.data.linkedResources = [];
 
-                _.each(this.data.linkedData.linkedTo, function(resource, index){
+                _.each(this.data.linkedData.linkedTo, _.bind(function(resource, index){
                     this.data.linkedResources.push(this.cleanLinkName(resource.resourceName, resource.linkQualifier));
 
                     //This second loop is to ensure that null returned first level values actually display in JSON editor
                     //Without this it will not display the textfields
-                    _.each(resource.content, function(attribute, key){
+                    _.each(resource.content, _.bind(function(attribute, key){
                         if (attribute === null) {
                             this.data.linkedData.linkedTo[index].content[key] = "";
                         }
-                    }, this);
+                    }, this));
 
-                }, this);
+                }, this));
 
                 this.parentRender(_.bind(function() {
                     this.loadEditor("all");
@@ -61,7 +62,7 @@ define([
 
         cleanLinkName: function(name, linkQualifier){
             var cleanName = name.split("/");
-            
+
             cleanName.pop();
 
             cleanName = cleanName.join("/");
@@ -86,17 +87,17 @@ define([
                     if (this.editors[selection]) {
                         this.editors[selection].destroy();
                     }
-    
+
                     if (this.data.linkedData.linkedTo.length > 0) {
-    
+
                         this.$el.closest(".container").find("#linkedSystemsTabHeader").show();
-    
+
                         if (this.data.linkedData.linkedTo[selection].content !== null) {
                             resourceId = _.last(this.data.linkedData.linkedTo[selection].resourceName.split("/"));
                             linkToResource += this.data.linkedData.linkedTo[selection].resourceName.replace(resourceId, "edit/" + resourceId);
-    
+
                             this.$el.find("#linkToResource").attr("href",linkToResource);
-    
+
                             resourceDelegate.getSchema(this.data.linkedData.linkedTo[selection].resourceName.split("/")).then(_.bind(function(schema) {
                                 var propCount = 0;
                                 if (schema.order) {
@@ -104,13 +105,13 @@ define([
                                         schema.properties[prop].propertyOrder = propCount++;
                                     });
                                 }
-                                
+
                                 schema.properties = resourceCollectionUtils.convertRelationshipTypes(schema.properties);
-                                
+
                                 if (schema.allSchemas) {
                                     delete schema.allSchemas;
                                 }
-    
+
                                 this.editors[selection] = new JSONEditor(
                                     this.$el.find("#linkedViewContent")[0],
                                     {
@@ -125,16 +126,16 @@ define([
                                         horizontalForm: true
                                     }
                                 );
-    
+
                                 if (this.data.linkedData.linkedTo[selection].content._id) {
                                     delete this.data.linkedData.linkedTo[selection].content._id;
                                 }
 
-                                _.each(this.data.linkedData.linkedTo[selection].content, function(value, key) {
+                                _.each(this.data.linkedData.linkedTo[selection].content, _.bind(function(value, key) {
                                     if (_.isArray(value) && value.length === 0) {
                                         this.data.linkedData.linkedTo[selection].content[key] = undefined;
                                     }
-                                }, this);
+                                }, this));
 
                                 this.editors[selection].setValue(this.data.linkedData.linkedTo[selection].content);
 
@@ -146,7 +147,7 @@ define([
                         }
                     }
                 }, this);
-            
+
             if (selectedIndex === "all") {
                 this.$el.find("#linkToResource").hide();
                 _.each(this.data.linkedResources, function (resource, index) {

@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "form2js",
     "org/forgerock/openidm/ui/admin/connector/AbstractConnectorView",
     "org/forgerock/commons/ui/common/main/EventManager",
@@ -73,7 +74,7 @@ define([
                     .groupBy( function(connectorRef) {
                         return connectorRef.displayName;
                     })
-                    .pairs()
+                    .toPairs()
                     .sortBy(function(connectorRef) {
                         return connectorRef[0];
                     })
@@ -87,14 +88,14 @@ define([
                     })
                     .value();
 
-                this.data.versionDisplay = _.filter(this.data.versionDisplay, function(version) {
+                this.data.versionDisplay = _.filter(this.data.versionDisplay, _.bind(function(version) {
                     var bundleName = version.versions[0].bundleName,
                         excludes = [
                             "org.forgerock.openicf.connectors.ssh-connector",
                             "org.forgerock.openicf.connectors.groovy-connector"
                         ];
                     return !_.includes(excludes, bundleName);
-                }, this);
+                }, this));
 
                 this.data.editState = false;
                 this.data.connectorName = "";
@@ -130,7 +131,7 @@ define([
             $.extend(true, mergedResult, connDetails, connectorData);
 
             //Added logic to ensure array parts correctly add and delete what is set
-            _.each(arrayComponents, function(component) {
+            _.each(arrayComponents, _.bind(function(component) {
                 tempArrayObject = form2js($(component).prop("id"), ".", true);
                 tempKeys = _.keys(tempArrayObject.configurationProperties);
 
@@ -138,7 +139,7 @@ define([
                     mergedResult.configurationProperties[tempKeys[0]] = tempArrayObject.configurationProperties[tempKeys[0]];
                 }
 
-            }, this);
+            }, this));
 
             return mergedResult;
         },
@@ -157,7 +158,7 @@ define([
 
             ConnectorDelegate.testConnector(mergedResult).then(
                 _.bind(function(testResult) {
-                    
+
                     eventManager.sendEvent(constants.EVENT_DISPLAY_MESSAGE_REQUEST, "connectorSaved");
 
                     if (!mergedResult.objectTypes) {

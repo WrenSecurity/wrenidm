@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "handlebars",
     "org/forgerock/openidm/ui/admin/mapping/util/MappingAdminAbstractView",
     "org/forgerock/commons/ui/common/main/EventManager",
@@ -65,12 +66,12 @@ define([
                 this.model.mappingName = this.getMappingName();
 
                 this.parentRender(_.bind(function () {
-                    this.model.queryEditors = _.map(this.model.queryEditors, function (qe) {
+                    this.model.queryEditors = _.map(this.model.queryEditors, _.bind(function (qe) {
                         qe.query = qe.type + "Query";
                         qe.resource = this.model.mapping[qe.type];
                         qe.editor = this.renderEditor(qe.query, this.model.mapping[qe.query], qe.resource);
                         return qe;
-                    }, this);
+                    }, this));
                 }, this));
             },
 
@@ -132,10 +133,10 @@ define([
                     .filter(function (qe) {
                         return qe !== null;
                     })
-                    .object()
+                    .fromPairs()
                     .value();
 
-                _.each(this.model.queryEditors, function (qe) {
+                _.each(this.model.queryEditors, _.bind(function (qe) {
                     let fullEntryName = qe.query + "FullEntry";
                     let fullEntryValue = this.$el.find("input[name='" + fullEntryName + "Radios']:checked").val();
                     // set query filter value
@@ -152,7 +153,7 @@ define([
                         }
                     }
 
-                }, this);
+                }, this));
 
                 this.AbstractMappingSave(this.model.mapping, _.bind(function() {
                     eventManager.sendEvent(constants.EVENT_DISPLAY_MESSAGE_REQUEST, "reconQueryFilterSaveSuccess");

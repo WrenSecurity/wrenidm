@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "jsonEditor",
     "org/forgerock/commons/ui/common/main/AbstractView",
     "org/forgerock/commons/ui/common/main/ValidatorsManager",
@@ -242,9 +243,9 @@ define([
                     }
 
                     //Load up passed variables
-                    _.each(this.model.passedVariables, function(value, key){
+                    _.each(this.model.passedVariables, _.bind(function(value, key){
                         this.addPassedVariable(key, value);
-                    }, this);
+                    }, this));
 
                     if (this.cmBox.getValue().length > 0) {
                         this.model.codeMirrorValid = true;
@@ -389,11 +390,11 @@ define([
                         }
                     }
 
-                    _.each(this.model.editors, function (jsonEditor) {
+                    _.each(this.model.editors, _.bind(function (jsonEditor) {
                         if (jsonEditor.row.find(".passed-variable-name input").val().length > 0) {
                             scriptObject.globals[jsonEditor.row.find(".passed-variable-name input").val()] = jsonEditor.editor.getValue();
                         }
-                    }, this);
+                    }, this));
 
                     scriptObject.globals = _.extend(scriptObject.globals, this.extendedPassVariables);
 

@@ -12,10 +12,11 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
-    "underscore",
+    "lodash",
     "org/forgerock/commons/ui/common/main/AbstractView"
 ], function(_, AbstractView) {
 
@@ -34,11 +35,11 @@ define([
                 this.data.noGrid = true;
             }
 
-            _.each(this.data.changes, function(change, i) {
+            _.each(this.data.changes, _.bind(function(change, i) {
                 if (_.isEmpty(change.values)){
                     this.data.changes[i].empty = true;
                 }
-            }, this);
+            }, this));
 
             this.parentRender(function () {
                 if (callback) {

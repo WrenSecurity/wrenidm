@@ -12,13 +12,14 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 /* eslint no-eval: 0 */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/commons/ui/common/util/Constants",
     "org/forgerock/commons/ui/common/main/AbstractDelegate",
     "org/forgerock/commons/ui/common/main/Configuration",
@@ -61,7 +62,7 @@ define([
     };
 
     obj.deleteLinks = function (linkType, id, ordinal) { // ordinal is either firstId or secondId
-        if (!_.contains(["firstId","secondId"], ordinal)) {
+        if (!_.includes(["firstId","secondId"], ordinal)) {
             throw "Unexpected value passed to deleteLinks: " + ordinal;
         }
         if (!id) {
@@ -152,7 +153,7 @@ define([
             .map(function (p) {
                 return obj.translatePropertyToTarget(sourceObject, p);
             })
-            .object()
+            .fromPairs()
             .value();
 
     };

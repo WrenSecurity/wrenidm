@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/common/util/Constants",
     "org/forgerock/commons/ui/common/main/EventManager"
 ], function($, _, constants, eventManager) {
@@ -36,11 +37,11 @@ define([
 
                         errors = _.chain(response.detail.failedPolicyRequirements)
                             .groupBy('property')
-                            .pairs()
+                            .toPairs()
                             .map(function (a) {
                                 return " - " + a[0] + ": " +
                                             _.chain(a[1])
-                                                .pluck('policyRequirements')
+                                                .map('policyRequirements')
                                                 .map(function (pr) {
                                                     return _.map(pr, function (p) {
                                                         return $.t("common.form.validation." + p.policyRequirement, p.params);

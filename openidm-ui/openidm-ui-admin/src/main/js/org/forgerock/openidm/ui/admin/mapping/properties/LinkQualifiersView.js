@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/mapping/util/MappingAdminAbstractView",
     "org/forgerock/openidm/ui/common/delegates/ConfigDelegate",
     "org/forgerock/commons/ui/common/util/Constants",
@@ -117,11 +118,11 @@ define([
 
         populateScriptLinkQualifier : function (data) {
             if (_.isArray(data) === true) {
-                _.each(data, function(linkQualifier){
+                _.each(data, _.bind(function(linkQualifier){
                     this.$el.find("#scriptLinkQualifierList").append('<button disabled="true" type="button" class="removeLinkQualifier btn btn-primary">'
                         + '<span class="linkQualifier">' +linkQualifier  +'</span>'
                         + '</button>');
-                }, this);
+                }, this));
 
                 this.$el.find("#badLinkQualifierScript").hide();
             } else {
@@ -214,12 +215,12 @@ define([
             if (scriptDetails !== null) {
                 ScriptDelegate.evalLinkQualifierScript(scriptDetails).then(_.bind(function (result) {
                     if (_.isArray(result)) {
-                        _.each(result, function(item) {
+                        _.each(result, _.bind(function(item) {
                             if (!_.isString(item)) {
                                 this.model.scriptError = true;
                                 this.model.errorMessage = $.t("templates.mapping.validLinkQualifierScript");
                             }
-                        }, this);
+                        }, this));
                     } else {
                         this.model.scriptError = true;
                         this.model.errorMessage = $.t("templates.mapping.linkQualifierNotArray");

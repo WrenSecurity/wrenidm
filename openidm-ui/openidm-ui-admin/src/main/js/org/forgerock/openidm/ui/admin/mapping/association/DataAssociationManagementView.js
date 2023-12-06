@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/mapping/util/MappingAdminAbstractView",
     "org/forgerock/commons/ui/common/main/Configuration",
     "org/forgerock/openidm/ui/admin/delegates/ReconDelegate",
@@ -67,8 +68,8 @@ define([
             this.mapping = this.getCurrentMapping();
             this.mappingSync = this.getSyncNow();
             this.data.numRepresentativeProps = this.getNumRepresentativeProps();
-            this.data.sourceProps = _.pluck(this.mapping.properties,"source").slice(0,this.data.numRepresentativeProps);
-            this.data.targetProps = _.pluck(this.mapping.properties,"target").slice(0,this.data.numRepresentativeProps);
+            this.data.sourceProps = _.map(this.mapping.properties,"source").slice(0,this.data.numRepresentativeProps);
+            this.data.targetProps = _.map(this.mapping.properties,"target").slice(0,this.data.numRepresentativeProps);
             this.data.hideSingleRecordReconButton = mappingUtils.readOnlySituationalPolicy(this.mapping.policies);
 
             this.data.reconAvailable = false;
@@ -178,7 +179,7 @@ define([
 
             this.data.reconAvailable = true;
             this.data.allSituations = _.keys(this.data.recon.situationSummary).join(",");
-            this.data.situationList = _.map(_.pairs(this.data.recon.situationSummary), function(item) { return { key: item[0], value: item[1] }; });
+            this.data.situationList = _.map(_.toPairs(this.data.recon.situationSummary), function(item) { return { key: item[0], value: item[1] }; });
 
             if (recon.started) {
                 this.data.last_started = dateUtil.formatDate(recon.started,"MMMM dd, yyyy HH:mm");
@@ -187,7 +188,7 @@ define([
             reconDelegate.getNewLinksFromRecon(this.data.recon._id, this.data.recon.ended).then(_.bind(function(newLinks) {
                 this.data.newLinks = newLinks;
                 this.data.newLinkIds = _.chain(newLinks)
-                    .pluck("sourceObjectId")
+                    .map("sourceObjectId")
                     .map(_.bind(function(sObjId) {
                         return sObjId.replace(this.mapping.source + "/","");
                     }, this))
@@ -225,7 +226,7 @@ define([
                                 translatedObject= syncDelegate.translateToTarget(sourceObject, _this.mapping);
                                 txt =  mappingUtils.buildObjectRepresentation(translatedObject, _this.data.targetProps);
 
-                                if (_.contains(_this.data.newLinkIds,sourceObject._id)) {
+                                if (_.includes(_this.data.newLinkIds,sourceObject._id)) {
                                     txt = "<span class='newLinkWarning errorMessage fa fa-exclamation-triangle' title='" + $.t("templates.mapping.analysis.newLinkCreated") + "'></span> " + txt;
                                 }
                             } else {
@@ -260,7 +261,7 @@ define([
                                 ambiguousTargetObjectIds = this.model.get("ambiguousTargetObjectIds"),
                                 txt;
 
-                            if (sourceObject && _.contains(_this.data.newLinkIds, sourceObject._id)) {
+                            if (sourceObject && _.includes(_this.data.newLinkIds, sourceObject._id)) {
                                 txt = mappingUtils.buildObjectRepresentation(_.filter(_this.data.newLinks, function(link){
                                     return link.sourceObjectId.replace(_this.mapping.source + "/","") === sourceObject._id;
                                 })[0].targetObject, _this.data.targetProps);
@@ -361,7 +362,7 @@ define([
                 collection: _this.model.recons,
                 row: BackgridUtils.ClickableRow.extend({
                     callback: function(e) {
-                        var disableButton = !this.model.get("sourceObject") || _.contains(_this.data.newLinkIds,this.model.get("_id"));
+                        var disableButton = !this.model.get("sourceObject") || _.includes(_this.data.newLinkIds,this.model.get("_id"));
 
                         _this.$el.find(".actionButton").prop('disabled',disableButton);
                         _this.$el.find(".selected").removeClass("selected");
@@ -385,7 +386,7 @@ define([
 
         onRowSelect: function (model, selected) {
             if (selected) {
-                if (!_.contains(this.data.selectedItems, model.id)) {
+                if (!_.includes(this.data.selectedItems, model.id)) {
                     this.data.selectedItems.push(model.id);
                 }
             } else {

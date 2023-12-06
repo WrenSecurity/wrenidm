@@ -12,10 +12,11 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/mapping/util/MappingAdminAbstractView",
     "org/forgerock/openidm/ui/admin/mapping/association/DataAssociationManagementView",
     "org/forgerock/openidm/ui/admin/mapping/association/IndividualRecordValidationView",
@@ -37,7 +38,7 @@ define([
             var mapping = this.getCurrentMapping();
 
             this.data.hideObjectFilters = true;
-            _.each(IndividualRecordValidationView.model.scripts, function(script) {
+            _.each(IndividualRecordValidationView.model.scripts, _.bind(function(script) {
                 if (_.has(IndividualRecordValidationView.model, "mapping")) {
                     if (_.has(IndividualRecordValidationView.model.mapping, script)) {
                         this.data.hideObjectFilters = false;
@@ -45,7 +46,7 @@ define([
                 } else if (_.has(mapping, script)) {
                     this.data.hideObjectFilters = false;
                 }
-            }, this);
+            }, this));
 
             this.data.hideReconQueries = !mapping.sourceQuery && !mapping.targetQuery;
 

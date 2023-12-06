@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/settings/audit/AuditAdminAbstractView",
     "org/forgerock/openidm/ui/admin/settings/audit/AuditEventHandlersDialog",
     "org/forgerock/openidm/ui/admin/delegates/AuditDelegate",
@@ -50,7 +51,7 @@ define([
                 eventHandler = {};
 
             if (args && args.reRender) {
-                this.model.auditData = _.clone(args.auditData, true);
+                this.model.auditData = _.cloneDeep(args.auditData);
             } else {
                 this.model.auditData = this.getAuditData();
             }
@@ -59,15 +60,15 @@ define([
                 this.model.availableHandlers = data;
 
                 if (_.has(this.model.auditData, "auditServiceConfig") && _.has(this.model.auditData.auditServiceConfig, "handlerForQueries")) {
-                    this.model.useForQueries = _.clone(this.model.auditData.auditServiceConfig.handlerForQueries, true);
+                    this.model.useForQueries = _.cloneDeep(this.model.auditData.auditServiceConfig.handlerForQueries);
                 } else {
                     this.model.useForQueries = "";
                 }
 
                 if (_.has(this.model.auditData, "eventHandlers")) {
-                    this.model.events = _.clone(this.model.auditData.eventHandlers, true);
+                    this.model.events = _.cloneDeep(this.model.auditData.eventHandlers);
 
-                    _.each(_.clone(this.model.auditData.eventHandlers, true), function(handler) {
+                    _.each(_.cloneDeep(this.model.auditData.eventHandlers), _.bind(function(handler) {
 
                         eventHandler = _.find(data, {"class": handler.class});
 
@@ -101,12 +102,12 @@ define([
                             handler.config.topics = handler.config.topics.join(", ");
                         }
                         this.data.definedEventHandlers.push(handler);
-                    }, this);
+                    }, this));
                 }
 
                 if (_.has(this.model.auditData, "auditServiceConfig")) {
                     if (_.has(this.model.auditData.auditServiceConfig, "availableAuditEventHandlers")) {
-                        _.each(_.clone(this.model.auditData.auditServiceConfig.availableAuditEventHandlers, true), function (handler) {
+                        _.each(_.cloneDeep(this.model.auditData.auditServiceConfig.availableAuditEventHandlers), _.bind(function (handler) {
 
                             if (_.last(handler.split(".")) === ONE_HANDLER_MAX_PROP_NAME && allowRepo) {
                                 this.data.eventHandlers.push({
@@ -119,7 +120,7 @@ define([
                                     value: handler
                                 });
                             }
-                        }, this);
+                        }, this));
                     }
                 }
 
@@ -128,16 +129,16 @@ define([
                         this.model.changesModule = ChangesPending.watchChanges({
                             element: this.$el.find(".audit-event-handlers-alert"),
                             undo: true,
-                            watchedObj: _.clone(this.model.auditData, true),
+                            watchedObj: _.cloneDeep(this.model.auditData),
                             watchedProperties: ["auditServiceConfig", "eventHandlers"],
                             undoCallback: _.bind(function (original) {
-                                _.each(this.model.changesModule.data.watchedProperties, function (prop) {
+                                _.each(this.model.changesModule.data.watchedProperties, _.bind(function (prop) {
                                     if (_.has(original, prop)) {
                                         this.model.auditData[prop] = original[prop];
                                     } else if (_.has(this.model.auditData, prop)) {
                                         delete this.model.auditData[prop];
                                     }
-                                }, this);
+                                }, this));
 
                                 this.setProperties(["eventHandlers"], this.model.auditData);
                                 this.setUseForQueries(this.model.auditData.auditServiceConfig.handlerForQueries);
@@ -204,19 +205,19 @@ define([
         editEventHandler: function (e) {
             e.preventDefault();
             var eventHandlerName = {"config": {"name": $(e.currentTarget).attr("data-name")}},
-                event = _.findWhere(this.model.auditData.eventHandlers, eventHandlerName),
-                canDisable = !_.findWhere(this.data.definedEventHandlers, eventHandlerName).useForQueries;
+                event = _.find(this.model.auditData.eventHandlers, eventHandlerName),
+                canDisable = !_.find(this.data.definedEventHandlers, eventHandlerName).useForQueries;
 
             AuditEventHandlersDialog.render(
                 {
                     "canDisable": canDisable,
                     "eventHandlerType": event.class,
-                    "eventHandler": _.clone(event, true),
+                    "eventHandler": _.cloneDeep(event),
                     "newEventHandler": false,
                     "usedEventHandlerNames": _.map(this.model.auditData.eventHandlers, function (t) {return t.config.name;})
                 },
                 _.bind(function (results) {
-                    var index = _.indexOf(this.model.auditData.eventHandlers, _.findWhere(this.model.auditData.eventHandlers, {"config": {"name": results.eventHandler.config.name }}));
+                    var index = _.indexOf(this.model.auditData.eventHandlers, _.find(this.model.auditData.eventHandlers, {"config": {"name": results.eventHandler.config.name }}));
                     this.model.auditData.eventHandlers[index] = results.eventHandler;
 
                     this.reRender();
@@ -244,12 +245,12 @@ define([
                             currentHandler = _.find(this.model.auditData.eventHandlers, {"config": {"name": currentHandlerName}}),
                             currentHandlerType = {};
 
-                        _.each(this.model.auditData.eventHandlers, function(eventHandler) {
+                        _.each(this.model.auditData.eventHandlers, _.bind(function(eventHandler) {
                             if (_.find(this.model.availableHandlers, {"class": eventHandler.class}).isUsableForQueries) {
                                 found = true;
                                 return false;
                             }
-                        }, this);
+                        }, this));
 
                         if (_.has(currentHandler, "class")) {
                             currentHandlerType = _.find(this.model.availableHandlers, {"class": currentHandler.class});

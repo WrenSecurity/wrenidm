@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "handlebars",
     "jsonEditor",
     "org/forgerock/commons/ui/common/main/AbstractView",
@@ -112,7 +113,7 @@ define([
                         if (this.data.isSystemResource) {
                             displayField = _.chain(schema.properties)
                                 .map(function(val, key) { val.name = key; return val; })
-                                .where({ nativeName: "__NAME__" })
+                                .filter({ nativeName: "__NAME__" })
                                 .value();
 
                             if (displayField) {
@@ -171,7 +172,7 @@ define([
 
             this.oldObject = $.extend(true, {}, filteredObject);
 
-            filteredProperties = resourceCollectionUtils.convertRelationshipTypes(_.omit(schema.properties,function(p) { return !p.viewable; }));
+            filteredProperties = resourceCollectionUtils.convertRelationshipTypes(_.omitBy(schema.properties,function(p) { return !p.viewable; }));
 
             if (!_.isEmpty(filteredProperties)){
                 filteredObject = _.pick(filteredObject, _.keys(filteredProperties));
@@ -332,7 +333,7 @@ define([
 
                 This loop filters out previously null values that have not been changed.
                 */
-                _.each(_.keys(formVal), function(key){
+                _.each(_.keys(formVal), _.bind(function(key){
                     // The old property must be null or undefined
                     if (this.oldObject[key] === null || this.oldObject[key] === undefined) {
                         // The property isn't an object and it is false or empty
@@ -342,7 +343,7 @@ define([
                             formVal[key] = this.oldObject[key];
                         }
                     }
-                }, this);
+                }, this));
             } else {
                 _.each(this.$el.find(".resourceCollectionValue"), function(element) {
                     try {
@@ -381,7 +382,7 @@ define([
             }
 
             if (this.data.newObject){
-                formVal = _.omit(formVal,function (val) { return val === "" || val === null; });
+                formVal = _.omitBy(formVal,function (val) { return val === "" || val === null; });
                 resourceDelegate.createResource(this.data.serviceUrl, formVal._id, formVal, successCallback);
             } else {
                 if (!this.data.isSystemResource) {
@@ -527,7 +528,7 @@ define([
 
                 if (el.val().length && el.val() !== "null") {
                     propertyValuePath = resourceCollectionUtils.getPropertyValuePath(JSON.parse(el.val()));
-                    resourceCollectionSchema = _.findWhere(_this.data.schema.allSchemas, { name : propertyValuePath.split("/")[propertyValuePath.split("/").length - 1] });
+                    resourceCollectionSchema = _.find(_this.data.schema.allSchemas, { name : propertyValuePath.split("/")[propertyValuePath.split("/").length - 1] });
 
                     if (resourceCollectionSchema) {
                         iconClass = resourceCollectionSchema.schema.icon;

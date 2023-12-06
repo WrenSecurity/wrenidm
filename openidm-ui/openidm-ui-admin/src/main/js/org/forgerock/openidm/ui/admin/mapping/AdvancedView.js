@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
@@ -77,17 +78,17 @@ define([
 
                     // Overwrite `ChangesPending#isChanged` to provide functionality to ChangesPending Widget
                     panel.changeWatcher.isChanged = function() {
-                        var isChanged =  _.some(this.data.watchedProperties, function (prop) {
+                        var isChanged =  _.some(this.data.watchedProperties, _.bind(function (prop) {
                         // need to add `!` to the output of `compare` to return from properly from `_.some`
                             return !this.compareObjects(prop, this.data.watchedObj, this.data.changes);
-                        }, this);
+                        }, this));
                         return isChanged;
                     };
 
                     // Overwrite `ChangesPending#compareObjects` to provide proper functionality to ChangesPending Widget
                     panel.changeWatcher.compareObjects = function(property, obj1, obj2) {
-                        var val1 = _.clone(obj1[property], true),
-                            val2 = _.clone(obj2[property], true),
+                        var val1 = _.cloneDeep(obj1[property]),
+                            val2 = _.cloneDeep(obj2[property]),
                             deleteEmptyProperties = function (obj) {
                                 _.each(obj, function(prop, key) {
                                     if (_.isEmpty(prop) && !_.isNumber(prop) && !_.isBoolean(prop)) {

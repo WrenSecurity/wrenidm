@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "backbone",
     "bootstrap",
     "org/forgerock/openidm/ui/admin/util/AdminAbstractView",
@@ -242,13 +243,13 @@ define([
                 });
             }
 
-            _.each(tempConnector, function(connectorObject, index){
+            _.each(tempConnector, _.bind(function(connectorObject, index){
                 if (connectorObject.cleanUrlName === selectedItem.attr("data-connector-title")) {
                     connectorPath = this.data.currentConnectors[index].config;
                     connectorName = this.data.currentConnectors[index].name;
                     connectorIndex = index;
                 }
-            }, this);
+            }, this));
 
             connectorUtils.deleteConnector(connectorName, connectorPath, () => {
                 this.data.currentConnectors.splice(connectorIndex, 1);
@@ -276,21 +277,21 @@ define([
             var search = $(event.target).val().toLowerCase();
 
             if (search.length > 0) {
-                _.each(this.$el.find(".card-spacer"), function(card) {
+                _.each(this.$el.find(".card-spacer"), _.bind(function(card) {
                     if ($(card).attr("data-type").toLowerCase().indexOf(search) > -1 || $(card).attr("data-name").toLowerCase().indexOf(search) > -1) {
                         $(card).fadeIn();
                     } else {
                         $(card).fadeOut();
                     }
-                }, this);
+                }, this));
 
-                _.each(this.$el.find(".backgrid tbody tr"), function(row) {
+                _.each(this.$el.find(".backgrid tbody tr"), _.bind(function(row) {
                     if ($(row).attr("data-type").toLowerCase().indexOf(search) > -1 || $(row).attr("data-name").toLowerCase().indexOf(search) > -1) {
                         $(row).fadeIn();
                     } else {
                         $(row).fadeOut();
                     }
-                }, this);
+                }, this));
             } else {
                 this.$el.find(".card-spacer").fadeIn();
                 this.$el.find(".backgrid tbody tr").fadeIn();

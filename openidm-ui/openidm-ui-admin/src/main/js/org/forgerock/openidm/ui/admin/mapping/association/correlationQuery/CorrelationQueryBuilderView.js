@@ -12,18 +12,19 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "handlebars",
     "org/forgerock/openidm/ui/admin/util/AdminAbstractView",
     "org/forgerock/openidm/ui/admin/util/InlineScriptEditor"
 ], function($, _, Handlebars, AdminAbstractView, InlineScriptEditor) {
 
     var CorrelationQueryBuilderView, expressionClosure;
-    
+
     CorrelationQueryBuilderView = AdminAbstractView.extend({
         template: "templates/admin/mapping/association/correlationQuery/CorrelationQueryBuilderTemplate.html",
         element: "#correlationQueryBuilderView",
@@ -86,7 +87,7 @@ define([
 
             this.data.fieldNames = [];
 
-            _.each(this.model.mapping.properties, function(property) {
+            _.each(this.model.mapping.properties, _.bind(function(property) {
                 // Link qualifier must match selected link qualifier
                 if ( (_.has(property, "condition") && _.has(property.condition, "linkQualifier") && property.condition.linkQualifier === this.model.linkQualifier) ||
                 // Or if there is a condition there cannot be a linkQualifier
@@ -95,10 +96,10 @@ define([
                     (!_.has(property, "condition") ) ) {
                     this.data.fieldNames.push(property.target);
                 }
-            }, this);
+            }, this));
 
             this.data.fieldNames = _.chain(this.data.fieldNames)
-                .unique()
+                .uniq()
                 .sortBy("name")
                 .value();
 

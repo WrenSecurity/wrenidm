@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "handlebars",
     "jsonEditor",
     "backbone",
@@ -140,7 +141,7 @@ define([
                 makeSortable = () => {
                     BackgridUtils.sortable({
                         "containers": [this.$el.find(".refPropertiesList tbody")[0]],
-                        "rows": _.clone(refProperties, true)
+                        "rows": _.cloneDeep(refProperties)
                     }, _.bind(function(newOrder) {
                         //get the _id property
                         var idProp = this.data.currentValue.properties._refProperties.properties[0];

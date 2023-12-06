@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/mapping/util/MappingAdminAbstractView",
     "org/forgerock/commons/ui/common/main/Configuration",
     "org/forgerock/commons/ui/common/util/Constants",
@@ -99,7 +100,7 @@ define([
             this.model.mapping = this.getCurrentMapping();
             this.model.mappingName = this.getMappingName();
             this.model.saveCallback = args.saveCallback;
-            this.model.renderedPolicies = args.policies || _.clone(this.model.mapping.policies, true) || [];
+            this.model.renderedPolicies = args.policies || _.cloneDeep(this.model.mapping.policies) || [];
 
             if (args.changes) {
                 this.data.changes = true;
@@ -157,9 +158,9 @@ define([
             });
 
             // Order the properties and fill in any empty situation
-            _.each(this.model.baseSituations, function(policy, situationName) {
+            _.each(this.model.baseSituations, _.bind(function(policy, situationName) {
                 if (_.isArray(systemPolicies[situationName])) {
-                    _.each(systemPolicies[situationName], function(situation) {
+                    _.each(systemPolicies[situationName], _.bind(function(situation) {
                         temp = _.pick(situation, "action", "situation", "condition", "postAction");
                         if (!_.has(temp, "condition")) {
                             temp.condition = null;
@@ -169,7 +170,7 @@ define([
                             temp.postAction = null;
                         }
                         systemPoliciesList = systemPoliciesList.concat(temp);
-                    }, this);
+                    }, this));
                 } else {
                     temp = _.pick(policy, "action", "situation", "condition", "postAction");
                     temp.situation = _.invert(this.model.lookup)[temp.situation];
@@ -193,7 +194,7 @@ define([
                     temp.situation = _.invert(this.model.lookup)[temp.situation];
                     newPoliciesFilledIn = newPoliciesFilledIn.concat(temp);
                 }
-            }, this);
+            }, this));
 
             if (_.isEqual(newPoliciesFilledIn, systemPoliciesList)) {
                 changes = false;
@@ -220,7 +221,7 @@ define([
                 }, this));
 
                 // Gets a copy of a the default action policies and formats it for rendering
-                _.each(this.model.allPatterns["Default Actions"].policies, function(policy) {
+                _.each(this.model.allPatterns["Default Actions"].policies, _.bind(function(policy) {
                     this.model.baseSituations[policy.situation] = {
                         "severity": "",
                         "situation": this.model.lookup[policy.situation],
@@ -254,7 +255,7 @@ define([
                             this.model.baseSituations[policy.situation].severity = "success-display";
                             break;
                     }
-                }, this);
+                }, this));
 
             }, this));
         },
@@ -288,7 +289,7 @@ define([
                 policies = this.model.allPatterns["Default Actions"].policies;
             }
 
-            _.each(policies, function (policy) {
+            _.each(policies, _.bind(function (policy) {
                 action = "";
                 condition = "";
                 postAction = "";
@@ -358,10 +359,10 @@ define([
                     "disabled": true
                 });
 
-            }, this);
+            }, this));
 
             // Order the properties and fill in any empty situation
-            _.each(this.model.baseSituations, function(policy, situationName) {
+            _.each(this.model.baseSituations, _.bind(function(policy, situationName) {
                 if (_.isArray(tempPolicies[situationName])) {
                     if (tempPolicies[situationName].length > 1 ) {
                         _.each(tempPolicies[situationName], function(policy, index) {
@@ -372,9 +373,9 @@ define([
                 } else {
                     this.data.policies = this.data.policies.concat(policy);
                 }
-            }, this);
+            }, this));
 
-            _.each(this.model.allPatterns, function(pattern, name) {
+            _.each(this.model.allPatterns, _.bind(function(pattern, name) {
                 currentPattern = _.chain(pattern.policies)
                     .map(function(policy) {
                         return _.pick(policy, "action", "situation");
@@ -393,7 +394,7 @@ define([
                     patternFound = true;
                     this.model.currentPattern = name;
                 }
-            }, this);
+            }, this));
 
             if (!patternFound) {
                 this.model.currentPattern = "Custom";
@@ -446,10 +447,10 @@ define([
 
             _.each(this.$el.find("#situationalPolicies table .event-hook .delete-policy"), function(deleteButton, index) {
                 if (deleteButton === event.currentTarget && !$(event.currentTarget).hasClass("disabled")) {
-                    _.each(this.data.policies, function(policy, index) {
+                    _.each(this.data.policies, _.bind(function(policy, index) {
                         this.data.policies[index] = _.pick(policy, "action", "situation", "condition", "postAction");
                         this.data.policies[index].situation = _.invert(this.model.lookup)[this.data.policies[index].situation];
-                    }, this);
+                    }, this));
 
                     this.data.policies.splice(index, 1);
                     this.reRender(this.data.policies);
@@ -478,7 +479,7 @@ define([
         editPolicy: function(event) {
             event.preventDefault();
 
-            _.each(this.$el.find("#situationalPolicies table .event-hook .edit-policy"), function(editButton, index) {
+            _.each(this.$el.find("#situationalPolicies table .event-hook .edit-policy"), _.bind(function(editButton, index) {
                 if (editButton === event.currentTarget) {
                     PoliciesDialogView.render({
                         "mappingName" : this.model.mappingName,
@@ -489,10 +490,10 @@ define([
                         "basePolicy": this.model.baseSituations[_.invert(this.model.lookup)[this.data.policies[index].situation]],
                         "lookup": this.model.lookup,
                         "saveCallback": _.bind(function(policy) {
-                            _.each(this.data.policies, function(policy, index) {
+                            _.each(this.data.policies, _.bind(function(policy, index) {
                                 this.data.policies[index] = _.pick(policy, "action", "situation", "condition", "postAction");
                                 this.data.policies[index].situation = _.invert(this.model.lookup)[this.data.policies[index].situation];
-                            }, this);
+                            }, this));
 
                             this.data.policies[index] = policy;
 
@@ -500,7 +501,7 @@ define([
                         }, this)
                     });
                 }
-            }, this);
+            }, this));
         },
 
         reset: function() {
@@ -511,7 +512,7 @@ define([
             var policies = [],
                 _this = this;
 
-            _.each(this.model.renderedPolicies, function(policy) {
+            _.each(this.model.renderedPolicies, _.bind(function(policy) {
                 policy = _.pick(policy, "action", "situation", "postAction", "condition");
 
                 if (!policy.condition) {
@@ -523,7 +524,7 @@ define([
                 }
 
                 policies.push(policy);
-            }, this);
+            }, this));
 
             this.model.mapping.policies = policies;
 

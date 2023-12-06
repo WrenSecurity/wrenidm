@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/mapping/util/MappingAdminAbstractView",
     "org/forgerock/openidm/ui/admin/delegates/SyncDelegate",
     "org/forgerock/commons/ui/common/main/ValidatorsManager",
@@ -107,7 +108,7 @@ define([
             var source = $("input[name='source']", this.currentDialog).val(),
                 hasAvailableSourceProps = this.data.availableSourceProps && this.data.availableSourceProps.length,
                 hasSourceValue = source && source.length,
-                invalidSourceProp = hasAvailableSourceProps && hasSourceValue && !_.contains(this.data.availableSourceProps,source),
+                invalidSourceProp = hasAvailableSourceProps && hasSourceValue && !_.includes(this.data.availableSourceProps,source),
                 proplistValidationMessage = $("#Property_List .validation-message", this.currentDialog),
                 transformValidationMessage = $("#Transformation_Script .validation-message", this.currentDialog),
                 conditionValidationMessage = $("#Condition_Script .validation-message", this.currentDialog),

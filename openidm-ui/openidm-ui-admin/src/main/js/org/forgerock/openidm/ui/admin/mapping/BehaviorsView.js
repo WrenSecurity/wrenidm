@@ -12,10 +12,11 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/mapping/util/MappingAdminAbstractView",
     "org/forgerock/commons/ui/common/main/EventManager",
     "org/forgerock/commons/ui/common/util/Constants",
@@ -65,7 +66,7 @@ define([
                 this.data.borderHide = true;
             }
 
-            _.each(SituationalEventScriptsView.model.scripts, function (script) {
+            _.each(SituationalEventScriptsView.model.scripts, _.bind(function (script) {
                 if (_.has(SituationalEventScriptsView.model, "mapping")) {
                     if (_.has(SituationalEventScriptsView.model.mapping, script)) {
                         this.data.hideSituational = false;
@@ -73,9 +74,9 @@ define([
                 } else if (_.has(this.mapping, script)) {
                     this.data.hideSituational = false;
                 }
-            }, this);
+            }, this));
 
-            _.each(ReconciliationScriptView.model.scripts, function (script) {
+            _.each(ReconciliationScriptView.model.scripts, _.bind(function (script) {
                 if (_.has(ReconciliationScriptView.model, "mapping")) {
                     if (_.has(ReconciliationScriptView.model.mapping, script)) {
                         this.data.hideRecon = false;
@@ -83,7 +84,7 @@ define([
                 } else if (_.has(this.mapping, script)) {
                     this.data.hideRecon = false;
                 }
-            }, this);
+            }, this));
 
             this.parentRender(_.bind(function () {
                 PoliciesView.render({

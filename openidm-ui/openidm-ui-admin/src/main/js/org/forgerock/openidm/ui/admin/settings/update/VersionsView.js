@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "handlebars",
     "backgrid",
     "bootstrap-dialog",
@@ -78,15 +79,15 @@ define([
 
                 MaintenanceDelegate.availableUpdateVersions().then(_.bind(function(data) {
 
-                    _.each(data, function (models) {
-                        _.each(models, function (model) {
+                    _.each(data, _.bind(function (models) {
+                        _.each(models, _.bind(function (model) {
                             if (model.reason) {
                                 this.data.errorMessage = model.reason;
                                 this.data.revision = $.t("templates.update.versions.badRevision");
                             }
                             Versions.add(model);
-                        }, this);
-                    }, this);
+                        }, this));
+                    }, this));
 
                     this.data.noVersions = data.updates.length === 0;
 

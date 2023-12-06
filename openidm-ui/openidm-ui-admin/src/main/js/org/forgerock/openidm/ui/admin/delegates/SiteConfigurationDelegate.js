@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/commons/ui/common/main/AbstractDelegate",
     "org/forgerock/commons/ui/common/main/Configuration",
     "org/forgerock/openidm/ui/common/delegates/SiteConfigurationDelegate",
@@ -69,7 +70,7 @@ define([
             ConfigDelegate.readEntity("ui/configuration").then(function (uiConfig) {
 
                 if (
-                    (_.contains(conf.loggedUser.uiroles,"ui-admin") &&
+                    (_.includes(conf.loggedUser.uiroles,"ui-admin") &&
                     Navigation.configuration.links && Navigation.configuration.links.admin &&
                     Navigation.configuration.links.admin.urls &&
                     Navigation.configuration.links.admin.urls.managed &&

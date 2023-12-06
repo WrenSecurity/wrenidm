@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "bootstrap",
     "handlebars",
     "form2js",
@@ -220,10 +221,10 @@ define([
 
                 this.model.surpressSave = true;
 
-                _.each(this.$el.find(".wide-card"), function(card) {
-                    tempConfig = _.find(this.data.configList, function(config) {
+                _.each(this.$el.find(".wide-card"), _.bind(function(card) {
+                    tempConfig = _.find(this.data.configList, _.bind(function(config) {
                         return $(card).attr("data-type") === config.type;
-                    }, this);
+                    }, this));
 
                     if (tempConfig.enabledByDefault) {
                         if ($(card).find(".section-check").length > 0) {
@@ -236,7 +237,7 @@ define([
                             return stage.name === $(card).attr("data-type");
                         });
                     }
-                }, this);
+                }, this));
 
                 this.model.surpressSave = false;
 
@@ -454,10 +455,10 @@ define([
                                 _.extend(currentData, formData);
 
                                 //Check for array items and set the values
-                                _.each(dialogRef.$modalBody.find("input.array-selection"), function (arraySelection) {
+                                _.each(dialogRef.$modalBody.find("input.array-selection"), _.bind(function (arraySelection) {
                                     tempName = $(arraySelection).prop("name");
                                     currentData[tempName] = $(arraySelection)[0].selectize.getValue().split(",");
-                                }, this);
+                                }, this));
 
                                 self.saveConfig();
 
@@ -574,7 +575,7 @@ define([
                         disabledList = _.filter(this.data.configList, (config) => {
                             var filterCheck = true;
 
-                            _.each(selfServiceConfig.stageConfigs, function (stage) {
+                            _.each(selfServiceConfig.stageConfigs, _.bind(function (stage) {
                                 if (stage.name === config.type) {
                                     filterCheck = false;
 
@@ -583,22 +584,22 @@ define([
                                         this.data.emailRequired = true;
                                     }
                                 }
-                            }, this);
+                            }, this));
 
                             return filterCheck;
                         });
 
-                        _.each(selfServiceConfig.stageConfigs, function (stage) {
-                            _.each(this.data.configList, function (config) {
+                        _.each(selfServiceConfig.stageConfigs, _.bind(function (stage) {
+                            _.each(this.data.configList, _.bind(function (config) {
                                 if (stage.name === config.type) {
                                     configList.push(config);
                                 }
-                            }, this);
-                        }, this);
+                            }, this));
+                        }, this));
 
-                        _.each(disabledList, function (config) {
+                        _.each(disabledList, _.bind(function (config) {
                             configList.splice(config.index, 0, config);
-                        }, this);
+                        }, this));
 
                         this.data.configList = configList;
                         this.data.enableSelfService = true;
@@ -620,10 +621,10 @@ define([
                             this.model.surpressSave = true;
                             this.setSortable();
 
-                            _.each(selfServiceConfig.stageConfigs, function (stage) {
+                            _.each(selfServiceConfig.stageConfigs, _.bind(function (stage) {
                                 this.$el.find(".wide-card[data-type='" + stage.name + "']").toggleClass("disabled", false);
                                 this.$el.find(".wide-card[data-type='" + stage.name + "'] .section-check").prop("checked", true).trigger("change");
-                            }, this);
+                            }, this));
                             this.showCaptchaWarning(this.model.saveConfig.stageConfigs);
 
 
@@ -695,13 +696,13 @@ define([
 
             $.extend(true, tempConfig, this.model.saveConfig);
 
-            _.each(this.$el.find(".selfservice-holder .wide-card"), function(config) {
-                _.each(tempConfig.stageConfigs, function(stage){
+            _.each(this.$el.find(".selfservice-holder .wide-card"), _.bind(function(config) {
+                _.each(tempConfig.stageConfigs, _.bind(function(stage){
                     if (stage.name === $(config).attr("data-type")) {
                         stageOrder.push(_.clone(stage));
                     }
-                }, this);
-            }, this);
+                }, this));
+            }, this));
 
             tempConfig.stageConfigs = stageOrder;
 
@@ -728,12 +729,12 @@ define([
 
             // For each key/property location that the identity service URL should be saved
             // find the corresponding location and set it.
-            _.each(this.model.identityServiceURLSaveLocations, function(data) {
+            _.each(this.model.identityServiceURLSaveLocations, _.bind(function(data) {
                 tempStepConfig = _.filter(this.model.saveConfig.stageConfigs, {"name": data.stepName})[0];
                 if (tempStepConfig) {
                     tempStepConfig[data.stepProperty] = this.data.defaultIdentityServiceURL;
                 }
-            }, this);
+            }, this));
 
             $.extend(true, saveData, this.model.saveConfig, formData);
 

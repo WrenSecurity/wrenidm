@@ -12,12 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions copyright 2018 Wren Security
+ * Portions copyright 2018-2023 Wren Security
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "jsonEditor",
     "org/forgerock/openidm/ui/admin/util/AdminAbstractView",
     "org/forgerock/openidm/ui/admin/managed/schema/dataTypes/RelationshipTypeView",
@@ -138,7 +138,7 @@ define([
                 */
                 propertyNameId = "#0-" + elementId.split("-").splice(0,3).join("-") + "-propertyName",
                 propertyName = this.$el.find(propertyNameId).val(),
-                propertySchema = _.findWhere(this.data.managedObjectSchema.getValue().properties,{propertyName: propertyName});
+                propertySchema = _.find(this.data.managedObjectSchema.getValue().properties,{propertyName: propertyName});
 
             /*
              when changing the order of the properties the this.getRelationshipElements()
@@ -662,9 +662,9 @@ define([
         translateSubProperties: function(properties, order, required, forArray) {
             var jsonEditorProperties = [];
 
-            _.each(order, function(propertyName) {
+            _.each(order, _.bind(function(propertyName) {
                 jsonEditorProperties.push(this.getType(properties[propertyName], propertyName, required, forArray));
-            }, this);
+            }, this));
 
             return jsonEditorProperties;
         },
@@ -800,7 +800,7 @@ define([
                 "required": [],
                 "order": []
             };
-            _.each(props, function(property, index) {
+            _.each(props, _.bind(function(property, index) {
                 var convertPolicyParams = function (policies) {
                     _.each(policies, function (policy) {
                         var policyParams = {};
@@ -858,7 +858,7 @@ define([
                 }
 
                 data.order.push(property.propertyName);
-            }, this);
+            }, this));
 
             return data;
         },

@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/settings/audit/AuditAdminAbstractView",
     "org/forgerock/openidm/ui/admin/settings/audit/AuditFilterPoliciesDialog",
     "org/forgerock/commons/ui/common/components/ChangesPending"
@@ -59,7 +60,7 @@ define([
                     this.model.changesModule = ChangesPending.watchChanges({
                         element: this.$el.find(".audit-filter-alert"),
                         undo: true,
-                        watchedObj: _.clone(this.model.auditData.auditServiceConfig, true),
+                        watchedObj: _.cloneDeep(this.model.auditData.auditServiceConfig),
                         watchedProperties: ["filterPolicies"],
                         undoCallback: _.bind(function (original) {
                             this.model.filterPolicies = original.filterPolicies;
@@ -118,7 +119,7 @@ define([
             var tempLocation;
 
             function addFilter(type, includeExclude) {
-                _.each(this.model.filterPolicies[type][includeExclude], function(location) {
+                _.each(this.model.filterPolicies[type][includeExclude], _.bind(function(location) {
                     tempLocation = location.split("/");
 
                     this.data.filters.push({
@@ -129,7 +130,7 @@ define([
                         "topic": tempLocation[1] || "",
                         "location": tempLocation.splice(2).join("/") || location
                     });
-                }, this);
+                }, this));
             }
 
             if (_.has(this.model.filterPolicies, "field")) {

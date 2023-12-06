@@ -22,9 +22,7 @@ require.config({
             "ThemeManager": "org/forgerock/openidm/ui/common/util/ThemeManager",
             "LoginView": "org/forgerock/openidm/ui/common/login/LoginView",
             "LoginDialog": "org/forgerock/openidm/ui/common/login/LoginDialog",
-            "NavigationFilter" : "org/forgerock/commons/ui/common/components/navigation/filters/RoleFilter",
-            // TODO: Remove this when there are no longer any references to the "underscore" dependency
-            "underscore": "lodash"
+            "NavigationFilter" : "org/forgerock/commons/ui/common/components/navigation/filters/RoleFilter"
         }
     },
     paths: {
@@ -36,6 +34,7 @@ require.config({
         "backgrid-filter": "libs/backgrid-filter",
         "backgrid-paginator": "libs/backgrid-paginator",
         "backgrid-selectall": "libs/backgrid-select-all",
+        underscore : "libs/underscore",
         lodash: "libs/lodash",
         js2form: "libs/js2form",
         form2js: "libs/form2js",
@@ -63,9 +62,6 @@ require.config({
     },
 
     shim: {
-        underscore: {
-            exports: "_"
-        },
         backbone: {
             deps: ["underscore"],
             exports: "Backbone"
@@ -115,10 +111,6 @@ require.config({
         },
         handlebars: {
             exports: "handlebars"
-        },
-        i18next: {
-            deps: ["jquery", "handlebars"],
-            exports: "i18n"
         },
         moment: {
             exports: "moment"
@@ -172,6 +164,7 @@ require([
 
     "jquery",
     "underscore",
+    "lodash",
     "backbone",
     "handlebars",
     "i18next",

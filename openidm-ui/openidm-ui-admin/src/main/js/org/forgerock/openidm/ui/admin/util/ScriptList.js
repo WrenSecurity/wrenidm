@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/util/AdminAbstractView",
     "org/forgerock/openidm/ui/admin/util/ScriptDialog",
     "org/forgerock/commons/ui/common/util/UIUtils"
@@ -40,7 +41,7 @@ define([
                     tempScriptData;
 
                 this.element = args.element;
-                this.data = _.clone(args, true);
+                this.data = _.cloneDeep(args);
 
                 this.data.eventHooks = {};
 
@@ -138,13 +139,13 @@ define([
             },
 
             getScripts: function() {
-                var scripts =  _.map(this.data.addedEvents, function(event) {
+                var scripts =  _.map(this.data.addedEvents, _.bind(function(event) {
                     if (_.has(this.data.currentObject, event)) {
                         return this.data.currentObject[event];
                     }
-                }, this);
+                }, this));
 
-                return _.object(this.data.addedEvents, scripts);
+                return _.zipObject(this.data.addedEvents, scripts);
             }
         });
 

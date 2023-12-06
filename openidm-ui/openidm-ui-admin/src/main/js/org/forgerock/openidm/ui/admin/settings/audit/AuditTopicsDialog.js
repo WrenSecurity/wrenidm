@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/settings/audit/AuditAdminAbstractView",
     "org/forgerock/commons/ui/common/util/UIUtils",
     "org/forgerock/commons/ui/common/main/Configuration",
@@ -100,7 +101,7 @@ define([
                 title = $.t("templates.audit.events.dialog.editEvent") + ": " + args.eventName.charAt(0).toUpperCase() + args.eventName.slice(1);
             }
 
-            this.preRenderSetup(_.clone(args, true));
+            this.preRenderSetup(_.cloneDeep(args));
 
             this.model.currentDialog = $('<div id="AuditEventsDialog"></div>');
             this.setElement(this.model.currentDialog);
@@ -138,11 +139,11 @@ define([
                                 event = this.data.defaults.event;
 
                             if (_.has(event, "filter") && _.has(event.filter, "fields")) {
-                                _.each(event.filter.fields, function(field, index) {
+                                _.each(event.filter.fields, _.bind(function(field, index) {
                                     if (field.name === "") {
                                         event.filter.fields.splice(index, 1);
                                     }
-                                }, this);
+                                }, this));
                             }
 
                             returnData.data = event;
@@ -273,23 +274,23 @@ define([
                         items: this.data.defaults.event.passwordFields || []
                     });
 
-                    _.each(fields, function(data) {
+                    _.each(fields, _.bind(function(data) {
                         this.$el.find(".filterFieldValues-"+data.name).selectize({
                             delimiter: ',',
                             persist: false,
                             create: true,
                             items: data.values || []
                         });
-                    }, this);
+                    }, this));
 
-                    _.each(defaultTriggers, function(values, key) {
+                    _.each(defaultTriggers, _.bind(function(values, key) {
                         this.$el.find(".trigger-"+key).selectize({
                             delimiter: ',',
                             persist: false,
                             create: false,
                             items: triggers[key] || []
                         });
-                    }, this);
+                    }, this));
 
                     this.model.filterScript = InlineScriptEditor.generateScriptEditor({
                         "element": this.$el.find("#filterScript"),
@@ -364,9 +365,9 @@ define([
         updateFilterTriggers: function(e) {
             var triggers = {};
 
-            _.each(this.data.defaults.triggers, function(values, key) {
+            _.each(this.data.defaults.triggers, _.bind(function(values, key) {
                 triggers[key] = this.$el.find(".trigger-"+key).val() || [];
-            }, this);
+            }, this));
 
             this.updateFilter("triggers", triggers);
         },
@@ -394,7 +395,7 @@ define([
             var container = $(e.currentTarget).closest(".well"),
                 filterName = container.attr("data-filter-name"),
                 fields = this.data.defaults.event.filter.fields,
-                i = _.indexOf(fields, _.findWhere(fields, {"name": filterName}));
+                i = _.indexOf(fields, _.find(fields, {"name": filterName}));
 
             if (i !== -1) {
                 fields.splice(i, 1);
@@ -415,7 +416,7 @@ define([
             var filterName = e.currentTarget.value,
                 oldFilterName = $(e.currentTarget).closest(".well").attr("data-filter-name"),
                 fields = this.data.defaults.event.filter.fields,
-                i = _.indexOf(fields, _.findWhere(fields, {"name": oldFilterName}));
+                i = _.indexOf(fields, _.find(fields, {"name": oldFilterName}));
 
             if (i !== -1) {
                 if (_.find(this.data.defaults.event.filter.fields, function (field) { return field.name === filterName; })) {
@@ -432,7 +433,7 @@ define([
             var container = $(e.currentTarget).closest(".well"),
                 filterName = container.attr("data-filter-name"),
                 fields = this.data.defaults.event.filter.fields,
-                i = _.indexOf(fields, _.findWhere(fields, {"name": filterName}));
+                i = _.indexOf(fields, _.find(fields, {"name": filterName}));
 
             if (i !== -1) {
                 fields[i].values = this.$el.find(".filterFieldValues-" + filterName).val();

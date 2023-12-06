@@ -13,11 +13,12 @@
  *
  * Copyright 2015-2016 ForgeRock AS.
  * Portions Copyright 2018 Rosie Applications, Inc.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/commons/ui/common/main/AbstractModel",
     "org/forgerock/commons/ui/common/main/Configuration",
     "org/forgerock/commons/ui/common/util/Constants",

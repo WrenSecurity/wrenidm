@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "backbone",
     "org/forgerock/openidm/ui/common/dashboard/widgets/AbstractWidget",
     "org/forgerock/commons/ui/common/main/EventManager",
@@ -41,7 +42,7 @@ define([
 
                 this.partials.push("partials/dashboard/widget/_quickStartConfig.html");
 
-                _.each(this.data.cards, function(card) {
+                _.each(this.data.cards, _.bind(function(card) {
                     card.name = $.t(card.name);
 
                     if (card.event) {
@@ -50,7 +51,7 @@ define([
                             eventManager.sendEvent(card.event);
                         };
                     }
-                }, this);
+                }, this));
 
                 this.parentRender(_.bind(function() {
                     if (callback) {
@@ -80,9 +81,9 @@ define([
                 this.model.QuickStartObjects = Backbone.Collection.extend({ model: this.model.QuickStartModel });
                 this.model.QuickObjectCollection = new this.model.QuickStartObjects();
 
-                _.each(this.data.cards, function(card) {
+                _.each(this.data.cards, _.bind(function(card) {
                     this.model.QuickObjectCollection.add(card);
-                }, this);
+                }, this));
 
                 this.model.quickObjectGrid = new Backgrid.Grid({
                     className: "table backgrid",

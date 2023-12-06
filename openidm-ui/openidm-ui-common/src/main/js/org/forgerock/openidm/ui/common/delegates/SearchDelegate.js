@@ -15,7 +15,7 @@
  */
 
 define([
-    "underscore",
+    "lodash",
     "org/forgerock/commons/ui/common/util/Constants",
     "org/forgerock/commons/ui/common/main/AbstractDelegate"
 ], function(_, constants, AbstractDelegate) {

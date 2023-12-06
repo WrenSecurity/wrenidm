@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/commons/ui/common/main/AbstractView",
     "org/forgerock/commons/ui/common/main/Configuration",
     "org/forgerock/commons/ui/common/util/UIUtils",
@@ -117,10 +118,10 @@ define([
                             this.$el.find(".nav-tabs").tabdrop();
 
                             // Set viable options stars
-                            _.each(this.model.basePolicy.options, function(action) {
+                            _.each(this.model.basePolicy.options, _.bind(function(action) {
                                 tempSelector = $("#defaultActionPane select option[value='"+action+"']");
                                 tempSelector.html(tempSelector.text() + " " + this.data.hollowStar);
-                            }, this);
+                            }, this));
 
                             // Set default option star
                             tempSelector = $("#defaultActionPane select option[value='"+this.model.basePolicy.action+"']");

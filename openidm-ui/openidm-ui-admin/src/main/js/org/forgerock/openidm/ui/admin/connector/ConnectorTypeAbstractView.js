@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "jsonEditor",
     "org/forgerock/commons/ui/common/main/AbstractView",
     "org/forgerock/commons/ui/common/main/ValidatorsManager",
@@ -110,7 +111,7 @@ define([
         },
 
         setSchema: function(schema, orderCount) {
-            _.each(this.data.connectorDefaults.configurationProperties, function(value, key, obj) {
+            _.each(this.data.connectorDefaults.configurationProperties, _.bind(function(value, key, obj) {
                 if (value === null) {
                     this.data.connectorDefaults.configurationProperties[key] = "";
 
@@ -141,7 +142,7 @@ define([
                     };
                 }
                 orderCount++;
-            }, this);
+            }, this));
         },
 
         getGenericState: function() {
@@ -155,13 +156,13 @@ define([
         fieldButtonCheck: function() {
             var arrayComponents = $(".connector-array-component");
 
-            _.each(arrayComponents, function(component){
+            _.each(arrayComponents, _.bind(function(component){
                 if ($(component).find(".remove-btn").length === 1) {
                     $(component).find(".input-group-addon").hide();
                 } else {
                     $(component).find(".input-group-addon").show();
                 }
-            }, this);
+            }, this));
         },
 
         addField: function (event){

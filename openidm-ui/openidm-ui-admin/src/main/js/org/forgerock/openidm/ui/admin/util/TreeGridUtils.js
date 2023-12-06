@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "handlebars"
 ], function ($, _, Handlebars) {
 
@@ -177,7 +178,7 @@ define([
 
         return space;
     });
-    
+
     Handlebars.registerHelper("unchanged", function(file) {
         if ($(file).text() === "Unchanged ") {
             return "";
