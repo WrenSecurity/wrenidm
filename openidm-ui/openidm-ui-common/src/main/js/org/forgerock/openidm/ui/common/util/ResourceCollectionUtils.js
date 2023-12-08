@@ -74,11 +74,11 @@ define([
                 render: {
                     item: function(item, escape) {
                         var txt = obj.getDisplayText(prop, item, resourceCollectionIndex);
-                        return "<div>" + txt + "</div>";
+                        return "<div class=\"item\">" + txt + "</div>";
                     },
                     option: function(item, escape) {
                         var txt = obj.getDisplayText(prop, item, resourceCollectionIndex);
-                        return "<div>" + txt + "</div>";
+                        return "<div class=\"option\">" + txt + "</div>";
                     }
                 },
                 load: function(query, callback) {

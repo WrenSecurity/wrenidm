@@ -78,7 +78,7 @@ define([
             render: {
                 option: function(item, selectizeEscape) {
                     var fields = _.pick(item, autocompleteProps),
-                        element = $('<div class="fr-search-option"></div>'),
+                        element = $('<div class="option fr-search-option"></div>'),
                         counter = 0;
 
                     _.forIn(fields, _.bind(function(value, key) {
@@ -96,7 +96,7 @@ define([
                 item: function(item, escape) {
                     selectedItem = item;
 
-                    return "<div>" +escape(item[autocompleteProps[0]]) +"</div>";
+                    return "<div class=\"item\">" +escape(item[autocompleteProps[0]]) +"</div>";
                 }
             },
             load: function(query, callback) {

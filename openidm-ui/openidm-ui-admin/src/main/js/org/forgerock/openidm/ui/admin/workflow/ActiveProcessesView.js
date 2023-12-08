@@ -158,7 +158,7 @@ define([
                                 displayName = (item.displayName) ? item.displayName : item.givenName + " " + item.sn;
 
 
-                            return '<div>' +
+                            return '<div class="item">' +
                                 '<span class="user-title">' +
                                 '<span class="user-fullname">' + escape(displayName) + userName + '</span>' +
                                 '</span>' +
@@ -169,7 +169,7 @@ define([
                                 displayName = (item.displayName) ? item.displayName : item.givenName + " " + item.sn;
 
 
-                            return '<div>' +
+                            return '<div class="option">' +
                                 '<span class="user-title">' +
                                 '<span class="user-fullname">' + escape(displayName) + userName + '</span>' +
                                 '</span>' +

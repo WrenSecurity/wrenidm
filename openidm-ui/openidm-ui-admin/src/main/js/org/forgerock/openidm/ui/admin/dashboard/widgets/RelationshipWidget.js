@@ -104,7 +104,7 @@ define([
                             },
                             render: {
                                 option: function(item, selectizeEscape) {
-                                    var element = $('<div class="fr-search-option"></div>'),
+                                    var element = $('<div class="option fr-search-option"></div>'),
                                         counter = 0;
 
                                     _.each(_this.data.searchFields, _.bind(function(key) {
@@ -126,7 +126,7 @@ define([
                                         txtArr.push(escape(item[field]));
                                     });
 
-                                    return "<div>" + txtArr.join(" / ") +"</div>";
+                                    return "<div class=\"item\">" + txtArr.join(" / ") +"</div>";
                                 }
                             },
                             load: function(query, selectizeCallback) {

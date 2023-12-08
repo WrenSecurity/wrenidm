@@ -61,11 +61,11 @@ define([
                         options: candidateUsers,
                         render: {
                             item: function (item, escape) {
-                                return '<div>' + item.givenName + ' ' + item.sn +
+                                return '<div class="item">' + item.givenName + ' ' + item.sn +
                                        '<br/> <span class="text-muted">' + item.userName + '</span></div>';
                             },
                             option: function (item, escape) {
-                                return '<div>' + item.givenName + ' ' + item.sn +
+                                return '<div class="option">' + item.givenName + ' ' + item.sn +
                                        '<br/> <span class="text-muted">' + item.userName + '</span></div>';
                             }
                         },

@@ -170,10 +170,10 @@ define([
                     placeholder: $.t("templates.admin.ResourceEdit.search",{ objectTitle: this.data.property.title || this.data.property.name }),
                     render: {
                         item: function(item, escape) {
-                            return "<div>" + item.label + "</div>";
+                            return "<div class=\"item\">" + item.label + "</div>";
                         },
                         option: function(item, escape) {
-                            return "<div>" + item.label + "</div>";
+                            return "<div class=\"option\">" + item.label + "</div>";
                         }
                     },
                     load: function(query, callback) {
