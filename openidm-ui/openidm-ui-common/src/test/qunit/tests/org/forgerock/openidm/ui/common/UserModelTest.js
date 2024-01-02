@@ -30,7 +30,7 @@ define([
 
         headers[Constants.HEADER_PARAM_USERNAME] = "openidm-admin";
 
-        userModel.getProfile(headers).then(function () {
+        return userModel.getProfile(headers).then(function () {
             assert.equal(userModel.getProtectedAttributes().length, 0, "No protected attributes for openidm-admin");
         }).then(function () {
             headers[Constants.HEADER_PARAM_USERNAME] = "bjensen";

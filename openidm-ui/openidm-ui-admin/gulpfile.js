@@ -21,10 +21,10 @@ const {
     useLessStyles,
     useBuildRequire
 } = require("@wrensecurity/commons-ui-build");
+const express = require('express');
 const gulp = require("gulp");
 const { runQunitPuppeteer, printResultSummary } = require("node-qunit-puppeteer");
 const { join } = require("path");
-const { pathToFileURL } = require("url");
 
 const TARGET_PATH = "target/www";
 const TESTS_PATH = "target/test";
@@ -68,10 +68,7 @@ gulp.task("eslint", useEslint({ src: "src/main/js/**/*.js" }));
 
 gulp.task("build:assets", useLocalResources({ "src/main/resources/**": "" }, { dest: TARGET_PATH }));
 
-gulp.task("build:scripts", useBuildScripts({
-    src: "src/main/js/**/*.js",
-    dest: TARGET_PATH
-}));
+gulp.task("build:scripts", useLocalResources({ "src/main/js/**/*.js": "" }, { dest: TARGET_PATH }));
 
 gulp.task("build:compose", useLocalResources({ "target/ui-compose/**": "" }, { dest: TARGET_PATH }));
 
@@ -101,17 +98,26 @@ gulp.task("test:scripts", useLocalResources(TEST_RESOURCES, { dest: TESTS_PATH }
 
 gulp.task("test:sinon", useBuildScripts({
     src: require.resolve("sinon/pkg/sinon.js"),
-    dest: join(TARGET_PATH, "libs")
+    dest: join(TARGET_PATH, "libs"),
+    plugins: []
 }));
 
 gulp.task("test:qunit", async () => {
-    const result = await runQunitPuppeteer({
-        targetUrl: pathToFileURL(join(TESTS_PATH, "index.html")).href,
-        puppeteerArgs: [
-            "--allow-file-access-from-files",
-            "--no-sandbox"
-        ]
-    });
+    const server = express();
+    server.use(express.static(join(__dirname, 'target')));
+    const listener = server.listen(0);
+    let result;
+    try {
+        result = await runQunitPuppeteer({
+            targetUrl: `http://localhost:${listener.address().port}/test/index.html`,
+            puppeteerArgs: [
+                "--allow-file-access-from-files",
+                "--no-sandbox"
+            ]
+        });
+    } finally {
+        listener.close();
+    }
     printResultSummary(result, console);
 });
 

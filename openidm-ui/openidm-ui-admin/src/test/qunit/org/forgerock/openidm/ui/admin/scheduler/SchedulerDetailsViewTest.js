@@ -113,13 +113,12 @@ define([
 
     QUnit.test("#createSourceMappingData properly creates the data object", function(assert) {
         let abstractSchedulerView = new AbstractSchedulerView();
-        _.bindAll(abstractSchedulerView);
         abstractSchedulerView.schedule = { invokeContext: { mapping: "foo", source :"bar" } };
 
         var data = [
                 { type: "mapping", options:["m1", "m2"] },
                 { type: "source", options:["s1", "s2"] }
-            ].map( abstractSchedulerView.createSourceMappingData),
+            ].map((resourceMapping) => abstractSchedulerView.createSourceMappingData(resourceMapping)),
             mapping = data[0],
             source = data[1];
 
@@ -141,7 +140,7 @@ define([
             // bind formChangeHandler to instance so I can use it
             formChangeHandler = _.bind(abstractSchedulerView.formChangeHandler, abstractSchedulerView),
             dateTimeChangeHandler = _.bind(abstractSchedulerView.dateTimeChangeHandler, abstractSchedulerView),
-            updateScheduleSpy = sinon.stub(abstractSchedulerView, "updateSchedule".callsFake(_.noop),
+            updateScheduleSpy = sinon.stub(abstractSchedulerView, "updateSchedule").callsFake(_.noop),
             setInvokeContextObjectSpy = sinon.spy(abstractSchedulerView, "setInvokeContextObject"),
             // create fake elements to trigger events on
             genericInput = $("<input>", {

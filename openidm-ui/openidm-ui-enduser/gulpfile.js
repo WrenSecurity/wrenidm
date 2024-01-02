@@ -57,10 +57,7 @@ gulp.task("eslint", useEslint({ src: "src/main/js/**/*.js" }));
 
 gulp.task("build:assets", useLocalResources({ "src/main/resources/**": "" }, { dest: TARGET_PATH }));
 
-gulp.task("build:scripts", useBuildScripts({
-    src: "src/main/js/**/*.js",
-    dest: TARGET_PATH
-}));
+gulp.task("build:scripts", useLocalResources({ "src/main/js/**/*.js": "" }, { dest: TARGET_PATH }));
 
 gulp.task("build:compose", useLocalResources({ "target/ui-compose/**": "" }, { dest: TARGET_PATH }));
 
@@ -90,7 +87,8 @@ gulp.task("test:scripts", useLocalResources(TEST_RESOURCES, { dest: TESTS_PATH }
 
 gulp.task("test:sinon", useBuildScripts({
     src: require.resolve("sinon/pkg/sinon.js"),
-    dest: join(TARGET_PATH, "libs")
+    dest: join(TARGET_PATH, "libs"),
+    plugins: []
 }));
 
 gulp.task("test:qunit", async () => {

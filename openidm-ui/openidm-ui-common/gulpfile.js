@@ -14,7 +14,6 @@
  * Copyright 2023 Wren Security.
  */
 const {
-    useBuildScripts,
     useEslint,
     useLocalResources
 } = require("@wrensecurity/commons-ui-build");
@@ -26,10 +25,7 @@ gulp.task("eslint", useEslint({ src: "src/main/js/**/*.js" }));
 
 gulp.task("build:assets", useLocalResources({ "src/main/resources/**": "" }, { dest: TARGET_PATH }));
 
-gulp.task("build:scripts", useBuildScripts({
-    src: "src/main/js/**/*.js",
-    dest: TARGET_PATH
-}));
+gulp.task("build:scripts", useLocalResources({ "src/main/js/**/*.js": "" }, { dest: TARGET_PATH }));
 
 gulp.task("build", gulp.series(
     gulp.parallel(
