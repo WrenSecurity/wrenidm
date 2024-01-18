@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2015 ForgeRock AS.
+ * Portions Copyright 2024 Wren Security
  */
 package org.forgerock.openidm.workflow.activiti.impl.mixin;
 
@@ -25,7 +26,7 @@ import org.forgerock.openidm.workflow.activiti.ActivitiConstants;
 /**
  *
  */
-@JsonIgnoreProperties({"persistentState"})
+@JsonIgnoreProperties({"persistentState", "queryVariables"})
 public class HistoricProcessInstanceMixIn {
 
     @JsonProperty(ActivitiConstants.ACTIVITI_BUSINESSKEY)

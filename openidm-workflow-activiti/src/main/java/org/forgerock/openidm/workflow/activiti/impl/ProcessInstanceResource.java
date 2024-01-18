@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2015 ForgeRock AS.
- * Portions Copyright 2021 Wren Security
+ * Portions Copyright 2021-2024 Wren Security
  */
 package org.forgerock.openidm.workflow.activiti.impl;
 
@@ -24,6 +24,7 @@ import static org.forgerock.openidm.util.ResourceUtil.notSupportedOnCollection;
 import static org.forgerock.openidm.util.ResourceUtil.notSupportedOnInstance;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,14 +40,15 @@ import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.history.HistoricVariableInstance;
+import org.activiti.engine.history.HistoricVariableInstanceQuery;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.HistoricProcessInstanceEntity;
 import org.activiti.engine.impl.persistence.entity.HistoricTaskInstanceEntity;
+import org.activiti.engine.impl.persistence.entity.HistoricVariableInstanceEntity;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ActionRequest;
@@ -213,10 +215,12 @@ public class ProcessInstanceResource implements CollectionResourceProvider {
             final HistoricProcessInstanceQuery query = queryFunction.apply(processEngine);
             if (ActivitiConstants.QUERY_ALL_IDS.equals(request.getQueryId())) {
                 for (HistoricProcessInstance i : query.list()) {
+                    // Fetch process variables
+                    ((HistoricProcessInstanceEntity) i).setQueryVariables(getVariables(i.getId(), null));
+                    // Serialize process instance into JSON value
                     JsonValue value = json(mapper.convertValue(i, Map.class));
                     // TODO OPENIDM-3603 add relationship support
                     value.put(ActivitiConstants.ACTIVITI_PROCESSDEFINITIONRESOURCENAME, getProcessDefName(i));
-                    value.put(ActivitiConstants.ACTIVITI_PROCESSVARIABLES, getProcessVariables(i.getId()));
                     ResourceResponse r = newResourceResponse(i.getId(), null, value);
                     handler.handleResource(r);
                 }
@@ -225,10 +229,12 @@ public class ProcessInstanceResource implements CollectionResourceProvider {
                 setProcessInstanceParams(query, request);
                 setSortKeys(query, request);
                 for (HistoricProcessInstance processinstance : query.list()) {
+                    // Fetch process variables
+                    ((HistoricProcessInstanceEntity) processinstance).setQueryVariables(getVariables(processinstance.getId(), null));
+                    // Serialize process instance into JSON value
                     JsonValue value = json(mapper.convertValue(processinstance, Map.class));
                     // TODO OPENIDM-3603 add relationship support
                     value.put(ActivitiConstants.ACTIVITI_PROCESSDEFINITIONRESOURCENAME, getProcessDefName(processinstance));
-                    value.put(ActivitiConstants.ACTIVITI_PROCESSVARIABLES, getProcessVariables(processinstance.getId()));
                     handler.handleResource(newResourceResponse(processinstance.getId(), null, value));
                 }
                 return newQueryResponse().asPromise();
@@ -250,11 +256,13 @@ public class ProcessInstanceResource implements CollectionResourceProvider {
             if (instance == null) {
                 return new NotFoundException().asPromise();
             } else {
+                // Fetch process variables
+                ((HistoricProcessInstanceEntity) instance).setQueryVariables(getVariables(resourceId, null));
+                // Serialize process instance into JSON value
                 JsonValue content = json(mapper.convertValue(instance, Map.class));
                 // TODO OPENIDM-3603 add relationship support
                 content.put(ActivitiConstants.ACTIVITI_PROCESSDEFINITIONRESOURCENAME, getProcessDefName(instance));
                 content.put("tasks", getTasksForProcess(instance.getId()).getObject());
-                content.put(ActivitiConstants.ACTIVITI_PROCESSVARIABLES, getProcessVariables(instance.getId()));
                 // diagram support
                 if (request.getFields().contains(ActivitiConstants.ACTIVITI_DIAGRAM)) {
                     final RuntimeService runtimeService = processEngine.getRuntimeService();
@@ -300,6 +308,9 @@ public class ProcessInstanceResource implements CollectionResourceProvider {
         HistoricTaskInstanceQuery query = processEngine.getHistoryService().createHistoricTaskInstanceQuery();
         JsonValue tasks = json(array());
         for (HistoricTaskInstance taskInstance : query.processInstanceId(processId).list()) {
+            // Fetch task variables
+            ((HistoricTaskInstanceEntity) taskInstance).setQueryVariables(getVariables(processId, taskInstance.getId()));
+            // Serialize task instance into JSON value
             tasks.add(mapper.convertValue(taskInstance, Map.class));
         }
         return tasks;
@@ -434,21 +445,25 @@ public class ProcessInstanceResource implements CollectionResourceProvider {
     }
 
     /**
-     * Get map with process variables for process instance with specified identifier.
-     * {@link ActivitiConstants#OPENIDM_CONTEXT} will not be returned.
-     * @param id Process instance identifier to get variables to. Never null.
-     * @return Map with process variables. Never null.
+     * Get variables for the process instance with the specified identifier.
+     * The search for variables can be restricted to a specific task using its identifier.
+     * {@link ActivitiConstants#OPENIDM_CONTEXT} variable will not be returned.
+     * @param processId Process instance identifier to get variables to. Never null.
+     * @param taskId Task instance identifier to restrict variable search to specific task. Can be null.
+     * @return List of {@link HistoricVariableInstanceEntity} instances. Never null.
      */
-    private Map<String, Object> getProcessVariables(String id) {
-        Map<String, Object> result = new HashMap<>();
-        // Resolve process variables for process instance with specified ID
-        List<HistoricVariableInstance> variables = processEngine.getHistoryService().
-                createHistoricVariableInstanceQuery().processInstanceId(id).list();
-        for (HistoricVariableInstance variable : variables) {
-            String name = variable.getVariableName();
-            if (!ActivitiConstants.OPENIDM_CONTEXT.equals(name)) {  // Remove useless OPENIDM_CONTEXT
-                result.put(name, variable.getValue());
+    private List<HistoricVariableInstanceEntity> getVariables(String processId, String taskId) {
+        List<HistoricVariableInstanceEntity> result = new ArrayList<>();
+        HistoricVariableInstanceQuery query = processEngine.getHistoryService()
+                .createHistoricVariableInstanceQuery().excludeVariableInitialization().processInstanceId(processId);
+        if (taskId != null) {
+            query.taskId(taskId);
+        }
+        for (HistoricVariableInstance variable : query.list()) {
+            if (ActivitiConstants.OPENIDM_CONTEXT.equals(variable.getVariableName())) {
+                continue;  // Remove useless OPENIDM_CONTEXT
             }
+            result.add((HistoricVariableInstanceEntity) variable);
         }
         return result;
     }

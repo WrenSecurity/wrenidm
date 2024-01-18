@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015 ForgeRock AS.
+ * Portions Copyright 2024 Wren Security
  */
 package org.forgerock.openidm.workflow.activiti.impl.mixin;
 
@@ -22,7 +23,7 @@ import org.forgerock.openidm.workflow.activiti.ActivitiConstants;
 
 import java.util.Date;
 
-@JsonIgnoreProperties({"persistentState"})
+@JsonIgnoreProperties({"persistentState", "queryVariables", "createTime"})
 public class HistoricTaskInstanceEntityMixIn {
 
 
