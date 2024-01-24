@@ -102,8 +102,7 @@
                 <exclude>org.wrensecurity.wrenidm:openidm-shell</exclude>
                 <exclude>org.wrensecurity.wrenidm:openidm-ui-ria*</exclude>
                 <exclude>org.wrensecurity.wrenidm:openidm-ui</exclude>
-                <exclude>org.wrensecurity.wrenidm:openidm-workflow-activiti:**:jar-with-dependencies</exclude>
-                <exclude>org.wrensecurity.wrenidm:openidm-workflow-remote</exclude>
+                <exclude>org.wrensecurity.wrenidm:wrenidm-workflow-flowable:**:jar-with-dependencies</exclude>
                 <exclude>org.apache.felix:*gogo*</exclude>
                 <exclude>stax:*</exclude>
                 <exclude>snappy:*</exclude>
@@ -238,8 +237,7 @@
         <dependencySet>
             <outputDirectory>/wrenidm/bin/workflow</outputDirectory>
             <includes>
-                <include>org.wrensecurity.wrenidm:openidm-workflow-activiti:**:jar-with-dependencies</include>
-                <include>org.wrensecurity.wrenidm:openidm-workflow-remote</include>
+                <include>org.wrensecurity.wrenidm:wrenidm-workflow-flowable:**:jar-with-dependencies</include>
             </includes>
         </dependencySet>
         <dependencySet>

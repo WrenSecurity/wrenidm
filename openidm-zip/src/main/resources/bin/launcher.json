@@ -109,7 +109,5 @@
     },
     "config.properties":"conf/config.properties",
     "system.properties":"conf/system.properties",
-    "boot.properties":{
-        "openidm.workflow.enabled":true
-    }
+    "boot.properties":{}
 }
