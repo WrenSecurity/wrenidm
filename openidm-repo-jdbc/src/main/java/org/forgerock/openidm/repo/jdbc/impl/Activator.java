@@ -26,7 +26,6 @@ package org.forgerock.openidm.repo.jdbc.impl;
 import static org.forgerock.json.JsonValueFunctions.enumConstant;
 
 import java.util.Hashtable;
-
 import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.config.persistence.ConfigBootstrapHelper;
 import org.forgerock.openidm.datasource.DataSourceService;
@@ -43,65 +42,69 @@ import org.slf4j.LoggerFactory;
  * OSGi bundle activator for JDBCRepoService.
  */
 public class Activator implements BundleActivator {
+
     final static Logger logger = LoggerFactory.getLogger(Activator.class);
 
-     public void start(BundleContext context) {
-         logger.debug("JDBC bundle starting", context);
+    @Override
+    public void start(BundleContext context) {
+        logger.debug("JDBC bundle starting", context);
 
-         JsonValue repoConfig = ConfigBootstrapHelper.getRepoBootConfig("jdbc", context);
-         if (repoConfig == null) {
-             logger.debug("No JDBC configuration detected");
-             logger.debug("JDBC bundle started", context);
-             return;
-         }
-         String dataSourcePid = repoConfig.get(JDBCRepoService.CONFIG_USE_DATASOURCE).asString();
-         if (dataSourcePid == null) {
-             logger.error("JDBC repository configured, but does not specify a datasource to use - "
-                     + "the \"" + JDBCRepoService.CONFIG_USE_DATASOURCE + "\" config property is required "
-                     + "and must be the <name> of a datasource.jdbc-<name>.json configuration.");
-             logger.debug("JDBC bundle started", context);
-             return;
-         }
+        JsonValue repoConfig = ConfigBootstrapHelper.getRepoBootConfig("jdbc", context);
+        if (repoConfig == null) {
+            logger.debug("No JDBC configuration detected");
+            logger.debug("JDBC bundle started", context);
+            return;
+        }
 
-         JsonValue dataSourceConfig = ConfigBootstrapHelper.getDataSourceBootConfig("jdbc-" + dataSourcePid, context);
-         if (dataSourceConfig == null) {
-             logger.error("JDBC repository configured, but datasource \"" + dataSourcePid + "\" was not found - "
-                     + " must specify or configure a valid datasource for JDBC repository to use.");
-             logger.debug("JDBC bundle started", context);
-             return;
-         }
+        String dataSourcePid = repoConfig.get(JDBCRepoService.CONFIG_USE_DATASOURCE).asString();
+        if (dataSourcePid == null) {
+            logger.error("JDBC repository configured, but does not specify a datasource to use - " + "the \""
+                    + JDBCRepoService.CONFIG_USE_DATASOURCE + "\" config property is required "
+                    + "and must be the <name> of a datasource.jdbc-<name>.json configuration.");
+            logger.debug("JDBC bundle started", context);
+            return;
+        }
 
-         logger.info("Bootstrapping JDBC repository");
+        JsonValue dataSourceConfig = ConfigBootstrapHelper.getDataSourceBootConfig("jdbc-" + dataSourcePid, context);
+        if (dataSourceConfig == null) {
+            logger.error("JDBC repository configured, but datasource \"" + dataSourcePid + "\" was not found - "
+                    + " must specify or configure a valid datasource for JDBC repository to use.");
+            logger.debug("JDBC bundle started", context);
+            return;
+        }
 
-         // Don't allow connection pooling for Boot Service - OPENIDM-6481
-         dataSourceConfig.remove("connectionPool");
+        logger.info("Bootstrapping JDBC repository");
 
-         // Init the bootstrap connection manager
-         DataSourceService dataSourceService = JDBCDataSourceService.getBootService(dataSourceConfig, context);
-         // Init the bootstrap repo
-         RepoBootService bootSvc = JDBCRepoService.getRepoBootService(context, dataSourceService, repoConfig);
+        // Don't allow connection pooling for Boot Service - OPENIDM-6481
+        dataSourceConfig.remove("connectionPool");
 
-         // Register bootstrap repo
-         Hashtable<String, String> prop = new Hashtable<String, String>();
-         prop.put(Constants.SERVICE_PID, "org.forgerock.openidm.bootrepo.jdbc");
-         prop.put("openidm.router.prefix", "bootrepo");
-         prop.put("db.type", "JDBC");
-         prop.put("db.dirname", getDbDirname(repoConfig));
+        // Init the bootstrap connection manager
+        DataSourceService dataSourceService = JDBCDataSourceService.getBootService(dataSourceConfig, context);
 
-         context.registerService(RepoBootService.class.getName(), bootSvc, prop);
-         logger.info("Registered bootstrap repository service");
-         logger.debug("JDBC bundle started", context);
-     }
+        // Init the bootstrap repo
+        RepoBootService bootSvc = JDBCRepoService.getRepoBootService(context, dataSourceService, repoConfig);
+
+        // Register bootstrap repo
+        Hashtable<String, String> prop = new Hashtable<String, String>();
+        prop.put(Constants.SERVICE_PID, "org.forgerock.openidm.bootrepo.jdbc");
+        prop.put("openidm.router.prefix", "bootrepo");
+        prop.put("db.type", "JDBC");
+        prop.put("db.dirname", getDbDirname(repoConfig));
+
+        context.registerService(RepoBootService.class.getName(), bootSvc, prop);
+        logger.info("Registered bootstrap repository service");
+        logger.debug("JDBC bundle started", context);
+    }
 
     /**
      * Get the name of the directory in db/ for the currently configured repo
+     *
      * @param repoConfig The current repo configuration
      * @return The name of the directory in db/ for the current repo
      */
     private String getDbDirname(JsonValue repoConfig) {
         final DatabaseType databaseType = repoConfig.get(JDBCRepoService.CONFIG_DB_TYPE)
-                .defaultTo(DatabaseType.ANSI_SQL99.name())
-                .as(enumConstant(DatabaseType.class));
+                .defaultTo(DatabaseType.ANSI_SQL99.name()).as(enumConstant(DatabaseType.class));
 
         switch (databaseType) {
             case SQLSERVER:
@@ -119,7 +122,9 @@ public class Activator implements BundleActivator {
         }
     }
 
-     public void stop(BundleContext context) {
-         logger.debug("JDBC bundle stopped", context);
-     }
+    @Override
+    public void stop(BundleContext context) {
+        logger.debug("JDBC bundle stopped", context);
+    }
+
 }

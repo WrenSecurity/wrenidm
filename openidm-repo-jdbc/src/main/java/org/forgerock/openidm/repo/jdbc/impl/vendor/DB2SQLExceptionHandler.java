@@ -2,7 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright © 2011 ForgeRock AS. All rights reserved.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2024 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -22,32 +22,25 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-package org.forgerock.openidm.repo.jdbc.impl;
+package org.forgerock.openidm.repo.jdbc.impl.vendor;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import org.forgerock.openidm.repo.jdbc.ErrorType;
 import org.forgerock.openidm.repo.jdbc.SQLExceptionHandler;
+import org.forgerock.openidm.repo.jdbc.impl.DefaultSQLExceptionHandler;
 
 /**
- * Default {@link SQLExceptionHandler} to help handle {@code SQLException}s across different DB implementations.
- *
- * <p>
- * Specific implementations and/or overrides may be needed for supported databases.
+ * DB2 database {@link SQLExceptionHandler} implementation.
  */
-// XXX This class did not undergo refactor like handlers where the default implementation is no longer MySQL
-public class DefaultSQLExceptionHandler implements SQLExceptionHandler {
-
-    @Override
-    public boolean isErrorType(SQLException ex, ErrorType errorType) {
-        return XOpenErrorMapping.isErrorType(ex, errorType);
-    }
+public class DB2SQLExceptionHandler extends DefaultSQLExceptionHandler {
 
     @Override
     public boolean isRetryable(SQLException ex, Connection connection) {
-        // These are known re-tryable for MySQL. Other DBs may need specific sql exception handler defnitions.
-        if (isErrorType(ex, ErrorType.CONNECTION_FAILURE) || isErrorType(ex, ErrorType.DEADLOCK_OR_TIMEOUT)
-                || isErrorType(ex, ErrorType.CANT_CHANGE_TX_ISOLATION)) {
+        // Re-tryable DB2 error codes
+        // -911 indicates DB2 rolled back already and expects a retry
+        // -912 indicates deadlock or timeout.
+        // -904 indicates resource limit was exceeded.
+        if (-911 == ex.getErrorCode() || -912 == ex.getErrorCode() || -904 == ex.getErrorCode()) {
             return true;
         } else {
             return false;

@@ -22,36 +22,30 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  */
-package org.forgerock.openidm.repo.jdbc.impl;
+package org.forgerock.openidm.repo.jdbc.impl.vendor;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import org.forgerock.openidm.repo.jdbc.ErrorType;
 import org.forgerock.openidm.repo.jdbc.SQLExceptionHandler;
+import org.forgerock.openidm.repo.jdbc.impl.DefaultSQLExceptionHandler;
+import org.forgerock.openidm.repo.jdbc.impl.XOpenErrorMapping;
 
 /**
- * Default {@link SQLExceptionHandler} to help handle {@code SQLException}s across different DB implementations.
- *
- * <p>
- * Specific implementations and/or overrides may be needed for supported databases.
+ * MySQL database {@link SQLExceptionHandler} implementation.
  */
-// XXX This class did not undergo refactor like handlers where the default implementation is no longer MySQL
-public class DefaultSQLExceptionHandler implements SQLExceptionHandler {
+public class MySQLExceptionHandler extends DefaultSQLExceptionHandler {
 
     @Override
     public boolean isErrorType(SQLException ex, ErrorType errorType) {
-        return XOpenErrorMapping.isErrorType(ex, errorType);
-    }
+        boolean result = XOpenErrorMapping.isErrorType(ex, errorType);
 
-    @Override
-    public boolean isRetryable(SQLException ex, Connection connection) {
-        // These are known re-tryable for MySQL. Other DBs may need specific sql exception handler defnitions.
-        if (isErrorType(ex, ErrorType.CONNECTION_FAILURE) || isErrorType(ex, ErrorType.DEADLOCK_OR_TIMEOUT)
-                || isErrorType(ex, ErrorType.CANT_CHANGE_TX_ISOLATION)) {
-            return true;
-        } else {
-            return false;
+        // MySQL the 23000 status code can be for multiple constraint violations, not just duplicates
+        if (ErrorType.DUPLICATE_KEY.equals(errorType) && result) {
+            // MySQL 1062 is for duplicate key value
+            return 1062 == ex.getErrorCode();
         }
+
+        return result;
     }
 
 }

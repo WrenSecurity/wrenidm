@@ -12,11 +12,10 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2024 Wren Security
  */
 package org.forgerock.openidm.repo.jdbc.impl;
 
-import static org.wrensecurity.guava.common.base.Strings.isNullOrEmpty;
 import static org.forgerock.json.JsonValue.field;
 import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
@@ -34,17 +33,18 @@ import static org.forgerock.openidm.repo.QueryConstants.QUERY_EXPRESSION;
 import static org.forgerock.openidm.repo.QueryConstants.QUERY_FILTER;
 import static org.forgerock.openidm.repo.QueryConstants.QUERY_ID;
 import static org.forgerock.openidm.repo.QueryConstants.SORT_KEYS;
+import static org.wrensecurity.guava.common.base.Strings.isNullOrEmpty;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ActionRequest;
 import org.forgerock.json.resource.ActionResponse;
@@ -69,17 +69,32 @@ import org.forgerock.json.resource.UpdateRequest;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
 import org.forgerock.openidm.config.enhanced.InvalidException;
 import org.forgerock.openidm.core.ServerConstants;
-import org.forgerock.openidm.crypto.CryptoService;
 import org.forgerock.openidm.datasource.DataSourceService;
 import org.forgerock.openidm.repo.RepoBootService;
 import org.forgerock.openidm.repo.RepositoryService;
 import org.forgerock.openidm.repo.jdbc.DatabaseType;
 import org.forgerock.openidm.repo.jdbc.ErrorType;
 import org.forgerock.openidm.repo.jdbc.TableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.handler.GenericTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.handler.MappedTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.DB2GenericTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.DB2MappedTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.DB2SQLExceptionHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.H2GenericTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.H2MappedTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.MSSQLExceptionHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.MSSQLGenericTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.MSSQLMappedTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.MySQLExceptionHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.MySQLGenericTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.MySQLMappedTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.OracleGenericTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.OracleMappedTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.PostgreSQLGenericTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.PostgreSQLMappedTableHandler;
 import org.forgerock.openidm.smartevent.EventEntry;
 import org.forgerock.openidm.smartevent.Name;
 import org.forgerock.openidm.smartevent.Publisher;
-import org.forgerock.openidm.util.Accessor;
 import org.forgerock.services.context.Context;
 import org.forgerock.util.promise.Promise;
 import org.osgi.framework.BundleContext;
@@ -124,17 +139,13 @@ public class JDBCRepoService implements RequestHandler, RepoBootService, Reposit
     public static final String CONFIG_MAX_TX_RETRY = "maxTxRetry";
     public static final String CONFIG_MAX_BATCH_SIZE = "maxBatchSize";
 
-    Map<String, TableHandler> tableHandlers;
-    TableHandler defaultTableHandler;
+    private Map<String, TableHandler> tableHandlers;
+    private TableHandler defaultTableHandler;
 
     private DatabaseType databaseType;
 
     private JsonValue config;
     private int maxTxRetry = 5;
-
-    /** CryptoService for detecting whether a value is encrypted */
-    @Reference
-    protected CryptoService cryptoService;
 
     /**
      * Enhanced configuration service.
@@ -986,84 +997,88 @@ public class JDBCRepoService implements RequestHandler, RepoBootService, Reposit
     }
 
     GenericTableHandler getGenericTableHandler(DatabaseType databaseType, JsonValue tableConfig,
-            String dbSchemaName, JsonValue queries, JsonValue commands, int maxBatchSize) {
-
+            String schemaName, JsonValue queries, JsonValue commands, int maxBatchSize) {
         // TODO: make pluggable
         switch (databaseType) {
-        case DB2:
-            return
-                    new DB2TableHandler(tableConfig, dbSchemaName, queries, commands, maxBatchSize,
-                            new DB2SQLExceptionHandler());
-        case ORACLE:
-            return
-                    new OracleTableHandler(tableConfig, dbSchemaName, queries, commands, maxBatchSize,
-                            new DefaultSQLExceptionHandler());
-        case H2:
-            return
-                    new H2TableHandler(tableConfig, dbSchemaName, queries, commands, maxBatchSize,
-                            new DefaultSQLExceptionHandler());
-        case POSTGRESQL:
-            return
-                    new PostgreSQLTableHandler(tableConfig, dbSchemaName, queries, commands, maxBatchSize,
-                            new DefaultSQLExceptionHandler());
-        case MYSQL:
-            return
-                    new MySQLTableHandler(tableConfig, dbSchemaName, queries, commands, maxBatchSize,
-                            new MySQLExceptionHandler());
-        case SQLSERVER:
-            return
-                    new MSSQLTableHandler(tableConfig, dbSchemaName, queries, commands, maxBatchSize,
-                            new MSSQLExceptionHandler());
-        default:
-            return
-                    new GenericTableHandler(tableConfig, dbSchemaName, queries, commands, maxBatchSize,
-                            new DefaultSQLExceptionHandler());
+            case DB2:
+                return new DB2GenericTableHandler(schemaName, tableConfig,
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        maxBatchSize, new DB2SQLExceptionHandler());
+            case H2:
+                return new H2GenericTableHandler(schemaName, tableConfig,
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        maxBatchSize, new DefaultSQLExceptionHandler());
+            case MYSQL:
+                return new MySQLGenericTableHandler(schemaName, tableConfig,
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        maxBatchSize, new MySQLExceptionHandler());
+            case ORACLE:
+                return new OracleGenericTableHandler(schemaName, tableConfig,
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        maxBatchSize, new DefaultSQLExceptionHandler());
+            case POSTGRESQL:
+                return new PostgreSQLGenericTableHandler(schemaName, tableConfig,
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        maxBatchSize, new DefaultSQLExceptionHandler());
+            case SQLSERVER:
+                return new MSSQLGenericTableHandler(schemaName, tableConfig,
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        maxBatchSize, new MSSQLExceptionHandler());
+            default:
+                return new GenericTableHandler(schemaName, tableConfig,
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        maxBatchSize, new DefaultSQLExceptionHandler());
         }
     }
 
     MappedTableHandler getMappedTableHandler(DatabaseType databaseType, JsonValue tableConfig,
-            String table, Map<String, Object> objectToColumn, String dbSchemaName,
-            JsonValue explicitQueries, JsonValue explicitCommands, int maxBatchSize)
+            String tableName, Map<String, Object> columnMapping, String schemaName,
+            JsonValue queries, JsonValue commands, int maxBatchSize)
             throws InternalServerErrorException {
-
-        final Accessor<CryptoService> cryptoServiceAccessor = new Accessor<CryptoService>() {
-            @Override
-            public CryptoService access() {
-                return cryptoService;
-            }
-        };
-
         // TODO: make pluggable
         switch (databaseType) {
-        case DB2:
-            return
-                    // DB2 uses Oracle(!) MappedTableHandler implementation - not a mistake!
-                    new OracleMappedTableHandler(table, objectToColumn, dbSchemaName, explicitQueries, explicitCommands,
-                            new DB2SQLExceptionHandler(), cryptoServiceAccessor);
-        case ORACLE:
-            return
-                    new OracleMappedTableHandler(table, objectToColumn, dbSchemaName, explicitQueries, explicitCommands,
-                            new DefaultSQLExceptionHandler(), cryptoServiceAccessor);
-        case H2:
-            return new H2MappedTableHandler(table, objectToColumn, dbSchemaName, explicitQueries, explicitCommands,
-                    new DefaultSQLExceptionHandler(), cryptoServiceAccessor);
-        case POSTGRESQL:
-            return
-                    new PostgreSQLMappedTableHandler(table, objectToColumn, dbSchemaName, explicitQueries, explicitCommands,
-                            new DefaultSQLExceptionHandler(), cryptoServiceAccessor);
-        case MYSQL:
-            return
-                    new MappedTableHandler(table, objectToColumn, dbSchemaName, explicitQueries, explicitCommands,
-                            new MySQLExceptionHandler(), cryptoServiceAccessor);
-        case SQLSERVER:
-            return
-                    new MSSQLMappedTableHandler(table, objectToColumn, dbSchemaName,
-                            explicitQueries, explicitCommands, new MSSQLExceptionHandler(),
-                            cryptoServiceAccessor);
-        default:
-            return
-                    new MappedTableHandler(table, objectToColumn, dbSchemaName, explicitQueries, explicitCommands,
-                            new DefaultSQLExceptionHandler(), cryptoServiceAccessor);
+            case DB2:
+                return new DB2MappedTableHandler(schemaName, tableName, new JsonValue(columnMapping),
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        new DB2SQLExceptionHandler());
+            case H2:
+                return new H2MappedTableHandler(schemaName, tableName, new JsonValue(columnMapping),
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        new DefaultSQLExceptionHandler());
+            case MYSQL:
+                return new MySQLMappedTableHandler(schemaName, tableName, new JsonValue(columnMapping),
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        new MySQLExceptionHandler());
+            case ORACLE:
+                return new OracleMappedTableHandler(schemaName, tableName, new JsonValue(columnMapping),
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        new DefaultSQLExceptionHandler());
+            case POSTGRESQL:
+                return new PostgreSQLMappedTableHandler(schemaName, tableName, new JsonValue(columnMapping),
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        new DefaultSQLExceptionHandler());
+            case SQLSERVER:
+                return new MSSQLMappedTableHandler(schemaName, tableName, new JsonValue(columnMapping),
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        new MSSQLExceptionHandler());
+            default:
+                return new MappedTableHandler(schemaName, tableName, new JsonValue(columnMapping),
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        new DefaultSQLExceptionHandler());
         }
     }
 }

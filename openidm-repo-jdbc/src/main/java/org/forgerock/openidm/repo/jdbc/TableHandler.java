@@ -167,6 +167,7 @@ public interface TableHandler {
      * @throws InternalServerErrorException if the operation failed because of a (possibly transient) failure
      * @throws SQLException if a DB failure is reported
      */
+    // XXX Would be much nicer, cleaner and safer to have a dedicated QueryParams value object
     List<Map<String, Object>> query(String type, Map<String, Object> params, Connection connection)
                 throws SQLException, ResourceException;
 
