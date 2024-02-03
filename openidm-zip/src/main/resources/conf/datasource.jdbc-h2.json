@@ -1,5 +1,5 @@
 {
-  "jdbcUrl": "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM '&{launcher.install.location}/db/h2/scripts/openidm.sql'",
+  "jdbcUrl": "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'db/h2/scripts/openidm.sql'",
   "driverClass": "org.h2.Driver",
   "username": "openidm",
   "password": "openidm",

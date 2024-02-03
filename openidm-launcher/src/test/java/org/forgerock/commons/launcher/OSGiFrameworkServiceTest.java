@@ -12,20 +12,18 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2013 ForgeRock AS.
- * Portions Copyright 2020 Wren Security.
+ * Portions Copyright 2020-2024 Wren Security.
  */
 package org.forgerock.commons.launcher;
 
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.hasEntry;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.net.URLDecoder;
 import java.util.concurrent.Semaphore;
-
+import org.hamcrest.MatcherAssert;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.osgi.framework.Bundle;
@@ -125,13 +123,14 @@ public class OSGiFrameworkServiceTest {
         Bundle[] installedBundles = service.getSystemBundle().getBundleContext().getBundles();
 
         if ("test1".equals(testName)) {
-            Assert.assertEquals(4, installedBundles.length, "Only 4 bundles should be installed");
+            Assert.assertEquals(installedBundles.length, 4, "Only 4 bundles should be installed");
         }
         if ("test2".equals(testName)) {
-            Assert.assertEquals(6, installedBundles.length, "Only 6 bundles should be installed");
+            Assert.assertEquals(installedBundles.length, 6, "Only 6 bundles should be installed");
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void parserTestOk() throws Exception {
         OSGiFrameworkService testable = new OSGiFrameworkService();
@@ -150,7 +149,7 @@ public class OSGiFrameworkServiceTest {
         Assert.assertEquals(testable.getStorageDir(), "storage-location");
         Assert.assertEquals(testable.isVerbose(), true);
         Assert.assertEquals(testable.isNewThread(), true);
-        assertThat(testable.getBootParameters(), allOf(aMapWithSize(2),
+        MatcherAssert.assertThat(testable.getBootParameters(), allOf(aMapWithSize(2),
                 hasEntry("key1", "value1"), hasEntry("key2", "value2")));
     }
 

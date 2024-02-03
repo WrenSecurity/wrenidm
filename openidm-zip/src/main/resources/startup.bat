@@ -18,7 +18,7 @@ goto end
 
 rem Only set OPENIDM_OPTS if not already set
 if not "%OPENIDM_OPTS%" == "" goto noOpenIDMOpts
-set OPENIDM_OPTS=${openidm.options} -Dfile.encoding=UTF-8
+set OPENIDM_OPTS="-Dfile.encoding=UTF-8"
 :noOpenIDMOpts
 
 set "JPDA="
@@ -83,6 +83,12 @@ echo "Using LOGGING_CONFIG: %LOGGING_CONFIG%"
 rem Note the quoting as JAVA_HOME may contain spaces.
 set _RUNJAVA="%JAVA_HOME%\bin\java"
 
+set COMPATIBILITY_OPTS=^
+  "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED" ^
+  "--add-opens=java.base/java.lang=ALL-UNNAMED" ^
+  "--add-opens=java.base/java.net=ALL-UNNAMED" ^
+  "--add-opens=java.base/java.util=ALL-UNNAMED"
+
 if not "%OS%" == "Windows_NT" goto noTitle
 if "%TITLE%" == "" set TITLE=OpenIDM
 set _EXECJAVA=start "%TITLE%" %_RUNJAVA%
@@ -96,10 +102,10 @@ set MAINCLASS=org.forgerock.commons.launcher.Main
 rem Execute Java with the applicable properties
 pushd %OPENIDM_HOME%
 if not "%JPDA%" == "" goto doJpda
-call %_EXECJAVA% %JAVA_OPTS% %OPENIDM_OPTS%  -Djava.endorsed.dirs="%JAVA_ENDORSED_DIRS%" -classpath "%CLASSPATH%" -Dcontent.types.user.table="%OPENIDM_HOME%\bin\content-types.properties" -Dopenidm.system.server.root="%OPENIDM_HOME%" %MAINCLASS% %CMD_LINE_ARGS%
+call %_EXECJAVA% %JAVA_OPTS% %COMPATIBILITY_OPTS% %OPENIDM_OPTS%  -Djava.endorsed.dirs="%JAVA_ENDORSED_DIRS%" -classpath "%CLASSPATH%" -Dcontent.types.user.table="%OPENIDM_HOME%\bin\content-types.properties" -Dopenidm.system.server.root="%OPENIDM_HOME%" %MAINCLASS% %CMD_LINE_ARGS%
 goto end
 :doJpda
-call %_EXECJAVA% %JAVA_OPTS% %OPENIDM_OPTS% %JPDA_OPTS% -Djava.endorsed.dirs="%JAVA_ENDORSED_DIRS%" -classpath "%CLASSPATH%" -Dcontent.types.user.table="%OPENIDM_HOME%\bin\content-types.properties" -Dopenidm.system.server.root="%OPENIDM_HOME%" %MAINCLASS% %CMD_LINE_ARGS%
+call %_EXECJAVA% %JAVA_OPTS% %COMPATIBILITY_OPTS% %OPENIDM_OPTS% %JPDA_OPTS% -Djava.endorsed.dirs="%JAVA_ENDORSED_DIRS%" -classpath "%CLASSPATH%" -Dcontent.types.user.table="%OPENIDM_HOME%\bin\content-types.properties" -Dopenidm.system.server.root="%OPENIDM_HOME%" %MAINCLASS% %CMD_LINE_ARGS%
 popd
 
 :end

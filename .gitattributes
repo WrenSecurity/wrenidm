@@ -1,0 +1,3 @@
+# Test resources sensitive to content length
+openidm-external-rest/src/test/resources/*.html  text eol=lf
+openidm-external-rest/src/test/resources/*.xml   text eol=lf
