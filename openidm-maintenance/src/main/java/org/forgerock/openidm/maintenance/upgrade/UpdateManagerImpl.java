@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2020-2023 Wren Security
+ * Portions Copyright 2020-2024 Wren Security
  */
 package org.forgerock.openidm.maintenance.upgrade;
 
@@ -53,8 +53,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.jar.Attributes;
 import java.util.regex.Pattern;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.forgerock.commons.launcher.OSGiFrameworkService;
 import org.forgerock.json.JsonPointer;
@@ -124,7 +122,7 @@ public class UpdateManagerImpl implements UpdateManager {
 
     private static final String UPDATE_CONFIG_FILE = "update.json";
     private static final Path CHECKSUMS_FILE = Paths.get(".checksums.csv");
-    private static final Path CHECKSUMS_FILE_IN_OPENIDM = Paths.get("openidm/.checksums.csv");
+    private static final String CHECKSUMS_FILE_IN_OPENIDM = "openidm/.checksums.csv";
     private static final Path BUNDLE_PATH = Paths.get("bundle");
     private static final Path CONF_PATH = Paths.get("conf");
     private static final String JSON_EXT = ".json";
@@ -1265,9 +1263,9 @@ public class UpdateManagerImpl implements UpdateManager {
                 // XXX undo the work by parsePid to make sure we call create on config properly
                 final String[] paths = pid.split("/");
                 final CreateRequest request;
-                if (paths.length == 2)
+                if (paths.length == 2) {
                     request = Requests.newCreateRequest("config/" + paths[0], paths[1], content);
-                else {
+                } else {
                     request = Requests.newCreateRequest("config", paths[0], content);
                 }
 
@@ -1313,9 +1311,9 @@ public class UpdateManagerImpl implements UpdateManager {
             // XXX undo the work by parsePid to make sure we call delete on config properly
             final String[] paths = pid.split("/");
             final DeleteRequest request;
-            if (paths.length == 2)
+            if (paths.length == 2) {
                 request = Requests.newDeleteRequest("config/" + paths[0], paths[1]);
-            else {
+            } else {
                 request = Requests.newDeleteRequest("config", paths[0]);
             }
 
@@ -1364,9 +1362,9 @@ public class UpdateManagerImpl implements UpdateManager {
      * @return the directory that holds the file to be extracted
      * @throws UpdateException
      */
-    Path extractFileToDirectory(File zipFile, Path fileToExtract) throws UpdateException {
+    Path extractFileToDirectory(File zipFile, String fileToExtract) throws UpdateException {
         try {
-            PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + fileToExtract.toString());
+            PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:" + fileToExtract);
             Path tmpDir = Files.createTempDirectory(UUID.randomUUID().toString());
             ZipUtils.unzipFile(zipFile.toPath(), pathMatcher, tmpDir);
             return tmpDir.resolve(fileToExtract).getParent();
@@ -1385,7 +1383,7 @@ public class UpdateManagerImpl implements UpdateManager {
         final Path tmpDir;
 
         try {
-            tmpDir = extractFileToDirectory(file, Paths.get("openidm/" + UPDATE_CONFIG_FILE));
+            tmpDir = extractFileToDirectory(file, "openidm/" + UPDATE_CONFIG_FILE);
         } catch (UpdateException e) {
             throw new InvalidArchiveUpdateException(file.toString(), "Unable to load " + UPDATE_CONFIG_FILE + ".", e);
         }

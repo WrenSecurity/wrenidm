@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2013 ForgeRock AS.
- * Portions Copyright 2020 Wren Security.
+ * Portions Copyright 2020-2024 Wren Security.
  */
 package org.forgerock.commons.launcher;
 
@@ -30,6 +30,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Dictionary;
@@ -41,8 +42,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.codehaus.plexus.util.DirectoryScanner;
+import org.forgerock.commons.launcher.support.DirectoryScanner;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.JsonValueTraverseFunction;
 import org.json.simple.parser.JSONParser;
@@ -433,7 +433,7 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
 
     @Override
     protected List<BundleHandler> listBundleHandlers(BundleContext context)
-            throws MalformedURLException {
+            throws IOException, MalformedURLException {
         JsonValue bundle = getLauncherConfiguration().get("bundle");
         BundleHandlerBuilder defaultBuilder =
                 BundleHandlerBuilder.newBuilder(bundle.get("default"));
@@ -459,22 +459,15 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
                 File inputFile = getFileForPath(location, installDirectory);
                 result.add(innerBuilder.build(inputFile.toURI().toURL()));
             } else {
-                DirectoryScanner scanner = new DirectoryScanner();
-                scanner.setBasedir(getFileForPath(location, installDirectory));
-                if (container.isDefined("includes")) {
-                    List<String> includes = container.get("includes").asList(String.class);
-                    scanner.setIncludes(includes.toArray(new String[includes.size()]));
-                }
-                if (container.isDefined("excludes")) {
-                    List<String> includes = container.get("excludes").asList(String.class);
-                    scanner.setExcludes(includes.toArray(new String[includes.size()]));
-                }
-                scanner.scan();
+                List<String> includes = container.get("includes").asList(String.class);
+                List<String> excludes = container.get("excludes").asList(String.class);
 
-                for (String bundleLocation : scanner.getIncludedFiles()) {
+                DirectoryScanner scanner = new DirectoryScanner(includes, excludes);
+
+                Path base = getFileForPath(location, installDirectory).toPath();
+                for (Path bundleLocation : scanner.scan(base)) {
                     BundleHandler newHandler =
-                            innerBuilder.build(scanner.getBasedir().toURI().resolve(
-                                    bundleLocation.replaceAll("\\\\", "/")).toURL());
+                            innerBuilder.build(bundleLocation.toUri().toURL());
                     for (BundleHandler handler : result) {
                         if (newHandler.getBundleUrl().equals(handler.getBundleUrl())) {
                             if (newHandler.getActions().equals(handler.getActions())
@@ -521,8 +514,9 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
             Properties props =
                     loadPropertyFile(projectDirectory, systemProperties.expect(String.class)
                             .defaultTo(SYSTEM_PROPERTIES_FILE_VALUE).asString());
-            if (props == null)
+            if (props == null) {
                 return;
+            }
             // Perform variable substitution on specified properties.
             for (Enumeration e = props.propertyNames(); e.hasMoreElements();) {
                 String name = (String) e.nextElement();
@@ -559,8 +553,9 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
             Properties props =
                     loadPropertyFile(projectDirectory, systemProperties.expect(String.class)
                             .defaultTo(CONFIG_PROPERTIES_FILE_VALUE).asString());
-            if (props == null)
+            if (props == null) {
                 return new HashMap<String, String>(0);
+            }
             // Perform variable substitution on specified properties.
             systemProperties = transformer.apply(new JsonValue(props, null));
         }
@@ -595,8 +590,9 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
             Properties props =
                     loadPropertyFile(projectDirectory, bootProperties.expect(String.class)
                             .defaultTo(BOOT_PROPERTIES_FILE_VALUE).asString());
-            if (props == null)
+            if (props == null) {
                 return new HashMap<String, Object>(0);
+            }
             // Perform variable substitution on specified properties.
             return transformer.apply(new JsonValue(props, null)).asMap();
         }
@@ -626,8 +622,9 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
             System.err.append("Main: Error loading properties from ").println(propertyFile);
             System.err.println("Main: " + ex);
             try {
-                if (is != null)
+                if (is != null) {
                     is.close();
+                }
             } catch (IOException ex2) {
                 // Nothing we can do.
             }

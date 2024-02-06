@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright © 2011 ForgeRock AS. All rights reserved.
+ * Portions Copyright 2024 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -27,27 +28,29 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * Interface to help handle SQLExceptions across different DB implementations
- *
+ * Interface to help handle SQLExceptions across different DB implementations.
  */
 public interface SQLExceptionHandler {
-    
+
     /**
-     * Query if a given exception signifies a well known error type
-     * 
+     * Query if a given exception signifies a well known error type.
+     *
+     * <p>
      * Allows table handlers to abstract database specific differences in reporting errors.
-     * 
-     * @param ex The exception thrown by the database
+     *
+     * @param exception the exception thrown by the database
      * @param errorType the error type to test against
      * @return true if the exception matches the error type passed
      */
-    boolean isErrorType(SQLException ex, ErrorType errorType);
-    
+    boolean isErrorType(SQLException exception, ErrorType errorType);
+
     /**
-     * As whether a given exception should be retried
-     * @param ex the exception thrown by the database
+     * As whether a given exception should be retried.
+     *
+     * @param exception the exception thrown by the database
      * @param connection where the failure occured, used for additional context
      * @return true if the expectation is that transaction should be retried by the application
      */
-    boolean isRetryable(SQLException ex, Connection connection);
+    boolean isRetryable(SQLException exception, Connection connection);
+
 }

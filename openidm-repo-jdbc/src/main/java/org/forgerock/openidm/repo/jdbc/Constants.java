@@ -12,50 +12,39 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2024 Wren Security.
  */
 
 package org.forgerock.openidm.repo.jdbc;
 
 /**
- *
- * JDBC Repository Service Constants
+ * JDBC Repository Service constants.
  */
 public class Constants {
 
     /**
-     * Raw Object Rev
-     * 
-     * The DB Table column representing the Object revision
+     * DB Table column representing the Object revision.
      */
     public static final String RAW_OBJECT_REV = "rev";
-    
+
     /**
-     * Raw Id
-     * 
-     * The ID of the row representing the Object within the DB Table
+     * ID of the row representing the Object within the DB Table.
      */
     public static final String RAW_ID = "id";
-    
+
     /**
-     * Raw Object Type Id
-     * 
-     * The ObjectTypes ID of the Object within the DB Table
-     */ 
+     * ObjectTypes ID of the Object within the DB Table.
+     */
     public static final String RAW_OBJECTTYPES_ID = "objecttypes_id";
-    
+
     /**
-     * The Object Id
-     * 
-     * The ID of the Mapped Object
-     */ 
+     * ID of the Mapped Object.
+     */
     public static final String OBJECT_ID = "_id";
-    
+
     /**
-     * The Object Revision
-     * 
-     * The Revision of the Mapped Object
-     */ 
+     * Revision of the Mapped Object
+     */
     public static final String OBJECT_REV = "_rev";
 
-    
 }

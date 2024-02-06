@@ -11,14 +11,16 @@
  * Header, with the fields enclosed by brackets [] replaced by your own identifying
  * information: "Portions copyright [year] [name of copyright owner]".
  *
- * Copyright 2023 Wren Security. All rights reserved.
+ * Copyright 2023-2024 Wren Security. All rights reserved.
  */
 package org.forgerock.openidm.maintenance.upgrade;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
@@ -27,16 +29,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Comparator;
+import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import org.codehaus.plexus.util.FileUtils;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 public class ZipUtilsTest {
 
     @Test
     public void testUnzipFile() throws IOException {
         Path workDir = Files.createTempDirectory("zipUtilsTest");
+
         // Prepare test files
         Path sourceDir = Files.createDirectory(workDir.resolve("source"));
         Path rootFilename = Paths.get("root.txt");
@@ -47,19 +51,31 @@ public class ZipUtilsTest {
         Path zipFile = workDir.resolve("test.zip");
         createZipArchive(zipFile, sourceDir);
         Path targetDir = Files.createDirectory(workDir.resolve("target"));
+
         // Check extraction of all files
         ZipUtils.unzipFile(zipFile, targetDir);
         assertTrue(Files.exists(targetDir.resolve(rootFilename)));
         assertTrue(Files.exists(targetDir.resolve(nestedFilename)));
-        FileUtils.contentEquals(sourceDir.resolve(rootFilename).toFile(), targetDir.resolve(rootFilename).toFile());
-        FileUtils.contentEquals(sourceDir.resolve(nestedFilename).toFile(), targetDir.resolve(nestedFilename).toFile());
-        // Check extraction of specific file
-        FileUtils.cleanDirectory(targetDir.toString());
-        ZipUtils.unzipFile(zipFile, FileSystems.getDefault().getPathMatcher("glob:" + nestedFilename.toString()), targetDir);
+        assertEquals(Files.readString(targetDir.resolve(rootFilename)),
+                Files.readString(sourceDir.resolve(rootFilename)));
+        assertEquals(Files.readString(targetDir.resolve(nestedFilename)),
+                Files.readString(sourceDir.resolve(nestedFilename)));
+
+        // Check extraction of a specific file
+        cleanDirectory(targetDir);
+        ZipUtils.unzipFile(zipFile, FileSystems.getDefault().getPathMatcher("glob:folder/nested.txt"), targetDir);
         assertFalse(Files.exists(targetDir.resolve(rootFilename)));
         assertTrue(Files.exists(targetDir.resolve(nestedFilename)));
-        FileUtils.contentEquals(sourceDir.resolve(nestedFilename).toFile(), targetDir.resolve(nestedFilename).toFile());
+        assertEquals(Files.readString(targetDir.resolve(nestedFilename)),
+                Files.readString(sourceDir.resolve(nestedFilename)));
+    }
 
+    private void cleanDirectory(Path path) throws IOException {
+        Files.walk(path)
+                .sorted(Comparator.reverseOrder())
+                .filter(Predicate.not(path::equals))
+                .map(Path::toFile)
+                .forEach(File::delete);
     }
 
     private void createZipArchive(Path targetFile, Path sourceFolder) {
@@ -79,6 +95,5 @@ public class ZipUtilsTest {
             throw new IllegalStateException("Failed to create zip archive.", e);
         }
     }
-
 
 }

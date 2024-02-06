@@ -30,10 +30,8 @@ import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 
 /**
- * Meta data provider interface to describe configuration requirements of a
- * bundle. Use a meta-data.json file to declare a meta data provider for a
- * bundle*
- *
+ * Meta data provider interface to describe configuration requirements of a bundle.
+ * Use a meta-data.json file to declare a meta data provider for a bundle.
  */
 public interface MetaDataProvider {
     /**

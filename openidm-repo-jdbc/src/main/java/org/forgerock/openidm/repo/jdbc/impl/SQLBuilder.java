@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2015 ForgeRock AS. All rights reserved.
+ * Portions Copyright 2024 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -25,13 +26,12 @@ package org.forgerock.openidm.repo.jdbc.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
-import org.wrensecurity.guava.common.base.Function;
-import org.wrensecurity.guava.common.collect.FluentIterable;
 import org.forgerock.openidm.config.enhanced.InternalErrorException;
 import org.forgerock.openidm.repo.util.Clause;
 import org.forgerock.openidm.repo.util.SQLRenderer;
+import org.wrensecurity.guava.common.base.Function;
+import org.wrensecurity.guava.common.collect.FluentIterable;
 
 /**
  * An {@link org.forgerock.openidm.repo.util.SQLRenderer} that models an SQL SELECT statement and
@@ -53,7 +53,7 @@ import org.forgerock.openidm.repo.util.SQLRenderer;
  * }
  * </pre>
  */
-abstract class SQLBuilder implements SQLRenderer<String> {
+public abstract class SQLBuilder implements SQLRenderer<String> {
 
     /**
      * Renders a select column.
@@ -65,6 +65,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
             this.column = column;
         }
 
+        @Override
         public String toSQL() {
             return column;
         }
@@ -82,6 +83,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
             this.alias = alias;
         }
 
+        @Override
         public String toSQL() {
             return table + (alias != null ? " " + alias : "");
         }
@@ -108,7 +110,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
     /**
      * Models/renders a table join.
      */
-    class Join implements SQLRenderer<String> {
+    public class Join implements SQLRenderer<String> {
         final JoinType type;
         final Table table;
         final Clause onClause;
@@ -150,7 +152,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
          * @param clause the on clause
          * @return the calling SQLBuilder with this completed join added
          */
-        SQLBuilder on(Clause clause) {
+        public SQLBuilder on(Clause clause) {
             builder.addJoin(new Join(builder, type, table, clause));
             return builder;
         }
@@ -178,6 +180,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
             this.ascending = ascending;
         }
 
+        @Override
         public String toSQL() {
             return order + " " + (ascending ? "ASC" : "DESC");
         }
@@ -196,7 +199,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
      * @param column the column to add to the select list
      * @return the builder
      */
-    SQLBuilder addColumn(String column) {
+    public SQLBuilder addColumn(String column) {
         columns.add(new Column(column));
         return this;
     }
@@ -207,7 +210,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
      * @param table a table to select from
      * @return the builder
      */
-    SQLBuilder from(String table) {
+    public SQLBuilder from(String table) {
         return from(table, null);
     }
 
@@ -218,7 +221,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
      * @param alias the table alias
      * @return the builder
      */
-    SQLBuilder from(String table, String alias) {
+    public SQLBuilder from(String table, String alias) {
         tables.add(new Table(table, alias));
         return this;
     }
@@ -229,7 +232,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
      * @param table the table to join
      * @return the Join
      */
-    Join leftJoin(String table) {
+    public Join leftJoin(String table) {
         return leftJoin(table, null);
     }
 
@@ -240,7 +243,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
      * @param alias the table's alias
      * @return the Join
      */
-    Join leftJoin(String table, String alias) {
+    public Join leftJoin(String table, String alias) {
         return join(JoinType.LEFT_OUTER, table, alias);
     }
 
@@ -250,7 +253,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
      * @param table the table to join
      * @return the Join
      */
-    Join rightJoin(String table) {
+    public Join rightJoin(String table) {
         return rightJoin(table, null);
     }
 
@@ -261,7 +264,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
      * @param alias the table's alias
      * @return the Join
      */
-    Join rightJoin(String table, String alias) {
+    public Join rightJoin(String table, String alias) {
         return join(JoinType.RIGHT_OUTER, table, alias);
     }
 
@@ -271,7 +274,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
      * @param table the table to join
      * @return the Join
      */
-    Join join(String table) {
+    public Join join(String table) {
         return join(table, null);
     }
 
@@ -282,7 +285,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
      * @param alias the table's alias
      * @return the Join
      */
-    Join join(String table, String alias) {
+    public Join join(String table, String alias) {
         return join(JoinType.INNER, table, alias);
     }
 
@@ -309,7 +312,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
      * @param whereClause the WhereClause
      * @return the builder
      */
-    SQLBuilder where(Clause whereClause) {
+    public SQLBuilder where(Clause whereClause) {
         this.whereClause = whereClause;
         return this;
     }
@@ -321,7 +324,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
      * @param ascending whether it is ascending
      * @return the builder
      */
-    SQLBuilder orderBy(String orderBy, boolean ascending) {
+    public SQLBuilder orderBy(String orderBy, boolean ascending) {
         this.orderBys.add(new OrderBy(orderBy, ascending));
         return this;
     }
@@ -340,7 +343,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
      *
      * @return a renderer for the column list
      */
-    SQLRenderer<String> getColumns() {
+    protected SQLRenderer<String> getColumns() {
         return new SQLRenderer<String>() {
             @Override
             public String toSQL() {
@@ -356,7 +359,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
      *
      * @return a renderer for the from clause
      */
-    SQLRenderer<String> getFromClause() {
+    protected SQLRenderer<String> getFromClause() {
         if (tables.isEmpty()) {
             throw new InternalErrorException("SQL query contains no tables in FROM clause");
         }
@@ -377,7 +380,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
                 }
             };
 
-    SQLRenderer<String> getJoinClause() {
+    protected SQLRenderer<String> getJoinClause() {
         if (joins.isEmpty()) {
             return NO_STRING;
         }
@@ -395,7 +398,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
      *
      * @return a renderer for the where clause
      */
-    SQLRenderer<String> getWhereClause() {
+    protected SQLRenderer<String> getWhereClause() {
         return new SQLRenderer<String>() {
             @Override
             public String toSQL() {
@@ -409,7 +412,7 @@ abstract class SQLBuilder implements SQLRenderer<String> {
      *
      * @return a renderer for the order-by clause
      */
-    SQLRenderer<String> getOrderByClause() {
+    protected SQLRenderer<String> getOrderByClause() {
         if (orderBys.isEmpty()) {
             return NO_STRING;
         }
@@ -427,6 +430,18 @@ abstract class SQLBuilder implements SQLRenderer<String> {
      */
     @Override
     public abstract String toSQL();
+
+    /**
+     * Render the SQL string for counting number of matched rows.
+     *
+     * @return rendered COUNT SQL string
+     */
+    public String toCountSQL() {
+        return "SELECT COUNT(*) as total "
+                + getFromClause().toSQL()
+                + getJoinClause().toSQL()
+                + getWhereClause().toSQL();
+    }
 
     /**
      * Return a string representation of this builder.

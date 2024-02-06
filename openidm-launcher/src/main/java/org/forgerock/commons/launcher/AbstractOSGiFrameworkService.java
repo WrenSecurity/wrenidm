@@ -16,8 +16,8 @@
  */
 package org.forgerock.commons.launcher;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +26,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkEvent;
@@ -53,7 +52,7 @@ public abstract class AbstractOSGiFrameworkService implements OSGiFramework {
      * @return list of startup bundle handlers.
      */
     protected abstract List<BundleHandler> listBundleHandlers(BundleContext context)
-            throws MalformedURLException;
+            throws IOException, MalformedURLException;
 
     /**
      * @return map of configuration properties.

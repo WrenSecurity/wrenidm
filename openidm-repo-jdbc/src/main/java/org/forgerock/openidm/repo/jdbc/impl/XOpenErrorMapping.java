@@ -20,15 +20,12 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-
 import org.forgerock.openidm.repo.jdbc.ErrorType;
-
 
 /**
  * Maps SQL state with Open Group (X/Open) SQL Standard codes to error constants known in OpenIDM
  *
  * Use the error type facility sparingly, as it can take DB specific error code implementations, porting and maintenance
- *
  */
 public class XOpenErrorMapping {
 
@@ -92,4 +89,5 @@ public class XOpenErrorMapping {
 
         return errorTypeToSqlStates.get(errorType).contains(sqlState);
     }
+
 }

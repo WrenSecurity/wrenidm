@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2024 Wren Security.
  */
 
 package org.forgerock.openidm.maintenance.upgrade;
@@ -35,8 +35,8 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.core.IdentityServer;
-import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.core.IdentityServerTestUtils;
+import org.forgerock.openidm.core.ServerConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
@@ -79,19 +79,24 @@ public class UpdateManagerImplTest {
             {
                 bindUpdateLogService(mock(UpdateLogService.class));
             }
+            @Override
             File[] getUpdateFiles() {
                 return new File[]{ archiveFile };
             }
+            @Override
             JsonValue readUpdateConfig(File file) throws InvalidArchiveUpdateException {
                 return testConfig;
             }
+            @Override
             ChecksumFile resolveChecksumFile(Path path) throws UpdateException {
                 return mock(ChecksumFile.class);
             }
-            Path extractFileToDirectory(File zipFile, Path fileToExtract) throws UpdateException {
+            @Override
+            Path extractFileToDirectory(File zipFile, String fileToExtract) throws UpdateException {
                 return mock(Path.class);
             }
             // This is to avoid ServiceTracker issues in test
+            @Override
             String getDbDirName() {
                 return "mysql";
             }
@@ -147,12 +152,15 @@ public class UpdateManagerImplTest {
         // this UpdateManagerImpl throws an exception on reading the update config to test
         // listAvailableUpdates' ability to return the proper error
         UpdateManagerImpl updateManager = new UpdateManagerImpl() {
+            @Override
             File[] getUpdateFiles() {
                 return new File[]{ archiveFile };
             }
+            @Override
             JsonValue readUpdateConfig(File file) throws InvalidArchiveUpdateException {
                 throw new InvalidArchiveUpdateException("test.zip", "bad properties");
             }
+            @Override
             ChecksumFile resolveChecksumFile(Path path) throws UpdateException {
                 return mock(ChecksumFile.class);
             }
@@ -239,16 +247,20 @@ public class UpdateManagerImplTest {
         // to simulate a bad checksum in order to test listAvailableUpdates'
         // ability to return the proper error
         UpdateManagerImpl updateManager = new UpdateManagerImpl() {
+            @Override
             File[] getUpdateFiles() {
                 return new File[]{ archiveFile };
             }
+            @Override
             JsonValue readUpdateConfig(File file) throws InvalidArchiveUpdateException {
                 return testConfig;
             }
+            @Override
             ChecksumFile resolveChecksumFile(Path path) throws UpdateException {
                 return mock(ChecksumFile.class);
             }
-            Path extractFileToDirectory(File zipFile, Path fileToExtract) throws UpdateException {
+            @Override
+            Path extractFileToDirectory(File zipFile, String fileToExtract) throws UpdateException {
                 throw new UpdateException("missing checksum file");
             }
         };
@@ -281,6 +293,7 @@ public class UpdateManagerImplTest {
     @Test(dataProvider = "versions")
     public void testGetBaseProductVersion(final String fullVersion, final String baseVersion, boolean unused) {
         UpdateManagerImpl updateManager = new UpdateManagerImpl() {
+            @Override
             String getProductVersion() {
                 return fullVersion;
             }
@@ -305,9 +318,11 @@ public class UpdateManagerImplTest {
                 field("restartRequired", false)
         ));
         UpdateManagerImpl updateManager = new UpdateManagerImpl() {
+            @Override
             String getProductVersion() {
                 return version;
             }
+            @Override
             String getBaseProductVersion() {
                 return baseVersion;
             }

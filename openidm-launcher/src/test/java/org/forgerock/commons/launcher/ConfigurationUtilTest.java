@@ -24,17 +24,19 @@
 
 package org.forgerock.commons.launcher;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
+
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
-
-import org.junit.Assert;
 import org.testng.annotations.Test;
 
 /**
  * A NAME does ...
- * 
+ *
  * @author Laszlo Hordos
  */
 public class ConfigurationUtilTest {
@@ -42,18 +44,18 @@ public class ConfigurationUtilTest {
     public void testGetZipFileListing() throws Exception {
         URL zip = ConfigurationUtilTest.class.getResource("/test2/bundles.zip");
         Vector<URL> result = ConfigurationUtil.getZipFileListing(zip, null, null);
-        Assert.assertEquals("Find all files", 3, result.size());
+        assertEquals(result.size(), 3, "Find all files");
         for (URL file : result) {
             InputStream is = null;
             try {
                 is = file.openConnection().getInputStream();
                 if (is != null) {
-                    Assert.assertTrue("Stream is empty", is.available() > 0);
+                    assertTrue(is.available() > 0, "Stream is empty");
                 } else {
-                    Assert.fail("Can not read from " + file);
+                    fail("Can not read from " + file);
                 }
             } catch (Exception e) {
-                Assert.fail(e.getMessage());
+                fail(e.getMessage());
             } finally {
                 if (null != is) {
                     try {
@@ -63,21 +65,14 @@ public class ConfigurationUtilTest {
                 }
             }
         }
-        result =
-                ConfigurationUtil.getZipFileListing(zip, Arrays.asList(new String[] { "**/*jar" }),
-                        null);
-        Assert.assertEquals("Find all jar files", 2, result.size());
-        result =
-                ConfigurationUtil.getZipFileListing(zip, Arrays.asList(new String[] { "*jar" }),
-                        null);
-        Assert.assertEquals("Find jar file in the root", 1, result.size());
-        result =
-                ConfigurationUtil.getZipFileListing(zip, Arrays
-                        .asList(new String[] { "bundle/*jar" }), null);
-        Assert.assertEquals("Find jar file in the bundle", 1, result.size());
-        result =
-                ConfigurationUtil.getZipFileListing(zip, Arrays.asList(new String[] { "**/*jar" }),
-                        Arrays.asList(new String[] { "bundle/*jar" }));
-        Assert.assertEquals("Find jar file in the root exclude the bundle", 1, result.size());
+        result = ConfigurationUtil.getZipFileListing(zip, List.of("**/*.jar"), null);
+        assertEquals(result.size(), 2, "Find all jar files");
+        result = ConfigurationUtil.getZipFileListing(zip, List.of("*.jar"), null);
+        assertEquals(result.size(), 1, "Find jar file in the root");
+        result = ConfigurationUtil.getZipFileListing(zip, List.of("bundle/*.jar"), null);
+        assertEquals(result.size(), 1, "Find jar file in the bundle");
+        result = ConfigurationUtil.getZipFileListing(zip, List.of("*.jar", "**/*.jar"), List.of("bundle/*.jar"));
+        assertEquals(result.size(), 1, "Find jar file in the root exclude the bundle");
     }
+
 }

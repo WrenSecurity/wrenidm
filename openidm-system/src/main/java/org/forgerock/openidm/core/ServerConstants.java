@@ -23,7 +23,7 @@
  *
  *      Copyright 2006-2010 Sun Microsystems, Inc.
  *      Portions Copyright 2010-2016 ForgeRock AS
- *      Portions Copyright 2018-2023 Wren Security.
+ *      Portions Copyright 2018-2024 Wren Security.
  */
 package org.forgerock.openidm.core;
 
@@ -258,15 +258,6 @@ public final class ServerConstants {
      * this ID
      */
     public final static String QUERY_ALL_IDS = "query-all-ids";
-
-    /**
-     * System populated query input key.
-     *
-     * Key available for token substitution inside the query expression,
-     * identifying the resource queried by name. Example use: select * from
-     * ${_resource} where ...
-     */
-    public final static String RESOURCE_NAME = "_resource";
 
     public static final String LAUNCHER_INSTALL_LOCATION = "launcher.install.location";
     public static final String LAUNCHER_INSTALL_URL = "launcher.install.url";

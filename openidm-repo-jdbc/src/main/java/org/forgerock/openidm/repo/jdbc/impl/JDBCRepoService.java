@@ -12,16 +12,14 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2024 Wren Security
  */
 package org.forgerock.openidm.repo.jdbc.impl;
 
-import static org.wrensecurity.guava.common.base.Strings.isNullOrEmpty;
 import static org.forgerock.json.JsonValue.field;
 import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.JsonValueFunctions.enumConstant;
-import static org.forgerock.json.resource.QueryResponse.NO_COUNT;
 import static org.forgerock.json.resource.ResourceException.newResourceException;
 import static org.forgerock.json.resource.ResourceResponse.FIELD_CONTENT_ID;
 import static org.forgerock.json.resource.ResourceResponse.FIELD_CONTENT_REVISION;
@@ -39,12 +37,12 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ActionRequest;
 import org.forgerock.json.resource.ActionResponse;
@@ -69,17 +67,32 @@ import org.forgerock.json.resource.UpdateRequest;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
 import org.forgerock.openidm.config.enhanced.InvalidException;
 import org.forgerock.openidm.core.ServerConstants;
-import org.forgerock.openidm.crypto.CryptoService;
 import org.forgerock.openidm.datasource.DataSourceService;
 import org.forgerock.openidm.repo.RepoBootService;
 import org.forgerock.openidm.repo.RepositoryService;
 import org.forgerock.openidm.repo.jdbc.DatabaseType;
 import org.forgerock.openidm.repo.jdbc.ErrorType;
 import org.forgerock.openidm.repo.jdbc.TableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.handler.GenericTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.handler.MappedTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.DB2GenericTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.DB2MappedTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.DB2SQLExceptionHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.H2GenericTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.H2MappedTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.MSSQLExceptionHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.MSSQLGenericTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.MSSQLMappedTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.MySQLExceptionHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.MySQLGenericTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.MySQLMappedTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.OracleGenericTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.OracleMappedTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.PostgreSQLGenericTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.vendor.PostgreSQLMappedTableHandler;
 import org.forgerock.openidm.smartevent.EventEntry;
 import org.forgerock.openidm.smartevent.Name;
 import org.forgerock.openidm.smartevent.Publisher;
-import org.forgerock.openidm.util.Accessor;
 import org.forgerock.services.context.Context;
 import org.forgerock.util.promise.Promise;
 import org.osgi.framework.BundleContext;
@@ -124,17 +137,13 @@ public class JDBCRepoService implements RequestHandler, RepoBootService, Reposit
     public static final String CONFIG_MAX_TX_RETRY = "maxTxRetry";
     public static final String CONFIG_MAX_BATCH_SIZE = "maxBatchSize";
 
-    Map<String, TableHandler> tableHandlers;
-    TableHandler defaultTableHandler;
+    private Map<String, TableHandler> tableHandlers;
+    private TableHandler defaultTableHandler;
 
     private DatabaseType databaseType;
 
     private JsonValue config;
     private int maxTxRetry = 5;
-
-    /** CryptoService for detecting whether a value is encrypted */
-    @Reference
-    protected CryptoService cryptoService;
 
     /**
      * Enhanced configuration service.
@@ -572,105 +581,37 @@ public class JDBCRepoService implements RequestHandler, RepoBootService, Reposit
     @Override
     public Promise<QueryResponse, ResourceException> handleQuery(Context context, QueryRequest request, QueryResourceHandler handler) {
         try {
-
-            // If paged results are requested then decode the cookie in order to determine
-            // the index of the first result to be returned.
-            final int requestPageSize = request.getPageSize();
-
-            // Cookie containing offset of last request
-            final String pagedResultsCookie = request.getPagedResultsCookie();
-
-            final boolean pagedResultsRequested = requestPageSize > 0;
-
-            // index of first record (used for SKIP/OFFSET)
-            final int firstResultIndex;
-
-            if (pagedResultsRequested) {
-                if (!isNullOrEmpty(pagedResultsCookie)) {
-                    try {
-                        firstResultIndex = Integer.parseInt(pagedResultsCookie);
-                    } catch (final NumberFormatException e) {
-                        throw new BadRequestException("Invalid paged results cookie");
-                    }
-                } else {
-                    firstResultIndex = Math.max(0, request.getPagedResultsOffset());
-                }
-            } else {
-                firstResultIndex = 0;
-            }
-
-            // Once cookie is processed Queries.query() can rely on the offset.
-            request.setPagedResultsOffset(firstResultIndex);
+            String type = trimStartingSlash(request.getResourcePath());
+            Map<String, Object> params = createQueryParams(request);
 
             List<ResourceResponse> results = query(request);
             for (ResourceResponse result : results) {
                 handler.handleResource(result);
             }
 
-            /*
-             * Execute additional -count query if we are paging
-             */
-            final String nextCookie;
-
-            // The number of results (if known)
-            final int resultCount;
-
-            if (pagedResultsRequested) {
-                TableHandler tableHandler = getTableHandler(trimStartingSlash(request.getResourcePath()));
-
-                // count if requested
-                switch (request.getTotalPagedResultsPolicy()) {
-                    case ESTIMATE:
-                    case EXACT:
-                        // Get total if -count query is available
-                        final String countQueryId = request.getQueryId() + "-count";
-                        if (tableHandler.queryIdExists(countQueryId)) {
-                            QueryRequest countRequest = Requests.copyOfQueryRequest(request);
-                            countRequest.setQueryId(countQueryId);
-
-                            // Strip pagination parameters
-                            countRequest.setPageSize(0);
-                            countRequest.setPagedResultsOffset(0);
-                            countRequest.setPagedResultsCookie(null);
-
-                            List<ResourceResponse> countResult = query(countRequest);
-
-                            if (countResult != null && !countResult.isEmpty()) {
-                                resultCount = countResult.get(0).getContent().get("total").asInteger();
-                            } else {
-                                logger.debug("Count query {} failed", countQueryId);
-                                resultCount = NO_COUNT;
-                            }
-                        } else {
-                            logger.debug("Count query with id {} not found", countQueryId);
-                            resultCount = NO_COUNT;
-                        }
-                        break;
-                    case NONE:
-                    default:
-                        resultCount = NO_COUNT;
-                        break;
-                }
-
-                if (results.size() < requestPageSize) {
-                    nextCookie = null;
-                } else {
-                    final int remainingResults = resultCount - (firstResultIndex + results.size());
-                    if (remainingResults == 0) {
-                        nextCookie = null;
-                    } else {
-                        nextCookie = String.valueOf(firstResultIndex + requestPageSize);
-                    }
-                }
-            } else {
-                nextCookie = null;
-                resultCount = NO_COUNT;
+            if (request.getPageSize() == 0) {
+                return newQueryResponse(null).asPromise();
             }
 
-            if (resultCount == NO_COUNT) {
-                return newQueryResponse(nextCookie).asPromise();
+            var tableHandler = getTableHandler(type);
+
+            Integer totalCount = null;
+            if (request.getTotalPagedResultsPolicy() != CountPolicy.NONE) {
+               try (var connection = getConnection()) {
+                   totalCount = tableHandler.queryCount(type, params, connection);
+               }
+            }
+
+            int nextOffset = ((Integer) params.get(PAGED_RESULTS_OFFSET)) + results.size();
+
+            if (totalCount != null) {
+                return newQueryResponse(
+                        totalCount > nextOffset ? String.valueOf(nextOffset) : null,
+                        CountPolicy.EXACT,
+                        totalCount).asPromise();
             } else {
-                return newQueryResponse(nextCookie, CountPolicy.EXACT, resultCount).asPromise();
+                return newQueryResponse(
+                        results.size() >= request.getPageSize() ? String.valueOf(nextOffset) : null).asPromise();
             }
         } catch (final ResourceException e) {
             return e.asPromise();
@@ -679,19 +620,48 @@ public class JDBCRepoService implements RequestHandler, RepoBootService, Reposit
         }
     }
 
+    /**
+     * Create query parameters for calling {@link TableHandler} implementation.
+     *
+     * @param request the original query request
+     * @return table handler's query parameters
+     */
+    private Map<String, Object> createQueryParams(QueryRequest request) throws BadRequestException {
+        Map<String, Object> params = new HashMap<>();
+
+        // query parameters
+        params.put(QUERY_ID, request.getQueryId());
+        params.put(QUERY_EXPRESSION, request.getQueryExpression());
+        params.put(QUERY_FILTER, request.getQueryFilter());
+
+        // paging parameters
+        params.put(PAGE_SIZE, request.getPageSize());
+        final String pagedResultsCookie = request.getPagedResultsCookie();
+        if (pagedResultsCookie != null && !pagedResultsCookie.isEmpty()) {
+            try {
+                params.put(PAGED_RESULTS_OFFSET, Math.max(0, Integer.parseInt(pagedResultsCookie)));
+            } catch (NumberFormatException e) {
+                throw new BadRequestException("Invalid paged results cookie");
+            }
+        } else {
+            params.put(PAGED_RESULTS_OFFSET, request.getPagedResultsOffset());
+        }
+
+        // sorting parameters
+        params.put(SORT_KEYS, request.getSortKeys());
+
+        // additional named parameters
+        params.putAll(request.getAdditionalParameters());
+
+        return params;
+    }
+
     @Override
     public List<ResourceResponse> query(QueryRequest request) throws ResourceException {
         String fullId = request.getResourcePath();
         String type = trimStartingSlash(fullId);
         logger.trace("Full id: {} Extracted type: {}", fullId, type);
-        Map<String, Object> params = new HashMap<>();
-        params.putAll(request.getAdditionalParameters());
-        params.put(QUERY_ID, request.getQueryId());
-        params.put(QUERY_EXPRESSION, request.getQueryExpression());
-        params.put(QUERY_FILTER, request.getQueryFilter());
-        params.put(PAGE_SIZE, request.getPageSize());
-        params.put(PAGED_RESULTS_OFFSET, request.getPagedResultsOffset());
-        params.put(SORT_KEYS, request.getSortKeys());
+        var params = createQueryParams(request);
 
         Connection connection = null;
         try {
@@ -986,84 +956,88 @@ public class JDBCRepoService implements RequestHandler, RepoBootService, Reposit
     }
 
     GenericTableHandler getGenericTableHandler(DatabaseType databaseType, JsonValue tableConfig,
-            String dbSchemaName, JsonValue queries, JsonValue commands, int maxBatchSize) {
-
+            String schemaName, JsonValue queries, JsonValue commands, int maxBatchSize) {
         // TODO: make pluggable
         switch (databaseType) {
-        case DB2:
-            return
-                    new DB2TableHandler(tableConfig, dbSchemaName, queries, commands, maxBatchSize,
-                            new DB2SQLExceptionHandler());
-        case ORACLE:
-            return
-                    new OracleTableHandler(tableConfig, dbSchemaName, queries, commands, maxBatchSize,
-                            new DefaultSQLExceptionHandler());
-        case H2:
-            return
-                    new H2TableHandler(tableConfig, dbSchemaName, queries, commands, maxBatchSize,
-                            new DefaultSQLExceptionHandler());
-        case POSTGRESQL:
-            return
-                    new PostgreSQLTableHandler(tableConfig, dbSchemaName, queries, commands, maxBatchSize,
-                            new DefaultSQLExceptionHandler());
-        case MYSQL:
-            return
-                    new MySQLTableHandler(tableConfig, dbSchemaName, queries, commands, maxBatchSize,
-                            new MySQLExceptionHandler());
-        case SQLSERVER:
-            return
-                    new MSSQLTableHandler(tableConfig, dbSchemaName, queries, commands, maxBatchSize,
-                            new MSSQLExceptionHandler());
-        default:
-            return
-                    new GenericTableHandler(tableConfig, dbSchemaName, queries, commands, maxBatchSize,
-                            new DefaultSQLExceptionHandler());
+            case DB2:
+                return new DB2GenericTableHandler(schemaName, tableConfig,
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        maxBatchSize, new DB2SQLExceptionHandler());
+            case H2:
+                return new H2GenericTableHandler(schemaName, tableConfig,
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        maxBatchSize, new DefaultSQLExceptionHandler());
+            case MYSQL:
+                return new MySQLGenericTableHandler(schemaName, tableConfig,
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        maxBatchSize, new MySQLExceptionHandler());
+            case ORACLE:
+                return new OracleGenericTableHandler(schemaName, tableConfig,
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        maxBatchSize, new DefaultSQLExceptionHandler());
+            case POSTGRESQL:
+                return new PostgreSQLGenericTableHandler(schemaName, tableConfig,
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        maxBatchSize, new DefaultSQLExceptionHandler());
+            case SQLSERVER:
+                return new MSSQLGenericTableHandler(schemaName, tableConfig,
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        maxBatchSize, new MSSQLExceptionHandler());
+            default:
+                return new GenericTableHandler(schemaName, tableConfig,
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        maxBatchSize, new DefaultSQLExceptionHandler());
         }
     }
 
     MappedTableHandler getMappedTableHandler(DatabaseType databaseType, JsonValue tableConfig,
-            String table, Map<String, Object> objectToColumn, String dbSchemaName,
-            JsonValue explicitQueries, JsonValue explicitCommands, int maxBatchSize)
+            String tableName, Map<String, Object> columnMapping, String schemaName,
+            JsonValue queries, JsonValue commands, int maxBatchSize)
             throws InternalServerErrorException {
-
-        final Accessor<CryptoService> cryptoServiceAccessor = new Accessor<CryptoService>() {
-            @Override
-            public CryptoService access() {
-                return cryptoService;
-            }
-        };
-
         // TODO: make pluggable
         switch (databaseType) {
-        case DB2:
-            return
-                    // DB2 uses Oracle(!) MappedTableHandler implementation - not a mistake!
-                    new OracleMappedTableHandler(table, objectToColumn, dbSchemaName, explicitQueries, explicitCommands,
-                            new DB2SQLExceptionHandler(), cryptoServiceAccessor);
-        case ORACLE:
-            return
-                    new OracleMappedTableHandler(table, objectToColumn, dbSchemaName, explicitQueries, explicitCommands,
-                            new DefaultSQLExceptionHandler(), cryptoServiceAccessor);
-        case H2:
-            return new H2MappedTableHandler(table, objectToColumn, dbSchemaName, explicitQueries, explicitCommands,
-                    new DefaultSQLExceptionHandler(), cryptoServiceAccessor);
-        case POSTGRESQL:
-            return
-                    new PostgreSQLMappedTableHandler(table, objectToColumn, dbSchemaName, explicitQueries, explicitCommands,
-                            new DefaultSQLExceptionHandler(), cryptoServiceAccessor);
-        case MYSQL:
-            return
-                    new MappedTableHandler(table, objectToColumn, dbSchemaName, explicitQueries, explicitCommands,
-                            new MySQLExceptionHandler(), cryptoServiceAccessor);
-        case SQLSERVER:
-            return
-                    new MSSQLMappedTableHandler(table, objectToColumn, dbSchemaName,
-                            explicitQueries, explicitCommands, new MSSQLExceptionHandler(),
-                            cryptoServiceAccessor);
-        default:
-            return
-                    new MappedTableHandler(table, objectToColumn, dbSchemaName, explicitQueries, explicitCommands,
-                            new DefaultSQLExceptionHandler(), cryptoServiceAccessor);
+            case DB2:
+                return new DB2MappedTableHandler(schemaName, tableName, new JsonValue(columnMapping),
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        new DB2SQLExceptionHandler());
+            case H2:
+                return new H2MappedTableHandler(schemaName, tableName, new JsonValue(columnMapping),
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        new DefaultSQLExceptionHandler());
+            case MYSQL:
+                return new MySQLMappedTableHandler(schemaName, tableName, new JsonValue(columnMapping),
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        new MySQLExceptionHandler());
+            case ORACLE:
+                return new OracleMappedTableHandler(schemaName, tableName, new JsonValue(columnMapping),
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        new DefaultSQLExceptionHandler());
+            case POSTGRESQL:
+                return new PostgreSQLMappedTableHandler(schemaName, tableName, new JsonValue(columnMapping),
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        new DefaultSQLExceptionHandler());
+            case SQLSERVER:
+                return new MSSQLMappedTableHandler(schemaName, tableName, new JsonValue(columnMapping),
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        new MSSQLExceptionHandler());
+            default:
+                return new MappedTableHandler(schemaName, tableName, new JsonValue(columnMapping),
+                        queries.isNotNull() ? queries.asMap(String.class) : Collections.emptyMap(),
+                        commands.isNotNull() ? commands.asMap(String.class) : Collections.emptyMap(),
+                        new DefaultSQLExceptionHandler());
         }
     }
 }

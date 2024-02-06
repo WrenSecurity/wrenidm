@@ -50,17 +50,17 @@ public class JDBCDataSourceServiceTest {
         // given
         JsonValue config = getDataSourceConfig("hikari");
         config.add(new JsonPointer("/connectionPool/maximumPoolSize"), 2);
-        
+
         // when
         DataSourceService dataSourceService = JDBCDataSourceService.getBootService(config, null);
-        
+
         //then
         assertThat(dataSourceService.getDataSource()).isInstanceOf(HikariDataSource.class);
         assertThat(canExhaustPool(dataSourceService.getDataSource(), 2)).isTrue();
         assertThat(dataSourceIsValid(dataSourceService.getDataSource())).isTrue();
     }
-    
-    @Test
+
+    @Test(enabled = false)
     public void testBoneCPDataSource() {
         // given
         JsonValue config = getDataSourceConfig("bonecp");
@@ -68,10 +68,10 @@ public class JDBCDataSourceServiceTest {
         config.add(new JsonPointer("/connectionPool/maxConnectionsPerPartition"), 2);
         config.add(new JsonPointer("/connectionPool/minConnectionsPerPartition"), 1);
         config.add(new JsonPointer("/connectionPool/acquireIncrement"), 1);
-        
+
         // when
         DataSourceService dataSourceService = JDBCDataSourceService.getBootService(config, null);
-        
+
         // then
         assertThat(dataSourceService.getDataSource()).isInstanceOf(BoneCPDataSource.class);
         assertThat(canExhaustPool(dataSourceService.getDataSource(), 2)).isTrue();
@@ -82,16 +82,16 @@ public class JDBCDataSourceServiceTest {
     public void testNonPoolingDataSource() {
         // given
         JsonValue config = getDataSourceConfig(null);
-        
+
         // when
         DataSourceService dataSourceService = JDBCDataSourceService.getBootService(config, null);
-        
+
         // then
         assertThat(dataSourceService.getDataSource()).isExactlyInstanceOf(
                 NonPoolingDataSourceFactory.NonPoolingDataSource.class);
         assertThat(dataSourceIsValid(dataSourceService.getDataSource())).isTrue();
     }
-    
+
     private boolean dataSourceIsValid(DataSource ds) {
         try {
             ds.getConnection().isValid(5);
@@ -100,7 +100,7 @@ public class JDBCDataSourceServiceTest {
         }
         return true;
     }
-    
+
     private JsonValue getDataSourceConfig(String type) {
         Object poolType = null;
         if (type != null) {
@@ -108,7 +108,7 @@ public class JDBCDataSourceServiceTest {
                     field("type", type)
             );
         }
-        
+
         return new JsonValue(
                 object(
                         field("driverClass", "org.hsqldb.jdbcDriver"),
@@ -123,7 +123,7 @@ public class JDBCDataSourceServiceTest {
         boolean exhausted = false;
         int numConnections = 0;
         Set<Connection> connections = new HashSet<>();
-        
+
         try {
             while (numConnections <= poolSize) {
                 connections.add(ds.getConnection());

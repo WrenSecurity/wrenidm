@@ -12,22 +12,26 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2013 ForgeRock AS.
- * Portions Copyright 2020 Wren Security.
+ * Portions Copyright 2020-2024 Wren Security.
  */
 package org.forgerock.commons.launcher;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import org.codehaus.plexus.util.MatchPatterns;
+import org.forgerock.commons.launcher.support.GlobPathMatcher;
 
 /**
  * A ConfigurationUtil class contains util methods used by
@@ -58,19 +62,24 @@ public class ConfigurationUtil {
             return files; // Empty.
         }
 
-        MatchPatterns includesPatterns = null;
-        MatchPatterns excludesPatterns = null;
+        List<PathMatcher> includesPatterns = null;
+        List<PathMatcher> excludesPatterns = null;
 
+        FileSystem fileSystem = FileSystems.getDefault();
         if (includes == null) {
             // No includes supplied, so set it to 'matches all'
-            includesPatterns = MatchPatterns.from("**");
+            includesPatterns = List.of(fileSystem.getPathMatcher("glob:**"));
         } else {
-            includesPatterns = MatchPatterns.from(includes);
+            includesPatterns = includes.stream()
+                    .map(pattern -> fileSystem.getPathMatcher("glob:" + pattern))
+                    .collect(Collectors.toList());
         }
         if (excludes == null) {
-            excludesPatterns = MatchPatterns.from();
+            excludesPatterns = List.of();
         } else {
-            excludesPatterns = MatchPatterns.from(excludes);
+            excludesPatterns = excludes.stream()
+                    .map(pattern -> fileSystem.getPathMatcher("glob:" + pattern))
+                    .collect(Collectors.toList());;
         }
 
         JarInputStream inputStream = null;
@@ -86,8 +95,8 @@ public class ConfigurationUtil {
                 if (jarEntry != null && !jarEntry.isDirectory()) {
                     String fileName = jarEntry.getName();
 
-                    if (includesPatterns.matches(fileName, false)
-                            && !excludesPatterns.matches(fileName, false)) {
+                    if (includesPatterns.stream().anyMatch(pattern -> pattern.matches(Path.of(fileName)))
+                            && !excludesPatterns.stream().anyMatch(pattern -> pattern.matches(Path.of(fileName)))) {
                         files.add(new URL(location, fileName));
                     }
                 }
@@ -140,20 +149,8 @@ public class ConfigurationUtil {
             }
         }
 
-        MatchPatterns includesPatterns = null;
-        MatchPatterns excludesPatterns = null;
-
-        if (includes == null) {
-            // No includes supplied, so set it to 'matches all'
-            includesPatterns = MatchPatterns.from("**");
-        } else {
-            includesPatterns = MatchPatterns.from(includes);
-        }
-        if (excludes == null) {
-            excludesPatterns = MatchPatterns.from();
-        } else {
-            excludesPatterns = MatchPatterns.from(excludes);
-        }
+        GlobPathMatcher includeMatcher = new GlobPathMatcher(includes != null ? includes : List.of("**"));
+        GlobPathMatcher excludeMatcher = new GlobPathMatcher(excludes != null ? excludes : List.of());
 
         ZipInputStream inputStream = null;
         try {
@@ -167,9 +164,8 @@ public class ConfigurationUtil {
                 jarEntry = inputStream.getNextEntry();
                 if (jarEntry != null && !jarEntry.isDirectory()) {
                     String fileName = jarEntry.getName();
-
-                    if (includesPatterns.matches(fileName, false)
-                            && !excludesPatterns.matches(fileName, false)) {
+                    Path filePath = Path.of(fileName);
+                    if (includeMatcher.matches(filePath) && !excludeMatcher.matches(filePath)) {
                         files.add(new URL(base, fileName));
                     }
                 }
