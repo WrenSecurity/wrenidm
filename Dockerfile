@@ -26,6 +26,7 @@ RUN \
 
 # Copy built artifact into target directory
 RUN \
+  --mount=type=cache,target=/root/.m2 \
   mkdir /build && \
   WRENIDM_VERSION=$(mvn -Dexpression=project.version -q -DforceStdout help:evaluate) && \
   unzip openidm-zip/target/wrenidm-$WRENIDM_VERSION.zip -d /build
