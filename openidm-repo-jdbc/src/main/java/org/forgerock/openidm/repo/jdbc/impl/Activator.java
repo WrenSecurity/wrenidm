@@ -116,7 +116,6 @@ public class Activator implements BundleActivator {
             case H2:
                 return databaseType.toString().toLowerCase();
             case ANSI_SQL99:
-            case ODBC:
             default:
                 return null;
         }

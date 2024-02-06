@@ -19,8 +19,6 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.List;
 import java.util.Map;
-import org.forgerock.openidm.repo.jdbc.impl.statement.NamedParameterSql;
-import org.forgerock.openidm.repo.jdbc.impl.statement.NamedParameterSupport;
 import org.testng.annotations.Test;
 
 /**

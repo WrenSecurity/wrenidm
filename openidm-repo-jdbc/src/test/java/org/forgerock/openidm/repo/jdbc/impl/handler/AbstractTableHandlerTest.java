@@ -77,11 +77,6 @@ import org.testng.annotations.Test;
  */
 public abstract class AbstractTableHandlerTest {
 
-    /**
-     * Whether to use support for number and boolean data types (this will be possible after dropping legacy mode).
-     */
-    protected static final boolean FUTURE_MODE = false;
-
     protected static final String OBJECT_TYPE = "greeting";
 
     protected static final String RESOURCE_ID = "hello";
@@ -205,8 +200,9 @@ public abstract class AbstractTableHandlerTest {
     public void testRead() throws Exception {
         var template = Map.of(
                 "name", "HELLO",
-                "score", FUTURE_MODE ? 7 : "7",
-                "visible", FUTURE_MODE ? true : "true",
+                "priority", 42,
+                "score", 7.0,
+                "visible", true,
                 "tags", List.of("foo", "bar"),
                 "meta", Map.of("owner", "john"));
         createResource(RESOURCE_ID, template);
@@ -242,8 +238,8 @@ public abstract class AbstractTableHandlerTest {
     public void testQueryFilterSimple() throws Exception {
         var template = Map.of(
                 "name", "HELLO",
-                "score", FUTURE_MODE ? 7.0 : "7",
-                "visible", FUTURE_MODE ? true : "true",
+                "score", 7.0,
+                "visible", true,
                 "tags", List.of("foo", "bar"),
                 "meta", Map.of("owner", "john"));
         createResource(RESOURCE_ID, template);
@@ -268,7 +264,7 @@ public abstract class AbstractTableHandlerTest {
         assertEquals(resultIds, Set.of(RESOURCE_ID));
     }
 
-    @Test(enabled = FUTURE_MODE)
+    @Test
     public void testQueryFilterNumber() throws Exception {
         createResource("lower-value", Map.of("score", 9));
         createResource("lower-decimal", Map.of("score", 9.1));
@@ -442,7 +438,7 @@ public abstract class AbstractTableHandlerTest {
         );
     }
 
-    @Test(enabled = FUTURE_MODE)
+    @Test
     public void testQueryIdCount() throws Exception {
         assertNull(tableHandler.queryCount(OBJECT_TYPE, Map.of("_queryId", "non-existing"), connection));
 
@@ -461,7 +457,7 @@ public abstract class AbstractTableHandlerTest {
         assertEquals(count, result.size());
     }
 
-    @Test(enabled = FUTURE_MODE)
+    @Test
     public void testQueryFilterCount() throws Exception {
         createResource(RESOURCE_ID, Map.of("name", "HELLO"));
         createResource("alternative", Map.of("name", "GUTEN TAG"));

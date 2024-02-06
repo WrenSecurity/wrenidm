@@ -20,7 +20,6 @@ import static org.forgerock.json.JsonValue.field;
 import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.JsonValueFunctions.enumConstant;
-import static org.forgerock.json.resource.QueryResponse.NO_COUNT;
 import static org.forgerock.json.resource.ResourceException.newResourceException;
 import static org.forgerock.json.resource.ResourceResponse.FIELD_CONTENT_ID;
 import static org.forgerock.json.resource.ResourceResponse.FIELD_CONTENT_REVISION;
@@ -33,7 +32,6 @@ import static org.forgerock.openidm.repo.QueryConstants.QUERY_EXPRESSION;
 import static org.forgerock.openidm.repo.QueryConstants.QUERY_FILTER;
 import static org.forgerock.openidm.repo.QueryConstants.QUERY_ID;
 import static org.forgerock.openidm.repo.QueryConstants.SORT_KEYS;
-import static org.wrensecurity.guava.common.base.Strings.isNullOrEmpty;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -583,105 +581,37 @@ public class JDBCRepoService implements RequestHandler, RepoBootService, Reposit
     @Override
     public Promise<QueryResponse, ResourceException> handleQuery(Context context, QueryRequest request, QueryResourceHandler handler) {
         try {
-
-            // If paged results are requested then decode the cookie in order to determine
-            // the index of the first result to be returned.
-            final int requestPageSize = request.getPageSize();
-
-            // Cookie containing offset of last request
-            final String pagedResultsCookie = request.getPagedResultsCookie();
-
-            final boolean pagedResultsRequested = requestPageSize > 0;
-
-            // index of first record (used for SKIP/OFFSET)
-            final int firstResultIndex;
-
-            if (pagedResultsRequested) {
-                if (!isNullOrEmpty(pagedResultsCookie)) {
-                    try {
-                        firstResultIndex = Integer.parseInt(pagedResultsCookie);
-                    } catch (final NumberFormatException e) {
-                        throw new BadRequestException("Invalid paged results cookie");
-                    }
-                } else {
-                    firstResultIndex = Math.max(0, request.getPagedResultsOffset());
-                }
-            } else {
-                firstResultIndex = 0;
-            }
-
-            // Once cookie is processed Queries.query() can rely on the offset.
-            request.setPagedResultsOffset(firstResultIndex);
+            String type = trimStartingSlash(request.getResourcePath());
+            Map<String, Object> params = createQueryParams(request);
 
             List<ResourceResponse> results = query(request);
             for (ResourceResponse result : results) {
                 handler.handleResource(result);
             }
 
-            /*
-             * Execute additional -count query if we are paging
-             */
-            final String nextCookie;
-
-            // The number of results (if known)
-            final int resultCount;
-
-            if (pagedResultsRequested) {
-                TableHandler tableHandler = getTableHandler(trimStartingSlash(request.getResourcePath()));
-
-                // count if requested
-                switch (request.getTotalPagedResultsPolicy()) {
-                    case ESTIMATE:
-                    case EXACT:
-                        // Get total if -count query is available
-                        final String countQueryId = request.getQueryId() + "-count";
-                        if (tableHandler.queryIdExists(countQueryId)) {
-                            QueryRequest countRequest = Requests.copyOfQueryRequest(request);
-                            countRequest.setQueryId(countQueryId);
-
-                            // Strip pagination parameters
-                            countRequest.setPageSize(0);
-                            countRequest.setPagedResultsOffset(0);
-                            countRequest.setPagedResultsCookie(null);
-
-                            List<ResourceResponse> countResult = query(countRequest);
-
-                            if (countResult != null && !countResult.isEmpty()) {
-                                resultCount = countResult.get(0).getContent().get("total").asInteger();
-                            } else {
-                                logger.debug("Count query {} failed", countQueryId);
-                                resultCount = NO_COUNT;
-                            }
-                        } else {
-                            logger.debug("Count query with id {} not found", countQueryId);
-                            resultCount = NO_COUNT;
-                        }
-                        break;
-                    case NONE:
-                    default:
-                        resultCount = NO_COUNT;
-                        break;
-                }
-
-                if (results.size() < requestPageSize) {
-                    nextCookie = null;
-                } else {
-                    final int remainingResults = resultCount - (firstResultIndex + results.size());
-                    if (remainingResults == 0) {
-                        nextCookie = null;
-                    } else {
-                        nextCookie = String.valueOf(firstResultIndex + requestPageSize);
-                    }
-                }
-            } else {
-                nextCookie = null;
-                resultCount = NO_COUNT;
+            if (request.getPageSize() == 0) {
+                return newQueryResponse(null).asPromise();
             }
 
-            if (resultCount == NO_COUNT) {
-                return newQueryResponse(nextCookie).asPromise();
+            var tableHandler = getTableHandler(type);
+
+            Integer totalCount = null;
+            if (request.getTotalPagedResultsPolicy() != CountPolicy.NONE) {
+               try (var connection = getConnection()) {
+                   totalCount = tableHandler.queryCount(type, params, connection);
+               }
+            }
+
+            int nextOffset = ((Integer) params.get(PAGED_RESULTS_OFFSET)) + results.size();
+
+            if (totalCount != null) {
+                return newQueryResponse(
+                        totalCount > nextOffset ? String.valueOf(nextOffset) : null,
+                        CountPolicy.EXACT,
+                        totalCount).asPromise();
             } else {
-                return newQueryResponse(nextCookie, CountPolicy.EXACT, resultCount).asPromise();
+                return newQueryResponse(
+                        results.size() >= request.getPageSize() ? String.valueOf(nextOffset) : null).asPromise();
             }
         } catch (final ResourceException e) {
             return e.asPromise();
@@ -690,19 +620,48 @@ public class JDBCRepoService implements RequestHandler, RepoBootService, Reposit
         }
     }
 
+    /**
+     * Create query parameters for calling {@link TableHandler} implementation.
+     *
+     * @param request the original query request
+     * @return table handler's query parameters
+     */
+    private Map<String, Object> createQueryParams(QueryRequest request) throws BadRequestException {
+        Map<String, Object> params = new HashMap<>();
+
+        // query parameters
+        params.put(QUERY_ID, request.getQueryId());
+        params.put(QUERY_EXPRESSION, request.getQueryExpression());
+        params.put(QUERY_FILTER, request.getQueryFilter());
+
+        // paging parameters
+        params.put(PAGE_SIZE, request.getPageSize());
+        final String pagedResultsCookie = request.getPagedResultsCookie();
+        if (pagedResultsCookie != null && !pagedResultsCookie.isEmpty()) {
+            try {
+                params.put(PAGED_RESULTS_OFFSET, Math.max(0, Integer.parseInt(pagedResultsCookie)));
+            } catch (NumberFormatException e) {
+                throw new BadRequestException("Invalid paged results cookie");
+            }
+        } else {
+            params.put(PAGED_RESULTS_OFFSET, request.getPagedResultsOffset());
+        }
+
+        // sorting parameters
+        params.put(SORT_KEYS, request.getSortKeys());
+
+        // additional named parameters
+        params.putAll(request.getAdditionalParameters());
+
+        return params;
+    }
+
     @Override
     public List<ResourceResponse> query(QueryRequest request) throws ResourceException {
         String fullId = request.getResourcePath();
         String type = trimStartingSlash(fullId);
         logger.trace("Full id: {} Extracted type: {}", fullId, type);
-        Map<String, Object> params = new HashMap<>();
-        params.putAll(request.getAdditionalParameters());
-        params.put(QUERY_ID, request.getQueryId());
-        params.put(QUERY_EXPRESSION, request.getQueryExpression());
-        params.put(QUERY_FILTER, request.getQueryFilter());
-        params.put(PAGE_SIZE, request.getPageSize());
-        params.put(PAGED_RESULTS_OFFSET, request.getPagedResultsOffset());
-        params.put(SORT_KEYS, request.getSortKeys());
+        var params = createQueryParams(request);
 
         Connection connection = null;
         try {

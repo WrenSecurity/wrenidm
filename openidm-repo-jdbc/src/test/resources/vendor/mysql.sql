@@ -33,8 +33,9 @@ CREATE TABLE wrenidm.managedgreeting (
   objectid VARCHAR(255) NOT NULL,
   rev VARCHAR(38) NOT NULL,
   name VARCHAR(255),
-  ranking VARCHAR(32),
-  visible VARCHAR(5),
+  priority INTEGER,
+  ranking DECIMAL(10, 2),
+  visible BIT,
   tags VARCHAR(255),
   meta VARCHAR(2048),
   PRIMARY KEY (objectid)

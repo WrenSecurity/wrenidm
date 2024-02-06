@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright © 2011-2013 ForgeRock AS. All rights reserved.
+ * Portions Copyright Wren Security 2024
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -27,5 +28,5 @@ package org.forgerock.openidm.repo.jdbc;
  * Supported database types.
  */
 public enum DatabaseType {
-    SQLSERVER, MYSQL, POSTGRESQL, ORACLE, DB2, H2, ANSI_SQL99, ODBC;
+    SQLSERVER, MYSQL, POSTGRESQL, ORACLE, DB2, H2, ANSI_SQL99;
 }

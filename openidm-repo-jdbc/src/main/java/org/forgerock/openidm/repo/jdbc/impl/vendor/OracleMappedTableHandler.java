@@ -16,10 +16,16 @@
 package org.forgerock.openidm.repo.jdbc.impl.vendor;
 
 import java.util.Map;
+import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.repo.jdbc.SQLExceptionHandler;
 import org.forgerock.openidm.repo.jdbc.impl.SQLBuilder;
+import org.forgerock.openidm.repo.jdbc.impl.handler.MappedColumnConfig;
+import org.forgerock.openidm.repo.jdbc.impl.handler.MappedConfigResolver;
 import org.forgerock.openidm.repo.jdbc.impl.handler.MappedTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.query.MappedSQLQueryFilterVisitor;
+import org.forgerock.openidm.repo.jdbc.impl.statement.NamedParameterCollector;
+import org.forgerock.openidm.repo.util.StringSQLRenderer;
 
 /**
  * Oracle database {@link MappedTableHandler} implementation.
@@ -54,6 +60,18 @@ public class OracleMappedTableHandler extends MappedTableHandler {
                                 + "(${int:_pagedResultsOffset} + 1) AND "
                                 + "(${int:_pagedResultsOffset} + ${int:_pageSize}) "
                         + "ORDER BY \"__rn\"";
+            }
+        };
+    }
+
+    @Override
+    protected MappedSQLQueryFilterVisitor createFilterVisitor(MappedConfigResolver configResolver) {
+        return new MappedSQLQueryFilterVisitor(configResolver, objectMapper) {
+            @Override
+            protected StringSQLRenderer visitBooleanAssertion(NamedParameterCollector collector,
+                    MappedColumnConfig config, String operand, JsonPointer field, Object valueAssertion) {
+                String paramName = collector.register("v", ((Boolean) valueAssertion).booleanValue() ? 1 : 0);
+                return new StringSQLRenderer(config.columnName + " " + operand + " " + "${" + paramName + "}");
             }
         };
     }

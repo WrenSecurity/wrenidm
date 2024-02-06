@@ -54,13 +54,15 @@ public abstract class AbstractMappedTableHandlerTest extends AbstractTableHandle
             field("_rev", Constants.RAW_OBJECT_REV),
             // string column property
             field("name", "name"),
-            // number column property
+            // number (integer) column property
+            field("priority", array("priority", ValueType.NUMBER.name())),
+            // number (decimal) column property
             field("score", object(
                 field("column", "ranking"), // intentional name discrepancy
-                field("type", (FUTURE_MODE ? ValueType.NUMBER : ValueType.STRING).name())
+                field("type", ValueType.NUMBER.name())
             )),
             // boolean column property
-            field("visible", array("visible", (FUTURE_MODE ? ValueType.BOOLEAN : ValueType.STRING).name())),
+            field("visible", array("visible", ValueType.BOOLEAN.name())),
             // json list column property
             field("tags", array("tags", ValueType.JSON_LIST.name())),
             // json map column property

@@ -19,8 +19,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.forgerock.json.JsonPointer;
 import org.forgerock.openidm.repo.jdbc.impl.handler.MappedColumnConfig;
-import org.forgerock.openidm.repo.jdbc.impl.handler.MappedConfigResolver;
 import org.forgerock.openidm.repo.jdbc.impl.handler.MappedColumnConfig.ValueType;
+import org.forgerock.openidm.repo.jdbc.impl.handler.MappedConfigResolver;
 import org.forgerock.openidm.repo.jdbc.impl.statement.NamedParameterCollector;
 import org.forgerock.openidm.repo.util.StringSQLQueryFilterVisitor;
 import org.forgerock.openidm.repo.util.StringSQLRenderer;
@@ -45,22 +45,12 @@ public class MappedSQLQueryFilterVisitor extends StringSQLQueryFilterVisitor<Nam
             Object valueAssertion) {
         MappedColumnConfig config = configResolver.resolve(field);
 
-        // convert column value to DECIMAL to ensure correct operator behavior
         if (isNumeric(valueAssertion) && config.valueType == ValueType.NUMBER) {
-            String paramName = collector.register("v", valueAssertion);
-            return new StringSQLRenderer(
-                    "CAST(" + config.columnName + " AS DECIMAL)"
-                    + " " + operand + " "
-                    + "CAST(${" + paramName + "} AS DECIMAL)");
+            return visitNumericAssertion(collector, config, operand, field, valueAssertion);
         }
 
-        // convert column value to BIT to ensure database vendor support
         if (valueAssertion instanceof Boolean && config.valueType == ValueType.BOOLEAN) {
-            String paramName = collector.register("v", ((Boolean) valueAssertion).booleanValue() ? 1 : 0);
-            return new StringSQLRenderer(
-                    "CAST(" + config.columnName + " AS BIT)"
-                    + " " + operand + " "
-                    + "CAST(${" + paramName + "} AS BIT)");
+            return visitBooleanAssertion(collector, config, operand, field, valueAssertion);
         }
 
         String paramValue;
@@ -79,6 +69,25 @@ public class MappedSQLQueryFilterVisitor extends StringSQLQueryFilterVisitor<Nam
                 + "${" + paramName + "}");
     }
 
+    protected StringSQLRenderer visitNumericAssertion(NamedParameterCollector collector, MappedColumnConfig config,
+            String operand, JsonPointer field, Object valueAssertion) {
+        // convert column value to DECIMAL to ensure correct operator behavior
+        String paramName = collector.register("v", valueAssertion);
+        return new StringSQLRenderer(
+                "CAST(" + config.columnName + " AS DECIMAL)"
+                + " " + operand + " "
+                + "CAST(${" + paramName + "} AS DECIMAL)");
+    }
+
+    protected StringSQLRenderer visitBooleanAssertion(NamedParameterCollector collector, MappedColumnConfig config,
+            String operand, JsonPointer field, Object valueAssertion) {
+        // convert column value to SMALLINT to ensure database vendor support
+        String paramName = collector.register("v", ((Boolean) valueAssertion).booleanValue() ? 1 : 0);
+        return new StringSQLRenderer(
+                "CAST(" + config.columnName + " AS BIT)"
+                + " " + operand + " "
+                + "${" + paramName + "}");
+    }
 
     @Override
     public StringSQLRenderer visitPresentFilter(NamedParameterCollector collector, JsonPointer field) {

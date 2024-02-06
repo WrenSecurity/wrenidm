@@ -306,14 +306,13 @@ public class MappedTableHandler extends AbstractTableHandler {
                 break;
             case BOOLEAN:
                 if (rawValue instanceof Boolean) {
-                    statement.setObject(index, ((Boolean) rawValue).booleanValue() ? 1 : 0);
+                    statement.setObject(index, ((Boolean) rawValue).booleanValue() ? 1 : 0, Types.BIT);
                 } else if (rawValue == null) {
                     statement.setNull(index, Types.BIT);
                 } else {
                     throw new InternalServerErrorException("Invalid value type " + rawValue.getClass());
                 }
                 break;
-
             case JSON_LIST:
                 statement.setString(index, value != null
                         ? objectMapper.writeValueAsString(value.asList()) : null);

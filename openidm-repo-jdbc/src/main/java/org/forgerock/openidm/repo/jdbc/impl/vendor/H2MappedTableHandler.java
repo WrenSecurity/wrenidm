@@ -17,9 +17,15 @@ package org.forgerock.openidm.repo.jdbc.impl.vendor;
 
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.repo.jdbc.SQLExceptionHandler;
+import org.forgerock.openidm.repo.jdbc.impl.handler.MappedColumnConfig;
+import org.forgerock.openidm.repo.jdbc.impl.handler.MappedConfigResolver;
 import org.forgerock.openidm.repo.jdbc.impl.handler.MappedTableHandler;
+import org.forgerock.openidm.repo.jdbc.impl.query.MappedSQLQueryFilterVisitor;
+import org.forgerock.openidm.repo.jdbc.impl.statement.NamedParameterCollector;
+import org.forgerock.openidm.repo.util.StringSQLRenderer;
 
 /**
  * H2 database {@link MappedTableHandler} implementation.
@@ -56,6 +62,18 @@ public class H2MappedTableHandler extends MappedTableHandler {
                             .collect(Collectors.joining(", "))
                 + " WHERE objectid = ?");
         return result;
+    }
+
+    @Override
+    protected MappedSQLQueryFilterVisitor createFilterVisitor(MappedConfigResolver configResolver) {
+        return new MappedSQLQueryFilterVisitor(configResolver, objectMapper) {
+            @Override
+            protected StringSQLRenderer visitBooleanAssertion(NamedParameterCollector collector,
+                    MappedColumnConfig config, String operand, JsonPointer field, Object valueAssertion) {
+                String paramName = collector.register("v", valueAssertion);
+                return new StringSQLRenderer(config.columnName + " " + operand + " " + "${" + paramName + "}");
+            }
+        };
     }
 
 }

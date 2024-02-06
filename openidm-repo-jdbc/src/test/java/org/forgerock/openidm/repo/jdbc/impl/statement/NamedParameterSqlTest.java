@@ -22,8 +22,6 @@ import static org.testng.Assert.assertTrue;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import org.forgerock.openidm.repo.jdbc.impl.statement.NamedParameterSql;
-import org.forgerock.openidm.repo.jdbc.impl.statement.NamedParameterToken;
 import org.testng.annotations.Test;
 
 /**

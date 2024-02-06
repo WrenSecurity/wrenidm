@@ -68,7 +68,9 @@ public class MappedResultMapper implements ResultMapper<Map<String, Object>> {
                     }
                     break;
                 case NUMBER:
-                    value = resultSet.getObject(config.columnName);
+                    value = config.javaType != null
+                            ? resultSet.getObject(config.columnName, config.javaType)
+                            : resultSet.getObject(config.columnName);
                     if (value instanceof Integer || value instanceof Long || value instanceof Double) {
                         // keep the value as is
                     } else if (value instanceof BigDecimal) {

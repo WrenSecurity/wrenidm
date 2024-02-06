@@ -29,7 +29,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import org.forgerock.json.JsonPointer;
 import org.forgerock.json.resource.BadRequestException;
 import org.forgerock.json.resource.InternalServerErrorException;
 import org.forgerock.json.resource.NotFoundException;
@@ -37,7 +36,6 @@ import org.forgerock.json.resource.PreconditionFailedException;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.openidm.repo.QueryConstants;
-import org.forgerock.util.query.QueryFilter;
 
 /**
  * Handler responsible for performing SQL operations on the underlying data source.
@@ -187,10 +185,8 @@ public interface TableHandler {
      * @throws InternalServerErrorException if the operation failed because of a (possibly transient) failure
      * @throws SQLException if a DB failure is reported
      */
-    default Integer queryCount(String type, Map<String, Object> params, Connection connection)
-            throws SQLException, ResourceException {
-        throw new UnsupportedOperationException(); // TODO remove default after dropping legacy handlers
-    }
+    Integer queryCount(String type, Map<String, Object> params, Connection connection)
+            throws SQLException, ResourceException;
 
     /**
      * Perform the command on the specified target and return the number of affected objects.
@@ -210,32 +206,6 @@ public interface TableHandler {
      */
     Integer command(String type, Map<String, Object> params, Connection connection)
             throws SQLException, ResourceException;
-
-    /**
-     * Build a raw query from the supplied filter.
-     *
-     * @param filter the query filter
-     * @param replacementTokens a map to store any replacement tokens
-     * @param params a map containing query parameters
-     * @param count whether to render a query for total number of matched rows
-     * @return the raw query string
-     */
-    @Deprecated
-    default String renderQueryFilter(QueryFilter<JsonPointer> filter, Map<String, Object> replacementTokens,
-            Map<String, Object> params) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     *  Check if a given queryId exists in our set of known queries
-     *
-     * @param queryId Identifier for the query
-     * @return true if queryId is available
-     */
-    @Deprecated
-    default boolean queryIdExists(final String queryId) {
-        throw new UnsupportedOperationException();
-    }
 
     /**
      * Check if a given exception signifies a well known error type.

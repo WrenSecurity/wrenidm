@@ -40,15 +40,19 @@ public class MappedColumnConfig {
 
     public static final String COLUMN_NAME = "column";
     public static final String VALUE_TYPE = "valueType";
+    public static final String JAVA_TYPE = "javaType";
 
     public final JsonPointer propertyName;
     public final ValueType valueType;
+    public final Class<?> javaType;
     public final String columnName;
 
-    public MappedColumnConfig(JsonPointer propertyName, String columnName, ValueType valueType) {
+    public MappedColumnConfig(JsonPointer propertyName, String columnName,
+            ValueType valueType, Class<?> javaType) {
         this.propertyName = propertyName;
         this.columnName = columnName;
         this.valueType = valueType;
+        this.javaType = javaType;
     }
 
     /**
@@ -76,7 +80,30 @@ public class MappedColumnConfig {
             return new MappedColumnConfig(
                     new JsonPointer(name),
                     columnConfig.required().asString(),
-                    ValueType.STRING);
+                    ValueType.STRING,
+                    String.class);
+        }
+    }
+
+    /**
+     * Parse java value class name (used as a type hint when mapping JDBC types).
+     *
+     * @param className java class name
+     * @return java class that for the stored value
+     */
+    private static Class<?> parseClass(String className) {
+        // intentionally avoid Class#forName
+        switch (className) {
+        case "java.lang.Integer":
+            return Integer.class;
+        case "java.lang.Long":
+            return Long.class;
+        case "java.lang.Double":
+            return Double.class;
+        case "java.lang.String":
+            return String.class;
+        default:
+            throw new InvalidException("Unsupported java class name " + className);
         }
     }
 
@@ -87,25 +114,28 @@ public class MappedColumnConfig {
      *
      * <pre>
      *   "propertyPointer": ["columnName", "valueType"],
+     *   "propertyPointer": ["columnName", "valueType", "javaType"]
      * </pre>
      *
      * Example:
      *
      * <pre>
-     *   "foo": ["foo", "STRING"]
+     *   "foo": ["foo", "STRING"],
+     *   "bar": ["bar", "NUMBER", "java.lang.Double"]
      * </pre>
      */
     private static MappedColumnConfig parseList(String name, JsonValue columnConfig) {
         int size = columnConfig.asList().size();
-        if (size != 2) {
+        if (size < 2 || size > 3) {
             throw new InvalidException("Explicit table mapping has invalid entry for "
-                    + name + ", expecting [column name, value type, stored type] but contains "
+                    + name + ", expecting [column name, value type, java type] but contains "
                     + columnConfig.asList());
         }
         return new MappedColumnConfig(
                 new JsonPointer(name),
                 columnConfig.get(0).required().asString(),
-                ValueType.valueOf(columnConfig.get(1).asString()));
+                ValueType.valueOf(columnConfig.get(1).asString()),
+                size > 2 ? parseClass(columnConfig.get(2).asString()) : null);
     }
 
     /**
@@ -117,13 +147,18 @@ public class MappedColumnConfig {
      *   "propertyPointer": {
      *     "type": "VALUE_TYPE",
      *   },
+     *   "propertyPointer": {
+     *     "type": "VALUE_TYPE",
+     *     "javaType": "JAVA_CLASS"
+     *   },
      * </pre>
      *
      * Example:
      *
      * <pre>
      *   "foo": {
-     *     "type": "NUMBER"
+     *     "type": "NUMBER",
+     *     "javaType": "java.lang.Double"
      *   }
      * </pre>
      */
@@ -135,7 +170,8 @@ public class MappedColumnConfig {
         return new MappedColumnConfig(
                 new JsonPointer(name),
                 columnConfig.get(COLUMN_NAME).required().asString(),
-                valueType != null ? ValueType.valueOf(valueType) : ValueType.STRING);
+                valueType != null ? ValueType.valueOf(valueType) : ValueType.STRING,
+                columnConfig.isDefined(JAVA_TYPE) ? parseClass(columnConfig.get(JAVA_TYPE).asString()) : null);
     }
 
 }
