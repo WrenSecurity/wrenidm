@@ -13,7 +13,7 @@ DROP DATABASE DOPENIDM;
 CREATE DATABASE   DOPENIDM
 --       STOGROUP   GOPENIDM
 --       BUFFERPOOL BP2
-    -- Increase default page size for Activiti
+    -- Increase default page size for Flowable
     PAGESIZE 32 K
 ;
 CONNECT TO DOPENIDM;

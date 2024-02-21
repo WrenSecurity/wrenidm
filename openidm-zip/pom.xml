@@ -203,7 +203,7 @@
 
         <dependency>
             <groupId>org.wrensecurity.wrenidm</groupId>
-            <artifactId>openidm-workflow-activiti</artifactId>
+            <artifactId>wrenidm-workflow-flowable</artifactId>
             <version>${project.version}</version>
         </dependency>
 

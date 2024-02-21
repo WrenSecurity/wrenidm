@@ -123,7 +123,7 @@
 
     <properties>
 
-        <pgpVerifyKeysVersion>1.7.14</pgpVerifyKeysVersion>
+        <pgpVerifyKeysVersion>1.8.1</pgpVerifyKeysVersion>
 
         <!-- Commons versions -->
         <wrensec.commons.version>22.6.0</wrensec.commons.version>
@@ -245,10 +245,10 @@
         <module>openidm-system</module>
         <module>openidm-ui</module>
         <module>openidm-util</module>
-        <module>openidm-workflow-activiti</module>
         <module>openidm-maintenance</module>
         <module>openidm-zip</module>
         <module>custom-scripted-connector-bundler</module>
+        <module>wrenidm-workflow-flowable</module>
     </modules>
 
     <build>

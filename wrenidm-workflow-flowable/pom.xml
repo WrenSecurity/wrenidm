@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    The contents of this file are subject to the terms of the Common Development and
+    Distribution License (the License). You may not use this file except in compliance with the
+    License.
+
+    You can obtain a copy of the License at legal/CDDLv1.1.txt. See the License for the
+    specific language governing permission and limitations under the License.
+
+    When distributing Covered Software, include this CDDL Header Notice in each file and include
+    the License file at legal/CDDLv1.1.txt. If applicable, add the following below the CDDL
+    Header, with the fields enclosed by brackets [] replaced by your own identifying
+    information: "Portions copyright [year] [name of copyright owner]".
+
+    Copyright (c) 2011-2014 ForgeRock AS. All Rights Reserved
+    Portions Copyright 2017-2024 Wren Security.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wrensecurity.wrenidm</groupId>
+        <artifactId>openidm-project</artifactId>
+        <version>6.2.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>wrenidm-workflow-flowable</artifactId>
+
+    <name>Wren:IDM - Flowable BPMN 2.0 Integration</name>
+    <description>
+        Provides support for Wren:IDM to implement Business Process Modeling Notation 2.0 processes
+        for controlling the provisioning of users, roles, and devices.
+    </description>
+
+    <properties>
+        <flowable.version>6.7.2</flowable.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wrensecurity.wrenidm</groupId>
+            <artifactId>openidm-enhanced-config</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wrensecurity.wrenidm</groupId>
+            <artifactId>openidm-repo</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wrensecurity.wrenidm</groupId>
+            <artifactId>openidm-router</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wrensecurity.commons</groupId>
+            <artifactId>script-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wrensecurity.commons</groupId>
+            <artifactId>script-groovy</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wrensecurity.commons</groupId>
+            <artifactId>forgerock-util</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-engine</artifactId>
+            <version>${flowable.version}</version>
+
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-osgi</artifactId>
+            <version>${flowable.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.aries.blueprint</groupId>
+            <artifactId>org.apache.aries.blueprint.core</artifactId>
+            <version>1.10.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+
+        <!-- Provided OSGi Dependencies -->
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.cmpn</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.enterprise</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <!-- Test Dependencies -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <DynamicImport-Package>*</DynamicImport-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.flowable</groupId>
+                                    <artifactId>flowable-engine-common</artifactId>
+                                    <version>${flowable.version}</version>
+
+                                    <!-- Unpack files that are missing in the OSGI metadata (see https://github.com/flowable/flowable-engine/issues/3333) -->
+                                    <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                                    <includes>org/flowable/common/db/mapping/**/*.xml</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>remotejar</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/assemble/assemblyCfg.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+
+                        <executions>
+                            <execution>
+                                <id>make-jar-with-dependencies</id>
+                                <phase>package</phase>
+
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
