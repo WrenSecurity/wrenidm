@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/util/AdminAbstractView",
     "org/forgerock/commons/ui/common/main/Configuration",
     "org/forgerock/commons/ui/common/main/Router",
@@ -56,7 +57,7 @@ define([
                     this.model.adminDashboards = this.model.uiConf.adminDashboards;
                 }
 
-                this.data.existingDashboards = _.pluck(this.model.adminDashboards, "name");
+                this.data.existingDashboards = _.map(this.model.adminDashboards, "name");
 
                 this.parentRender(_.bind(function () {
                     ValidatorsManager.bindValidators(this.$el.find("#NewDashboardForm"));
@@ -74,9 +75,9 @@ define([
             var isDefault = this.$el.find("#DefaultDashboard").is(":checked");
 
             if (isDefault) {
-                _.each(this.model.adminDashboards, function(dashboard) {
+                _.each(this.model.adminDashboards, _.bind(function(dashboard) {
                     dashboard.isDefault = false;
-                }, this);
+                }, this));
             }
             this.model.adminDashboards.push({
                 "name": this.$el.find("#DashboardName").val(),

@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/util/AdminAbstractView",
     "org/forgerock/commons/ui/common/util/ModuleLoader",
     "org/forgerock/openidm/ui/common/delegates/ResourceDelegate",
@@ -162,7 +163,7 @@ define([
                                 displayName = (item.displayName) ? item.displayName : item.givenName + " " + item.sn;
 
 
-                            return '<div>' +
+                            return '<div class="item">' +
                                 '<span class="user-title">' +
                                 '<span class="user-fullname">' + escape(displayName) + userName + '</span>' +
                                 '</span>' +
@@ -173,7 +174,7 @@ define([
                                 displayName = (item.displayName) ? item.displayName : item.givenName + " " + item.sn;
 
 
-                            return '<div>' +
+                            return '<div class="option">' +
                                 '<span class="user-title">' +
                                 '<span class="user-fullname">' + escape(displayName) + userName + '</span>' +
                                 '</span>' +

@@ -1,8 +1,9 @@
 define([
     "org/forgerock/openidm/ui/common/resource/RelationshipArrayView",
     "org/forgerock/commons/ui/common/components/Messages",
-    "lodash"
-], function (RelationshipArrayView, messagesManager, _) {
+    "lodash",
+    "jquery"
+], function (RelationshipArrayView, messagesManager, _, $) {
     QUnit.module('RelationshipArrayView Tests');
 
     var relationshipArrayView = new RelationshipArrayView(),

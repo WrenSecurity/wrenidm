@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/settings/audit/AuditAdminAbstractView",
     "org/forgerock/openidm/ui/admin/delegates/AuditDelegate",
     "org/forgerock/commons/ui/common/util/UIUtils",
@@ -79,7 +80,7 @@ define([
             this.data.topics = _.union(this.data.selectedTopics, this.getTopics());
 
             AuditDelegate.availableHandlers().then(_.bind(function (data) {
-                this.data.handler = _.findWhere(data, {"class": this.data.eventHandlerType});
+                this.data.handler = _.find(data, {"class": this.data.eventHandlerType});
 
                 this.model.currentDialog = $('<div id="AuditEventHandlersDialog"></div>');
                 this.setElement(this.model.currentDialog);
@@ -138,11 +139,11 @@ define([
                 schema.description = $.t(schema.description);
             }
 
-            _.forEach(schema, function(subSchema) {
+            _.forEach(schema, _.bind(function(subSchema) {
                 if (_.isObject(subSchema)) {
                     this.translateDescriptions(subSchema);
                 }
-            }, this);
+            }, this));
         },
 
         renderTemplate: function(data) {

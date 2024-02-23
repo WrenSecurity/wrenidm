@@ -15,7 +15,7 @@
  */
 
 define([
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/common/util/Constants",
     "org/forgerock/commons/ui/common/main/EventManager"
 ], function(_, constants, eventManager) {

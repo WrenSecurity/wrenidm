@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "handlebars",
     "org/forgerock/openidm/ui/admin/mapping/util/MappingAdminAbstractView",
     "org/forgerock/openidm/ui/common/delegates/ConfigDelegate",
@@ -60,12 +61,12 @@ define([
             this.data.targetDefinition = this.getDisplayDetails(this.model.mapping.validTarget);
 
             ConfigDelegate.readEntity("managed").then((managed) => {
-                _.each(managed.objects, function(managedObject) {
+                _.each(managed.objects, _.bind(function(managedObject) {
                     if (managedObject.name === "user") {
                         this.data.preferences = managedObject.schema.properties.preferences.properties;
                         this.model.allPreferences = _.keys(this.data.preferences);
                     }
-                }, this);
+                }, this));
 
                 if (!_.isUndefined(this.model.mapping.validSource)
                     && this.model.mapping.validSource.file
@@ -80,7 +81,7 @@ define([
                     this.model.changesModule = ChangesPending.watchChanges({
                         element: this.$el.find("#indvidualRecordMessages"),
                         undo: false,
-                        watchedObj: _.clone(this.model.mapping, true),
+                        watchedObj: _.cloneDeep(this.model.mapping),
                         watchedProperties: ["validSource", "validTarget"]
                     });
 
@@ -214,15 +215,15 @@ define([
          * @param checkboxes - Takes in an array of html checkboxes for preferences
          */
         setPreferences: function(preferences, checkboxes) {
-            _.each(checkboxes, function(element) {
-                _.find(preferences, function(value){
+            _.each(checkboxes, _.bind(function(element) {
+                _.find(preferences, _.bind(function(value){
                     if ($(element).val() === value) {
                         $(element).prop("checked", true);
                     }
 
                     return $(element).val() === value;
-                }, this);
-            }, this);
+                }, this));
+            }, this));
         },
 
         /**

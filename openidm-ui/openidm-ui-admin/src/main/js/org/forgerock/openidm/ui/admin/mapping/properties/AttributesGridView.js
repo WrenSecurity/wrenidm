@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "handlebars",
     "backbone",
     "org/forgerock/openidm/ui/admin/util/AdminAbstractView",
@@ -72,16 +73,16 @@ define([
         sampleDisplay: [],
 
         render: function (args, callback) {
-            this.model.renderArgs = _.clone(args, true);
-            this.model.defaultMapping = _.clone(args.mapping, true);
+            this.model.renderArgs = _.cloneDeep(args);
+            this.model.defaultMapping = _.cloneDeep(args.mapping);
 
             this.model.usesDragIcon = args.useDragIcon;
             this.model.staticSourceSample = args.staticSourceSample;
-            this.model.mapping = _.clone(args.mapping, true);
+            this.model.mapping = _.cloneDeep(args.mapping);
             this.model.save = args.save;
             this.model.numRepresentativeProps = args.numRepresentativeProps;
             this.model.availableObjects = args.availableObjects;
-            this.model.mappingProperties = _.clone(args.mappingProperties, true);
+            this.model.mappingProperties = _.cloneDeep(args.mappingProperties);
 
             this.data.usesDynamicSampleSource = args.usesDynamicSampleSource;
             this.data.usesLinkQualifier = args.usesLinkQualifier;
@@ -89,7 +90,7 @@ define([
             this.data.missingRequiredProperties = [];
 
             if (this.data.usesLinkQualifier) {
-                this.data.linkQualifiers = _.clone(args.linkQualifiers, true);
+                this.data.linkQualifiers = _.cloneDeep(args.linkQualifiers);
                 this.model.currentLinkQualifier = this.data.linkQualifiers[0];
                 this.data.hasLinkQualifiers = this.model.mapping.linkQualifiers;
             }
@@ -101,7 +102,7 @@ define([
             this.checkMissingRequiredProperties();
 
             this.parentRender(_.bind(function () {
-                var mapProps = this.model.mappingProperties || _.clone(this.model.defaultMapping, true).properties,
+                var mapProps = this.model.mappingProperties || _.cloneDeep(this.model.defaultMapping).properties,
                     sampleSource = {};
 
                 if (conf.globalData.sampleSource && conf.globalData.sampleSource.IDMSampleMappingName === this.model.mapping.name) {
@@ -111,7 +112,7 @@ define([
                 this.data.mapProps = mapProps;
 
                 if (this.data.usesDynamicSampleSource) {
-                    let autocompleteProps = _.pluck(this.model.mapping.properties,"source").slice(0, this.model.numRepresentativeProps);
+                    let autocompleteProps = _.map(this.model.mapping.properties,"source").slice(0, this.model.numRepresentativeProps);
 
                     mappingUtils.setupSampleSearch($("#findSampleSource", this.$el), this.model.mapping, autocompleteProps, (item)  => {
                         item.IDMSampleMappingName = this.model.mapping.name;
@@ -137,12 +138,12 @@ define([
         initSort: function() {
             BackgridUtils.sortable({
                 "containers": [this.$el.find("#attributesGridHolder tbody")[0]],
-                "rows": _.clone(this.model.mappingProperties, true)
+                "rows": _.cloneDeep(this.model.mappingProperties)
             }, _.bind(this.setMappingProperties, this));
         },
 
         checkChanges: function () {
-            var currentProperties = _.clone(this.model.defaultMapping, true).properties,
+            var currentProperties = _.cloneDeep(this.model.defaultMapping).properties,
                 changedProperties = this.model.mappingProperties || currentProperties,
                 changesPending = !_.isEqual(currentProperties, changedProperties);
 
@@ -179,13 +180,13 @@ define([
         },
 
         checkMissingRequiredProperties: function() {
-            var props = this.model.mappingProperties || _.clone(this.model.defaultMapping, true).properties;
+            var props = this.model.mappingProperties || _.cloneDeep(this.model.defaultMapping).properties;
 
-            _.each(this.data.requiredProperties, function(key) {
+            _.each(this.data.requiredProperties, _.bind(function(key) {
                 if (!_.filter(props, function(p) {return p.target === key;}).length) {
                     this.data.missingRequiredProperties.push(key);
                 }
-            }, this);
+            }, this));
         },
 
         addRequiredProperties: function(e) {
@@ -240,7 +241,7 @@ define([
             this.model.mappingProperties = attributes;
             this.model.attributes = new Attributes();
 
-            _.each(attributes, function(attribute) {
+            _.each(attributes, _.bind(function(attribute) {
                 if (evalResults !== null) {
                     tempResults = evalResults[evalCounter];
                 } else {
@@ -261,7 +262,7 @@ define([
                 });
 
                 evalCounter++;
-            }, this);
+            }, this));
 
             attributesGrid = new Backgrid.Grid({
                 className: "table backgrid",
@@ -463,7 +464,7 @@ define([
             this.sampleDisplay = [];
 
             if (!_.isEmpty(sampleSource)) {
-                _.each(propertyDetails, function (item) {
+                _.each(propertyDetails, _.bind(function (item) {
 
                     globals = {
                         source: {}
@@ -502,7 +503,7 @@ define([
                     this.sampleDisplay.push(tempDetails);
 
                     evalPromises.push(evalCheck);
-                }, this);
+                }, this));
             }
 
             if (evalPromises.length > 0) {

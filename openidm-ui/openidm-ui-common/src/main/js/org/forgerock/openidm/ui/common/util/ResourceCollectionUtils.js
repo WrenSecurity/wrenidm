@@ -12,13 +12,14 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 /* eslint no-eval: 0 */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "handlebars",
     "org/forgerock/commons/ui/common/util/Constants",
     "org/forgerock/commons/ui/common/main/EventManager",
@@ -73,11 +74,11 @@ define([
                 render: {
                     item: function(item, escape) {
                         var txt = obj.getDisplayText(prop, item, resourceCollectionIndex);
-                        return "<div>" + txt + "</div>";
+                        return "<div class=\"item\">" + txt + "</div>";
                     },
                     option: function(item, escape) {
                         var txt = obj.getDisplayText(prop, item, resourceCollectionIndex);
-                        return "<div>" + txt + "</div>";
+                        return "<div class=\"option\">" + txt + "</div>";
                     }
                 },
                 load: function(query, callback) {

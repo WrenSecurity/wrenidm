@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "handlebars",
     "org/forgerock/commons/ui/common/main/AbstractConfigurationAware",
     "org/forgerock/openidm/ui/common/delegates/ConfigDelegate",
@@ -75,16 +76,16 @@ define([
 
         if (type[0] === "system") {
             ConnectorDelegate.currentConnectors().then(_.bind(function(connectors) {
-                connectorUrl = _.find(connectors, function(connector) {
+                connectorUrl = _.find(connectors, _.bind(function(connector) {
                     return connector.name === type[1];
-                }, this);
+                }, this));
 
                 if (connectorUrl && connectorUrl.config && connectorUrl.config.length > 0) {
                     connectorUrl = connectorUrl.config.split("/");
 
                     ConfigDelegate.readEntity(connectorUrl[1] +"/" +connectorUrl[2]).then(_.bind(function(config) {
                         if (required) {
-                            properties = _.pick(config.objectTypes[type[2]].properties, function(property) {
+                            properties = _.pickBy(config.objectTypes[type[2]].properties, function(property) {
                                 return property.required === true;
                             });
                         } else {
@@ -99,14 +100,14 @@ define([
             }, this));
         } else if (type[0] === "managed") {
             ConfigDelegate.readEntity("managed").then(_.bind(function(managed) {
-                properties = _.find(managed.objects, function(managedObject) {
+                properties = _.find(managed.objects, _.bind(function(managedObject) {
                     return managedObject.name === type[1];
-                }, this);
+                }, this));
 
                 if (properties.schema && properties.schema.properties) {
                     if (required) {
 
-                        properties = _.pick(properties.schema.properties, function(value, key) {
+                        properties = _.pickBy(properties.schema.properties, function(value, key) {
                             var found = false;
 
                             _.each(properties.schema.required, function(field) {
@@ -132,7 +133,7 @@ define([
 
         return propertiesPromise;
     };
-    
+
     /**
      * @param {string} message The text provided in the main body of the dialog
      * @param {Function} confirmCallback Fired when the delete button is clicked
@@ -185,11 +186,11 @@ define([
      */
     obj.filteredPropertiesList = function(availableProps, existingFields) {
         return _.chain(availableProps)
-            .omit((prop, key) => {
+            .omitBy((prop, key) => {
                 return prop.type !== "string" ||
                                key === "_id" ||
                                _.has(prop, "encryption") ||
-                               _.contains(existingFields, key);
+                               _.includes(existingFields, key);
             })
             .keys()
             .sortBy()

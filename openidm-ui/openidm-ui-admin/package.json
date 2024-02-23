@@ -1,33 +1,17 @@
 {
-  "name": "openidm-ui-admin",
-  "author": "Wren Security <info@wrensecurity.org>",
-  "version": "0.0.1",
+  "name": "@wrensecurity/wrenidm-ui-admin",
+  "description": "Wren:IDM Admin UI",
   "private": true,
   "scripts": {
-    "build": "grunt build:prod",
-    "build:dev": "grunt build:dev"
+    "build": "gulp",
+    "test": "gulp test"
   },
   "devDependencies": {
-    "@babel/cli": "^7.23.0",
-    "@babel/core": "^7.23.2",
-    "@babel/eslint-parser": "^7.22.15",
-    "@babel/preset-env": "^7.23.2",
+    "@wrensecurity/commons-ui-build": "file:target/ui-libs/wrensecurity-commons-ui-build-0.0.0.tgz",
     "@wrensecurity/eslint-config": "^0.2.0",
-    "eslint": "^8.53.0",
-    "grunt": "^1.6.1",
-    "grunt-babel": "^8.0.0",
-    "grunt-cli": "1.2.0",
-    "grunt-contrib-copy": "1.0.0",
-    "grunt-contrib-less": "1.3.0",
-    "grunt-contrib-qunit": "^8.0.1",
-    "grunt-contrib-requirejs": "1.0.0",
-    "grunt-contrib-watch": "1.0.0",
-    "grunt-eslint": "^24.3.0",
-    "grunt-newer": "1.2.0",
-    "grunt-notify": "0.4.5",
-    "grunt-sync": "0.8.2",
-    "grunt-text-replace": "0.4.0",
-    "less-plugin-clean-css": "1.5.1"
+    "express": "^4.18.2",
+    "gulp": "^4.0.2",
+    "node-qunit-puppeteer": "^2.1.2"
   },
   "dependencies": {
     "backbone-relational": "^0.9.0",
@@ -38,7 +22,8 @@
     "d3": "^3.5.5",
     "dragula": "^3.6.7",
     "moment-timezone": "^0.5.4",
-    "qunit": "^2.15.0",
-    "sinon": "^1.15.4"
+    "qunit": "^2.20.0",
+    "requirejs": "^2.3.6",
+    "sinon": "^17.0.1"
   }
 }

@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/commons/ui/common/main/AbstractView",
     "org/forgerock/commons/ui/common/util/Constants",
     "org/forgerock/openidm/ui/admin/delegates/SchedulerDelegate",
@@ -283,7 +284,7 @@ define([
 
         cronPeriod = cronDiv.find(".cron-period").find("select").find("option:selected").text();
 
-        cronDiv.find(".cron-block").filter(function() { return $(this).css("display") === "inline"; }).each(function () {
+        cronDiv.find(".cron-block").filter(function() { return $(this).css("display") !== "none"; }).each(function () {
             $(this).find("select").find("option:not(:selected)").remove();
             //$(this).find("select").remove();
             readableTextArray.push($(this).text());

@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
@@ -153,7 +154,7 @@ define([
                     .groupBy( function(connectorRef) {
                         return connectorRef.displayName;
                     })
-                    .pairs()
+                    .toPairs()
                     .sortBy(function(connectorRef) {
                         return connectorRef[0];
                     })
@@ -208,14 +209,14 @@ define([
                     this.model.connectorDetails = data;
 
                     //Build a version object
-                    _.each(this.data.versionDisplay, function (group) {
-                        group.versions = _.map(group.versions, function (v) {
+                    _.each(this.data.versionDisplay, _.bind(function (group) {
+                        group.versions = _.map(group.versions, _.bind(function (v) {
                             v.selected = v.connectorName === this.data.connectorTypeName &&
                                 v.bundleVersion === data.connectorRef.bundleVersion &&
                                 v.systemType === this.data.systemType;
                             return v;
-                        }, this);
-                    }, this);
+                        }, this));
+                    }, this));
 
                     this.previousObjectType = data.objectTypes;
                     this.data.objectTypes = data.objectTypes;
@@ -1019,12 +1020,12 @@ define([
         updateActionDropdown: function(objectTypes) {
             this.$el.find(".dropdown-menu .data-link").remove();
 
-            _.each(objectTypes, function(object, key){
+            _.each(objectTypes, _.bind(function(object, key){
                 this.$el.find(".dropdown-menu .divider").before(
                     '<li class="data-link">'
                         +'<a href="#resource/system/' + this.data.connectorId +'/' +key+'/list/"><i class="fa fa-database"> Data ('+key  +')</i></a>'
                         +'</li>');
-            }, this);
+            }, this));
         },
 
         //When adding a new object type

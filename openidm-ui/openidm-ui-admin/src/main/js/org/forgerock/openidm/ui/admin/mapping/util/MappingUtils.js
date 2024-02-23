@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "handlebars",
     "org/forgerock/openidm/ui/common/delegates/SearchDelegate",
     "org/forgerock/openidm/ui/common/delegates/ConfigDelegate",
@@ -77,10 +78,10 @@ define([
             render: {
                 option: function(item, selectizeEscape) {
                     var fields = _.pick(item, autocompleteProps),
-                        element = $('<div class="fr-search-option"></div>'),
+                        element = $('<div class="option fr-search-option"></div>'),
                         counter = 0;
 
-                    _.forIn(fields, function(value, key) {
+                    _.forIn(fields, _.bind(function(value, key) {
                         if (counter === 0) {
                             $(element).append('<div class="fr-search-primary">' +selectizeEscape(value) +'</div>');
                         } else {
@@ -88,14 +89,14 @@ define([
                         }
 
                         counter++;
-                    }, this);
+                    }, this));
 
                     return element.prop('outerHTML');
                 },
                 item: function(item, escape) {
                     selectedItem = item;
 
-                    return "<div>" +escape(item[autocompleteProps[0]]) +"</div>";
+                    return "<div class=\"item\">" +escape(item[autocompleteProps[0]]) +"</div>";
                 }
             },
             load: function(query, callback) {
@@ -150,7 +151,7 @@ define([
     * @param syncConfigMappings {object} - current sync.json mappings array
     */
     obj.deleteMapping = function(mappingName, mappingChildren, syncConfigMappings) {
-        var newSyncConfigMappings = _.filter(syncConfigMappings, function(mapping) {
+        var newSyncConfigMappings = _.filter(syncConfigMappings, _.bind(function(mapping) {
             /*
                 if there are other mappings with this mapping set as the "links"
                 property remove the "links" property of those mappings
@@ -160,7 +161,7 @@ define([
                 delete mapping.links;
             }
             return mapping.name !== mappingName;
-        }, this);
+        }, this));
 
         return obj.deleteMappingChildren(mappingName, mappingChildren).then(function () {
             return configDelegate.updateEntity("sync", {"mappings": newSyncConfigMappings});

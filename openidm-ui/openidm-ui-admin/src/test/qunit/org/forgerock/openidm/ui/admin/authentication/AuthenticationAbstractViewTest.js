@@ -1,6 +1,7 @@
 define([
-    "org/forgerock/openidm/ui/admin/authentication/AuthenticationAbstractView"
-], function (AuthenticationAbstractView) {
+    "org/forgerock/openidm/ui/admin/authentication/AuthenticationAbstractView",
+    "lodash"
+], function (AuthenticationAbstractView, _) {
     QUnit.module("AuthenticationAbstractView Tests");
 
     QUnit.test("Derives custom properties from all properties", function(assert) {

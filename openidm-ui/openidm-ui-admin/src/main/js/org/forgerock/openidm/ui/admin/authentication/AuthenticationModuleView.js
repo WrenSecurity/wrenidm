@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "backbone",
     "backgrid",
     "handlebars",
@@ -76,7 +77,7 @@ define([
                 this.getAuthenticationData()
             );
 
-            this.model.authModulesClean = _.clone(this.model.authModules, true);
+            this.model.authModulesClean = _.cloneDeep(this.model.authModules);
 
             // Translate the name of the modules
             _.each(this.data.module_types, _.bind(function(module, index) {
@@ -156,7 +157,7 @@ define([
                 this.$el.find("#moduleType").selectize({
                     render: {
                         option: function(item, selectizeEscape) {
-                            var element = $('<div class="fr-search-option"></div>');
+                            var element = $('<div class="fr-search-option option"></div>');
 
                             $(element).append('<div class="fr-search-primary">' +selectizeEscape(item.text) +'</div>');
                             $(element).append('<div class="fr-search-secondary text-muted">' + $.t("templates.auth.modules." + item.value + ".msg") + '</div>');
@@ -176,7 +177,7 @@ define([
         makeSortable: function() {
             BackgridUtils.sortable({
                 "containers": [this.$el.find("#authModuleGrid tbody")[0]],
-                "rows": _.clone(this.model.authModules, true)
+                "rows": _.cloneDeep(this.model.authModules)
             }, _.bind(function(newOrder) {
                 this.model.authModules = newOrder;
                 this.saveChanges();

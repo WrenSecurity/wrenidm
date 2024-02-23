@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/mapping/util/MappingAdminAbstractView",
     "org/forgerock/commons/ui/common/main/EventManager",
     "org/forgerock/commons/ui/common/util/Constants",
@@ -66,7 +67,7 @@ define([
 
             this.model.changes = args.changes || [];
             this.model.linkQualifiers = LinkQualifierUtils.getLinkQualifier(this.model.mappingName) || ["default"];
-            this.model.addedLinkQualifiers = _.union(_.pluck(this.model.mapping.correlationQuery, "linkQualifier"), _.pluck(this.model.changes, "linkQualifier"));
+            this.model.addedLinkQualifiers = _.union(_.map(this.model.mapping.correlationQuery, "linkQualifier"), _.map(this.model.changes, "linkQualifier"));
 
             // Legacy Support
             if (_.has(this.model.mapping, "correlationQuery") && !_.isArray(this.model.mapping.correlationQuery)) {
@@ -74,7 +75,7 @@ define([
                 this.model.mapping.correlationQuery = [this.model.mapping.correlationQuery];
             }
 
-            this.data.correlationQueries = _.clone(this.model.mapping.correlationQuery, true);
+            this.data.correlationQueries = _.cloneDeep(this.model.mapping.correlationQuery);
 
             if (_.difference(this.model.linkQualifiers, this.model.addedLinkQualifiers).length === 0) {
                 this.data.noLinkQualifiers = true;
@@ -108,11 +109,11 @@ define([
                 }
             }, this));
 
-            _.each(this.data.correlationQueries, function(query, key) {
+            _.each(this.data.correlationQueries, _.bind(function(query, key) {
                 if (this.model.linkQualifiers.indexOf(query.linkQualifier) === -1) {
                     this.data.correlationQueries[key].error = true;
                 }
-            }, this);
+            }, this));
 
             this.parentRender(function () {
                 var scriptData = "";
@@ -226,7 +227,7 @@ define([
                     changesIndex = _.indexOf(this.model.changes, changesQuery);
 
                 if (correlationQueryIndex >= 0) {
-                    this.model.changes.push(_.extend(_.clone(this.model.mapping.correlationQuery[correlationQueryIndex], true), {"changes": "delete"}));
+                    this.model.changes.push(_.extend(_.cloneDeep(this.model.mapping.correlationQuery[correlationQueryIndex]), {"changes": "delete"}));
                 } else if (changesIndex >= 0) {
                     this.model.changes.splice(changesIndex, 1);
                 }
@@ -246,8 +247,8 @@ define([
                 query = added || correlationQuery;
 
             CorrelationQueryDialog.render({
-                query: _.clone(query, true),
-                mapping: _.clone(this.model.mapping, true),
+                query: _.cloneDeep(query),
+                mapping: _.cloneDeep(this.model.mapping),
                 mappingName: this.model.mappingName,
                 linkQualifiers: this.model.linkQualifiers,
                 addedLinkQualifiers: this.model.addedLinkQualifiers,
@@ -279,7 +280,7 @@ define([
                 scriptDetails;
 
             if (this.$el.find(".correlationQueryType").val() === "queries") {
-                _.each(this.model.changes, function (change) {
+                _.each(this.model.changes, _.bind(function (change) {
                     switch (change.changes) {
                         case "add":
                             this.model.mapping.correlationQuery.push(_.omit(change, "deleted", "added", "edited", "changes"));
@@ -299,7 +300,7 @@ define([
                             this.model.mapping.correlationQuery.splice(editedIndex, 1);
                             break;
                     }
-                }, this);
+                }, this));
 
             }
 

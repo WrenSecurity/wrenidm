@@ -31,9 +31,7 @@
     <description>Parent POM for all UI components in Wren:IDM.</description>
 
     <properties>
-        <forgerock-ui.version>22.1.2</forgerock-ui.version>
-        <node.install.directory>${project.parent.basedir}</node.install.directory>
-        <grunt.task>build:dev</grunt.task>
+        <wrensec-ui.version>23.0.1</wrensec-ui.version>
     </properties>
 
     <modules>
@@ -49,41 +47,44 @@
                 <plugin>
                     <groupId>com.github.eirslett</groupId>
                     <artifactId>frontend-maven-plugin</artifactId>
-                    <version>1.12.0</version>
+                    <version>1.14.2</version>
+
                     <configuration>
-                        <installDirectory>${node.install.directory}</installDirectory>
+                        <installDirectory>${project.parent.basedir}</installDirectory>
+                        <nodeVersion>v20.9.0</nodeVersion>
+                        <npmVersion>10.2.3</npmVersion>
+                        <nodeDownloadRoot>https://nodejs.org/dist/</nodeDownloadRoot>
+                        <npmDownloadRoot>https://wrensecurity.jfrog.io/artifactory/api/npm/npm-virtual/npm/-/</npmDownloadRoot>
                     </configuration>
+
                     <executions>
                         <execution>
                             <id>install-node-and-npm</id>
+                            <phase>initialize</phase>
+
                             <goals>
                                 <goal>install-node-and-npm</goal>
                             </goals>
-                            <phase>initialize</phase>
-                            <configuration>
-                                <nodeVersion>v20.9.0</nodeVersion>
-                                <npmVersion>10.2.3</npmVersion>
-                                <npmDownloadRoot>https://wrensecurity.jfrog.io/artifactory/api/npm/npm-virtual/npm/-/</npmDownloadRoot>
-                            </configuration>
                         </execution>
+
                         <execution>
-                            <id>npm-install</id>
+                            <id>npm install</id>
+
                             <goals>
                                 <goal>npm</goal>
                             </goals>
-                            <phase>initialize</phase>
-                            <configuration>
-                                <arguments>install</arguments>
-                            </configuration>
                         </execution>
+
                         <execution>
-                            <id>grunt</id>
+                            <id>npm build</id>
+                            <phase>process-resources</phase>
+
                             <goals>
-                                <goal>grunt</goal>
+                                <goal>npm</goal>
                             </goals>
-                            <phase>compile</phase>
+
                             <configuration>
-                                <arguments>${grunt.task} --target-version=${project.version}</arguments>
+                                <arguments>run build</arguments>
                             </configuration>
                         </execution>
                     </executions>
@@ -91,13 +92,4 @@
             </plugins>
         </pluginManagement>
     </build>
-
-    <profiles>
-        <profile>
-            <id>production-build</id>
-            <properties>
-                <grunt.task>build:prod</grunt.task>
-            </properties>
-        </profile>
-    </profiles>
 </project>

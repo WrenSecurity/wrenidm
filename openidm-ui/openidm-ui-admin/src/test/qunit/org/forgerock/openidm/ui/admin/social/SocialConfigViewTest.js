@@ -3,7 +3,7 @@ define([
     "org/forgerock/openidm/ui/admin/social/SocialConfigView",
     "org/forgerock/openidm/ui/admin/util/AdminUtils"
 ], function (SocialConfigView,
-             AdminUtils) {
+        AdminUtils) {
     QUnit.module('SocialConfigView Tests');
 
     QUnit.test("Generate card details", function (assert) {
@@ -192,7 +192,7 @@ define([
                 amendedConfig.objects[1].schema.type === "object" &&
                 amendedConfig.objects[1].schema.viewable === true &&
                 amendedConfig.objects[1].schema.properties._id,
-            "provider definition with no schema results in default managed object schema with default properties");
+        "provider definition with no schema results in default managed object schema with default properties");
 
         assert.deepEqual(amendedConfig.objects[1].schema.order, ["_id", "user"], "default order generated for managed object without schema");
 

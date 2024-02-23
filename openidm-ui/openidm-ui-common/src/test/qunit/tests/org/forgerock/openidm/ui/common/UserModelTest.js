@@ -14,7 +14,7 @@ define([
 
         Configuration.globalData = {roles: {}};
         // stub the rest calls invoked by the UserModel to use these simple responses
-        sinon.stub(ServiceInvoker, "restCall", function (options) {
+        sinon.stub(ServiceInvoker, "restCall").callsFake(function (options) {
             options.headers = options.headers || {};
             return $.Deferred().resolve({
                 authenticationId: Constants.HEADER_PARAM_USERNAME,
@@ -30,7 +30,7 @@ define([
 
         headers[Constants.HEADER_PARAM_USERNAME] = "openidm-admin";
 
-        userModel.getProfile(headers).then(function () {
+        return userModel.getProfile(headers).then(function () {
             assert.equal(userModel.getProtectedAttributes().length, 0, "No protected attributes for openidm-admin");
         }).then(function () {
             headers[Constants.HEADER_PARAM_USERNAME] = "bjensen";

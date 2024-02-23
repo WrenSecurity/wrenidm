@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
@@ -260,7 +261,7 @@ define([
                         this.model.surpressSave = true;
 
                         //Set UI to stages to current active and available stages
-                        _.each(selfServiceConfig.stageConfigs, function (stage) {
+                        _.each(selfServiceConfig.stageConfigs, _.bind(function (stage) {
                             this.$el.find(".wide-card[data-type='" + stage.name + "']").toggleClass("disabled", false);
 
                             if (stage.name === "userDetails") {
@@ -271,7 +272,7 @@ define([
                                 this.$el.find(".wide-card[data-type='" + stage.name + "'] .section-check").prop("checked", true).trigger("change");
 
                             }
-                        }, this);
+                        }, this));
                         this.showCaptchaWarning(this.model.saveConfig.stageConfigs);
 
                         this.model.surpressSave = false;
@@ -477,10 +478,10 @@ define([
 
                 this.model.surpressSave = true;
 
-                _.each(this.$el.find(".wide-card"), function(card) {
-                    tempConfig = _.find(this.model.configList, function(config) {
+                _.each(this.$el.find(".wide-card"), _.bind(function(card) {
+                    tempConfig = _.find(this.model.configList, _.bind(function(config) {
                         return $(card).attr("data-type") === config.type;
-                    }, this);
+                    }, this));
 
                     if (tempConfig.enabledByDefault) {
                         this.activateStage(this.model.emailServiceAvailable, card, $(card).attr("data-type"));
@@ -489,7 +490,7 @@ define([
                             return stage.name === $(card).attr("data-type");
                         });
                     }
-                }, this);
+                }, this));
 
                 this.model.surpressSave = false;
 

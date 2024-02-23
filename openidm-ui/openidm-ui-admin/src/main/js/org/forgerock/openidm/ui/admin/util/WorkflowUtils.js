@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/commons/ui/common/util/UIUtils",
     "org/forgerock/openidm/ui/common/delegates/ResourceDelegate",
     "org/forgerock/commons/ui/common/components/Messages",
@@ -60,11 +61,11 @@ define([
                         options: candidateUsers,
                         render: {
                             item: function (item, escape) {
-                                return '<div>' + item.givenName + ' ' + item.sn +
+                                return '<div class="item">' + item.givenName + ' ' + item.sn +
                                        '<br/> <span class="text-muted">' + item.userName + '</span></div>';
                             },
                             option: function (item, escape) {
-                                return '<div>' + item.givenName + ' ' + item.sn +
+                                return '<div class="option">' + item.givenName + ' ' + item.sn +
                                        '<br/> <span class="text-muted">' + item.userName + '</span></div>';
                             }
                         },
@@ -138,7 +139,7 @@ define([
              * before changing assignee alert the "assigner" that the user
              * being assigned does not exist in the list of candidate users
              */
-            if (id !== "noUserAssigned" && !_.contains(model.get("candidates").candidateUsers, id)) {
+            if (id !== "noUserAssigned" && !_.includes(model.get("candidates").candidateUsers, id)) {
                 UIUtils.jqConfirm($.t("templates.taskInstance.nonCanditateWarning",{ userName: label }), _.bind(function() {
                     assignNow();
                 }, this));

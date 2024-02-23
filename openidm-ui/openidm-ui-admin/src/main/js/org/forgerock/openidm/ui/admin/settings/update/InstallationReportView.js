@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "handlebars",
     "org/forgerock/openidm/ui/admin/util/AdminAbstractView",
     "org/forgerock/openidm/ui/admin/util/TreeGridUtils",
@@ -166,7 +167,7 @@ define([
 
         formatFiles: function() {
             var formattedFileList,
-                files = _.clone(this.model.response.files, true);
+                files = _.cloneDeep(this.model.response.files);
 
             formattedFileList = _.map(files, function (file) {
                 var temp = file.filePath.split("/");
@@ -179,7 +180,7 @@ define([
                 return file;
             });
 
-            return _.sortByAll(formattedFileList, [
+            return _.sortBy(formattedFileList, [
                 function(i) {
                     if (i.partialFilePath.length > 0) {
                         return i.partialFilePath.toLowerCase();

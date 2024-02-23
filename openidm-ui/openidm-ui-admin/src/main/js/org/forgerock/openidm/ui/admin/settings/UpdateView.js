@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "backgrid",
     "org/forgerock/openidm/ui/admin/util/AdminAbstractView",
     "org/forgerock/commons/ui/common/main/AbstractModel",
@@ -71,7 +72,7 @@ define([
                             .then(_.bind(function(maintenanceData) {
                                 MaintenanceDelegate.getUpdateLogs({excludeFields: ['files']})
                                     .then(_.bind(function(updateLogData) {
-                                        var runningUpdate = _.findWhere(updateLogData.result, {"status": "IN_PROGRESS"});
+                                        var runningUpdate = _.find(updateLogData.result, {"status": "IN_PROGRESS"});
 
                                         // There isn't a running install and OpenIDM is in maintenance mode
                                         if (maintenanceData.maintenanceEnabled === true && updateLogData.result.length === 0) {

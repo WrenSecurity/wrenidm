@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
@@ -387,8 +388,8 @@ define([
 
             retrieveAuthenticationData: function (callback) {
                 ConfigDelegate.readEntity("authentication").then(_.bind(function (data) {
-                    authenticationDataChanges = _.clone(data, true);
-                    authenticationData = _.clone(data, true);
+                    authenticationDataChanges = _.cloneDeep(data);
+                    authenticationData = _.cloneDeep(data);
 
                     if (callback) {
                         callback();
@@ -433,7 +434,7 @@ define([
             },
 
             getAuthenticationData: function () {
-                return _.clone(authenticationData.serverAuthContext, true);
+                return _.cloneDeep(authenticationData.serverAuthContext);
             },
 
             /**
@@ -444,7 +445,7 @@ define([
              * @param object {object} - the object containing changes
              */
             setProperties: function(properties, object) {
-                _.each(properties, function(prop) {
+                _.each(properties, _.bind(function(prop) {
                     if (_.isEmpty(object[prop]) &&
                         !_.isNumber(object[prop]) &&
                         !_.isBoolean(object[prop])) {
@@ -452,14 +453,14 @@ define([
                     } else {
                         authenticationDataChanges.serverAuthContext[prop] = object[prop];
                     }
-                }, this);
+                }, this));
             },
 
             saveAuthentication: function() {
                 var doSave = () => {
                         return ConfigDelegate.updateEntity("authentication", authenticationDataChanges).then(function() {
                             EventManager.sendEvent(Constants.EVENT_DISPLAY_MESSAGE_REQUEST, "authSaveSuccess");
-                            authenticationData = _.clone(authenticationDataChanges, true);
+                            authenticationData = _.cloneDeep(authenticationDataChanges);
                             $(".sessionResetAlert").show();
                         });
                     },

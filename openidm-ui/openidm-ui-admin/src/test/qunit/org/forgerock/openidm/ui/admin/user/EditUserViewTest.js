@@ -1,4 +1,7 @@
-define(["org/forgerock/openidm/ui/admin/user/EditUserView"], function (EditUserView) {
+define([
+    "org/forgerock/openidm/ui/admin/user/EditUserView",
+    "jquery"
+], function (EditUserView, $) {
     QUnit.module('EditUserView Tests');
 
     QUnit.test("Conditionally displays alert", function (assert) {

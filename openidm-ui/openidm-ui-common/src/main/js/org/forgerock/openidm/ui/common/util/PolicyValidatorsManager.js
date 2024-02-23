@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "form2js",
     "org/forgerock/commons/ui/common/main/ValidatorsManager",
     "org/forgerock/openidm/ui/common/delegates/PolicyDelegate"
@@ -77,7 +78,7 @@ define([
                 PolicyDelegate.readEntity(baseEntity).then(_.bind(function (allEntityPolicies) {
                     // look into the containerElement for every property with a policy declared,
                     // and bind validation handlers for each property found.
-                    _.each(allEntityPolicies.properties, function (property) {
+                    _.each(allEntityPolicies.properties, _.bind(function (property) {
                         var input = containerElement.hasClass("jsonEditor") ?
                             // could be improved to support more complex properties
                                 containerElement.find("[name$='\\[" + property.name + "\\]']") :
@@ -97,7 +98,7 @@ define([
 
                             ValidatorsManager.bindValidatorsForField(containerElement, input);
                         }
-                    }, this);
+                    }, this));
 
                     if (callback) {
                         callback();

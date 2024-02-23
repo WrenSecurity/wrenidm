@@ -18,7 +18,7 @@ define([
             }
         }, Configuration.globalData);
         // just return back the
-        sinon.stub(AttributesGridView, "sampleEvalCheck", function (sampleDetails, globals) {
+        sinon.stub(AttributesGridView, "sampleEvalCheck").callsFake(function (sampleDetails, globals) {
             return $.Deferred().resolve({sampleDetails, globals});
         });
         // don't do anything with this one; just stub it out.

@@ -7,11 +7,11 @@ define([
     QUnit.module('Workflow Form Functions');
 
     QUnit.test("Task Details Form Submit validation (OPENIDM-5558)", function (assert) {
-        var fakeForm = $("<form id='test'><input data-validation-status='ok'></form>")
+        var fakeForm = $("<form id='test'><input data-validation-status='ok'></form>");
 
         $("#qunit-fixture").append(fakeForm);
 
-        sinon.stub(WorkflowDelegate, "completeTask", $.noop);
+        sinon.stub(WorkflowDelegate, "completeTask").callsFake($.noop);
 
         TaskDetailsView.formSubmit.call({
             "$el": fakeForm,

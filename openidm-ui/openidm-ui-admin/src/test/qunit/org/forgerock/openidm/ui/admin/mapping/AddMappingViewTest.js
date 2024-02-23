@@ -18,13 +18,13 @@ define([
             selectManaged = ["managed", "User"],
             selectResult = AddMappingView.preselectMappingCard(selectConnector, connectors, managed);
 
-            assert.equal(selectResult.name, "ldap", "Successfully selected LDAP connector");
-            assert.equal(selectResult.resourceType, "connector", "Successfully detected and set resource type of connector");
+        assert.equal(selectResult.name, "ldap", "Successfully selected LDAP connector");
+        assert.equal(selectResult.resourceType, "connector", "Successfully detected and set resource type of connector");
 
-            selectResult = AddMappingView.preselectMappingCard(selectManaged, connectors, managed);
+        selectResult = AddMappingView.preselectMappingCard(selectManaged, connectors, managed);
 
-            assert.equal(selectResult.name, "User", "Successfully selected User managed object");
-            assert.equal(selectResult.resourceType, "managed", "Successfully detected and set resource type of managed");
+        assert.equal(selectResult.name, "User", "Successfully selected User managed object");
+        assert.equal(selectResult.resourceType, "managed", "Successfully detected and set resource type of managed");
     });
 
     QUnit.test("Add mapping card based on card location in dom", function (assert) {

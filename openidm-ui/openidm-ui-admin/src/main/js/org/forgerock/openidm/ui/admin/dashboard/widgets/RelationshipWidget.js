@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "bootstrap",
     "selectize",
     "d3",
@@ -53,7 +54,7 @@ define([
 
             widgetRender: function(args, callback) {
                 var _this = this;
-                
+
                 /*
                  * if baseObject does not exist use widget defaults for baseOjbect and searchFields settings
                  */
@@ -74,7 +75,7 @@ define([
                      */
                     this.data.relationshipProps = this.getRelationshipProps(schema.properties);
                     /*
-                     * if there are no searchFields defined then set the searchFields array to 
+                     * if there are no searchFields defined then set the searchFields array to
                      * a single string value containing the second value in the schema order
                      * this assumes that "_id" is the value of schema.order[0]
                      * TODO figure out a better way of handling this
@@ -82,9 +83,9 @@ define([
                     if (schema.order && !this.data.searchFields) {
                         this.data.searchFields = [schema.order[1]];
                     }
-                    
+
                     this.data.schema = schema;
-                    
+
                     this.parentRender(_.bind(function(){
                         /*
                          * build the selectize search field
@@ -103,38 +104,38 @@ define([
                             },
                             render: {
                                 option: function(item, selectizeEscape) {
-                                    var element = $('<div class="fr-search-option"></div>'),
+                                    var element = $('<div class="option fr-search-option"></div>'),
                                         counter = 0;
-    
-                                    _.each(_this.data.searchFields, function(key) {
+
+                                    _.each(_this.data.searchFields, _.bind(function(key) {
                                         if (counter === 0) {
                                             $(element).append('<div class="fr-search-primary">' +selectizeEscape(item[key]) +'</div>');
                                         } else {
                                             $(element).append('<div class="fr-search-secondary text-muted">' +selectizeEscape(item[key]) +'</div>');
                                         }
-    
+
                                         counter++;
-                                    }, this);
-    
+                                    }, this));
+
                                     return element.prop('outerHTML');
                                 },
                                 item: function(item, escape) {
                                     var txtArr = [];
-                                    
+
                                     _.each(_this.data.searchFields, function (field) {
                                         txtArr.push(escape(item[field]));
                                     });
-                                    
-                                    return "<div>" + txtArr.join(" / ") +"</div>";
+
+                                    return "<div class=\"item\">" + txtArr.join(" / ") +"</div>";
                                 }
                             },
                             load: function(query, selectizeCallback) {
                                 var queryFilter = ResourceDelegate.queryStringForSearchableFields(_this.data.searchFields, query);
-                                
+
                                 if (!query.length || query.length < 2) {
                                     return selectizeCallback();
                                 }
-                                
+
                                 ResourceDelegate.searchResource(queryFilter, "managed/" + _this.data.baseObject).then(function(response) {
                                     if (response && response.result.length > 0) {
                                         selectizeCallback(response.result);
@@ -144,11 +145,11 @@ define([
                                 });
                             }
                         });
-                        
+
                         if (_this.data.resourceUrl) {
                             _this.getResourceRenderChart();
                         }
-    
+
                         if (callback) {
                             callback();
                         }
@@ -187,15 +188,15 @@ define([
                                 searchFields : []
                             },
                             returnText = "";
-                        
+
                         _.each(resourceCollection, function (rc) {
                             var pathArr = rc.path.split("/"),
                                 resourceType = pathArr[0],
                                 resourceObject = pathArr[1];
-                            
+
                             if (resourceType === itemType && resourceObject === itemObject) {
                                 /*
-                                 * refreshSettings are for the click event on the circle which refreshes the 
+                                 * refreshSettings are for the click event on the circle which refreshes the
                                  * relationship chart view with the perspective of the object being clicked
                                  */
                                 refreshSettings.baseObject = resourceObject;
@@ -209,11 +210,11 @@ define([
                                 });
                             }
                         });
-                        
+
                         if (nameTextArr[0]) {
                             returnText = nameTextArr.join(" / ");
                         }
-                        
+
                         return {
                             refreshSettings : refreshSettings,
                             text: returnText
@@ -221,7 +222,7 @@ define([
                     },
                     /*
                      * addNode adds a node on the first level of relationship data for the item being passed in
-                     * 
+                     *
                      * if displaySubRelationships is enabled it loops over all of the relationship properties of
                      * whatever object the item comes from (i.e. managed/user or managed/role) and adds a subnode for
                      * each of the values from that relationship
@@ -234,7 +235,7 @@ define([
                             resourceCollections,
                             secondarySourceId,
                             nodeData = getNodeData(item, itemType, itemObject, resourceCollection);
-                        
+
                         if (nodeData.text && nodeData.text.length) {
                             nodeSet.push({
                                 id: "N" + nodeCounter,
@@ -245,24 +246,24 @@ define([
                                 resourceUrl: item._ref,
                                 refreshSettings: nodeData.refreshSettings
                             });
-                            
+
                             secondarySourceId = "N" + nodeCounter;
 
                             nodeCounter++;
-                            
+
                             if (prop.items) {
                                 resourceCollections = prop.items.resourceCollection;
                             } else {
                                 resourceCollections = prop.resourceCollection;
                             }
                             _.each(resourceCollections , function (resourceCollection) {
-                                var schema = _.where(_this.data.schema.allSchemas, { name : resourceCollection.path.split("/")[1] }),
+                                var schema = _.filter(_this.data.schema.allSchemas, { name : resourceCollection.path.split("/")[1] }),
                                     relProps = [];
-                                
+
                                 if (schema[0]) {
                                     relProps = _this.getRelationshipProps(schema[0].schema.properties);
                                 }
-                                
+
                                 _.each(relProps, function (relProp) {
                                     var addSubNode = function (item) {
                                         var subItemRef = item._ref.split("/"),
@@ -293,7 +294,7 @@ define([
 
                                         nodeCounter++;
                                     };
-                                    
+
                                     if (item[relProp.propName]) {
                                         if (_.isArray(item[relProp.propName])) {
                                             _.each(item[relProp.propName], function (subSubItem) {
@@ -313,7 +314,7 @@ define([
                         displayTextArray.push(details[field]);
                     }
                 });
-                
+
                 /*
                  * create the nodeSet with the origin being the mainNode
                  */
@@ -326,7 +327,7 @@ define([
                     type: this.data.schema.title,
                     hlink: "#resource/managed/" + this.data.baseObject + "/edit/" + details._id
                 }];
-                
+
                 this.$el.find("#roundRelationshipGraph").empty();
                 /*
                  * loop over all the relationship props and add nodes for all the property values
@@ -334,7 +335,7 @@ define([
                  */
                 _.each(this.data.relationshipProps, function (prop) {
                     var propKey;
-                    
+
                     if (details[prop.propName]) {
                         if (details[prop.propName].length || (prop.type === "relationship" && !_.isEmpty(details[prop.propName]))) {
                             /*
@@ -351,7 +352,7 @@ define([
                                 });
                             }
                         }
-                        
+
                         if (prop.type === "array") {
                             /*
                              * loop over all the the relationships in this property's data set
@@ -378,7 +379,7 @@ define([
                         linkType: item.type
                     });
                 });
-                
+
                 //Multi layer example keep for future development
                 /*
                 nodeSet.push({
@@ -434,25 +435,25 @@ define([
             getResourceRenderChart : function (id) {
                 var resourceUrl,
                     fields = "?_fields=*";
-                
+
                 if (id) {
                     resourceUrl = "managed/" + this.data.baseObject + "/" + id;
                 }
-                
+
                 if (this.data.resourceUrl) {
                     resourceUrl = this.data.resourceUrl;
                 }
                 _.each(this.data.relationshipProps, _.bind(function (prop) {
-                
+
                     fields += "," + prop.propName + "/*";
 
                     if (this.data.displaySubRelationships === "true") {
                         fields += this.addResourceCollectionProps(prop);
                     }
                 }, this));
-                
+
                 resourceUrl += fields;
-                
+
                 ResourceDelegate.getResource(resourceUrl).then(_.bind(function (response) {
                     this.setupRelationshipChart(response);
                 }, this));
@@ -475,21 +476,21 @@ define([
              */
             addResourceCollectionProps : function (prop) {
                 var resourceCollections,
-                    fields = ""; 
-                
+                    fields = "";
+
                 if (prop.items) {
                     resourceCollections = prop.items.resourceCollection;
                 } else {
                     resourceCollections = prop.resourceCollection;
                 }
                 _.each(resourceCollections , _.bind(function (resourceCollection) {
-                    var schema = _.where(this.data.schema.allSchemas, { name : resourceCollection.path.split("/")[1] }),
+                    var schema = _.filter(this.data.schema.allSchemas, { name : resourceCollection.path.split("/")[1] }),
                         relProps = [];
-                    
+
                     if (schema[0]) {
                         relProps = this.getRelationshipProps(schema[0].schema.properties);
                     }
-                    
+
                     _.each(relProps, function (relProp) {
                         if (prop.type === "relationship") {
                             fields += "," + prop.propName + "/" + relProp.propName + "/*";
@@ -498,7 +499,7 @@ define([
                         }
                     });
                 }, this));
-                
+
                 return fields;
             },
 
@@ -563,7 +564,7 @@ define([
                 }
             },
             /*
-             * this function runs when checkboxes in the legend are clicked 
+             * this function runs when checkboxes in the legend are clicked
              * to turn on and off different sets of relationships
              */
             dataTypeToggle: function () {
@@ -574,7 +575,7 @@ define([
                     nodes = $('.node[type_value|="' + type_value + '"]'),//circles
                     links = $('.linkType-' + type_value.replace(/ /g, "_")),//lines connected to main node
                     sublinks = $("[class|='linkType-" + type_value.replace(/ /g, "_") + "']");//lines connected to sub nodes
-                
+
                 if (checked) {
                     nodes.show();
                     links.show();
@@ -734,7 +735,7 @@ define([
                     force,
                     link,
                     node,
-                    linkText, 
+                    linkText,
                     mainNodeType;
 
                 //Create a hash that maps colors to types
@@ -953,7 +954,7 @@ define([
                     .style("fill", "Black")
                     .style("font", "bold 12px Arial")
                     .attr("text-anchor","start");
-                
+
                 //add checkboxes for each data type
                 svgCanvas.selectAll("input.legend_checkbox")
                     .data(sortedKeys).enter()
@@ -968,15 +969,15 @@ define([
                             id = "legendCheckbox-" + strippedString,
                             type_value = d,
                             parent_type = "";
-                        
+
                         if (type_value.split("-").length > 1) {
                             parent_type = type_value.split("-")[0];
                         }
-                        
+
                         if (d === mainNodeType) {
                             return "";
                         }
-                        
+
                         return "<input type='checkbox' class='legendCheckbox' id='" + id + "' type_value='" + type_value + "' parent_type='" + parent_type + "' checked/>";
                     })
                     .on("click", _this.dataTypeToggle);

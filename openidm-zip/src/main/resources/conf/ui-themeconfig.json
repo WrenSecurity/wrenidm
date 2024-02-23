@@ -2,7 +2,7 @@
     "icon" : "favicon.ico",
     "path" : "",
     "stylesheets" : [
-        "css/bootstrap-3.3.5-custom.css",
+        "css/bootstrap.css",
         "css/structure.css",
         "css/theme.css"
     ],

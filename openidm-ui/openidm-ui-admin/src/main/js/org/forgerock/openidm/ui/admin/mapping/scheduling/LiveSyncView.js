@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/mapping/util/MappingAdminAbstractView",
     "org/forgerock/commons/ui/common/main/EventManager",
     "org/forgerock/commons/ui/common/util/Constants",
@@ -62,7 +63,7 @@ define([
                 }
 
                 if (args.schedules.result.length > 0) {
-                    _.each(args.schedules.result, function (scheduleId) {
+                    _.each(args.schedules.result, _.bind(function (scheduleId) {
                         tempPromises = SchedulerDelegate.specificSchedule(scheduleId._id);
 
                         promises.push(tempPromises);
@@ -97,7 +98,7 @@ define([
                             }
 
                         }, this));
-                    }, this);
+                    }, this));
 
                 } else if (this.model.mapping.source.indexOf("managed/") >= 0) {
                     this.$el.find(".noLiveSyncMessage").hide();

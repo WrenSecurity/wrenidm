@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
@@ -76,14 +77,14 @@ define([
                 mainVersion,
                 connectorRef;
 
-            connectorData = _.findWhere(this.data.connectors, {"connectorName": selectedValue.attr('connectorTypeName'), "bundleVersion": selectedValue.attr('bundleVersion')});
+            connectorData = _.find(this.data.connectors, {"connectorName": selectedValue.attr('connectorTypeName'), "bundleVersion": selectedValue.attr('bundleVersion')});
 
 
             // For each schedule on the page
-            _.each(this.addedLiveSyncSchedules, function (source) {
+            _.each(this.addedLiveSyncSchedules, _.bind(function (source) {
                 this.$el.find("#" + source.split("/").join("")).find(".deleteSchedule").click();
                 this.addedLiveSyncSchedules.splice(_.indexOf(this.addLiveSyncScheduler, source), 1);
-            }, this);
+            }, this));
             this.objectTypes = [];
 
 

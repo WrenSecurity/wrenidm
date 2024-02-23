@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore"
+    "lodash"
 ], function ($, _) {
     var obj = {
         "changed": {
@@ -118,7 +119,7 @@ define([
                 var v = input.val().toUpperCase().trim(),
                     usedNames = JSON.parse($(input).attr("data-unique-list").toUpperCase());
 
-                if (v.length > 0 && !_.contains(usedNames, v)) {
+                if (v.length > 0 && !_.includes(usedNames, v)) {
                     callback();
                 } else {
                     callback([$.t("common.form.validation.unique")]);

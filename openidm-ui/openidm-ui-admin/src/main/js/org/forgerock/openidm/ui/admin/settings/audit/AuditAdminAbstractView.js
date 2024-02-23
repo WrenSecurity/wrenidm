@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/util/AdminAbstractView",
     "org/forgerock/openidm/ui/common/delegates/ConfigDelegate",
     "org/forgerock/commons/ui/common/main/EventManager",
@@ -32,8 +33,8 @@ define([
         AuditAdminAbstractView = AdminAbstractView.extend({
             retrieveAuditData: function (callback) {
                 ConfigDelegate.readEntity("audit").then(_.bind(function (data) {
-                    auditDataChanges = _.clone(data, true);
-                    auditData = _.clone(data, true);
+                    auditDataChanges = _.cloneDeep(data);
+                    auditData = _.cloneDeep(data);
                     if (callback) {
                         callback();
                     }
@@ -41,15 +42,15 @@ define([
             },
 
             getAuditData: function () {
-                return _.clone(auditDataChanges, true);
+                return _.cloneDeep(auditDataChanges);
             },
 
             getTopics: function() {
-                return _.union(_.keys(_.clone(auditDataChanges.eventTopics, true)), ["authentication", "access", "activity", "recon", "sync", "config"]);
+                return _.union(_.keys(_.cloneDeep(auditDataChanges.eventTopics)), ["authentication", "access", "activity", "recon", "sync", "config"]);
             },
 
             setProperties: function(properties, object) {
-                _.each(properties, function(prop) {
+                _.each(properties, _.bind(function(prop) {
                     if (_.isEmpty(object[prop]) &&
                         !_.isNumber(object[prop]) &&
                         !_.isBoolean(object[prop])) {
@@ -57,7 +58,7 @@ define([
                     } else {
                         auditDataChanges[prop] = object[prop];
                     }
-                }, this);
+                }, this));
             },
 
             setFilterPolicies: function(policies) {
@@ -71,7 +72,7 @@ define([
             saveAudit: function(callback) {
                 ConfigDelegate.updateEntity("audit", auditDataChanges).then(_.bind(function() {
                     EventManager.sendEvent(Constants.EVENT_DISPLAY_MESSAGE_REQUEST, "auditSaveSuccess");
-                    auditData = _.clone(auditDataChanges, true);
+                    auditData = _.cloneDeep(auditDataChanges);
 
                     if (callback) {
                         callback();

@@ -12,10 +12,11 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/mapping/util/MappingAdminAbstractView",
     "org/forgerock/commons/ui/common/main/EventManager",
     "org/forgerock/commons/ui/common/util/Constants",
@@ -117,11 +118,11 @@ define([
                 _.extend(this.model.mapping, currentScripts);
 
                 // Remove any mapping instances of scripts that are not added
-                _.each(scriptsToDelete, function(script) {
+                _.each(scriptsToDelete, _.bind(function(script) {
                     if (_.has(this.model.mapping, script)) {
                         delete this.model.mapping[script];
                     }
-                }, this);
+                }, this));
             }
 
             this.AbstractMappingSave(this.model.mapping, _.bind(function() {

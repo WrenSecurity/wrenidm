@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/commons/ui/common/main/AbstractView",
     "org/forgerock/openidm/ui/admin/delegates/WorkflowDelegate",
     "org/forgerock/commons/ui/common/main/ValidatorsManager"
@@ -58,9 +59,9 @@ define([
                 function myParentRender() {
                     this.parentRender(_.bind(function() {
                         if (selected !== false) {
-                            _.each(selected.params, function(param, id) {
+                            _.each(selected.params, _.bind(function(param, id) {
                                 this.$el.find("#" + id).find("textarea").val(param);
-                            }, this);
+                            }, this));
 
                             this.$el.find("#workflowList").val(selected._id);
                         }
@@ -107,7 +108,7 @@ define([
 
                 if (args.workflows) {
                     this.data.workflows = args.workflows;
-                    selected = _.findWhere(this.data.workflows, {"key": this.model.key});
+                    selected = _.find(this.data.workflows, {"key": this.model.key});
                     this.getWorkflowSchema(selected).then(_.bind(function(properties) {
                         this.data.properties = properties;
                         _.bind(myParentRender, this)();
@@ -149,7 +150,7 @@ define([
 
                 WorkflowDelegate.availableWorkflows().then(_.bind(function(workflowData) {
 
-                    _.each(workflowData.result, function(workflow) {
+                    _.each(workflowData.result, _.bind(function(workflow) {
                         workflowList.push({
                             "key": workflow.key,
                             "name": workflow.name,
@@ -161,7 +162,7 @@ define([
                             selectedWorkflow.params = params;
                         }
 
-                    }, this);
+                    }, this));
 
                     promise.resolve({
                         "workflowList": workflowList,
@@ -186,7 +187,7 @@ define([
 
                     if (_.has(result, "startFormHandler") && _.has(result.startFormHandler, "formPropertyHandlers")) {
 
-                        _.each(result.startFormHandler.formPropertyHandlers, function(property) {
+                        _.each(result.startFormHandler.formPropertyHandlers, _.bind(function(property) {
                             if (property.id[0] !== "_") {
                                 workflowProperties.push({
                                     "id": property.id,
@@ -195,7 +196,7 @@ define([
                                     "type": property.type.name
                                 });
                             }
-                        }, this);
+                        }, this));
                     }
 
                     promise.resolve(workflowProperties);
@@ -213,7 +214,7 @@ define([
                 this.render({
                     "params": {},
                     "sync": this.data.sync,
-                    "key": _.findWhere(this.data.workflows, {"_id": this.$el.find("#workflowList").val()}).key,
+                    "key": _.find(this.data.workflows, {"_id": this.$el.find("#workflowList").val()}).key,
                     "changeCallback":  this.model.changeCallback,
                     "workflows": this.data.workflows,
                     "element": this.element,
@@ -226,7 +227,7 @@ define([
             },
 
             getConfiguration: function () {
-                var config = _.findWhere(this.data.workflows, {"_id": this.$el.find("#workflowList").val()}),
+                var config = _.find(this.data.workflows, {"_id": this.$el.find("#workflowList").val()}),
                     properties = {},
                     file = "workflow/triggerWorkflowGeneric.js";
 

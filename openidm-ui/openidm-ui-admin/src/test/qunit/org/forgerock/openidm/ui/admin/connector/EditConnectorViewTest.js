@@ -2,11 +2,10 @@ define([
     "org/forgerock/openidm/ui/admin/connector/EditConnectorView",
     "lodash",
     "sinon",
-    "org/forgerock/openidm/ui/admin/connector/oauth/GoogleTypeView"
+    "org/forgerock/openidm/ui/admin/connector/oauth/GoogleTypeView",
+    "jquery"
 ],
-function (EditConnectorView, _,
-          sinon,
-          GoogleTypeView) {
+function (EditConnectorView, _, sinon, GoogleTypeView, $) {
     QUnit.module('Connectors');
 
     QUnit.test("Advanced Connector Save", function (assert) {
@@ -62,11 +61,11 @@ function (EditConnectorView, _,
 
     QUnit.test("OAuth Connector Whitespace Trimming", function (assert) {
         var whiteSpaceMerge = {
-                "configurationProperties" : {
-                    "clientSecret" : "   test  ",
-                    "clientId" : "  test     "
-                }
-            };
+            "configurationProperties" : {
+                "clientSecret" : "   test  ",
+                "clientId" : "  test     "
+            }
+        };
 
         whiteSpaceMerge = GoogleTypeView.cleanSpacing(whiteSpaceMerge);
 
@@ -76,21 +75,20 @@ function (EditConnectorView, _,
 
     QUnit.test("Generate correct connector patch", function (assert) {
         var connector = {
-            "test" : "stuff"
-        },
-        change = {
-            "test" : "new stuff"
-        },
-        patch = EditConnectorView.generateConnectorPatch(connector, change, null);
+                "test" : "stuff"
+            },
+            change = {
+                "test" : "new stuff"
+            },
+            patch = EditConnectorView.generateConnectorPatch(connector, change, null);
 
         assert.equal(patch[0].value, "new stuff", "Correctly generated patch value");
         assert.equal(patch[1].field, "/enabled", "Correctly disable connector for testing");
     });
 
     QUnit.test("Testing a connector with pass result", function (assert) {
-        var ready = assert.async();
-
-        var connectorPassStub = sinon.stub(EditConnectorView, "connectorPass", function(preTestResult, updatedForm){
+        var ready = assert.async(),
+            connectorPassStub = sinon.stub(EditConnectorView, "connectorPass").callsFake(function(preTestResult, updatedForm) {
                 ready();
 
                 assert.equal(preTestResult, true, "Promise correctly resolved and called pass function");
@@ -105,9 +103,8 @@ function (EditConnectorView, _,
     });
 
     QUnit.test("Testing a connector with fail result", function (assert) {
-        var ready = assert.async();
-
-        var connectorFailstub = sinon.stub(EditConnectorView, "connectorFail", function(preTestResult, updatedForm, message){
+        var ready = assert.async(),
+            connectorFailstub = sinon.stub(EditConnectorView, "connectorFail").callsFake(function(preTestResult, updatedForm, message){
                 ready();
 
                 assert.equal(preTestResult, false, "Promise correctly resolved and called fail function");

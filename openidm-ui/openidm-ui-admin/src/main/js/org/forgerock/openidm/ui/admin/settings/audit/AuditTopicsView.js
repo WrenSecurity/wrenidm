@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/settings/audit/AuditAdminAbstractView",
     "org/forgerock/openidm/ui/admin/settings/audit/AuditTopicsDialog",
     "org/forgerock/commons/ui/common/components/ChangesPending"
@@ -72,17 +73,17 @@ define([
                 this.model.auditData = this.getAuditData();
 
                 if (_.has(this.model.auditData, "eventTopics")) {
-                    this.model.topics = _.extend(_.clone(this.constants.DEFAULT_TOPICS, true), _.clone(this.model.auditData.eventTopics, true));
+                    this.model.topics = _.extend(_.cloneDeep(this.constants.DEFAULT_TOPICS), _.cloneDeep(this.model.auditData.eventTopics));
                 }
             } else {
                 this.model = args.model;
             }
 
-            _.each(_.clone(this.model.topics, true), function (event, name) {
-                event.defaultEvents = _.contains(this.constants.DEFAULT_TOPICS_LIST, name);
+            _.each(_.cloneDeep(this.model.topics), _.bind(function (event, name) {
+                event.defaultEvents = _.includes(this.constants.DEFAULT_TOPICS_LIST, name);
                 event.name = name;
                 this.data.topics.push(event);
-            }, this);
+            }, this));
 
             this.parentRender(_.bind(function() {
 
@@ -97,7 +98,7 @@ define([
                             this.model.topics = {};
 
                             if (_.has(this.model.auditData, "eventTopics")) {
-                                this.model.topics = _.extend(_.clone(this.constants.DEFAULT_TOPICS, true), _.clone(this.model.auditData.eventTopics, true));
+                                this.model.topics = _.extend(_.cloneDeep(this.constants.DEFAULT_TOPICS), _.cloneDeep(this.model.auditData.eventTopics));
                             }
 
                             this.reRender();
@@ -149,12 +150,12 @@ define([
                 dialogConfig = {
                     "event": this.model.topics[eventName],
                     "eventName": eventName,
-                    "isDefault": _.contains(this.constants.DEFAULT_TOPICS_LIST, eventName),
+                    "isDefault": _.includes(this.constants.DEFAULT_TOPICS_LIST, eventName),
                     "definedEvents": _.keys(this.model.topics),
                     "newEvent": false
                 };
 
-            if (_.contains(this.constants.DEFAULT_TOPICS_LIST, eventName) && eventName !== "custom") {
+            if (_.includes(this.constants.DEFAULT_TOPICS_LIST, eventName) && eventName !== "custom") {
                 dialogConfig.eventDeclarativeActions = this.model.EVENT_ACTIONS[eventName];
                 dialogConfig.limitedEdits = true;
 
@@ -163,7 +164,7 @@ define([
             }
 
             // Triggers only apply to recon and activity events, we can enhance this later if it becomes necessary.
-            if (_.contains(["activity", "recon"], eventName)) {
+            if (_.includes(["activity", "recon"], eventName)) {
                 dialogConfig.triggers = {"recon": this.model.EVENT_ACTIONS.recon};
             }
 

@@ -12,10 +12,11 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
-    "underscore"
+    "lodash"
 ], function (_) {
     return {
         getValueFromJSONPointer: function (pointer, object) {
@@ -34,21 +35,21 @@ define([
                     // no filter means everything evaluates to true
                     return true;
                 case "and":
-                    return _.reduce(filter.children, function (currentResult, child) {
+                    return _.reduce(filter.children, _.bind(function (currentResult, child) {
                         if (currentResult) { // since this is "and" we can short-circuit evaluation by only continuing to evaluate if we haven't yet hit a false result
                             return this.evaluate(child, object);
                         } else {
                             return currentResult;
                         }
-                    }, true, this);
+                    }, this), true);
                 case "or":
-                    return _.reduce(filter.children, function (currentResult, child) {
+                    return _.reduce(filter.children, _.bind(function (currentResult, child) {
                         if (!currentResult) { // since this is "or" we can short-circuit evaluation by only continuing to evaluate if we haven't yet hit a true result
                             return this.evaluate(child, object);
                         } else {
                             return currentResult;
                         }
-                    }, false, this);
+                    }, this), false);
                 case "expr":
                     value = this.getValueFromJSONPointer(filter.name, object);
                     switch (filter.tag) {

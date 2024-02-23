@@ -3,73 +3,73 @@ define([
     "lodash",
     "sinon",
     "handlebars",
-    "org/forgerock/openidm/ui/admin/scheduler/SchedulerListView",,
+    "org/forgerock/openidm/ui/admin/scheduler/SchedulerListView",
     "org/forgerock/commons/ui/common/util/UIUtils"
 ], function ($,_, sinon, handlebars, SchedulerListView, UIUtils) {
     QUnit.module('SchedulerListView Tests');
     var scheduleObjArray = [
         //liveSync
-        {
-            schedule:{
-                "_id": "2915c559-0f82-40b0-badc-b0b40a36cc83",
-                "invokeContext": {
-                    "action": "liveSync",
-                    "source": "system/ldap/group"
-                }
-            },
-            expectedResult: 'LiveSync<br><span class="text-muted">system/ldap/group</span>'
-        },
-        //recon
-        {
-            schedule:{
-                "_id": "recon",
-                "invokeContext": {
-                    "action": "reconcile",
-                    "mapping": "managedUser_systemLdapAccounts"
-                }
-            },
-            expectedResult: 'Reconciliation<br><span class="text-muted">managedUser_systemLdapAccounts</span>'
-        },
-        //script with file
-        {
-            schedule:{
-                "_id": "e12e256f-7590-4780-9260-ddacafd5d408",
-                "invokeContext": {
-                    "script": {
-                        "type": "text/javascript",
-                        "file": "script/someJSFile.js"
+            {
+                schedule:{
+                    "_id": "2915c559-0f82-40b0-badc-b0b40a36cc83",
+                    "invokeContext": {
+                        "action": "liveSync",
+                        "source": "system/ldap/group"
                     }
-                }
+                },
+                expectedResult: 'LiveSync<br><span class="text-muted">system/ldap/group</span>'
             },
-            expectedResult: 'Script<br><span class="text-muted">script/someJSFile.js</span>'
-        },
-        //script with source
-        {
-            schedule:{
-                "_id": "e12e256f-7590-4780-9260-ddacafd5d408",
-                "invokeContext": {
-                    "script": {
-                        "type": "text/javascript",
-                        "source": "console.log(myVar)"
+            //recon
+            {
+                schedule:{
+                    "_id": "recon",
+                    "invokeContext": {
+                        "action": "reconcile",
+                        "mapping": "managedUser_systemLdapAccounts"
                     }
-                }
+                },
+                expectedResult: 'Reconciliation<br><span class="text-muted">managedUser_systemLdapAccounts</span>'
             },
-            expectedResult: 'Script<br><span class="text-muted">console.log(myVar)</span>'
-        },
-        //taskscanner
-        {
-            schedule:{
-                "_id": "1ffa8860-98ef-4f53-bf3a-99b2b3d4989b",
-                "invokeService": "org.forgerock.openidm.taskscanner",
-                "invokeContext": {
-                    "scan": {
-                        "object": "system/ldap/account"
-                    },
-                    "task" : true
-                }
+            //script with file
+            {
+                schedule:{
+                    "_id": "e12e256f-7590-4780-9260-ddacafd5d408",
+                    "invokeContext": {
+                        "script": {
+                            "type": "text/javascript",
+                            "file": "script/someJSFile.js"
+                        }
+                    }
+                },
+                expectedResult: 'Script<br><span class="text-muted">script/someJSFile.js</span>'
             },
-            expectedResult: 'Task Scanner<br><span class="text-muted">system/ldap/account</span>'
-        }
+            //script with source
+            {
+                schedule:{
+                    "_id": "e12e256f-7590-4780-9260-ddacafd5d408",
+                    "invokeContext": {
+                        "script": {
+                            "type": "text/javascript",
+                            "source": "console.log(myVar)"
+                        }
+                    }
+                },
+                expectedResult: 'Script<br><span class="text-muted">console.log(myVar)</span>'
+            },
+            //taskscanner
+            {
+                schedule:{
+                    "_id": "1ffa8860-98ef-4f53-bf3a-99b2b3d4989b",
+                    "invokeService": "org.forgerock.openidm.taskscanner",
+                    "invokeContext": {
+                        "scan": {
+                            "object": "system/ldap/account"
+                        },
+                        "task" : true
+                    }
+                },
+                expectedResult: 'Task Scanner<br><span class="text-muted">system/ldap/account</span>'
+            }
         ],
         queryFilterObjArray = [
             {
@@ -157,15 +157,15 @@ define([
 
         $.get("../www/partials/scheduler/_ScheduleTypeDisplay.html", function (partial) {
 
-            sinon.stub(SchedulerListView, "renderTypePartial", function (type, descriptor) {
+            sinon.stub(SchedulerListView, "renderTypePartial").callsFake(function (type, descriptor) {
                 return $(handlebars.compile(partial)({
                     type : type,
                     descriptor : descriptor
                 }))
-                .html()
-                .toString()
+                    .html()
+                    .toString()
                 //get rid of excess whitespace
-                .replace(/\s\s+/g,"").trim();
+                    .replace(/\s\s+/g,"").trim();
             });
 
             _.each(scheduleObjArray, function (obj) {

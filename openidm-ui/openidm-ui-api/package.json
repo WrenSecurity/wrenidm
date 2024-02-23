@@ -1,11 +1,13 @@
 {
-  "name": "openidm-ui-api",
-  "version": "0.0.2",
+  "name": "@wrensecurity/wrenidm-ui-api",
+  "description": "Wren:IDM API UI",
   "private": true,
+  "scripts": {
+    "build": "gulp"
+  },
   "devDependencies": {
-    "grunt": "0.4.5",
-    "grunt-cli": "1.2.0",
-    "grunt-contrib-copy": "1.0.0",
+    "@wrensecurity/commons-ui-build": "file:target/ui-libs/wrensecurity-commons-ui-build-0.0.0.tgz",
+    "gulp": "^4.0.2",
     "swagger-ui": "2.2.6",
     "swagger-ui-themes": "^2.0.1"
   }

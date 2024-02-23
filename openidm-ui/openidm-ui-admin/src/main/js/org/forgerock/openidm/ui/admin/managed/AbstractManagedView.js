@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/util/AdminAbstractView",
     "org/forgerock/openidm/ui/common/delegates/ConfigDelegate",
     "org/forgerock/commons/ui/common/main/EventManager",
@@ -60,7 +61,7 @@ define([
                     let resourceMapping = RepoDelegate.findGenericResourceMappingForRoute(this.data.repoConfig, "managed/"+managedObject.name);
                     if (resourceMapping && resourceMapping.searchableDefault !== true) {
                         let searchablePropertiesList = _(managedObject.schema.properties)
-                            .pairs()
+                            .toPairs()
                             .map((prop) => {
                                 if (prop[1].searchable) {
                                     return prop[0];
@@ -92,11 +93,11 @@ define([
         checkManagedName: function(name, managedList) {
             var found = false;
 
-            _.each(managedList, function(managedObject){
+            _.each(managedList, _.bind(function(managedObject){
                 if (managedObject.name === name){
                     found = true;
                 }
-            }, this);
+            }, this));
 
             return found;
         },

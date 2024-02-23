@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "handlebars",
     "org/forgerock/commons/ui/common/main/AbstractView",
     "org/forgerock/commons/ui/common/main/Configuration",
@@ -87,7 +88,7 @@ define([
                     this.data.currentValue = _.cloneDeep(this.parent.data.currentValue.resourceCollection[args.resourceCollectionIndex]);
 
                     //if this resource collection's value is not in the list of available resources add it
-                    if (!_.contains(this.data.resources, this.data.currentValue.path)) {
+                    if (!_.includes(this.data.resources, this.data.currentValue.path)) {
                         this.data.resources.push(this.data.currentValue.path);
                     }
                 }
@@ -218,7 +219,7 @@ define([
                     makeSortable = () => {
                         BackgridUtils.sortable({
                             "containers": [listElement.find("tbody")[0]],
-                            "rows": _.clone(this.data.currentValue.query.fields, true)
+                            "rows": _.cloneDeep(this.data.currentValue.query.fields)
                         }, _.bind(function(newOrder) {
                             this.data.currentValue.query.fields = newOrder;
                             this.data.currentValue.query.sortKeys = newOrder;

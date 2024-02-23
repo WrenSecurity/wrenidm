@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/commons/ui/common/util/Constants",
     "org/forgerock/openidm/ui/common/delegates/ConfigDelegate",
     "org/forgerock/openidm/ui/admin/authentication/AuthenticationAbstractView"
@@ -48,8 +49,8 @@ define([
          */
         render: function (callback) {
             this.model = this.getAuthenticationData();
-            this.data.sessionModule = _.clone(this.model.sessionModule, true);
-            this.data.sessionModuleClean = _.clone(this.model.sessionModule, true);
+            this.data.sessionModule = _.cloneDeep(this.model.sessionModule);
+            this.data.sessionModuleClean = _.cloneDeep(this.model.sessionModule);
 
             ConfigDelegate.readEntity("ui/configuration").then((uiConfig) => {
                 this.data.logoutURLClean = this.data.logoutURL = _.get(uiConfig, "configuration.logoutUrl");

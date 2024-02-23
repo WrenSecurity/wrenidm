@@ -12,10 +12,11 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/common/util/Constants",
     "org/forgerock/commons/ui/common/main/EventManager"
 ], function(_, constants, EventManager) {
@@ -101,7 +102,7 @@ define([
                     if (response.maintenanceEnabled) {
 
                         MaintenanceDelegate.getUpdateLogs().then(_.bind(function(updateLogData) {
-                            var runningUpdate = _.findWhere(updateLogData.result, {"status": "IN_PROGRESS"});
+                            var runningUpdate = _.find(updateLogData.result, {"status": "IN_PROGRESS"});
 
                             //  In maintenance mode, but no install running
                             if (_.isUndefined(runningUpdate)) {
@@ -113,12 +114,12 @@ define([
 
                                 // An install is running, redirect to settings and disable everything
                             } else {
-                                if (!_.contains(URIUtils.getCurrentFragment(), "settings/update")) {
+                                if (!_.includes(URIUtils.getCurrentFragment(), "settings/update")) {
                                     Navigation.configuration = {};
                                     Router.configuration.routes["default"] = AdminRoutesConfig.settingsView;
                                 }
 
-                                if (!_.contains(URIUtils.getCurrentFragment(), "settings")) {
+                                if (!_.includes(URIUtils.getCurrentFragment(), "settings")) {
                                     EventManager.sendEvent(Constants.EVENT_CHANGE_VIEW, {route: Router.configuration.routes.settingsView});
                                 }
                             }
@@ -133,7 +134,7 @@ define([
             description: "Update Navigation Bar",
             dependencies: [
                 "jquery",
-                "underscore",
+                "lodash",
                 "org/forgerock/commons/ui/common/components/Navigation",
                 "org/forgerock/openidm/ui/common/delegates/ConfigDelegate",
                 "org/forgerock/commons/ui/common/main/Configuration"
@@ -192,7 +193,7 @@ define([
                     // Updates the Dashboards dropdown values
                     Navigation.configuration.links.admin.urls.dashboard.urls = [];
 
-                    _.each(dashboardConfig.adminDashboards, function(dashboard, index) {
+                    _.each(dashboardConfig.adminDashboards, _.bind(function(dashboard, index) {
                         name = dashboard.name;
 
                         if (index === _.findIndex(dashboardConfig.adminDashboards, {"isDefault": true})) {
@@ -204,7 +205,7 @@ define([
                             "name": name
                         });
 
-                    }, this);
+                    }, this));
 
                     Navigation.configuration.links.admin.urls.dashboard.urls.push({
                         divider: true

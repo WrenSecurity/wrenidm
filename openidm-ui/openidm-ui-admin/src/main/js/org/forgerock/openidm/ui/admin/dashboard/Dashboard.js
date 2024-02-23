@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "bootstrap-dialog",
     "handlebars",
     "org/forgerock/openidm/ui/admin/util/AdminAbstractView",
@@ -99,7 +100,7 @@ define([
                     if (!_.isUndefined(this.data.dashboard.widgets) && this.data.dashboard.widgets.length > 0) {
                         holderList = this.$el.find(".widget-holder");
 
-                        _.each(this.data.dashboard.widgets, function (widget, index) {
+                        _.each(this.data.dashboard.widgets, _.bind(function (widget, index) {
                             this.model.loadedWidgets.push(DashboardWidgetLoader.generateWidget(
                                 {
                                     "element" : holderList[index],
@@ -116,7 +117,7 @@ define([
                                 }, this))
                             );
 
-                        }, this);
+                        }, this));
                     }
 
                     //Calls widget specific resize function if needed
@@ -124,11 +125,11 @@ define([
                         if (!$.contains(document, this.$el.find("#dashboardWidgets")[0])) {
                             $(window).unbind("resize");
                         } else {
-                            _.each(this.model.loadedWidgets, function(dashboardHolder){
+                            _.each(this.model.loadedWidgets, _.bind(function(dashboardHolder){
                                 if (dashboardHolder.model.widget.resize){
                                     dashboardHolder.model.widget.resize();
                                 }
-                            }, this);
+                            }, this));
                         }
                         this.initDragDrop();
 
@@ -225,7 +226,7 @@ define([
                 title: $.t("dashboard.renameTitle"),
                 type: BootstrapDialog.TYPE_DEFAULT,
                 size: BootstrapDialog.SIZE_NORMAL,
-                message: $(Handlebars.compile("{{> dashboard/_RenameDashboard}}")({"existingDashboards": _.pluck(this.model.allDashboards, "name")})),
+                message: $(Handlebars.compile("{{> dashboard/_RenameDashboard}}")({"existingDashboards": _.map(this.model.allDashboards, "name")})),
                 onshown: _.bind(function (dialogRef) {
                     this.setElement("#RenameDashboardDialog");
                     ValidatorsManager.bindValidators(dialogRef.$modal.find("#RenameDashboardDialog form"));
@@ -281,7 +282,7 @@ define([
                 size: BootstrapDialog.SIZE_NORMAL,
                 message: $(Handlebars.compile("{{> dashboard/_DuplicateDashboard}}")({
                     "defaultName": $.t("dashboard.duplicateOf") + this.data.dashboard.name,
-                    "existingDashboards": _.pluck(this.model.allDashboards, "name")
+                    "existingDashboards": _.map(this.model.allDashboards, "name")
                 })),
                 onshown: _.bind(function (dialogRef) {
                     this.setElement("#DuplicateDashboardDialog");
@@ -302,7 +303,7 @@ define([
                         cssClass: "btn-primary",
                         id: "SaveNewName",
                         action: _.bind(function (dialogRef) {
-                            var newDashboard = _.clone(this.data.dashboard, true);
+                            var newDashboard = _.cloneDeep(this.data.dashboard);
 
                             newDashboard.name = dialogRef.$modal.find("#DashboardName").val();
                             newDashboard.isDefault = false;
@@ -332,9 +333,9 @@ define([
          * @returns {*} - Returns an updated copy of the dashboard object as the new default dashboard
          */
         defaultDashboard: function(allDashboards, currentDashboard) {
-            _.each(allDashboards, function(dashboard) {
+            _.each(allDashboards, _.bind(function(dashboard) {
                 dashboard.isDefault = false;
-            }, this);
+            }, this));
 
             currentDashboard.isDefault = true;
 

@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "org/forgerock/openidm/ui/admin/util/FilterEditor",
     "org/forgerock/openidm/ui/admin/delegates/ScriptDelegate"
 ], function ($, _, FilterEditor, ScriptDelegate) {
@@ -32,7 +33,7 @@ define([
                 if (_.has(queryFilterTree, "subfilters")) {
                     return {
                         "op" : queryFilterTree.operator,
-                        "children" : _.map(queryFilterTree.subfilters, this.transform, this)
+                        "children" : _.map(queryFilterTree.subfilters, _.bind(this.transform, this))
                     };
                 } else if (_.has(queryFilterTree, "subfilter")) {
                     return {
@@ -63,7 +64,7 @@ define([
                         case "none":
                             return "";
                         default:
-                            var sc = _.map(node.children, this.serialize, this),
+                            var sc = _.map(node.children, _.bind(this.serialize, this)),
                                 string = "(" + sc.join(" " + node.op + " ") + ")";
                             return string;
                     }

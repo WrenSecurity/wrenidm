@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "backbone",
     "org/forgerock/openidm/ui/admin/util/AdminAbstractView",
     "org/forgerock/commons/ui/common/main/EventManager",
@@ -84,10 +85,10 @@ define([
 
             this.model.managedObjectCollection = new ManagedObjects();
 
-            _.each(this.data.currentManagedObjects, function(managedObject) {
+            _.each(this.data.currentManagedObjects, _.bind(function(managedObject) {
                 managedObject.type = $.t("templates.managed.managedObjectType");
                 this.model.managedObjectCollection.add(managedObject);
-            }, this);
+            }, this));
 
             RenderRow = Backgrid.Row.extend({
                 render: function () {
@@ -201,9 +202,9 @@ define([
             }
 
             UIUtils.confirmDialog($.t("templates.managed.managedDelete"), "danger", _.bind(function(){
-                tempManaged = _.reject(tempManaged, function(managedObject){
+                tempManaged = _.reject(tempManaged, _.bind(function(managedObject){
                     return managedObject.name === selectedItem.attr("data-managed-title");
-                }, this);
+                }, this));
 
                 promises.push(ConfigDelegate.updateEntity("managed", {"objects" : tempManaged}));
                 promises.push(RepoDelegate.deleteManagedObject(this.data.repoConfig, selectedItem.attr("data-managed-title")));
@@ -229,21 +230,21 @@ define([
             var search = $(event.target).val().toLowerCase();
 
             if (search.length > 0) {
-                _.each(this.$el.find(".card-spacer"), function(card) {
+                _.each(this.$el.find(".card-spacer"), _.bind(function(card) {
                     if ($(card).attr("data-managed-title").toLowerCase().indexOf(search) > -1) {
                         $(card).fadeIn();
                     } else {
                         $(card).fadeOut();
                     }
-                }, this);
+                }, this));
 
-                _.each(this.$el.find(".backgrid tbody tr"), function(row) {
+                _.each(this.$el.find(".backgrid tbody tr"), _.bind(function(row) {
                     if ($(row).attr("data-managed-title").toLowerCase().indexOf(search) > -1) {
                         $(row).fadeIn();
                     } else {
                         $(row).fadeOut();
                     }
-                }, this);
+                }, this));
             } else {
                 this.$el.find(".card-spacer").fadeIn();
                 this.$el.find(".backgrid tbody tr").fadeIn();

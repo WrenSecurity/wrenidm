@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
@@ -34,11 +35,11 @@ define([
         ]),
 
         render: function (args) {
-            this.data = _.clone(args, true);
+            this.data = _.cloneDeep(args);
             // Client Cert Modules have access to an additional resource: "security/truststore"
             this.data.resources.push("security/truststore");
             this.data.userOrGroupValue = "userRoles";
-            this.data.userOrGroupOptions = _.clone(AuthenticationAbstractView.prototype.userOrGroupOptions, true);
+            this.data.userOrGroupOptions = _.cloneDeep(AuthenticationAbstractView.prototype.userOrGroupOptions);
             this.data.customProperties = this.getCustomPropertiesList(this.knownProperties, this.data.config.properties || {});
             this.data.userOrGroupDefault = this.getUserOrGroupDefault(this.data.config || {});
 

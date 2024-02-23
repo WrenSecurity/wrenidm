@@ -1,24 +1,25 @@
 define([
-    "org/forgerock/openidm/ui/admin/mapping/association/IndividualRecordValidationView"
-], function (IndividualRecordValidationView) {
+    "org/forgerock/openidm/ui/admin/mapping/association/IndividualRecordValidationView",
+    "jquery"
+], function (IndividualRecordValidationView, $) {
     QUnit.module('IndividualRecordValidationView Tests');
 
     QUnit.test("Generate correct rendering information for validSource", function (assert) {
         var preferenceTest = {
-            "type" : "text/javascript",
-            "globals" : {
-                "preferences" : [
-                    "marketing"
-                ]
+                "type" : "text/javascript",
+                "globals" : {
+                    "preferences" : [
+                        "marketing"
+                    ]
+                },
+                "file" : "ui/preferenceCheck.js"
             },
-            "file" : "ui/preferenceCheck.js"
-        },
-        scriptTest  =  {
-            "type" : "text/javascript",
-            "globals" : {},
-            "file" : "ui/test.js"
-        },
-        results;
+            scriptTest  =  {
+                "type" : "text/javascript",
+                "globals" : {},
+                "file" : "ui/test.js"
+            },
+            results;
 
         results = IndividualRecordValidationView.getDisplayDetails(undefined);
 
@@ -92,7 +93,7 @@ define([
 
         assert.equal(checkbox.is(":checked"), true, "Correctly checked preference check box");
 
-        checkbox = $("<input class='preference-check' type='checkbox' value='update'>")
+        checkbox = $("<input class='preference-check' type='checkbox' value='update'>");
 
         IndividualRecordValidationView.setPreferences(preferences, checkbox);
 
@@ -102,16 +103,16 @@ define([
 
     QUnit.test("Set edited script to correct mapping validation event", function (assert) {
         var testScript = {
-            "type" : "text/javascript",
-            "globals" : {},
-            "source" : "test"
-        },
-        testScript2 = {
-            "type" : "text/javascript",
-            "globals" : {},
-            "file" : "fake"
-        },
-        mapping = {};
+                "type" : "text/javascript",
+                "globals" : {},
+                "source" : "test"
+            },
+            testScript2 = {
+                "type" : "text/javascript",
+                "globals" : {},
+                "file" : "fake"
+            },
+            mapping = {};
 
         mapping = IndividualRecordValidationView.setScript(testScript, "target", mapping);
 

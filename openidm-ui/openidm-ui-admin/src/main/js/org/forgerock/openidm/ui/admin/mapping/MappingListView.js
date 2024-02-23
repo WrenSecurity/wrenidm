@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions Copyright 2023 Wren Security.
  */
 
 define([
     "jquery",
-    "underscore",
+    "lodash",
     "handlebars",
     "backbone",
     "org/forgerock/openidm/ui/admin/util/AdminAbstractView",
@@ -105,12 +106,12 @@ define([
                     })
                     .value();
 
-                _.each(this.data.mappingConfig, function (sync) {
+                _.each(this.data.mappingConfig, _.bind(function (sync) {
                     sync.targetType = this.syncType(sync.target);
                     sync.sourceType = this.syncType(sync.source);
 
                     mappingDetails.push(connectorUtils.getMappingDetails(sync.sourceType, sync.targetType));
-                }, this);
+                }, this));
 
                 $.when.apply($, mappingDetails).then(_.bind(function() {
                     var results = arguments,
@@ -121,7 +122,7 @@ define([
 
                     this.model.mappingCollection = new Mappings();
 
-                    _.each(results, function (mappingInfo, index) {
+                    _.each(results, _.bind(function (mappingInfo, index) {
                         this.data.mappingConfig[index].targetIcon = mappingInfo.targetIcon.iconClass;
                         this.data.mappingConfig[index].sourceIcon = mappingInfo.sourceIcon.iconClass;
 
@@ -140,7 +141,7 @@ define([
                         this.data.mappingConfig[index].targetConnector = this.setCardState(this.data.mappingConfig[index].targetConnector, this.data.mappingConfig[index].targetType, this.data.mappingConfig[index].target, this.model.managedDetails);
 
                         this.model.mappingCollection.add(this.data.mappingConfig[index]);
-                    }, this);
+                    }, this));
 
                     RenderRow = Backgrid.Row.extend({
                         render: function () {
@@ -392,7 +393,7 @@ define([
             }, this));
         },
         showSyncStatus: function(isOnPageLoad){
-            _.each(this.data.mappingConfig, function (mapping){
+            _.each(this.data.mappingConfig, _.bind(function (mapping){
                 var el = this.$el.find("." + mapping.name + "_syncStatus"),
                     icon = this.$el.find("." + mapping.name + "_syncStatus_icon"),
                     recon = mapping.recon,
@@ -467,28 +468,28 @@ define([
                 }
 
                 el.html(text);
-            }, this);
+            }, this));
         },
 
         filterMappings: function(event) {
             var search = $(event.target).val().toLowerCase();
 
             if (search.length > 0) {
-                _.each(this.$el.find(".mapping-config-body"), function(card) {
+                _.each(this.$el.find(".mapping-config-body"), _.bind(function(card) {
                     if ($(card).attr("mapping").toLowerCase().indexOf(search) > -1) {
                         $(card).fadeIn();
                     } else {
                         $(card).fadeOut();
                     }
-                }, this);
+                }, this));
 
-                _.each(this.$el.find(".backgrid tbody tr"), function(row) {
+                _.each(this.$el.find(".backgrid tbody tr"), _.bind(function(row) {
                     if ($(row).attr("data-mapping-title").toLowerCase().indexOf(search) > -1) {
                         $(row).fadeIn();
                     } else {
                         $(row).fadeOut();
                     }
-                }, this);
+                }, this));
             } else {
                 this.$el.find(".mapping-config-body").fadeIn();
                 this.$el.find(".backgrid tbody tr").fadeIn();
@@ -503,7 +504,7 @@ define([
          * @param recon {object} - recon object
          */
         updateMappingRecon: function (mappingName, recon) {
-            var mapping = _.findWhere(this.data.mappingConfig, { name : mappingName });
+            var mapping = _.find(this.data.mappingConfig, { name : mappingName });
             mapping.recon = recon;
             this.showSyncStatus();
         },
@@ -583,7 +584,7 @@ define([
          */
         stopSync: function(e){
             var mappingName = $(e.target).closest(".stop-sync").attr("mappingName"),
-                mapping = _.findWhere(this.data.mappingConfig, { name : mappingName });
+                mapping = _.find(this.data.mappingConfig, { name : mappingName });
 
             e.preventDefault();
 
