@@ -7,15 +7,15 @@ define([
     "org/forgerock/openidm/ui/admin/scheduler/AbstractSchedulerView"
 
 ], function (
-    $, _, sinon, Handlebars, SchedulerDelegate, AbstractSchedulerView
+        $, _, sinon, Handlebars, SchedulerDelegate, AbstractSchedulerView
 ) {
     QUnit.module('SchedulerDetailView Tests');
 
     QUnit.test("#updateInvokeContextVisibleElement calls the correct callback for each `invokeService` type", function(assert) {
-        let abstractSchedulerView = new AbstractSchedulerView(),
-            mappingOptionsSpy,
-            liveSyncOptionsSpy,
-            iseSpy;
+        let abstractSchedulerView = new AbstractSchedulerView();
+        let mappingOptionsSpy;
+        let liveSyncOptionsSpy;
+        let iseSpy;
         // overwrite methods so I don't actually make delegate calls that will most likely fail in the testing environment
         abstractSchedulerView.showMappingOptions = _.noop;
         abstractSchedulerView.showLiveSyncOptions = _.noop;
@@ -41,7 +41,9 @@ define([
     });
 
     QUnit.test("#resourceOptions properly forms the options from the delegate response", function(assert) {
-        let abstractDelegateView, connectors, resourceOptionsObj;
+        let abstractDelegateView;
+        let connectors;
+        let resourceOptionsObj;
         abstractDelegateView = new AbstractSchedulerView;
         connectors = [
             {
@@ -72,7 +74,9 @@ define([
     });
 
     QUnit.test("#mappingOptions properly forms the options from the delegate response", function(assert) {
-        let abstractDelegateView, syncConfig, mappingOptionsObj;
+        let abstractDelegateView;
+        let syncConfig;
+        let mappingOptionsObj;
         abstractDelegateView = new AbstractSchedulerView;
         syncConfig = {
             "_id": "sync",
@@ -135,35 +139,35 @@ define([
 
     QUnit.test("#formChangeHandler calls #updateSchedule with correct args", function(assert) {
         // expect(0);
-        let invokeContextInputSpyArgs,
-            abstractSchedulerView = new AbstractSchedulerView(),
-            // bind formChangeHandler to instance so I can use it
-            formChangeHandler = _.bind(abstractSchedulerView.formChangeHandler, abstractSchedulerView),
-            dateTimeChangeHandler = _.bind(abstractSchedulerView.dateTimeChangeHandler, abstractSchedulerView),
-            updateScheduleSpy = sinon.stub(abstractSchedulerView, "updateSchedule").callsFake(_.noop),
-            setInvokeContextObjectSpy = sinon.spy(abstractSchedulerView, "setInvokeContextObject"),
-            // create fake elements to trigger events on
-            genericInput = $("<input>", {
-                "class": "schedule-form-element",
-                name: "generic",
-                value: "generic test value"
-            }),
-            checkboxInput = $("<input>", {
-                "class": "schedule-form-element",
-                type: "checkbox",
-                name: "checkbox",
-                value: "true",
-                checked: false
-            }),
-            invokeContextInput = $("<input>", {
-                "class": "schedule-form-element",
-                name: "mapping",
-                value: "mapping test value"}),
-            timeInput = $("<input>", {
-                "class": "date-time-picker",
-                name: "timeInput",
-                value: "10/02/2016 12:00 AM"
-            });
+        let invokeContextInputSpyArgs;
+        let abstractSchedulerView = new AbstractSchedulerView();
+        // bind formChangeHandler to instance so I can use it
+        let formChangeHandler = _.bind(abstractSchedulerView.formChangeHandler, abstractSchedulerView);
+        let dateTimeChangeHandler = _.bind(abstractSchedulerView.dateTimeChangeHandler, abstractSchedulerView);
+        let updateScheduleSpy = sinon.stub(abstractSchedulerView, "updateSchedule").callsFake(_.noop);
+        let setInvokeContextObjectSpy = sinon.spy(abstractSchedulerView, "setInvokeContextObject");
+        // create fake elements to trigger events on
+        let genericInput = $("<input>", {
+            "class": "schedule-form-element",
+            name: "generic",
+            value: "generic test value"
+        });
+        let checkboxInput = $("<input>", {
+            "class": "schedule-form-element",
+            type: "checkbox",
+            name: "checkbox",
+            value: "true",
+            checked: false
+        });
+        let invokeContextInput = $("<input>", {
+            "class": "schedule-form-element",
+            name: "mapping",
+            value: "mapping test value"});
+        let timeInput = $("<input>", {
+            "class": "date-time-picker",
+            name: "timeInput",
+            value: "10/02/2016 12:00 AM"
+        });
 
         // set up event handlers
         genericInput.on("change", formChangeHandler);
@@ -209,9 +213,9 @@ define([
     });
 
     QUnit.test("#setInvokeContextObject calls #updateSchedule with correct args", function(assert) {
-        let spyArgs,
-            abstractSchedulerView = new AbstractSchedulerView(),
-            updateScheduleSpy = sinon.stub(abstractSchedulerView, "updateSchedule").callsFake(_.noop);
+        let spyArgs;
+        let abstractSchedulerView = new AbstractSchedulerView();
+        let updateScheduleSpy = sinon.stub(abstractSchedulerView, "updateSchedule").callsFake(_.noop);
 
         // send in prop/value for "source", "script", "mapping"
         abstractSchedulerView.setInvokeContextObject("source", "test source");

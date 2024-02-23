@@ -1,7 +1,8 @@
 define([
-    "org/forgerock/openidm/ui/admin/mapping/association/dataAssociationManagement/ChangeAssociationDialog"
+    "org/forgerock/openidm/ui/admin/mapping/association/dataAssociationManagement/ChangeAssociationDialog",
+    "jquery"
 ],
-function (ChangeAssociationDialog, _) {
+function (ChangeAssociationDialog, $) {
     QUnit.module('ChangeAssociationDialog');
 
     QUnit.test("formatResult", function (assert) {

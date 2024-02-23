@@ -21,7 +21,7 @@ const gulp = require("gulp");
 
 const TARGET_PATH = "target/www";
 
-gulp.task("eslint", useEslint({ src: "src/main/js/**/*.js" }));
+gulp.task("eslint", useEslint({ src: "src/{main/js,test/qunit}/**/*.js" }));
 
 gulp.task("build:assets", useLocalResources({ "src/main/resources/**": "" }, { dest: TARGET_PATH }));
 

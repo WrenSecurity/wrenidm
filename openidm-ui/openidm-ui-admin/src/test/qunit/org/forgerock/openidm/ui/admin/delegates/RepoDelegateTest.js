@@ -61,9 +61,9 @@ define([
 
     QUnit.test("syncSearchablePropertiesForGenericResource", function (assert) {
         var updatedConfig = RepoDelegate.syncSearchablePropertiesForGenericResource(
-                RepoDelegate.findGenericResourceMappingForRoute(_.cloneDeep(jdbcRepoConfig), "managed/user"),
-                ["userName","mail"]
-            );
+            RepoDelegate.findGenericResourceMappingForRoute(_.cloneDeep(jdbcRepoConfig), "managed/user"),
+            ["userName","mail"]
+        );
 
         assert.equal(updatedConfig.properties["/userName"].searchable,true, "userName still searchable");
         assert.equal(updatedConfig.properties["/mail"].searchable,true, "mail now searchable");

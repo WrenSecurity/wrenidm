@@ -53,7 +53,7 @@ const TEST_RESOURCES = {
     "../openidm-ui-common/src/test/qunit/testRunner.js": ""
 };
 
-gulp.task("eslint", useEslint({ src: "src/main/js/**/*.js" }));
+gulp.task("eslint", useEslint({ src: "src/{main/js,test/qunit}/**/*.js" }));
 
 gulp.task("build:assets", useLocalResources({ "src/main/resources/**": "" }, { dest: TARGET_PATH }));
 

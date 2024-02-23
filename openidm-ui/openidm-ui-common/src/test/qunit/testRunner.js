@@ -51,7 +51,7 @@
             require(["../test/main"], function () {
                 QUnit.start();
             });
-        })
+        });
     });
 
 }());
