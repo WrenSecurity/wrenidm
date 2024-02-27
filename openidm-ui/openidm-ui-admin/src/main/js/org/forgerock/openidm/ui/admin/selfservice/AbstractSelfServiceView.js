@@ -85,7 +85,6 @@ define([
                 lineNumbers: true,
                 autofocus: false,
                 viewportMargin: Infinity,
-                theme: "forgerock",
                 mode: "xml",
                 htmlMode: true,
                 lineWrapping: true

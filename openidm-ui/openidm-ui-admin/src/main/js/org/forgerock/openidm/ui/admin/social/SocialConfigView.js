@@ -368,7 +368,6 @@ define([
                         this.model.iconCode = codemirror.fromTextArea(dialogRef.$modalBody.find(".button-html")[0], {
                             lineNumbers: true,
                             viewportMargin: Infinity,
-                            theme: "forgerock",
                             mode: "xml",
                             htmlMode: true,
                             lineWrapping: true

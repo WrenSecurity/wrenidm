@@ -202,7 +202,7 @@ define([
 
             $(clickedEle).parents(".form-group").remove();
 
-            if ($('#' + field_type + 'Wrapper').find('.field').size() === 1){
+            if ($('#' + field_type + 'Wrapper').find('.field').length === 1){
                 $('#' + field_type + 'Wrapper').find('.input-group-addon').hide();
             }
 

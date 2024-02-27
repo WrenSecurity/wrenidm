@@ -451,7 +451,7 @@ define([
 
                 isValid = _this.validateMapping();
 
-                if (isValid && initialRender !== "true" && $('#propertyMappingDialogForm').size() === 0){
+                if (isValid && initialRender !== "true" && $('#propertyMappingDialogForm').length === 0){
                     _this.formSubmit();
                 }
             });

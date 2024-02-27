@@ -84,7 +84,6 @@ define([
                 this.model.iconCode = codemirror.fromTextArea(this.$el.find(".button-html")[0], {
                     lineNumbers: true,
                     viewportMargin: Infinity,
-                    theme: "forgerock",
                     mode: "xml",
                     htmlMode: true,
                     lineWrapping: true

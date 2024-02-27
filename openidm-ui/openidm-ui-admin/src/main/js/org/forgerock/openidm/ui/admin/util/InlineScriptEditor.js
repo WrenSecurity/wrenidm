@@ -132,7 +132,6 @@ define([
                         lineNumbers: true,
                         autofocus: this.model.autoFocus,
                         viewportMargin: Infinity,
-                        theme: "forgerock",
                         mode: mode
                     });
 
