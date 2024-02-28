@@ -35,6 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.sql.DataSource;
 import org.flowable.common.engine.impl.scripting.ResolverFactory;
 import org.flowable.common.engine.impl.scripting.ScriptBindingsFactory;
+import org.flowable.compatibility.DefaultFlowable5CompatibilityHandler;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.delegate.JavaDelegate;
@@ -294,6 +295,10 @@ public class FlowableServiceImpl implements RequestHandler {
                     // Disable useless services
                     configuration.setDisableEventRegistry(true);
                     configuration.setDisableIdmEngine(true);
+
+                    // Enable v5 compatibility mode
+                    configuration.setFlowable5CompatibilityEnabled(true);
+                    configuration.setFlowable5CompatibilityHandler(new DefaultFlowable5CompatibilityHandler());
 
                     // Retrieve process engine instance
                     processEngineFactory = new ProcessEngineFactory();

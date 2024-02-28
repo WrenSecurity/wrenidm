@@ -18,6 +18,7 @@ package org.wrensecurity.wrenidm.workflow.flowable.impl.resource;
 
 import static org.forgerock.json.JsonValue.array;
 import static org.forgerock.json.JsonValue.json;
+import static org.forgerock.json.resource.Responses.newActionResponse;
 import static org.forgerock.json.resource.Responses.newQueryResponse;
 import static org.forgerock.json.resource.Responses.newResourceResponse;
 import static org.forgerock.openidm.util.ResourceUtil.notSupportedOnCollection;
@@ -45,6 +46,7 @@ import org.flowable.engine.impl.RepositoryServiceImpl;
 import org.flowable.engine.impl.persistence.entity.HistoricProcessInstanceEntity;
 import org.flowable.engine.impl.persistence.entity.HistoricProcessInstanceEntityImpl;
 import org.flowable.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.history.HistoricTaskInstance;
 import org.flowable.task.api.history.HistoricTaskInstanceQuery;
@@ -117,7 +119,30 @@ public class ProcessInstanceResource implements CollectionResourceProvider {
 
     @Override
     public Promise<ActionResponse, ResourceException> actionInstance(Context context, String resourceId, ActionRequest request) {
-        return notSupportedOnInstance(request).asPromise();
+        if ("migrate".equals(request.getAction())) {
+            ProcessInstance instance = processEngine.getRuntimeService().createProcessInstanceQuery()
+                    .processInstanceId(resourceId).singleResult();
+            if (instance == null) {
+                return new BadRequestException("Invalid process instance '" + resourceId + "' to migrate.").asPromise();
+            }
+            ProcessDefinition definition = processEngine.getRepositoryService().createProcessDefinitionQuery()
+                    .processDefinitionKey(instance.getProcessDefinitionKey()).latestVersion().singleResult();
+            if (definition == null) {
+                return new BadRequestException("Missing process definition for '" + instance.getProcessDefinitionKey() + "'.").asPromise();
+            }
+            if (instance.getProcessDefinitionId().equals(definition.getId())) {
+                return new BadRequestException("Process instance '" + resourceId + "' is already using the latest process definition.").asPromise();
+            }
+            try {
+                processEngine.getProcessMigrationService().createProcessInstanceMigrationBuilder()
+                        .migrateToProcessDefinition(definition.getId())
+                        .migrate(resourceId);
+            } catch (Exception e) {
+                return new InternalServerErrorException("Failed to migrate process instance '" + resourceId + "'.").asPromise();
+            }
+            return newActionResponse(new JsonValue(Map.of("Successfully migrated process instance", resourceId))).asPromise();
+        }
+        return new BadRequestException("Unknown action '" + request.getAction() + "'.").asPromise();
     }
 
     @Override
