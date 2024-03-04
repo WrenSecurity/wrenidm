@@ -25,6 +25,7 @@
     </parent>
 
     <artifactId>wrenidm-workflow-flowable</artifactId>
+    <packaging>bundle</packaging>
 
     <name>Wren:IDM - Flowable BPMN 2.0 Integration</name>
     <description>
@@ -95,6 +96,13 @@
         </dependency>
 
         <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable5-compatibility</artifactId>
+            <version>${flowable.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.aries.blueprint</groupId>
             <artifactId>org.apache.aries.blueprint.core</artifactId>
             <version>1.10.3</version>
@@ -158,74 +166,21 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
                 <configuration>
                     <instructions>
+                        <Import-Package>!org.flowable.camel.impl,!org.flowable.mule,*</Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
+                        <Embed-Dependency>
+                            <!-- Embed flowable dependencies with missing OSGI metadata -->
+                            artifactId=flowable5-*,
+                            artifactId=flowable-engine-common;inline=org/flowable/common/db/mapping/*.xml|org/flowable/common/db/mapping/**/*.xml
+                        </Embed-Dependency>
+                        <Embed-Transitive>true</Embed-Transitive>
                     </instructions>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-
-                <executions>
-                    <execution>
-                        <id>unpack</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.flowable</groupId>
-                                    <artifactId>flowable-engine-common</artifactId>
-                                    <version>${flowable.version}</version>
-
-                                    <!-- Unpack files that are missing in the OSGI metadata (see https://github.com/flowable/flowable-engine/issues/3333) -->
-                                    <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-                                    <includes>org/flowable/common/db/mapping/**/*.xml</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>remotejar</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-assembly-plugin</artifactId>
-
-                        <configuration>
-                            <descriptors>
-                                <descriptor>src/assemble/assemblyCfg.xml</descriptor>
-                            </descriptors>
-                        </configuration>
-
-                        <executions>
-                            <execution>
-                                <id>make-jar-with-dependencies</id>
-                                <phase>package</phase>
-
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

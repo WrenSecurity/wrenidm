@@ -235,12 +235,6 @@
             <outputDirectory>/wrenidm/bin</outputDirectory>
         </dependencySet>
         <dependencySet>
-            <outputDirectory>/wrenidm/bin/workflow</outputDirectory>
-            <includes>
-                <include>org.wrensecurity.wrenidm:wrenidm-workflow-flowable:**:jar-with-dependencies</include>
-            </includes>
-        </dependencySet>
-        <dependencySet>
             <unpack>false</unpack>
             <includes>
                 <include>org.forgerock.openidm.tools:custom-scripted-connector-bundler:*</include>
