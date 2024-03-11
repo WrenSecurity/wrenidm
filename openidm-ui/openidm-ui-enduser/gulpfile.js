@@ -30,12 +30,6 @@ const TARGET_PATH = "target/www";
 const TESTS_PATH = "target/test";
 
 const MODULE_RESOURCES = {
-    "backgrid/lib/backgrid.min.css": "css/backgrid.css",
-    "backgrid/lib/backgrid.min.js": "libs/backgrid.js",
-    "backgrid-filter/backgrid-filter.css": "css/backgrid-filter.css",
-    "backgrid-filter/backgrid-filter.min.js": "libs/backgrid-filter.js",
-    "backgrid-paginator/backgrid-paginator.min.css": "css/backgrid-paginator.css",
-    "backgrid-paginator/backgrid-paginator.min.js": "libs/backgrid-paginator.js",
     "d3/d3.min.js": "libs/d3.js",
     "qunit/qunit/qunit.css": "css/qunit.css",
     "qunit/qunit/qunit.js": "libs/qunit.js"
