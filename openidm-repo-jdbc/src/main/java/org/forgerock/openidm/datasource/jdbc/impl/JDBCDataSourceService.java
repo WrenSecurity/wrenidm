@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2024 Wren Security
  */
 package org.forgerock.openidm.datasource.jdbc.impl;
 
@@ -57,7 +57,7 @@ import com.zaxxer.hikari.HikariConfig;
  * A DataSource Manager for JDBC DataSources.
  *
  * This service exposes a DataSourceService for based on JDBC DataSource configuration.  DataSources through
- * JDNI, OSGi service-registration, non-pooled connections, and BoneCP are supported.
+ * JDNI, OSGi service-registration, non-pooled connections, and HikariCP are supported.
  */
 @Component(
         name = JDBCDataSourceService.PID,
@@ -122,9 +122,7 @@ public class JDBCDataSourceService implements DataSourceService {
                     return mapper.treeToValue(node, OsgiDataSourceConfig.class);
                 } else if ("connectionPool".equals(key)) {
                     final String type = element.getValue().get("type").asText();
-                    if ("bonecp".equals(type)) {
-                        return mapper.treeToValue(node, BoneCPDataSourceConfig.class);
-                    } else if ("hikari".equals(type)) {
+                    if ("hikari".equals(type)) {
                         return mapper.treeToValue(node, HikariCPDataSourceConfig.class);
                     }
                     // implement other types of pooling configs here

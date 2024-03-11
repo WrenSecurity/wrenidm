@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015 ForgeRock AS.
+ * Portions Copyright 2024 Wren Security
  */
 package org.forgerock.openidm.datasource.jdbc.impl;
 
@@ -56,14 +57,6 @@ interface DataSourceConfigVisitor<R, P> {
      */
     R visit(NonPoolingDataSourceConfig config, P parameters);
 
-    /**
-     * Visit a {@link BoneCPDataSourceConfig}.
-     *
-     * @param config the datasource config
-     * @return the result of the visitor
-     */
-    R visit(BoneCPDataSourceConfig config, P parameters);
-    
     /**
      * Visit a {@link HikariCPDataSourceConfig}.
      *

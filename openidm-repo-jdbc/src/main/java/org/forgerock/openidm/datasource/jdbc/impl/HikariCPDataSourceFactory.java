@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2024 Wren Security
  */
 package org.forgerock.openidm.datasource.jdbc.impl;
 
@@ -19,6 +20,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.util.UUID;
 import javax.sql.DataSource;
+import org.forgerock.openidm.core.IdentityServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,14 +28,17 @@ import org.slf4j.LoggerFactory;
  * Creates the Hikari data source containing the Hikari config.
  */
 public class HikariCPDataSourceFactory implements DataSourceFactory {
-    private final static Logger logger = LoggerFactory.getLogger(HikariCPDataSourceFactory.class);
-    
+
+    private static final Logger logger = LoggerFactory.getLogger(HikariCPDataSourceFactory.class);
+
+    private static final String ENABLED_STATISTICS_PROPERTY = "wrenidm.hikaricp.statistics.enabled";
+
     private final HikariCPDataSourceConfig config;
-    
+
     HikariCPDataSourceFactory(HikariCPDataSourceConfig config) {
         this.config = config;
     }
-    
+
     @Override
     public DataSource newInstance() {
         HikariConfig cfg = config.getConnectionPool();
@@ -44,15 +49,17 @@ public class HikariCPDataSourceFactory implements DataSourceFactory {
         cfg.setPassword(config.getPassword());
         cfg.setCatalog(config.getDatabaseName());
         cfg.setConnectionTimeout(config.getConnectionTimeout());
+        cfg.setRegisterMbeans(Boolean.parseBoolean(IdentityServer.getInstance()
+                .getProperty(ENABLED_STATISTICS_PROPERTY, "false")));
 
         if (cfg.getPoolName() == null || cfg.getPoolName().isEmpty()) {
             cfg.setPoolName(UUID.randomUUID().toString());
         }
-        
+
         logger.debug("HikariDataSource: {}", cfg);
         return new HikariDataSource(cfg);
     }
-    
+
     public void shutdown(DataSource dataSource) {
         //close the datasource connection pool
         if (dataSource instanceof HikariDataSource) {

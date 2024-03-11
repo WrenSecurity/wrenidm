@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2024 Wren Security.
  */
 
 package org.forgerock.openidm.datasource.jdbc.impl;
@@ -22,7 +22,6 @@ import static org.forgerock.json.JsonValue.field;
 import static org.forgerock.json.JsonValue.fieldIfNotNull;
 import static org.forgerock.json.JsonValue.object;
 
-import com.jolbox.bonecp.BoneCPDataSource;
 import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -56,24 +55,6 @@ public class JDBCDataSourceServiceTest {
 
         //then
         assertThat(dataSourceService.getDataSource()).isInstanceOf(HikariDataSource.class);
-        assertThat(canExhaustPool(dataSourceService.getDataSource(), 2)).isTrue();
-        assertThat(dataSourceIsValid(dataSourceService.getDataSource())).isTrue();
-    }
-
-    @Test(enabled = false)
-    public void testBoneCPDataSource() {
-        // given
-        JsonValue config = getDataSourceConfig("bonecp");
-        config.add(new JsonPointer("/connectionPool/partitionCount"), 1);
-        config.add(new JsonPointer("/connectionPool/maxConnectionsPerPartition"), 2);
-        config.add(new JsonPointer("/connectionPool/minConnectionsPerPartition"), 1);
-        config.add(new JsonPointer("/connectionPool/acquireIncrement"), 1);
-
-        // when
-        DataSourceService dataSourceService = JDBCDataSourceService.getBootService(config, null);
-
-        // then
-        assertThat(dataSourceService.getDataSource()).isInstanceOf(BoneCPDataSource.class);
         assertThat(canExhaustPool(dataSourceService.getDataSource(), 2)).isTrue();
         assertThat(dataSourceIsValid(dataSourceService.getDataSource())).isTrue();
     }
