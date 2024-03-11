@@ -13,9 +13,6 @@
     "node-qunit-puppeteer": "^2.1.2"
   },
   "dependencies": {
-    "backgrid": "^0.3.5",
-    "backgrid-filter": "^0.3.7",
-    "backgrid-paginator": "^0.3.5",
     "d3": "^3.5.5",
     "qunit": "^2.20.0",
     "requirejs": "^2.3.6",

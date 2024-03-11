@@ -30,13 +30,6 @@ const TARGET_PATH = "target/www";
 const TESTS_PATH = "target/test";
 
 const MODULE_RESOURCES = {
-    "backbone-relational/backbone-relational.js": "libs/backbone-relational.js",
-    "backgrid-filter/backgrid-filter.css": "css/backgrid-filter.css",
-    "backgrid-filter/backgrid-filter.min.js": "libs/backgrid-filter.js",
-    "backgrid-paginator/backgrid-paginator.min.css": "css/backgrid-paginator.css",
-    "backgrid-paginator/backgrid-paginator.min.js": "libs/backgrid-paginator.js",
-    "backgrid/lib/backgrid.min.css": "css/backgrid.css",
-    "backgrid/lib/backgrid.min.js": "libs/backgrid.js",
     "d3/d3.min.js": "libs/d3.js",
     "dragula/dist/dragula.min.css": "css/dragula.css",
     "dragula/dist/dragula.min.js": "libs/dragula.js",
