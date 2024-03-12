@@ -15,34 +15,24 @@
  */
 const {
     useLocalResources,
+    useModuleResources
 } = require("@wrensecurity/commons-ui-build");
 const gulp = require("gulp");
-const { join, dirname } = require("path");
 
 const TARGET_PATH = "target/www";
 
+const MODULE_RESOURCES = {
+    "swagger-ui-dist/swagger-ui-bundle.js": "libs/swagger-ui-bundle.js",
+    "swagger-ui-dist/swagger-ui.css": "css/swagger-ui.css"
+};
+
 gulp.task("build:assets", useLocalResources({ "src/main/resources/**": "" }, { dest: TARGET_PATH }));
 
-gulp.task("build:swagger", () => {
-    const baseDir = dirname(require.resolve("swagger-ui/dist/swagger-ui.js"));
-    return gulp.src([
-        `${baseDir}/swagger-ui.js`,
-        `${baseDir}/swagger-ui.min.js`,
-        `${baseDir}/css/*`,
-        `${baseDir}/fonts/*`,
-        `${baseDir}/images/*`,
-        `${baseDir}/lang/*`,
-        `${baseDir}/lib/*`,
-    ], { base: baseDir }).pipe(gulp.dest(TARGET_PATH));
-});
-
-gulp.task("build:swagger-themes", () => gulp.src(require.resolve("swagger-ui-themes/themes/theme-flattop.css"))
-    .pipe(gulp.dest(join(TARGET_PATH, "css"))));
+gulp.task("build:libs", useModuleResources(MODULE_RESOURCES, { path: __filename, dest: TARGET_PATH }));
 
 gulp.task("build", gulp.parallel(
     "build:assets",
-    "build:swagger",
-    "build:swagger-themes"
+    "build:libs"
 ));
 
 gulp.task("default", gulp.series("build"));
