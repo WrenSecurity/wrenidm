@@ -14,7 +14,7 @@
  * "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2024 Wren Security.
  */
 package org.forgerock.openidm.info.health;
 
@@ -23,12 +23,11 @@ import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
 import static org.forgerock.json.resource.Responses.newResourceResponse;
 
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.Set;
-
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import org.forgerock.api.annotations.ApiError;
 import org.forgerock.api.annotations.Handler;
 import org.forgerock.api.annotations.Operation;
@@ -42,78 +41,57 @@ import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.ServiceUnavailableException;
 import org.forgerock.openidm.core.IdentityServer;
-import org.forgerock.openidm.info.health.api.BoneCPDatabaseInfoResource;
+import org.forgerock.openidm.info.health.api.HikariCPDatabaseInfoResource;
 import org.forgerock.services.context.Context;
 import org.forgerock.util.promise.Promise;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Gets BoneCP usage statistics from {@code StatisticsMBean}.
+ * Component providing HikariCP MBean (JMX) monitoring metrics.
  */
 @SingletonProvider(@Handler(
-        id = "databaseInfoResourceProvider:0",
-        title = "Health - Database connection pool statistics",
-        description = "Provides database connection pool statistics if enabled. Presently only supports statistics " +
-                "gathering if using BoneCP.",
-        mvccSupported = false,
-        resourceSchema = @Schema(fromType = BoneCPDatabaseInfoResource.class)))
+    id = "databaseInfoResourceProvider:0",
+    title = "Health - Database connection pool statistics",
+    description = "Provides DB connection pool statistics if enabled.",
+    mvccSupported = false,
+    resourceSchema = @Schema(fromType = HikariCPDatabaseInfoResource.class)))
 public class DatabaseInfoResourceProvider extends AbstractInfoResourceProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(DatabaseInfoResourceProvider.class);
 
-    @Read(operationDescription =
-    @Operation(
-            description = "Read BoneCP DB connection pool statistics.",
+    @Read(operationDescription = @Operation(
+            description = "Read HikariCP DB connection pool statistics.",
             errors = {
-                    @ApiError(
-                            code=ResourceException.UNAVAILABLE,
-                            description = "If BoneCP is not configured as the data source connection pool."
-                    )
+                @ApiError(
+                    code = ResourceException.UNAVAILABLE,
+                    description = "If HikariCP is not configured as the data source connection pool."
+                )
             }))
     @Override
     public Promise<ResourceResponse, ResourceException> readInstance(Context context, ReadRequest request) {
-
-        Boolean enabled = Boolean.parseBoolean(
-                IdentityServer.getInstance().getProperty("openidm.bonecp.statistics.enabled", "false"));
+        Boolean enabled = Boolean.parseBoolean(IdentityServer.getInstance().getProperty("wrenidm.hikaricp.statistics.enabled", "false"));
         if (!enabled) {
-            return new ServiceUnavailableException("BoneCP statistics mbean not enabled").asPromise();
+            return new ServiceUnavailableException("HikariCP statistics not enabled").asPromise();
         }
         try {
-            final ObjectName objectName = new ObjectName("com.jolbox.bonecp:type=BoneCP-*");
-            final MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-
-            Set<ObjectName> names = mBeanServer.queryNames(objectName, null);
-            JsonValue results = new JsonValue(new HashMap<String, Object>());
-
+            ObjectName poolName = new ObjectName("com.zaxxer.hikari:type=Pool (*)");
+            MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+            Set<ObjectName> names = mBeanServer.queryNames(poolName, null);
+            JsonValue results = new JsonValue(new HashMap<>());
             for (ObjectName name : names) {
-                final JsonValue singleResult = json(object(
-                        field("connectionWaitTimeAvg", mBeanServer.getAttribute(name, "ConnectionWaitTimeAvg")),
-                        field("statementExecuteTimeAvg", mBeanServer.getAttribute(name, "StatementExecuteTimeAvg")),
-                        field("statementPrepareTimeAvg", mBeanServer.getAttribute(name, "StatementPrepareTimeAvg")),
-                        field("totalLeasedConnections", mBeanServer.getAttribute(name, "TotalLeased")),
-                        field("totalFreeConnections", mBeanServer.getAttribute(name, "TotalFree")),
-                        field("totalCreatedConnections", mBeanServer.getAttribute(name, "TotalCreatedConnections")),
-                        field("cacheHits", mBeanServer.getAttribute(name, "CacheHits")),
-                        field("cacheMiss", mBeanServer.getAttribute(name, "CacheMiss")),
-                        field("statementsCached", mBeanServer.getAttribute(name, "StatementsCached")),
-                        field("statementsPrepared", mBeanServer.getAttribute(name, "StatementsPrepared")),
-                        field("connectionsRequested", mBeanServer.getAttribute(name, "ConnectionsRequested")),
-                        field("cumulativeConnectionWaitTime",
-                                mBeanServer.getAttribute(name, "CumulativeConnectionWaitTime")),
-                        field("cumulativeStatementExecutionTime",
-                                mBeanServer.getAttribute(name, "CumulativeStatementExecutionTime")),
-                        field("cumulativeStatementPrepareTime",
-                                mBeanServer.getAttribute(name, "CumulativeStatementPrepareTime")),
-                        field("cacheHitRatio", mBeanServer.getAttribute(name, "CacheHitRatio")),
-                        field("statementsExecuted", mBeanServer.getAttribute(name, "StatementsExecuted"))
+                JsonValue result = json(object(
+                        field("activeConnections", mBeanServer.getAttribute(name, "ActiveConnections")),
+                        field("totalConnections", mBeanServer.getAttribute(name, "TotalConnections")),
+                        field("idleConnections", mBeanServer.getAttribute(name, "IdleConnections")),
+                        field("threadsAwaitingConnection", mBeanServer.getAttribute(name, "ThreadsAwaitingConnection"))
                 ));
-                results.put(name.getCanonicalName(), singleResult.getObject());
+                results.put(name.getCanonicalName(), result.getObject());
             }
             return newResourceResponse("", "", results).asPromise();
         } catch (Exception e) {
-            logger.error("Unable to get BoneCP statistics mbean");
-            return new InternalServerErrorException("Unable to get BoneCP statistics mbean", e).asPromise();
+            logger.error("Failed to get HikariCP statistics.", e);
+            return new InternalServerErrorException("Failed to get HikariCP statistics.", e).asPromise();
         }
     }
 }

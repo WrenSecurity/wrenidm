@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015 ForgeRock AS.
+ * Portions Copyright 2024 Wren Security
  */
 package org.forgerock.openidm.datasource.jdbc.impl;
 
@@ -46,11 +47,6 @@ class DataSourceFactoryConfigVisitor implements DataSourceConfigVisitor<DataSour
     @Override
     public DataSourceFactory visit(NonPoolingDataSourceConfig config, Void unused) {
         return new NonPoolingDataSourceFactory(config);
-    }
-
-    @Override
-    public DataSourceFactory visit(BoneCPDataSourceConfig config, Void unused) {
-        return new BoneCPDataSourceFactory(config);
     }
 
     @Override
