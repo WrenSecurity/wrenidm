@@ -13,91 +13,57 @@
   information: "Portions Copyrighted [year] [name of copyright owner]".
 
   Copyright 2016 ForgeRock AS
+  Portions Copyright 2024 Wren Security
 -->
 <html>
 <head>
     <meta charset="UTF-8">
     <title>API Explorer</title>
-    <link href='css/typography.css' media='screen' rel='stylesheet' type='text/css'/>
-    <link href='css/reset.css' media='screen' rel='stylesheet' type='text/css'/>
-    <link href='css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
-    <link href='css/reset.css' media='print' rel='stylesheet' type='text/css'/>
-    <link href='css/theme-flattop.css' media='screen' rel='stylesheet' type='text/css'/>
-    <link href='css/reset.css' media='screen' rel='stylesheet' type='text/css'/>
-    <link href='css/print.css' media='print' rel='stylesheet' type='text/css'/>
-
-    <script src='lib/object-assign-pollyfill.js' type='text/javascript'></script>
-    <script src='lib/jquery-1.8.0.min.js' type='text/javascript'></script>
-    <script src='lib/jquery.slideto.min.js' type='text/javascript'></script>
-    <script src='lib/jquery.wiggle.min.js' type='text/javascript'></script>
-    <script src='lib/jquery.ba-bbq.min.js' type='text/javascript'></script>
-    <script src='lib/handlebars-4.0.5.js' type='text/javascript'></script>
-    <script src='lib/lodash.min.js' type='text/javascript'></script>
-    <script src='lib/backbone-min.js' type='text/javascript'></script>
-    <script src='swagger-ui.min.js' type='text/javascript'></script>
-    <script src='lib/highlight.9.1.0.pack.js' type='text/javascript'></script>
-    <script src='lib/highlight.9.1.0.pack_extended.js' type='text/javascript'></script>
-    <script src='lib/jsoneditor.min.js' type='text/javascript'></script>
-    <script src='lib/marked.js' type='text/javascript'></script>
-    <script src='lib/swagger-oauth.js' type='text/javascript'></script>
-
-    <style type="text/css">
-        /* theme-flattop.css fixes, needed until the theme is updated to support recent Swagger UI version */
-        .swagger-section .swagger-ui-wrap p {
-            line-height: inherit;
-            padding: inherit;
-        }
-    </style>
-
+    <link href='css/swagger-ui.css' media='screen' rel='stylesheet' type='text/css'/>
+    <script src='libs/swagger-ui-bundle.js' type='text/javascript'></script>
     <script type="text/javascript">
-        $(function () {
+        // Plugin to allow host override in the API specification
+        const ApiHostMutatorPlugin = (system) => ({
+            rootInjects: {
+                setHost: (host) => {
+                    const jsonSpec = system.getState().toJSON().spec.json;
+                    const newJsonSpec = Object.assign({}, jsonSpec, { host });
+                    return system.specActions.updateJsonSpec(newJsonSpec);
+                }
+            }
+        });
+        window.onload = function() {
             var url = window.location.search.match(/url=([^&]+)/);
             if (url && url.length > 1) {
                 url = decodeURIComponent(url[1]);
             } else {
-                // default Swagger JSON URL
                 url = "/openidm/?_api";
             }
-
-            hljs.configure({
-                highlightSizeThreshold: 5000
-            });
-
-            if (window.SwaggerTranslator) {
-                window.SwaggerTranslator.translate();
-            }
-            window.swaggerUi = new SwaggerUi({
+            const swaggerUi = SwaggerUIBundle({
                 url: url,
                 validatorUrl: null,
-                dom_id: "swagger-ui-div",
+                dom_id: "#swagger-ui",
+                presets: [SwaggerUIBundle.presets.apis],
                 defaultModelRendering: 'schema',
                 supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
-                apisSorter: 'alpha',
-                onComplete: function (swaggerApi, swaggerUi) {
-                    // ensure that correct host is set at runtime
-                    window.swaggerUi.api.setHost(location.hostname + ':' + location.port);
-
-                    // NOTE: OpenIDM requires X-Requested-With header
-                    window.swaggerUi.api.clientAuthorizations.add("X-Requested-With",
-                            new SwaggerClient.ApiKeyAuthorization("X-Requested-With", "Swagger-UI", "header"));
-
-                    if (window.SwaggerTranslator) {
-                        window.SwaggerTranslator.translate();
-                    }
+                plugins: [ApiHostMutatorPlugin],
+                onComplete: function () {
+                    swaggerUi.setHost(window.location.hostname + ':' + window.location.port);
                 },
-                onFailure: function (data) {
-                    if (typeof data === 'string' && data.indexOf('401') !== -1) {
-                        // 401: Unauthorized, so redirect to login
+                requestInterceptor: (request) => {
+                    request.headers['X-Requested-With'] = 'Swagger-UI';
+                    return request;
+                },
+                responseInterceptor: (response) => {
+                    if (response && response.status === 401) {
                         window.top.location.replace('/');
                     }
                 }
             });
-
-            window.swaggerUi.load();
-        });
+        };
     </script>
 </head>
 <body class="swagger-section" style="margin: 1em;">
-<div id="swagger-ui-div" class="swagger-ui-wrap"></div>
+    <div id="swagger-ui"></div>
 </body>
 </html>
