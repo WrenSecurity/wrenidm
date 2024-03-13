@@ -148,8 +148,7 @@ public class NamedParameterSupport {
         } else if (value instanceof String) {
             statement.setString(index, (String) value);
         } else {
-            var type = value != null ? value.getClass().getName() : "null";
-            throw new InternalServerErrorException("Unsupported parameter type: " +  type);
+            statement.setString(index, value != null ? value.toString() : null);
         }
     }
 
