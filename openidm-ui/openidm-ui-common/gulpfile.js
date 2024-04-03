@@ -18,6 +18,8 @@ const {
     useLocalResources
 } = require("@wrensecurity/commons-ui-build");
 const gulp = require("gulp");
+const replace = require("gulp-replace");
+const argv = require("yargs").argv;
 
 const TARGET_PATH = "target/www";
 
@@ -27,10 +29,24 @@ gulp.task("build:assets", useLocalResources({ "src/main/resources/**": "" }, { d
 
 gulp.task("build:scripts", useLocalResources({ "src/main/js/**/*.js": "" }, { dest: TARGET_PATH }));
 
+/**
+ * Include the version of Wren:IDM in the index file.
+ *
+ * This is needed to force the browser to refetch JavaScript files when a new version of Wren:IDM is deployed.
+ */
+gulp.task("build:version", () => (
+    gulp.src(`${TARGET_PATH}/index.html`)
+        .pipe(replace("${version}", argv["target-version"] || "dev"))
+        .pipe(gulp.dest(TARGET_PATH))
+));
+
 gulp.task("build", gulp.series(
     gulp.parallel(
         "build:assets",
         "build:scripts"
+    ),
+    gulp.parallel(
+        "build:version"
     )
 ));
 
