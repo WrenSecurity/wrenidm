@@ -24,11 +24,6 @@
 
 package org.forgerock.openidm.script;
 
-import java.lang.IllegalArgumentException;
-import java.lang.NoSuchMethodException;
-import java.lang.Object;
-import java.lang.Override;
-import java.lang.String;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,16 +31,12 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import org.forgerock.script.scope.Function;
-import org.forgerock.script.scope.FunctionFactory;
-import org.forgerock.script.scope.Parameter;
-import org.forgerock.services.context.Context;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ActionRequest;
 import org.forgerock.json.resource.ActionResponse;
 import org.forgerock.json.resource.BadRequestException;
 import org.forgerock.json.resource.ConnectionFactory;
+import org.forgerock.json.resource.CountPolicy;
 import org.forgerock.json.resource.CreateRequest;
 import org.forgerock.json.resource.DeleteRequest;
 import org.forgerock.json.resource.NotFoundException;
@@ -58,9 +49,13 @@ import org.forgerock.json.resource.QueryResponse;
 import org.forgerock.json.resource.ReadRequest;
 import org.forgerock.json.resource.Request;
 import org.forgerock.json.resource.Requests;
-import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.ResourceException;
+import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.json.resource.UpdateRequest;
+import org.forgerock.script.scope.Function;
+import org.forgerock.script.scope.FunctionFactory;
+import org.forgerock.script.scope.Parameter;
+import org.forgerock.services.context.Context;
 import org.forgerock.util.Factory;
 import org.forgerock.util.LazyMap;
 
@@ -619,6 +614,7 @@ public final class ResourceFunctions {
             if (null != queryResponse) {
                 result.put("pagedResultsCookie", queryResponse.getPagedResultsCookie());
                 result.put("totalPagedResults", queryResponse.getTotalPagedResults());
+                result.put("totalPagedResultsPolicy", queryResponse.getTotalPagedResultsPolicy().name());
             }
             if (null != results) {
                 result.put("result", results);
@@ -680,6 +676,15 @@ public final class ResourceFunctions {
                         qr.setPagedResultsOffset(params.get(name).required().asInteger());
                     } else if (name.equalsIgnoreCase("_pageSize")) {
                         qr.setPageSize(params.get(name).required().asInteger());
+                    } else if (name.equalsIgnoreCase("_totalPagedResultsPolicy")) {
+                        final String s = params.get(name).required().asString();
+                        try {
+                            qr.setTotalPagedResultsPolicy(CountPolicy.valueOf(s));
+                        } catch (IllegalArgumentException e) {
+                            // FIXME: i18n.
+                            throw new BadRequestException("The value '" + s + "' for parameter '"
+                                    + name + "' could not be parsed as a valid count policy");
+                        }
                     } else if (name.equalsIgnoreCase("_queryFilter")) {
                         final String s = params.get(name).required().asString();
                         try {
@@ -688,7 +693,6 @@ public final class ResourceFunctions {
                             // FIXME: i18n.
                             throw new BadRequestException("The value '" + s + "' for parameter '"
                                     + name + "' could not be parsed as a valid query filter");
-
                         }
                     } else {
                         setAdditionalParameter(qr, name, params.get(name));
