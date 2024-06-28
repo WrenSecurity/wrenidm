@@ -90,7 +90,9 @@ def queryParams1 = [
         _queryId: "query-all-ids"
 ]
 def queryParams2 = [
-        _queryFilter: "nickName eq \"Babs\""
+        _queryFilter: "nickName eq \"Babs\"",
+        _pageSize: 42,
+        _totalPagedResultsPolicy: "EXACT"
 ]
 
 try {
@@ -98,7 +100,10 @@ try {
 } catch (NotSupportedException e) {
     //expected
 }
+
 def userQ2 = router.query("Users", queryParams2)
+assert userQ2.totalPagedResultsPolicy == "EXACT"
+
 def userQ3 = router.query("Users", queryParams2, callback)
 
 def printResult = { resource, error ->

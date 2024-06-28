@@ -121,7 +121,9 @@ var queryParams1 = {
     "_queryId": "query-all-ids"
 }
 var queryParams2 = {
-    "_queryFilter": "nickName eq \"Babs\""
+    "_queryFilter": "nickName eq \"Babs\"",
+    "_pageSize": 42,
+    "_totalPagedResultsPolicy": "EXACT"
 }
 
 try {
@@ -129,7 +131,12 @@ try {
 } catch (e) {
     //expected
 }
+
 var userQ2 = router.query("Users", queryParams2)
+if (userQ2.totalPagedResultsPolicy != "EXACT") {
+    throw { "message": "Expected total paged results policy not set" };
+}
+
 var userQ3 = router.query("Users", queryParams2, callback)
 
 var printResult = function (resource, error) {
