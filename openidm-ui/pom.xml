@@ -51,8 +51,8 @@
 
                     <configuration>
                         <installDirectory>${project.parent.basedir}</installDirectory>
-                        <nodeVersion>v20.9.0</nodeVersion>
-                        <npmVersion>10.2.3</npmVersion>
+                        <nodeVersion>v20.15.0</nodeVersion>
+                        <npmVersion>10.7.0</npmVersion>
                         <nodeDownloadRoot>https://nodejs.org/dist/</nodeDownloadRoot>
                         <npmDownloadRoot>https://wrensecurity.jfrog.io/artifactory/api/npm/npm-virtual/npm/-/</npmDownloadRoot>
                     </configuration>
