@@ -32,13 +32,13 @@ RUN \
   unzip openidm-zip/target/wrenidm-$WRENIDM_VERSION.zip -d /build
 
 
-FROM eclipse-temurin:17-jdk
+FROM eclipse-temurin:17-jdk-ubi9-minimal
 
 # Create wrenidm user
 ARG WRENIDM_UID=1000
 ARG WRENIDM_GID=1000
-RUN addgroup --gid ${WRENIDM_GID} wrenidm && \
-    adduser --uid ${WRENIDM_UID} --gid ${WRENIDM_GID} --system wrenidm
+RUN groupadd --gid ${WRENIDM_GID} wrenidm && \
+    useradd --uid ${WRENIDM_UID} --gid ${WRENIDM_GID} --system wrenidm
 
 # Deploy wrenidm project
 COPY --chown=wrenidm:root --from=project-build /build/wrenidm /opt/wrenidm
