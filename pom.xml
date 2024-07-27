@@ -127,7 +127,7 @@
 
         <!-- Commons versions -->
         <wrensec.commons.version>22.6.0</wrensec.commons.version>
-        <commons.script.version>4.6.0</commons.script.version>
+        <commons.script.version>4.6.1</commons.script.version>
 
         <!-- Third party dependency versions -->
         <javascript.maven.plugin.version>2.0.0-alpha-1</javascript.maven.plugin.version>
