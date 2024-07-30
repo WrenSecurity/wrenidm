@@ -49,6 +49,7 @@ public class WorkflowConstants {
     public static final String END_TIME_ATTR = "endTime";
     public static final String STATUS_ATTR = "status";
     public static final String BUSINESS_KEY_ATTR = "businessKey";
+    public static final String BUSINESS_STATUS_ATTR = "businessStatus";
     public static final String DELETE_REASON_ATTR = "deleteReason";
     public static final String DURATION_IN_MILLIS_ATTR = "durationInMillis";
     public static final String TASK_NAME_ATTR = "taskName";
