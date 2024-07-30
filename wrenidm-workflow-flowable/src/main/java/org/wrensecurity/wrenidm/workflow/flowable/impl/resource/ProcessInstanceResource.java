@@ -329,6 +329,9 @@ public class ProcessInstanceResource implements CollectionResourceProvider {
                 case WorkflowConstants.SUPER_PROCESS_INSTANCE_ID_ATTR:
                     query.superProcessInstanceId(param.getValue());
                     break;
+                case WorkflowConstants.BUSINESS_STATUS_ATTR:
+                    query.processInstanceBusinessStatus(param.getValue());
+                    break;
                 case WorkflowConstants.FINISHED_ATTR:
                     if (Boolean.parseBoolean(param.getValue())) {
                         query.finished();

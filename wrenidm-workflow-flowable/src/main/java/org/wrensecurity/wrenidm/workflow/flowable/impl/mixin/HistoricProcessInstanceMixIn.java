@@ -38,6 +38,9 @@ public abstract class HistoricProcessInstanceMixIn {
     @JsonProperty(WorkflowConstants.BUSINESS_KEY_ATTR)
     protected String businessKey;
 
+    @JsonProperty(WorkflowConstants.BUSINESS_STATUS_ATTR)
+    protected String businessStatus;
+
     @JsonProperty(WorkflowConstants.DELETE_REASON_ATTR)
     protected String deleteReason;
 
