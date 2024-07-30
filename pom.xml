@@ -127,7 +127,7 @@
 
         <!-- Commons versions -->
         <wrensec.commons.version>22.6.0</wrensec.commons.version>
-        <commons.script.version>4.6.1</commons.script.version>
+        <commons.script.version>4.7.0</commons.script.version>
 
         <!-- Third party dependency versions -->
         <javascript.maven.plugin.version>2.0.0-alpha-1</javascript.maven.plugin.version>
@@ -140,7 +140,7 @@
         <asm.version>9.0</asm.version>
         <!-- quartz 2.x is not compatible yet -->
         <quartz.version>1.8.6_1</quartz.version>
-        <rhino.version>1.7.14_2</rhino.version>
+        <rhino.version>1.7.15_1</rhino.version>
         <groovy.version>2.4.21</groovy.version>
 
         <!-- OSGi / Felix versions -->
