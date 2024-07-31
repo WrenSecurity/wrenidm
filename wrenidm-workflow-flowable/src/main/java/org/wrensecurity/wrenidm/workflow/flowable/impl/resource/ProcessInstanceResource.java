@@ -60,6 +60,7 @@ import org.forgerock.json.resource.ActionRequest;
 import org.forgerock.json.resource.ActionResponse;
 import org.forgerock.json.resource.BadRequestException;
 import org.forgerock.json.resource.CollectionResourceProvider;
+import org.forgerock.json.resource.CountPolicy;
 import org.forgerock.json.resource.CreateRequest;
 import org.forgerock.json.resource.DeleteRequest;
 import org.forgerock.json.resource.InternalServerErrorException;
@@ -219,7 +220,9 @@ public class ProcessInstanceResource implements CollectionResourceProvider {
                 applyRequestParams(query, request);
                 applySortKeys(query, request);
             }
-            for (HistoricProcessInstance processInstance : query.list()) {
+            List<HistoricProcessInstance> results = request.getPageSize() == 0 ? query.list() : query.listPage(
+                    request.getPagedResultsOffset(), request.getPageSize());
+            for (HistoricProcessInstance processInstance : results) {
                 // Fetch process variables
                 ((HistoricProcessInstanceEntity) processInstance).setQueryVariables(getVariables(processInstance.getId(), null));
                 // Serialize process instance into JSON value
@@ -227,7 +230,20 @@ public class ProcessInstanceResource implements CollectionResourceProvider {
                 value.put(WorkflowConstants.PROCESS_DEFINITION_RESOURCE_NAME_ATTR, processInstance.getProcessDefinitionName());
                 handler.handleResource(newResourceResponse(processInstance.getId(), null, value));
             }
-            return newQueryResponse().asPromise();
+            if (request.getPageSize() == 0) {
+                return newQueryResponse().asPromise();
+            }
+            // Handle paging
+            Integer totalCount = null;
+            if (request.getTotalPagedResultsPolicy() != CountPolicy.NONE) {
+               totalCount = Long.valueOf(query.count()).intValue();
+            }
+            int nextOffset = request.getPagedResultsOffset() + results.size();
+            if (totalCount != null) {
+                return newQueryResponse(totalCount > nextOffset ? String.valueOf(nextOffset) : null, CountPolicy.EXACT, totalCount).asPromise();
+            } else {
+                return newQueryResponse(results.size() >= request.getPageSize() ? String.valueOf(nextOffset) : null).asPromise();
+            }
         } catch (Exception e) {
             return new InternalServerErrorException(e.getMessage(), e).asPromise();
         }
