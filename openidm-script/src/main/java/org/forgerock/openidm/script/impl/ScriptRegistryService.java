@@ -650,7 +650,7 @@ public class ScriptRegistryService extends ScriptRegistryImpl implements Request
                         result = propertiesCache.get(name);
                     }
                     if (null == result) {
-                        Object defaultValue = arguments.length == 2 ? arguments[1] : null;
+                        Object defaultValue = arguments.length > 1 ? arguments[1] : null;
                         result = IdentityServer.getInstance().getProperty(name, defaultValue, Object.class);
                         propertiesCache.putIfAbsent(name, result);
                     }
