@@ -27,11 +27,11 @@ def syncContext = context.containsContext(SyncContext.class) \
     ? context.asContext(SyncContext.class)
     : null;
 
-def mappingSource = mappingConfig.source.getObject() as String
+def mappingSource = mappingConfig.source as String
 def sourceObject = source as JsonValue
 def oldSource = oldSource as JsonValue
 
-mappingName =  mappingConfig.name.getObject() as String
+def mappingName =  mappingConfig.name as String
 
 try {
     if (!mappingSource.equals("managed/user") && syncContext == null) {

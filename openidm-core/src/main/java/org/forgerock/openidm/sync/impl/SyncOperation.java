@@ -746,7 +746,7 @@ abstract class SyncOperation {
             Map<String, Object> scope = new HashMap<String, Object>();
             scope.put("context", context);
             scope.put("linkQualifier", getLinkQualifier());
-            scope.put("mappingConfig", objectMapping.getConfig());
+            scope.put("mappingConfig", objectMapping.getConfig().asMap());
             String sourceId = getSourceObjectId();
             String targetId = getTargetObjectId();
             // TODO: Once script engine can do on-demand get replace these forced loads
