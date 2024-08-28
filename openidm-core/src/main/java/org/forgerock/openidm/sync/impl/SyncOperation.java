@@ -525,7 +525,16 @@ abstract class SyncOperation {
                                 execScript("onUpdate", onUpdateScript, oldTarget);
                                 // only update if target changes
                                 if (!oldTarget.isEqualTo(getTargetObject())) {
-                                    updateTargetObject(context, getTargetObject(), targetId, reconContext);
+                                    ResourceResponse updateResponse = updateTargetObject(context, getTargetObject(), targetId, reconContext);
+                                    // Handle potential UID target change during update
+                                    if (updateResponse != null) {
+                                        final String updatedTargetId = updateResponse.getId();
+                                        if (updatedTargetId != null && objectMapping.isLinkingEnabled() && linkObject._id != null
+                                                && !linkObject.targetEquals(updatedTargetId)) {
+                                            linkObject.targetId = updatedTargetId;
+                                            linkObject.update(context);
+                                        }
+                                    }
                                 }
                             }
                             // execute the defaultPostMapping script to add lastSync attribute to managed user
@@ -824,9 +833,10 @@ abstract class SyncOperation {
      * @param context the Context to use for the request
      * @param target the target object to create.
      * @param reconContext Recon context or {@code null}
+     * @return the resource response to the update request
      * @throws SynchronizationException
      */
-    private void updateTargetObject(Context context, JsonValue target, String targetId,
+    private ResourceResponse updateTargetObject(Context context, JsonValue target, String targetId,
             ReconciliationContext reconContext) throws SynchronizationException {
         EventEntry measure = Publisher.start(ObjectMapping.EVENT_UPDATE_TARGET, target, null);
         final long startNanoTime = ObjectMapping.startNanoTime(reconContext);
@@ -841,8 +851,9 @@ abstract class SyncOperation {
             LOGGER.trace("Update target object {}", fullId);
             UpdateRequest request = newUpdateRequest(fullId, target)
                     .setRevision(target.get("_rev").asString());
-            objectMapping.getConnectionFactory().getConnection().update(context, request);
+            ResourceResponse updateResponse = objectMapping.getConnectionFactory().getConnection().update(context, request);
             measure.setResult(target);
+            return updateResponse;
         } catch (SynchronizationException se) {
             throw se;
         } catch (JsonValueException jve) {
