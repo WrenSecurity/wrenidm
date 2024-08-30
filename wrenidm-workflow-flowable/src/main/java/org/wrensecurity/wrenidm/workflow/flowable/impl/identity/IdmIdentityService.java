@@ -20,36 +20,44 @@ package org.wrensecurity.wrenidm.workflow.flowable.impl.identity;
 
 import java.util.List;
 import org.flowable.common.engine.impl.identity.Authentication;
-import org.flowable.engine.IdentityService;
 import org.flowable.idm.api.Group;
 import org.flowable.idm.api.GroupQuery;
 import org.flowable.idm.api.NativeGroupQuery;
+import org.flowable.idm.api.NativeTokenQuery;
 import org.flowable.idm.api.NativeUserQuery;
 import org.flowable.idm.api.Picture;
+import org.flowable.idm.api.Privilege;
+import org.flowable.idm.api.PrivilegeMapping;
+import org.flowable.idm.api.PrivilegeQuery;
+import org.flowable.idm.api.Token;
+import org.flowable.idm.api.TokenQuery;
 import org.flowable.idm.api.User;
 import org.flowable.idm.api.UserQuery;
+import org.flowable.idm.engine.IdmEngineConfiguration;
+import org.flowable.idm.engine.impl.IdmIdentityServiceImpl;
 import org.forgerock.json.resource.Connection;
 import org.forgerock.json.resource.ConnectionFactory;
 import org.forgerock.json.resource.ResourceException;
 
-public class IdmIdentityService implements IdentityService {
+public class IdmIdentityService extends IdmIdentityServiceImpl {
 
-    public static final String ID_ATTR = "id";
+    public static final String ID_ATTR = "_id";
     public static final String NAME_ATTR = "name";
     public static final String USERNAME_ATTR = "userName";
     public static final String GIVEN_NAME_ATTR = "givenName";
     public static final String SURNAME_ATTR = "sn";
     public static final String MAIL_ATTR = "mail";
+    public static final String MEMBERS_ATTR = "members";
 
     private ConnectionFactory connectionFactory;
 
-    public void setConnectionFactory(ConnectionFactory connectionFactory) {
+    public IdmIdentityService(ConnectionFactory connectionFactory, IdmEngineConfiguration idmEngineConfiguration) {
+        super(idmEngineConfiguration);
         this.connectionFactory = connectionFactory;
     }
 
-    @Override
-    public UserQuery createUserQuery() {
-        return new IdmUserQuery(getConnection());
+    public void setConnectionFactory(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
     }
 
     @Override
@@ -62,69 +70,36 @@ public class IdmIdentityService implements IdentityService {
         Authentication.setAuthenticatedUserId(userId);
     }
 
+    // User related unsupported methods
+
+    @Override
+    public UserQuery createUserQuery() {
+        throw new UnsupportedOperationException("Creating user query is not supported.");
+    }
+
     @Override
     public NativeUserQuery createNativeUserQuery() {
-        throw new UnsupportedOperationException("Native user query is not supported.");
+        throw new UnsupportedOperationException("Creating native user query is not supported.");
     }
 
     @Override
     public User newUser(String userId) {
-        throw new UnsupportedOperationException("User creation is not supported.");
+        throw new UnsupportedOperationException("Creating user is not supported.");
     }
 
     @Override
     public void saveUser(User user) {
-        throw new UnsupportedOperationException("User creation is not supported.");
+        throw new UnsupportedOperationException("Saving user is not supported.");
     }
 
     @Override
     public void updateUserPassword(User user) {
-        throw new UnsupportedOperationException("User password update is not supported.");
+        throw new UnsupportedOperationException("Updating user password is not supported.");
     }
 
     @Override
     public void deleteUser(String userId) {
-        throw new UnsupportedOperationException("User deletion is not supported.");
-    }
-
-    @Override
-    public Group newGroup(String groupId) {
-        throw new UnsupportedOperationException("Group creation is not supported.");
-    }
-
-    @Override
-    public NativeGroupQuery createNativeGroupQuery() {
-        throw new UnsupportedOperationException("Native group query is not supported.");
-    }
-
-    @Override
-    public List<Group> getPotentialStarterGroups(String processDefinitionId) {
-        throw new UnsupportedOperationException("Getting of potential starter groups is not supported.");
-    }
-
-    @Override
-    public List<User> getPotentialStarterUsers(String processDefinitionId) {
-        throw new UnsupportedOperationException("Getting of potential starter users is not supported.");
-    }
-
-    @Override
-    public void saveGroup(Group group) {
-        throw new UnsupportedOperationException("Group creation is not supported.");
-    }
-
-    @Override
-    public void deleteGroup(String groupId) {
-        throw new UnsupportedOperationException("Group deletion is not supported.");
-    }
-
-    @Override
-    public void createMembership(String userId, String groupId) {
-        throw new UnsupportedOperationException("Membership creation is not supported.");
-    }
-
-    @Override
-    public void deleteMembership(String userId, String groupId) {
-        throw new UnsupportedOperationException("Membership deletion is not supported.");
+        throw new UnsupportedOperationException("Deleting user is not supported.");
     }
 
     @Override
@@ -134,32 +109,143 @@ public class IdmIdentityService implements IdentityService {
 
     @Override
     public void setUserPicture(String userId, Picture picture) {
-        throw new UnsupportedOperationException("Setting of user picture is not supported.");
+        throw new UnsupportedOperationException("Setting user picture is not supported.");
     }
 
     @Override
     public Picture getUserPicture(String userId) {
-        throw new UnsupportedOperationException("Getting of user picture is not supported.");
+        throw new UnsupportedOperationException("Getting user picture is not supported.");
     }
 
     @Override
     public void setUserInfo(String userId, String key, String value) {
-        throw new UnsupportedOperationException("Setting of user info is not supported.");
+        throw new UnsupportedOperationException("Setting user info is not supported.");
     }
 
     @Override
     public String getUserInfo(String userId, String key) {
-        throw new UnsupportedOperationException("Getting of user info is not supported.");
+        throw new UnsupportedOperationException("Getting user info is not supported.");
     }
 
     @Override
     public List<String> getUserInfoKeys(String userId) {
-        throw new UnsupportedOperationException("Getting of user info keys is not supported.");
+        throw new UnsupportedOperationException("Getting user info keys is not supported.");
     }
 
     @Override
     public void deleteUserInfo(String userId, String key) {
-        throw new UnsupportedOperationException("Deleting of user info is not supported.");
+        throw new UnsupportedOperationException("Deleting user info is not supported.");
+    }
+
+    // Group related unsupported methods
+
+    @Override
+    public Group newGroup(String groupId) {
+        throw new UnsupportedOperationException("Creating group is not supported.");
+    }
+
+    @Override
+    public NativeGroupQuery createNativeGroupQuery() {
+        throw new UnsupportedOperationException("Creating native group query is not supported.");
+    }
+
+    @Override
+    public void saveGroup(Group group) {
+        throw new UnsupportedOperationException("Saving group is not supported.");
+    }
+
+    @Override
+    public void deleteGroup(String groupId) {
+        throw new UnsupportedOperationException("Deleting group is not supported.");
+    }
+
+    @Override
+    public void createMembership(String userId, String groupId) {
+        throw new UnsupportedOperationException("Creating membership is not supported.");
+    }
+
+    @Override
+    public void deleteMembership(String userId, String groupId) {
+        throw new UnsupportedOperationException("Deleting membership is not supported.");
+    }
+
+    // Privilege related unsupported methods
+
+    @Override
+    public Privilege createPrivilege(String name) {
+        throw new UnsupportedOperationException("Creating privilege is not supported.");
+    }
+
+    @Override
+    public void addUserPrivilegeMapping(String privilegeId, String userId) {
+        throw new UnsupportedOperationException("Creating user privilege mapping is not supported.");
+    }
+
+    @Override
+    public void deleteUserPrivilegeMapping(String privilegeId, String userId) {
+        throw new UnsupportedOperationException("Deleting user privilege mapping is not supported.");
+    }
+
+    @Override
+    public void addGroupPrivilegeMapping(String privilegeId, String groupId) {
+        throw new UnsupportedOperationException("Creating group privilege mapping is not supported.");
+    }
+
+    @Override
+    public void deleteGroupPrivilegeMapping(String privilegeId, String groupId) {
+        throw new UnsupportedOperationException("Deleting group privilege mapping is not supported.");
+    }
+
+    @Override
+    public List<PrivilegeMapping> getPrivilegeMappingsByPrivilegeId(String privilegeId) {
+        throw new UnsupportedOperationException("Getting privilege mappings is not supported.");
+    }
+
+    @Override
+    public void deletePrivilege(String id) {
+        throw new UnsupportedOperationException("Deleting privilege is not supported.");
+    }
+
+    @Override
+    public PrivilegeQuery createPrivilegeQuery() {
+        throw new UnsupportedOperationException("Creating privilege query is not supported.");
+    }
+
+    @Override
+    public List<Group> getGroupsWithPrivilege(String name) {
+        throw new UnsupportedOperationException("Getting groups with privileges is not supported.");
+    }
+
+    @Override
+    public List<User> getUsersWithPrivilege(String name) {
+        throw new UnsupportedOperationException("Getting users with privileges is not supported.");
+    }
+
+    // Token related unsupported methods
+
+    @Override
+    public Token newToken(String tokenId) {
+        throw new UnsupportedOperationException("Creating token is not supported.");
+    }
+
+    @Override
+    public void saveToken(Token token) {
+        throw new UnsupportedOperationException("Saving token is not supported.");
+    }
+
+    @Override
+    public void deleteToken(String tokenId) {
+        throw new UnsupportedOperationException("Deleting token is not supported.");
+    }
+
+    @Override
+    public TokenQuery createTokenQuery() {
+        throw new UnsupportedOperationException("Creating token query is not supported.");
+    }
+
+    @Override
+    public NativeTokenQuery createNativeTokenQuery() {
+        throw new UnsupportedOperationException("Creating native token query is not supported.");
     }
 
     /**

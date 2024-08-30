@@ -49,6 +49,7 @@ public class IdmUserQuery extends UserQueryImpl {
 
     @Override
     public List<User> executeList(CommandContext commandContext) {
+        // FIXME: handle filtering
         QueryRequest request = Requests.newQueryRequest("managed/user");
         request.setQueryId(WorkflowConstants.QUERY_ALL_IDS);
         List<User> result = new ArrayList<>();
@@ -63,6 +64,7 @@ public class IdmUserQuery extends UserQueryImpl {
 
     @Override
     public long executeCount(CommandContext commandContext) {
+        // FIXME: handle filtering
         try {
             QueryRequest request = Requests.newQueryRequest("managed/user");
             if (getId() == null) {
