@@ -62,6 +62,7 @@ public class WorkflowConstants {
     public static final String EXECUTION_ID_ATTR = "executionId";
     public static final String CANDIDATE_GROUP_ATTR = "taskCandidateGroup";
     public static final String CANDIDATE_USER_ATTR = "taskCandidateUser";
+    public static final String CANDIDATE_OR_ASSIGNED_ATTR = "taskCandidateOrAssigned";
     public static final String START_USER_ID_ATTR = "startUserId";
     public static final String SUPER_PROCESS_INSTANCE_ID_ATTR = "superProcessInstanceId";
     public static final String TASK_ID_ATTR = "taskId";

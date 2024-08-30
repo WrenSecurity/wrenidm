@@ -306,6 +306,9 @@ public class TaskInstanceResource implements CollectionResourceProvider {
                 case WorkflowConstants.CANDIDATE_USER_ATTR:
                     query.taskCandidateUser(param.getValue());
                     break;
+                case WorkflowConstants.CANDIDATE_OR_ASSIGNED_ATTR:
+                    query.taskCandidateOrAssigned(param.getValue());
+                    break;
                 case WorkflowConstants.RESOURCE_ID:
                     query.taskId(param.getValue());
                     break;
