@@ -20,6 +20,8 @@
  * with the fields enclosed by brackets [] replaced by
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
+ * 
+ * Portions Copyrighted 2024 Wren Security
  */
 
 /*
@@ -124,49 +126,24 @@ function join (arr, delim) {
 }
 
 function isUserCandidateForTask(taskInstanceId) {
-
-    var userCandidateTasksQueryParams = {
+    const params = {
             "_queryId": "filtered-query",
+            "taskId": taskInstanceId,
             "taskCandidateUser": context.security.authenticationId
-        },
-        userCandidateTasks = openidm.query("workflow/taskinstance", userCandidateTasksQueryParams).result,
-        userGroupCandidateTasksQueryParams,
-        userGroupCandidateTasks,
-        i,roles,role;
-
-    for (i = 0; i < userCandidateTasks.length; i++) {
-        if (taskInstanceId === userCandidateTasks[i]._id) {
-            return true;
-        }
     }
-
-    roles = "";
-    for (i = 0; i < context.security.authorization.roles.length; i++) {
-        role = context.security.authorization.roles[i];
-        if (i === 0) {
-            roles = role;
-        } else {
-            roles = roles + "," + role;
-        }
-    }
-
-    userGroupCandidateTasksQueryParams = {
-        "_queryId": "filtered-query",
-        "taskCandidateGroup": ((typeof roles === "string") ? roles : join(roles, ","))
-    };
-    userGroupCandidateTasks = openidm.query("workflow/taskinstance", userGroupCandidateTasksQueryParams).result;
-    for (i = 0; i < userGroupCandidateTasks.length; i++) {
-        if (taskInstanceId === userGroupCandidateTasks[i]._id) {
-            return true;
-        }
-    }
-
-    return false;
+    const tasks = openidm.query("workflow/taskinstance", params).result;
+    return tasks.length > 0;
 }
 
 function canUpdateTask() {
-    var taskInstanceId = request.resourcePath.split("/")[2];
-    return isMyTask() || isUserCandidateForTask(taskInstanceId);
+    const taskInstanceId = request.resourcePath.split("/")[2];
+    const params = {
+            "_queryId": "filtered-query",
+            "taskId": taskInstanceId,
+            "taskCandidateOrAssigned": context.security.authenticationId
+    }
+    const tasks = openidm.query("workflow/taskinstance", params).result;
+    return tasks.length > 0;
 }
 
 function isProcessOnUsersList(processFilter) {
