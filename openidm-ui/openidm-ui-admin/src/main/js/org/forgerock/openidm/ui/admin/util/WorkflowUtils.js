@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2024 Wren Security.
  */
 
 define([
@@ -99,14 +99,14 @@ define([
                         cssClass: "btn-primary",
                         action: function(dialogRef) {
                             var id = $("#candidateUsersSelect").val(),
-                                label = $("#candidateUsersSelect option:selected").text(),
+                                selectedUser = _.find(candidateUsers, { _id: id }),
                                 callback = function () {
                                     _this.render([_this.model.id], _.bind(function () {
                                         messagesManager.messages.addMessage({"message": $.t("templates.taskInstance.assignedSuccess")});
                                     }, this));
                                 };
 
-                            obj.assignTask(_this.model, id, label, callback);
+                            obj.assignTask(_this.model, selectedUser, callback);
                             dialogRef.close();
                         }
                     }
@@ -118,18 +118,17 @@ define([
          * sets the assignee attribute on a taskinstance
          *
          * @param model {a taskinstance model}
-         * @id {the new assignee id to be set}
-         * @label {the username text to be displayed in the nonCandidateWarning}
+         * @user {object representing the new assignee user to be set}
          * @successCallback
          * @returns {nothing}
          * @constructor
          */
-        obj.assignTask = function(model, id, label, successCallback) {
+        obj.assignTask = function(model, user, successCallback) {
             var assignNow = function () {
-                model.set("assignee",id);
+                model.set("assignee", user._id);
 
-                if (id === "noUserAssigned") {
-                    model.set("assignee",null);
+                if (user._id === "noUserAssigned") {
+                    model.set("assignee", null);
                 }
 
                 model.save().then(successCallback);
@@ -139,8 +138,8 @@ define([
              * before changing assignee alert the "assigner" that the user
              * being assigned does not exist in the list of candidate users
              */
-            if (id !== "noUserAssigned" && !_.includes(model.get("candidates").candidateUsers, id)) {
-                UIUtils.jqConfirm($.t("templates.taskInstance.nonCanditateWarning",{ userName: label }), _.bind(function() {
+            if (user._id !== "noUserAssigned" && !_.includes(model.get("candidates").candidateUsers, user.userName)) {
+                UIUtils.jqConfirm($.t("templates.taskInstance.nonCanditateWarning",{ userName: user.userName }), _.bind(function() {
                     assignNow();
                 }, this));
             } else {
