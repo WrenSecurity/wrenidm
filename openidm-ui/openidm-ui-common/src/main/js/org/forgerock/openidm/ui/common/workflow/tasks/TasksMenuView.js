@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2024 Wren Security.
  */
 
 define([
@@ -262,8 +262,8 @@ define([
                 task = this.getTaskFromCacheById($(target).closest("tr").find("input[name=taskId]").val());
 
                 if (task) {
-                    for (i = 0; i < task.usersToAssign.users.length; i++) {
-                        user = task.usersToAssign.users[i];
+                    for (i = 0; i < task.usersToAssign.length; i++) {
+                        user = task.usersToAssign[i];
 
                         if ($(target).find("option[value='"+ user.username +"']").length === 0 && user.username !== conf.loggedUser.get("userName")) {
                             $(target).append('<option value="'+ user.username +'">'+ user.displayableName +'</option');

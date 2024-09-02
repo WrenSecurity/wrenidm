@@ -163,7 +163,7 @@ define([
                                 displayName = (item.displayName) ? item.displayName : item.givenName + " " + item.sn;
 
 
-                            return '<divclass="option">' +
+                            return '<div class="option">' +
                                 '<span class="user-title">' +
                                 '<span class="user-fullname">' + escape(displayName) + userName + '</span>' +
                                 '</span>' +
@@ -176,7 +176,7 @@ define([
                         if (!query.length) {
                             queryFilter = "userName sw \"\" &_pageSize=10";
                         } else {
-                            queryFilter = "givenName sw \"" +query +"\" or sn sw \"" +query +"\" or userName sw \"" +query +"\"";
+                            queryFilter = "givenName sw \"" + query +"\" or sn sw \"" + query +"\" or userName sw \"" + query +"\"";
                         }
 
                         ResourceDelegate.searchResource(queryFilter, "managed/user").then(function(search) {

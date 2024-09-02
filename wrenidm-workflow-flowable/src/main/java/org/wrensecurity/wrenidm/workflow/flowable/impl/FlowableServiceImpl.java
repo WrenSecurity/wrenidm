@@ -82,7 +82,7 @@ import org.osgi.service.component.propertytypes.ServiceDescription;
 import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wrensecurity.wrenidm.workflow.flowable.impl.identity.IdmIdentityService;
+import org.wrensecurity.wrenidm.workflow.flowable.impl.identity.IdmEngineConfigurator;
 import org.wrensecurity.wrenidm.workflow.flowable.impl.scripting.IdmExpressionManager;
 import org.wrensecurity.wrenidm.workflow.flowable.impl.scripting.IdmScriptResolverFactory;
 import org.wrensecurity.wrenidm.workflow.flowable.impl.session.IdmSessionFactory;
@@ -175,12 +175,10 @@ public class FlowableServiceImpl implements RequestHandler {
     @Reference(policy = ReferencePolicy.STATIC)
     IDMConnectionFactory connectionFactory;
 
-
     @Reference(policy = ReferencePolicy.DYNAMIC)
     private volatile EnhancedConfig enhancedConfig;
 
     private final IdmExpressionManager expressionManager = new IdmExpressionManager();
-    private final IdmIdentityService identityService = new IdmIdentityService();
     private final IdmSessionFactory sessionFactory = new IdmSessionFactory();
     private ProcessEngineFactory processEngineFactory;
     private Configuration worfklowInstallerConfig;
@@ -264,8 +262,8 @@ public class FlowableServiceImpl implements RequestHandler {
                     configuration.setDatabaseTablePrefix(tablePrefix);
                     configuration.setTablePrefixIsSchema(tablePrefixIsSchema);
 
-                    // Configure custom identity service
-                    configuration.setIdentityService(identityService);
+                    // Configure custom IdM engine
+                    configuration.setIdmEngineConfigurator(new IdmEngineConfigurator(connectionFactory));
 
                     // Register IdM session factory
                     configuration.addCustomSessionFactory(sessionFactory);
@@ -294,7 +292,6 @@ public class FlowableServiceImpl implements RequestHandler {
 
                     // Disable useless services
                     configuration.setDisableEventRegistry(true);
-                    configuration.setDisableIdmEngine(true);
 
                     // Enable v5 compatibility mode
                     configuration.setFlowable5CompatibilityEnabled(true);
@@ -479,16 +476,6 @@ public class FlowableServiceImpl implements RequestHandler {
     public void unbindConfigAdmin(ConfigurationAdmin configAdmin) {
         this.configurationAdmin = null;
     }
-
-    protected void bindConnectionFactory(IDMConnectionFactory factory) {
-        connectionFactory = factory;
-        this.identityService.setConnectionFactory(factory);
-    }
-    protected void unbindConnectionFactory(IDMConnectionFactory factory) {
-        connectionFactory = null;
-        this.identityService.setConnectionFactory(null);
-    }
-
 
     /**
      * DataSource implementation that proxies all requests to the chosen DataSource referenced by the

@@ -19,21 +19,25 @@ package org.wrensecurity.wrenidm.workflow.flowable.impl.identity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.flowable.common.engine.impl.interceptor.CommandContext;
 import org.flowable.idm.api.Group;
+import org.flowable.idm.api.GroupQuery;
 import org.flowable.idm.engine.impl.GroupQueryImpl;
+import org.forgerock.json.JsonPointer;
+import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.Connection;
 import org.forgerock.json.resource.QueryRequest;
-import org.forgerock.json.resource.QueryResourceHandler;
+import org.forgerock.json.resource.ReadRequest;
 import org.forgerock.json.resource.Requests;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.openidm.util.ContextUtil;
 import org.forgerock.services.context.Context;
-import org.wrensecurity.wrenidm.workflow.flowable.WorkflowConstants;
+import org.forgerock.util.query.QueryFilter;
 
 /**
- * Component handling flowable user queries.
+ * Component handling flowable group queries.
  */
 public class IdmGroupQuery extends GroupQueryImpl {
 
@@ -50,12 +54,15 @@ public class IdmGroupQuery extends GroupQueryImpl {
     @Override
     public List<Group> executeList(CommandContext commandContext) {
         QueryRequest request = Requests.newQueryRequest("managed/role");
-        request.setQueryId(WorkflowConstants.QUERY_ALL_IDS);
-        List<Group> roles = new ArrayList<>();
-        QueryResourceHandler handler = new RoleQueryResourceHandler(roles);
+        applyQueryRequestFilter(request);
+        applyQueryRequestFields(request);
+        Collection<ResourceResponse> roles = new ArrayList<>();
         try {
-            connection.query(context, request, handler);
-            return roles;
+            connection.query(context, request, roles);
+            return roles.stream()
+                    .filter(role -> filterRolesByMember(role))
+                    .map(role -> new IdmGroup(role.getContent()))
+                    .collect(Collectors.toList());
         } catch (ResourceException e) {
             throw new RuntimeException(e);
         }
@@ -63,18 +70,16 @@ public class IdmGroupQuery extends GroupQueryImpl {
 
     @Override
     public long executeCount(CommandContext commandContext) {
+        QueryRequest request = Requests.newQueryRequest("managed/role");
+        applyQueryRequestFilter(request);
+        applyQueryRequestFields(request);
+        Collection<ResourceResponse> roles = new ArrayList<>();
         try {
-            QueryRequest request = Requests.newQueryRequest("managed/role");
-            if (null == getId()) {
-                request.setQueryId(WorkflowConstants.QUERY_ALL_IDS);
-            } else {
-                request.setQueryId("get-by-field-value");
-                request.setAdditionalParameter("field", "id");
-                request.setAdditionalParameter("value", getId());
-            }
-            Collection<ResourceResponse> roles = new ArrayList<>();
             connection.query(context, request, roles);
-            return roles.size();
+            return roles.stream()
+                    .filter(role -> filterRolesByMember(role))
+                    .collect(Collectors.toList())
+                    .size();
         } catch (ResourceException e) {
             throw new RuntimeException(e);
         }
@@ -82,38 +87,71 @@ public class IdmGroupQuery extends GroupQueryImpl {
 
     @Override
     public Group executeSingleResult(CommandContext commandContext) {
-        return readRole(getId());
-    }
-
-    /**
-     * Read IdM role with the specified identifier.
-     */
-    private Group readRole(String id) {
         try {
-            QueryRequest request = Requests.newQueryRequest("managed/role");
-            request.setQueryId("get-by-field-value");
-            request.setAdditionalParameter("value", id);
-            request.setAdditionalParameter("field", "id");
-            List<ResourceResponse> roles = new ArrayList<>();
-            connection.query(context, request, roles);
-            return !roles.isEmpty() ? new IdmGroup(roles.get(0).getContent()) : null;
+            ReadRequest request = Requests.newReadRequest("managed/role", this.id);
+            request.addField(IdmIdentityService.ID_ATTR, IdmIdentityService.NAME_ATTR);
+            ResourceResponse role = connection.read(context, request);
+            return new IdmGroup(role.getContent());
         } catch (ResourceException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private class RoleQueryResourceHandler implements QueryResourceHandler {
+    @Override
+    public GroupQuery groupName(String name) {
+        throw new UnsupportedOperationException("Filtering by group name is not supported.");
+    }
 
-        private final List<Group> roles;
+    @Override
+    public GroupQuery groupNameLike(String nameLike) {
+        throw new UnsupportedOperationException("Filtering by group nameLike is not supported.");
+    }
 
-        public RoleQueryResourceHandler(List<Group> roles) {
-            this.roles = roles;
+    @Override
+    public GroupQuery groupNameLikeIgnoreCase(String nameLikeIgnoreCase) {
+        throw new UnsupportedOperationException("Filtering by group nameLikeIgnoreCase is not supported.");
+    }
+
+    @Override
+    public GroupQuery groupType(String type) {
+        throw new UnsupportedOperationException("Filtering by group type is not supported.");
+    }
+
+    @Override
+    public GroupQuery groupMembers(List<String> userIds) {
+        throw new UnsupportedOperationException("Filtering by group members is not supported.");
+    }
+
+    private void applyQueryRequestFilter(QueryRequest request) {
+        Collection<QueryFilter<JsonPointer>> subFilters = new ArrayList<QueryFilter<JsonPointer>>();
+        if (this.id != null) {
+            subFilters.add(QueryFilter.equalTo(new JsonPointer(IdmIdentityService.ID_ATTR), this.id));
         }
-
-        @Override
-        public boolean handleResource(ResourceResponse resource) {
-            return roles.add(readRole(resource.getContent().get(WorkflowConstants.RESOURCE_ID).asString()));
+        if (this.ids != null) {
+            Collection<QueryFilter<JsonPointer>> idSubfilters = ids.stream()
+                .map(id -> QueryFilter.equalTo(new JsonPointer(IdmIdentityService.ID_ATTR), id))
+                .collect(Collectors.toList());
+            subFilters.add(QueryFilter.or(idSubfilters));
         }
+        request.setQueryFilter(subFilters.size() > 0 ? QueryFilter.and(subFilters) : QueryFilter.alwaysTrue());
+    }
 
+    private void applyQueryRequestFields(QueryRequest request) {
+        request.addField(IdmIdentityService.ID_ATTR, IdmIdentityService.NAME_ATTR);
+        if (this.userId != null) {
+            request.addField(new JsonPointer(IdmIdentityService.MEMBERS_ATTR, "*", IdmIdentityService.USERNAME_ATTR));
+        }
+    }
+
+    private boolean filterRolesByMember(ResourceResponse role) {
+        if (this.userId == null) {
+            return true;
+        }
+        for (JsonValue member : role.getContent().get(IdmIdentityService.MEMBERS_ATTR)) {
+            if (member.get(IdmIdentityService.USERNAME_ATTR).asString().equals(this.userId)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

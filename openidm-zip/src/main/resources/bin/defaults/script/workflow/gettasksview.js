@@ -20,6 +20,8 @@
  * with the fields enclosed by brackets [] replaced by
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
+ *
+ * Portions Copyrighted 2024 Wren Security
  */
 
 if (request.method !== "query") {
@@ -31,29 +33,29 @@ if (request.method !== "query") {
 
 (function () {
     var processInstances = {},
-        users = {},
         taskDefinitions = {},
         usersWhoCanBeAssignedToTask = {},
         getProcessInstance = function(processInstanceId) {
             var processInstance;
             if (!processInstances[processInstanceId]) {
-                processInstance = openidm.read("workflow/processinstance/"+processInstanceId);
+                processInstance = openidm.read("workflow/processinstance/" + processInstanceId);
                 processInstances[processInstanceId] = processInstance;
             }
             return processInstances[processInstanceId];
         },
 
         getTaskDefinition = function(processDefinitionId, taskDefinitionKey) {
-            var taskDefinitionQueryParams,taskDefinition;
-            if (!taskDefinitions[processDefinitionId+"|"+taskDefinitionKey]) {
+            var taskDefinition;
+            var key = processDefinitionId + "|" + taskDefinitionKey;
+            if (!taskDefinitions[key]) {
                 taskDefinition = openidm.read("workflow/processdefinition/" + processDefinitionId + "/taskdefinition/" + taskDefinitionKey)
-                taskDefinitions[processDefinitionId+"|"+taskDefinitionKey] = taskDefinition;
+                taskDefinitions[key] = taskDefinition;
             }
-            return taskDefinitions[processDefinitionId+"|"+taskDefinitionKey];
+            return taskDefinitions[key];
         },
         getUsersWhoCanBeAssignedToTask = function(taskId) {
             var usersWhoCanBeAssignedToTaskQueryParams = {
-                    "_queryId": "query-by-task-id",
+                    "_queryId": "getavailableuserstoassign",
                     "taskId": taskId
                 },
                 isTaskManager = false,
@@ -77,24 +79,12 @@ if (request.method !== "query") {
             return usersWhoCanBeAssignedToTask[taskId];
         },
 
-        join = function (arr, delim) {
-            var returnStr = "",i=0;
-            for (i=0; i<arr.length; i++) {
-                returnStr = returnStr + arr[i] + delim;
-            }
-            return returnStr.replace(new RegExp(delim + "$"), '');
-        },
-        roles = context.security.authorization.roles.join(","),
         userName = context.security.authenticationId,
         tasks,
         taskId,
         task,
         userAssignedTasksQueryParams,
-        tasksUniqueMap,
         userCandidateTasksQueryParams,
-        userCandidateTasks,
-        userGroupCandidateTasksQueryParams,
-        userGroupCandidateTasks,
         taskDefinition,
         taskInstance,
         processInstance,
@@ -108,32 +98,11 @@ if (request.method !== "query") {
         };
         tasks = openidm.query("workflow/taskinstance", userAssignedTasksQueryParams).result;
     } else {
-        tasksUniqueMap = {};
-
         userCandidateTasksQueryParams = {
           "_queryId": "filtered-query",
           "taskCandidateUser": userName
         };
-        userCandidateTasks = openidm.query("workflow/taskinstance", userCandidateTasksQueryParams).result;
-        for (i = 0; i < userCandidateTasks.length; i++) {
-            tasksUniqueMap[userCandidateTasks[i]._id] = userCandidateTasks[i];
-        }
-
-        userGroupCandidateTasksQueryParams = {
-          "_queryId": "filtered-query",
-          "taskCandidateGroup": roles
-        };
-        userGroupCandidateTasks = openidm.query("workflow/taskinstance", userGroupCandidateTasksQueryParams).result;
-        for (i = 0; i < userGroupCandidateTasks.length; i++) {
-            tasksUniqueMap[userGroupCandidateTasks[i]._id] = userGroupCandidateTasks[i];
-        }
-
-        tasks = [];
-        for (taskId in tasksUniqueMap) {
-            if (tasksUniqueMap.hasOwnProperty(taskId)) {
-                tasks.push(tasksUniqueMap[taskId]);
-            }
-        }
+        tasks = openidm.query("workflow/taskinstance", userCandidateTasksQueryParams).result;
     }
 
     //building view
