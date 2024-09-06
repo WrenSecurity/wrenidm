@@ -47,7 +47,7 @@ public class IdmIdentityService extends IdmIdentityServiceImpl {
     public static final String GIVEN_NAME_ATTR = "givenName";
     public static final String SURNAME_ATTR = "sn";
     public static final String MAIL_ATTR = "mail";
-    public static final String MEMBERS_ATTR = "members";
+    public static final String MEMBERS_ATTR = "authzMembers";
     public static final String ROLES_ATTR = "authzRoles";
 
     private ConnectionFactory connectionFactory;
@@ -75,7 +75,7 @@ public class IdmIdentityService extends IdmIdentityServiceImpl {
 
     @Override
     public UserQuery createUserQuery() {
-        throw new UnsupportedOperationException("Creating user query is not supported.");
+        return new IdmUserQuery(getConnection());
     }
 
     @Override

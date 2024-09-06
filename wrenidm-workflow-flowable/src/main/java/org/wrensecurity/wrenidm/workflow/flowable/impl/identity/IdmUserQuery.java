@@ -16,21 +16,27 @@
  */
 package org.wrensecurity.wrenidm.workflow.flowable.impl.identity;
 
+import static org.forgerock.openidm.util.ContextUtil.createInternalContext;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.activiti.engine.ActivitiIllegalArgumentException;
 import org.flowable.common.engine.impl.interceptor.CommandContext;
 import org.flowable.idm.api.User;
+import org.flowable.idm.api.UserQuery;
 import org.flowable.idm.engine.impl.UserQueryImpl;
+import org.forgerock.json.JsonPointer;
+import org.forgerock.json.JsonValue;
+import org.forgerock.json.resource.BadRequestException;
 import org.forgerock.json.resource.Connection;
+import org.forgerock.json.resource.NotFoundException;
 import org.forgerock.json.resource.QueryRequest;
-import org.forgerock.json.resource.QueryResourceHandler;
+import org.forgerock.json.resource.ReadRequest;
 import org.forgerock.json.resource.Requests;
 import org.forgerock.json.resource.ResourceException;
 import org.forgerock.json.resource.ResourceResponse;
-import org.forgerock.openidm.util.ContextUtil;
-import org.forgerock.services.context.Context;
-import org.wrensecurity.wrenidm.workflow.flowable.WorkflowConstants;
 
 /**
  * Component handling flowable user queries.
@@ -38,8 +44,6 @@ import org.wrensecurity.wrenidm.workflow.flowable.WorkflowConstants;
 public class IdmUserQuery extends UserQueryImpl {
 
     private static final long serialVersionUID = 1L;
-
-    private static final Context context = ContextUtil.createInternalContext();
 
     private final Connection connection;
 
@@ -49,72 +53,183 @@ public class IdmUserQuery extends UserQueryImpl {
 
     @Override
     public List<User> executeList(CommandContext commandContext) {
-        // FIXME: handle filtering
+        // Search for users with a specific role
+        if (this.groupId != null) {
+            List<User> users = new ArrayList<>();
+            for (JsonValue user : getRoleMembers(this.groupId)) {
+                users.add(new IdmUser(user));
+            }
+            return users;
+        }
+
+        // Perform standard user search
         QueryRequest request = Requests.newQueryRequest("managed/user");
-        request.setQueryId(WorkflowConstants.QUERY_ALL_IDS);
-        List<User> result = new ArrayList<>();
-        QueryResourceHandler handler = new UserQueryResourceHandler(result);
         try {
-            connection.query(context, request, handler);
-            return result;
+            applyQueryRequestParams(request);
+        } catch (BadRequestException e) {
+            throw new RuntimeException(e);
+        }
+        applyQueryRequestFields(request);
+        Collection<ResourceResponse> users = new ArrayList<>();
+        try {
+            connection.query(createInternalContext(), request, users);
         } catch (ResourceException e) {
             throw new RuntimeException(e);
         }
+        return users.stream()
+                .map(user -> new IdmUser(user.getContent()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public long executeCount(CommandContext commandContext) {
-        // FIXME: handle filtering
-        try {
-            QueryRequest request = Requests.newQueryRequest("managed/user");
-            if (getId() == null) {
-                request.setQueryId(WorkflowConstants.QUERY_ALL_IDS);
-            } else {
-                request.setQueryId("for-userName");
-                request.setAdditionalParameter("uid", getId());
-            }
-            Collection<ResourceResponse> result = new ArrayList<>();
-            connection.query(context, request, result);
-            return result.size();
-        } catch (ResourceException e) {
-            throw new RuntimeException(e);
-        }
+        return executeList(commandContext).size();
     }
 
     @Override
     public User executeSingleResult(CommandContext commandContext) {
-        return readUser(getId());
+        if (this.id == null) {
+            throw new UnsupportedOperationException("Single result only supported for ID based search");
+        }
+        List<User> users = executeList(commandContext);
+        return !users.isEmpty() ? users.get(0) : null;
     }
 
-    /**
-     * Read IdM user with the specified identifier (username).
-     */
-    private User readUser(String id) {
+    @Override
+    public UserQuery userId(String id) {
+        if (this.groupId != null) {
+            throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both memberOfGroup and userId");
+        }
+        return super.userId(id);
+    }
+
+    @Override
+    public UserQuery memberOfGroup(String groupId) {
+        if (this.id != null) {
+            throw new ActivitiIllegalArgumentException("Invalid query usage: cannot set both userId and memberOfGroup");
+        }
+        return super.memberOfGroup(groupId);
+    }
+
+    @Override
+    public UserQuery userIds(List<String> ids) {
+        throw new UnsupportedOperationException("Filtering by userId is not supported");
+    }
+
+    @Override
+    public UserQuery userIdIgnoreCase(String id) {
+        throw new UnsupportedOperationException("Filtering by user userIdIgnoreCase is not supported");
+    }
+
+    @Override
+    public UserQuery userFirstName(String firstName) {
+        throw new UnsupportedOperationException("Filtering by user firstName is not supported");
+    }
+
+    @Override
+    public UserQuery userFirstNameLike(String firstNameLike) {
+        throw new UnsupportedOperationException("Filtering by user firstNameLike is not supported");
+    }
+
+    @Override
+    public UserQuery userFirstNameLikeIgnoreCase(String firstNameLikeIgnoreCase) {
+        throw new UnsupportedOperationException("Filtering by user firstNameLikeIgnoreCase is not supported");
+    }
+
+    @Override
+    public UserQuery userLastName(String lastName) {
+        throw new UnsupportedOperationException("Filtering by user lastName is not supported");
+    }
+
+    @Override
+    public UserQuery userLastNameLike(String lastNameLike) {
+        throw new UnsupportedOperationException("Filtering by user lastNameLike is not supported");
+    }
+
+    @Override
+    public UserQuery userLastNameLikeIgnoreCase(String lastNameLikeIgnoreCase) {
+        throw new UnsupportedOperationException("Filtering by user lastNameLikeIgnoreCase is not supported");
+    }
+
+    @Override
+    public UserQuery userFullNameLike(String fullNameLike) {
+        throw new UnsupportedOperationException("Filtering by user fullNameLike is not supported");
+    }
+
+    @Override
+    public UserQuery userFullNameLikeIgnoreCase(String fullNameLikeIgnoreCase) {
+        throw new UnsupportedOperationException("Filtering by user fullNameLikeIgnoreCase is not supported");
+    }
+
+    @Override
+    public UserQuery userDisplayName(String displayName) {
+        throw new UnsupportedOperationException("Filtering by user displayName is not supported");
+    }
+
+    @Override
+    public UserQuery userDisplayNameLike(String displayNameLike) {
+        throw new UnsupportedOperationException("Filtering by user displayNameLike is not supported");
+    }
+
+    @Override
+    public UserQuery userDisplayNameLikeIgnoreCase(String displayNameLikeIgnoreCase) {
+        throw new UnsupportedOperationException("Filtering by user displayNameLikeIgnoreCase is not supported");
+    }
+
+    @Override
+    public UserQuery userEmail(String email) {
+        throw new UnsupportedOperationException("Filtering by user email is not supported");
+    }
+
+    @Override
+    public UserQuery userEmailLike(String emailLike) {
+        throw new UnsupportedOperationException("Filtering by user emailLike is not supported");
+    }
+
+    @Override
+    public UserQuery memberOfGroups(List<String> groupIds) {
+        throw new UnsupportedOperationException("Filtering by user groupIds is not supported");
+    }
+
+    @Override
+    public UserQuery tenantId(String tenantId) {
+        throw new UnsupportedOperationException("Filtering by tenantId is not supported");
+    }
+
+    private JsonValue getRoleMembers(String roleId) {
+        ReadRequest request = Requests.newReadRequest("managed/role", roleId);
+        request.addField(
+            new JsonPointer(IdmIdentityService.MEMBERS_ATTR, "*", IdmIdentityService.ID_ATTR),
+            new JsonPointer(IdmIdentityService.MEMBERS_ATTR, "*", IdmIdentityService.USERNAME_ATTR),
+            new JsonPointer(IdmIdentityService.MEMBERS_ATTR, "*", IdmIdentityService.GIVEN_NAME_ATTR),
+            new JsonPointer(IdmIdentityService.MEMBERS_ATTR, "*", IdmIdentityService.SURNAME_ATTR),
+            new JsonPointer(IdmIdentityService.MEMBERS_ATTR, "*", IdmIdentityService.MAIL_ATTR)
+        );
         try {
-            QueryRequest request = Requests.newQueryRequest("managed/user");
-            request.setQueryId("for-userName");
-            request.setAdditionalParameter("uid", id);
-            List<ResourceResponse> users = new ArrayList<>();
-            connection.query(context, request, users);
-            return !users.isEmpty() ? new IdmUser(users.get(0).getContent()) : null;
+            ResourceResponse result = connection.read(createInternalContext(), request);
+            return result.getContent().get(IdmIdentityService.MEMBERS_ATTR);
+        } catch (NotFoundException e) {
+            return new JsonValue(null);
         } catch (ResourceException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Unable to fetch role members", e);
         }
-
     }
 
-    private class UserQueryResourceHandler implements QueryResourceHandler {
-
-        private final List<User> users;
-
-        public UserQueryResourceHandler(List<User> users) {
-            this.users = users;
+    private void applyQueryRequestParams(QueryRequest request) throws BadRequestException {
+        if (this.id != null) {
+            request.setQueryId("for-userName");
+            request.setAdditionalParameter("uid", this.id);
         }
+    }
 
-        @Override
-        public boolean handleResource(ResourceResponse resource) {
-            return users.add(readUser(resource.getContent().get(WorkflowConstants.RESOURCE_ID).asString()));
-        }
+    private void applyQueryRequestFields(QueryRequest request) {
+        request.addField(
+                IdmIdentityService.ID_ATTR,
+                IdmIdentityService.USERNAME_ATTR,
+                IdmIdentityService.GIVEN_NAME_ATTR,
+                IdmIdentityService.SURNAME_ATTR,
+                IdmIdentityService.MAIL_ATTR
+        );
     }
 
 }

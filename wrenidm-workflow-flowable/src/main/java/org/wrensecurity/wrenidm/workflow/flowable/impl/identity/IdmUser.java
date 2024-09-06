@@ -20,7 +20,7 @@ import org.flowable.idm.api.User;
 import org.forgerock.json.JsonValue;
 
 /**
- * Component representing IdM user.
+ * IdM's <i>managed user</i> wrapper.
  */
 public class IdmUser extends JsonValue implements User {
 
@@ -37,6 +37,7 @@ public class IdmUser extends JsonValue implements User {
 
     @Override
     public void setId(String id) {
+        throw new UnsupportedOperationException("IdM user cannot be modified");
     }
 
     @Override
@@ -46,6 +47,7 @@ public class IdmUser extends JsonValue implements User {
 
     @Override
     public void setFirstName(String firstName) {
+        throw new UnsupportedOperationException("IdM user cannot be modified");
     }
 
     @Override
@@ -55,6 +57,7 @@ public class IdmUser extends JsonValue implements User {
 
     @Override
     public void setLastName(String lastName) {
+        throw new UnsupportedOperationException("IdM user cannot be modified");
     }
 
     @Override
@@ -64,6 +67,7 @@ public class IdmUser extends JsonValue implements User {
 
     @Override
     public void setDisplayName(String displayName) {
+        throw new UnsupportedOperationException("IdM user cannot be modified");
     }
 
     @Override
@@ -73,6 +77,7 @@ public class IdmUser extends JsonValue implements User {
 
     @Override
     public void setEmail(String email) {
+        throw new UnsupportedOperationException("IdM user cannot be modified");
     }
 
     @Override
@@ -82,6 +87,7 @@ public class IdmUser extends JsonValue implements User {
 
     @Override
     public void setPassword(String password) {
+        throw new UnsupportedOperationException("IdM user cannot be modified");
     }
 
     @Override
@@ -91,6 +97,7 @@ public class IdmUser extends JsonValue implements User {
 
     @Override
     public void setTenantId(String tenantId) {
+        throw new UnsupportedOperationException("IdM user cannot be modified");
     }
 
     @Override
