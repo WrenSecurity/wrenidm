@@ -20,7 +20,7 @@ import org.flowable.idm.api.Group;
 import org.forgerock.json.JsonValue;
 
 /**
- * Component representing IdM role.
+ * IdM's <i>managed role</i> wrapper.
  */
 public class IdmGroup extends JsonValue implements Group {
 
@@ -37,6 +37,7 @@ public class IdmGroup extends JsonValue implements Group {
 
     @Override
     public void setId(String id) {
+        throw new UnsupportedOperationException("IdM group cannot be modified");
     }
 
     @Override
@@ -46,6 +47,7 @@ public class IdmGroup extends JsonValue implements Group {
 
     @Override
     public void setName(String name) {
+        throw new UnsupportedOperationException("IdM group cannot be modified");
     }
 
     @Override
@@ -55,5 +57,7 @@ public class IdmGroup extends JsonValue implements Group {
 
     @Override
     public void setType(String string) {
+        throw new UnsupportedOperationException("IdM group cannot be modified");
     }
+
 }

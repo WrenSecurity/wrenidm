@@ -67,7 +67,7 @@ if (!request.additionalParameters || !request.additionalParameters.taskId) {
     task = openidm.read("workflow/taskinstance/" + request.additionalParameters.taskId);
 
     if (!task) {
-        throw "Task ID " + request.additionalParameters.taskId + " Not Found";
+        throw "Task Not Found";
     }
 
     // Collect candidate users

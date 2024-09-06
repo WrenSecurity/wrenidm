@@ -48,6 +48,7 @@ public class IdmIdentityService extends IdmIdentityServiceImpl {
     public static final String SURNAME_ATTR = "sn";
     public static final String MAIL_ATTR = "mail";
     public static final String MEMBERS_ATTR = "members";
+    public static final String ROLES_ATTR = "authzRoles";
 
     private ConnectionFactory connectionFactory;
 
