@@ -26,82 +26,79 @@
 
 if (request.method !== "query") {
     throw {
-        "code" : 403,
-        "message" : "Access denied"
+        "code": 403,
+        "message": "Access denied"
     };
 }
 
 if (!request.additionalParameters || !request.additionalParameters.taskId) {
-    throw "Required param: taskId";
+    throw {
+        "code": 400,
+        "message": "Required param: taskId"
+    };
 }
 
 (function () {
-    var getUserByUserName = function(userName) {
-        var params = {
-                "_queryId": "for-userName",
-                "uid": userName
-            },
-            result = openidm.query("managed/user", params),
-            user = null;
+    const getUserByUserName = userName => {
+        const params = {
+            "_queryId": "for-userName",
+            "uid": userName
+        };
+        const users = openidm.query("managed/user", params);
+        return users.result[0];
+    };
 
-        if (result.result && result.result.length === 1) {
-            user = result.result[0];
-        }
-        return user;
-    },
-    getDisplayableOf = function(user) {
+    const getDisplayName = user => {
         if (user.givenName || user.sn) {
-            return user.givenName + " " + user.sn;
-        } else {
-            return user.userName ? user.userName : user._id;
+            return [user.givenName, user.sn].join(" ");
         }
-    },
-    usersToAdd = {},
-    availableUsersToAssign,
-    candidateUsers = [],
-    candidateUser,
-    candidateGroups = [],
-    result,
-    user,
-    username,
-    task = openidm.read("workflow/taskinstance/" + request.additionalParameters.taskId);
+        return user.userName ? user.userName : user._id;
+    };
 
+    // Fetch the task
+    const task = openidm.read(
+        `workflow/taskinstance/${encodeURIComponent(request.additionalParameters.taskId)}`
+    );
     if (!task) {
         throw "Task Not Found";
     }
 
-    // Collect candidate users
-    candidateUsers = task.candidates.candidateUsers;
-    candidateUsers.forEach(user => {
-        usersToAdd[candidateUser] = user;
-    });
+    const candidateUsers = {};
 
     // Collect users from candidate groups
-    candidateGroups = task.candidates.candidateGroups;
-    candidateGroups.forEach(group => {
-        result = openidm.query("managed/role/" + group + "/members", { "_queryFilter": "true" }, ["_id", "userName", "givenName", "sn"]);
-        if (result.result) {
-            result.result.forEach(user => {
-                usersToAdd[user.userName] = user;
-            });
+    task.candidates.candidateGroups.forEach(groupName => {
+        openidm.query(
+            `managed/role/${encodeURIComponent(groupName)}/authzMembers`,
+            { "_queryFilter": "true" },
+            ["_id", "userName", "givenName", "sn"]
+        ).result.forEach(user => {
+            candidateUsers[user.userName] = user;
+        });
+    });
+
+
+    // Collect candidate users
+    task.candidates.candidateUsers.forEach(userName => {
+        if (!candidateUsers[userName]) {
+            const user = getUserByUserName(userName);
+            if (user) {
+                candidateUsers[userName] = user;
+            }
         }
     });
 
-    availableUsersToAssign = [];
-    for (username in usersToAdd) {
-        user = getUserByUserName(username);
-        if (user) {
-            availableUsersToAssign.push({ _id: user._id, username: username, displayableName: getDisplayableOf(user) });
-        }
-    }
+    // Map candidates to the expected result format
+    const result = Object.values(candidateUsers).map(user => ({
+        _id: user._id,
+        username: user.userName,
+        displayName: getDisplayName(user)
+    }));
 
-    // Add internal users
-    internalUsers = openidm.query("repo/internal/user", { "_queryFilter": "true" });
-    if (internalUsers.result) {
-        internalUsers.result.forEach(user => {
-            availableUsersToAssign.push({ _id: user._id, username: user.userName, displayableName: getDisplayableOf(user) });
-        });
-    }
+    // Add internal users to the result
+    const internalUsers = openidm.query("repo/internal/user", { "_queryFilter": "true" });
+    internalUsers.result.forEach(user => {
+        result.push({ _id: user._id, username: user.userName, displayName: getDisplayName(user) });
+    });
 
-    return availableUsersToAssign;
+    return result;
 }());
