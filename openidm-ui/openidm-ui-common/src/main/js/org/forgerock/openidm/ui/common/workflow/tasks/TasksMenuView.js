@@ -266,7 +266,7 @@ define([
                         user = task.usersToAssign[i];
 
                         if ($(target).find("option[value='"+ user.username +"']").length === 0 && user.username !== conf.loggedUser.get("userName")) {
-                            $(target).append('<option value="'+ user.username +'">'+ user.displayableName +'</option');
+                            $(target).append('<option value="'+ user.username +'">'+ user.displayName +'</option');
                         }
                     }
                 }

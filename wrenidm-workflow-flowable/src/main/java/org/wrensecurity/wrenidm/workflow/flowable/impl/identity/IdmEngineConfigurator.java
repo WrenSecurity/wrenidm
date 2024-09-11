@@ -44,6 +44,8 @@ public class IdmEngineConfigurator extends org.flowable.idm.engine.configurator.
     }
 
     protected static IdmEngineConfiguration getIdmEngineConfiguration(AbstractEngineConfiguration engineConfiguration) {
-        return (IdmEngineConfiguration) engineConfiguration.getEngineConfigurations().get(EngineConfigurationConstants.KEY_IDM_ENGINE_CONFIG);
+        return (IdmEngineConfiguration) engineConfiguration.getEngineConfigurations()
+                .get(EngineConfigurationConstants.KEY_IDM_ENGINE_CONFIG);
     }
+
 }

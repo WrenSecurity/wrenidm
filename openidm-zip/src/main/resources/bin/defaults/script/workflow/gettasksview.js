@@ -55,7 +55,7 @@ if (request.method !== "query") {
         },
         getUsersWhoCanBeAssignedToTask = function(taskId) {
             var usersWhoCanBeAssignedToTaskQueryParams = {
-                    "_queryId": "getavailableuserstoassign",
+                    "_queryId": "query-by-task-id",
                     "taskId": taskId
                 },
                 isTaskManager = false,
@@ -72,7 +72,7 @@ if (request.method !== "query") {
                 }
 
                 if(isTaskManager) {
-                    usersWhoCanBeAssignedToTaskResult = openidm.query("endpoint/getavailableuserstoassign", usersWhoCanBeAssignedToTaskQueryParams);
+                    usersWhoCanBeAssignedToTaskResult = openidm.query("endpoint/getavailableuserstoassign", usersWhoCanBeAssignedToTaskQueryParams).result;
                 }
                 usersWhoCanBeAssignedToTask[taskId] = usersWhoCanBeAssignedToTaskResult;
             }

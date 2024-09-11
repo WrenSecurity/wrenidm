@@ -98,8 +98,10 @@ define([
                         label: $.t("common.form.submit"),
                         cssClass: "btn-primary",
                         action: function(dialogRef) {
-                            var id = $("#candidateUsersSelect").val(),
-                                selectedUser = _.find(candidateUsers, { _id: id }),
+                            var select = $("#candidateUsersSelect"),
+                                id = select.val(),
+                                users = select[0].selectize.options,
+                                selectedUser = users[id],
                                 callback = function () {
                                     _this.render([_this.model.id], _.bind(function () {
                                         messagesManager.messages.addMessage({"message": $.t("templates.taskInstance.assignedSuccess")});
