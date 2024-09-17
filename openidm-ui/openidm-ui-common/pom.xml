@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wrensecurity.wrenidm</groupId>
         <artifactId>openidm-ui</artifactId>
-        <version>7.0.0-M5</version>
+        <version>7.0.0-M6-SNAPSHOT</version>
     </parent>
 
     <artifactId>openidm-ui-common</artifactId>
