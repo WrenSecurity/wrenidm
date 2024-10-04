@@ -14,7 +14,7 @@
  * "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2018-2020 Wren Security.
+ * Portions Copyright 2018-2024 Wren Security.
  */
 package org.forgerock.openidm.sync.impl;
 
@@ -660,6 +660,7 @@ class ObjectMapping {
             throws SynchronizationException {
         if (resultScript != null) {
             Map<String, Object> scope = new HashMap<>();
+            scope.put("context", context);
             scope.put("source", reconContext.getStatistics().getSourceStat().asMap());
             scope.put("target", reconContext.getStatistics().getTargetStat().asMap());
             scope.put("global", reconContext.getStatistics().asMap());

@@ -12,6 +12,7 @@
  * own identifying information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2024 Wren Security.
  */
 package org.forgerock.openidm.sync;
 
@@ -46,7 +47,7 @@ import org.forgerock.openidm.condition.Condition;
 
 /**
  * This class contains the necessary logic to map an attribute from the source object to an attribute
- * on the target object.  It optionally contains a condition and transform scripts.. 
+ * on the target object.  It optionally contains a condition and transform scripts..
  */
 public class PropertyMapping {
 
@@ -58,7 +59,7 @@ public class PropertyMapping {
 
     /** A transform script */
     private final Script transform;
-    
+
     /** A {@link JsonPointer} for the target */
     private final JsonPointer targetPointer;
 
@@ -67,7 +68,7 @@ public class PropertyMapping {
 
     /** A default value */
     private final Object defaultValue;
-    
+
     /**
      * Constructor
      *
@@ -117,7 +118,7 @@ public class PropertyMapping {
 
     /**
      * Applies this property mapping on the supplied source and target objects if no link qualifier has been configured,
-     * or the supplied link qualifier matches the configure one.  This may execute condition and transform scripts if 
+     * or the supplied link qualifier matches the configure one.  This may execute condition and transform scripts if
      * any are configured.
      *
      * @param sourceObject Current specified source property/object to map from
@@ -144,13 +145,15 @@ public class PropertyMapping {
         }
         if (transform != null) { // optional property mapping script
             Map<String, Object> scope = new HashMap<String, Object>();
+            scope.put("context", context);
             scope.put("source", result);
             scope.put("linkQualifier", linkQualifier);
+
             try {
                 result = transform.exec(scope, context); // script yields transformation result
             } catch (ScriptException se) {
                 LOGGER.warn("Property mapping " + targetPointer + " transformation script encountered exception", se);
-                throw new SynchronizationException("Transformation script error :  " + se.getMessage() + 
+                throw new SynchronizationException("Transformation script error :  " + se.getMessage() +
                         " for attribute '" + targetPointer + "'");
             }
         }
@@ -159,10 +162,10 @@ public class PropertyMapping {
         }
         put(targetObject, targetPointer, result);
     }
-    
+
     /**
      * Evaluates a property mapping condition.  Returns true if the condition passes, false otherwise.
-     * 
+     *
      * @param sourceObject Current specified source property/object to map from
      * @param oldSource oldSource an optional previous source object before the change(s) that triggered the sync, null
      * if not provided
