@@ -12,13 +12,8 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
+ * Portions copyright Wren Security 2024.
  */
-
-/**
- * Calculates the effective roles
- */
-
-/*global object */
 
 /**
  * Module which calculates the effective roles
@@ -69,22 +64,15 @@
     /**
      * Processes the temporal constraints of a given object. If any temporal constraints are defined, this function will
      * return true if the current time instant (now) is contained within any of the temporal constraints, false
-     * otherwise.  If no constraints are defined the function will return true.
+     * otherwise. If no constraints are defined the function will return true.
      *
      * @param role the role to process.
      * @returns false if temporal constraints are defined and don't include the current time instant, true otherwise.
      */
     function processConstraints(object) {
-        if (object.temporalConstraints !== undefined && object.temporalConstraints.length) {
-            // Loops through constraints
-            for (index in object.temporalConstraints) {
-                var constraint = object.temporalConstraints[index];
-                // If at least one constraint passes, the role is in effect
-                if (org.forgerock.openidm.util.DateUtil.getDateUtil().isNowWithinInterval(constraint.duration)) {
-                    return true;
-                }
-            }
-            return false;
+        if (object.temporalConstraints && object.temporalConstraints.length) {
+            // If at least one constraint passes, the role is in effect
+            return object.temporalConstraints.some(constraint => org.forgerock.openidm.util.DateUtil.getDateUtil().isNowWithinInterval(constraint.duration));
         }
         // No temporal constraints
         return true;
