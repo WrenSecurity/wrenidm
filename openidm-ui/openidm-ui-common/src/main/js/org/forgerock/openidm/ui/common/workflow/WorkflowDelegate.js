@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -126,6 +126,19 @@ define([
                     errorCallback();
                 } else if (successCallback) {
                     successCallback(data.result[0]);
+                }
+            },
+            error: errorCallback
+        });
+    };
+
+    obj.fetchUser = function(username, successCallback, errorCallback) {
+        obj.serviceCall({
+            url : '/openidm/managed/user?_queryId=for-userName&uid=' + encodeURIComponent(username) + '&_fields=_id,givenName,sn,userName',
+            type: 'GET',
+            success: function(data) {
+                if (successCallback) {
+                    successCallback(data);
                 }
             },
             error: errorCallback

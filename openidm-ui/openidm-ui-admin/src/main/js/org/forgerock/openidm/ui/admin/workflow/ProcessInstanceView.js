@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -27,7 +27,8 @@ define([
     "org/forgerock/commons/ui/common/main/AbstractCollection",
     "backgrid",
     "org/forgerock/openidm/ui/admin/util/BackgridUtils",
-    "org/forgerock/commons/ui/common/util/UIUtils"
+    "org/forgerock/commons/ui/common/util/UIUtils",
+    "org/forgerock/openidm/ui/common/workflow/WorkflowDelegate"
 ], function($, _,
         AbstractView,
         eventManager,
@@ -38,11 +39,11 @@ define([
         AbstractCollection,
         Backgrid,
         BackgridUtils,
-        UIUtils) {
+        UIUtils,
+        WorkflowDelegate) {
 
     var ProcessInstanceModel = AbstractModel.extend({ url: "/openidm/workflow/processinstance" }),
         ProcessDefinitionModel = AbstractModel.extend({ url: "/openidm/workflow/processdefinition" }),
-        UserModel = AbstractModel.extend({ url: "/openidm/managed/user" }),
         TaskInstanceCollection = AbstractCollection.extend({
             mode: "client"
         }),
@@ -67,9 +68,7 @@ define([
                 }, this));
             },
             render: function(args, callback) {
-                var processDefinition = new ProcessDefinitionModel(),
-                    startedBy = new UserModel(),
-                    owner = new UserModel();
+                var processDefinition = new ProcessDefinitionModel();
 
                 this.model = new ProcessInstanceModel();
 
@@ -77,14 +76,25 @@ define([
 
                 this.model.fetch().then(_.bind(function(){
                     var fetchArr = [];
+
                     this.data.processInstance = this.model.toJSON();
 
                     if (this.data.processInstance.startUserId) {
-                        startedBy.id = this.data.processInstance.startUserId;
-                        if (startedBy.id === 'openidm-admin') {
-                            startedBy.url = '/openidm/repo/internal/user';
+                        if (this.data.processInstance.startUserId === 'openidm-admin') {
+                            this.data.startedBy = {
+                                _id: 'openidm-admin',
+                                givenName: 'Admin',
+                                sn: 'Admin'
+                            };
+                        } else {
+                            fetchArr.push(WorkflowDelegate.fetchUser(this.data.processInstance.startUserId,
+                                _.bind(function(response) {
+                                    if (response.resultCount === 1) {
+                                        this.data.startedBy = response.result[0];
+                                    }
+                                }, this)));
+
                         }
-                        fetchArr.push(startedBy.fetch());
                     }
 
                     processDefinition.id = this.data.processInstance.processDefinitionId;
@@ -93,7 +103,6 @@ define([
                     $.when.apply($, fetchArr).done(_.bind(function(){
 
                         this.data.processDefinition = processDefinition.toJSON();
-                        this.data.startedBy = startedBy.toJSON();
 
                         if (this.data.processDefinition.processDiagramResourceName) {
                             this.data.showDiagram = true;
