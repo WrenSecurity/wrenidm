@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -304,7 +304,7 @@ define([
                 // this text escaped since it's being inserted into an attribute
                 let tipDescription = _.escape($(this).text());
                 let iconElement = $('<i class="fa fa-info-circle info" title="'+ tipDescription+'"/>');
-                $(this).parent().find("label").after(iconElement);
+                $(this).parent().find("label").append(' ').append(iconElement);
                 $(this).empty();
             });
 
