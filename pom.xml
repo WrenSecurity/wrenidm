@@ -126,7 +126,7 @@
         <pgpVerifyKeysVersion>1.8.1</pgpVerifyKeysVersion>
 
         <!-- Commons versions -->
-        <wrensec.commons.version>22.6.0</wrensec.commons.version>
+        <wrensec.commons.version>22.6.1</wrensec.commons.version>
         <commons.script.version>4.7.0</commons.script.version>
 
         <!-- Third party dependency versions -->
