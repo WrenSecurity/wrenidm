@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2023-2024 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -127,7 +127,7 @@ define([
          */
         obj.assignTask = function(model, user, successCallback) {
             var assignNow = function () {
-                model.set("assignee", user._id);
+                model.set("assignee", user.userName);
 
                 if (user._id === "noUserAssigned") {
                     model.set("assignee", null);

@@ -142,7 +142,7 @@ define([
                 this.model.processes.getFirstPage();
 
                 this.$el.find("#processAssignedTo").selectize({
-                    valueField: '_id',
+                    valueField: 'userName',
                     labelField: 'userName',
                     searchField: ["userName","givenName", "sn"],
                     create: false,
@@ -196,7 +196,7 @@ define([
 
                 this.$el.find("#processAssignedTo")[0].selectize.addOption({
                     _id : "anyone",
-                    userName: "Anyone",
+                    userName: "anyone",
                     givenName : "Anyone",
                     sn : ""
                 });

@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -24,11 +24,11 @@ define([
     "org/forgerock/commons/ui/common/util/Constants",
     "org/forgerock/commons/ui/common/util/UIUtils",
     "org/forgerock/commons/ui/common/main/AbstractModel",
-    "org/forgerock/openidm/ui/admin/util/WorkflowUtils"
-], function($, _, Handlebars, AbstractView, eventManager, constants, UIUtils, AbstractModel, WorkflowUtils) {
+    "org/forgerock/openidm/ui/admin/util/WorkflowUtils",
+    "org/forgerock/openidm/ui/common/workflow/WorkflowDelegate"
+], function($, _, Handlebars, AbstractView, eventManager, constants, UIUtils, AbstractModel, WorkflowUtils, WorkflowDelegate) {
     var TaskModel = AbstractModel.extend({ url: "/openidm/workflow/taskinstance" }),
         ProcessModel = AbstractModel.extend({ url: "/openidm/workflow/processdefinition" }),
-        UserModel = AbstractModel.extend({ url: "/openidm/managed/user" }),
         TaskInstanceView = AbstractView.extend({
             template: "templates/admin/workflow/TaskInstanceViewTemplate.html",
 
@@ -36,8 +36,7 @@ define([
                 "click .assignTask" : "showCandidateUserSelection"
             },
             render: function(args, callback) {
-                var process = new ProcessModel(),
-                    assignee = new UserModel();
+                var process = new ProcessModel();
 
                 this.data = {
                     showForm: false,
@@ -54,8 +53,12 @@ define([
                     this.data.task = this.model.toJSON();
 
                     if (this.data.task.assignee) {
-                        assignee.id = this.data.task.assignee;
-                        fetchArr.push(assignee.fetch());
+                        fetchArr.push(WorkflowDelegate.fetchUser(this.data.task.assignee,
+                            _.bind(function(response) {
+                                if (response.resultCount === 1) {
+                                    this.data.assignee = response.result[0];
+                                }
+                            }, this)));
                     }
 
                     process.id = this.data.task.processDefinitionId;
@@ -65,7 +68,6 @@ define([
                         var formTemplate = _.filter(this.data.task.formProperties, function(p) { return _.has(p,"_formGenerationTemplate"); });
 
                         this.data.process = process.toJSON();
-                        this.data.assignee = assignee.toJSON();
 
                         if (formTemplate.length) {
                             this.data.showForm = true;

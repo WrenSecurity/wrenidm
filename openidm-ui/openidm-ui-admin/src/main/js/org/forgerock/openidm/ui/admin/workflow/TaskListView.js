@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -140,7 +140,7 @@ define([
                 Tasks.getFirstPage();
 
                 this.$el.find("#taskAssignedTo").selectize({
-                    valueField: '_id',
+                    valueField: 'userName',
                     labelField: 'userName',
                     searchField: ["given", "sn", "userName"],
                     create: false,
@@ -199,8 +199,8 @@ define([
                     }, this)
                 });
 
-                this.$el.find("#taskAssignedTo")[0].selectize.addOption({_id : "anyone", userName: "", displayName : $.t("templates.workflows.tasks.anyone")});
-                this.$el.find("#taskAssignedTo")[0].selectize.addOption({_id : "unassigned", userName: "", displayName : $.t("templates.workflows.tasks.unassigned")});
+                this.$el.find("#taskAssignedTo")[0].selectize.addOption({_id : "anyone", userName: "anyone", displayName : $.t("templates.workflows.tasks.anyone")});
+                this.$el.find("#taskAssignedTo")[0].selectize.addOption({_id : "unassigned", userName: "unassigned", displayName : $.t("templates.workflows.tasks.unassigned")});
 
                 this.$el.find("#taskAssignedTo")[0].selectize.setValue("anyone");
 
