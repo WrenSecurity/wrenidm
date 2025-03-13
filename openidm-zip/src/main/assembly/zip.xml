@@ -98,6 +98,7 @@
                 <exclude>org.apache.felix:org.osgi.foundation</exclude>
                 <exclude>org.apache.felix:javax.servlet</exclude>
                 <exclude>org.forgerock.openicf.connectors:*</exclude>
+                <exclude>org.wrensecurity.wrenicf.connector:*</exclude>
                 <exclude>org.wrensecurity.wrenidm:openidm-launcher</exclude>
                 <exclude>org.wrensecurity.wrenidm:openidm-shell</exclude>
                 <exclude>org.wrensecurity.wrenidm:openidm-ui-ria*</exclude>
@@ -177,6 +178,7 @@
             <outputDirectory>/wrenidm/connectors</outputDirectory>
             <includes>
                 <include>org.forgerock.openicf.connectors:*-connector</include>
+                <include>org.wrensecurity.wrenicf.connector:*-connector</include>
             </includes>
         </dependencySet>
         <dependencySet>

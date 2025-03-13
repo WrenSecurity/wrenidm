@@ -175,10 +175,10 @@
         <openicf.csvconnector.version>1.5.1.4</openicf.csvconnector.version>
         <openicf.dbtableconnector.version>1.1.0.2</openicf.dbtableconnector.version>
         <openicf.remoteconnectorserver.version />
-        <openicf.ldapconnector.version>1.4.3.0</openicf.ldapconnector.version>
         <openicf.groovyconnector.version>1.4.3.0</openicf.groovyconnector.version>
         <openicf.sshconnector.version>1.4.1.0</openicf.sshconnector.version>
         <openicf.kerberosconnector.version>1.4.1.0</openicf.kerberosconnector.version>
+        <wrenicf.ldapconnector.version>1.5.3.0</wrenicf.ldapconnector.version>
 
         <!-- OSGi bundles properties -->
         <openidm.osgi.import.before.defaults />
