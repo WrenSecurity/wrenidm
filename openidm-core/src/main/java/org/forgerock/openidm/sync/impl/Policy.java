@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Portions copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2025 Wren Security.
  */
 package org.forgerock.openidm.sync.impl;
 
@@ -51,7 +52,7 @@ class Policy {
     private final Situation situation;
 
     /**
-     * Reconciliation Action {@link org.forgerock.openidm.sync.ReconAction}. 
+     * Reconciliation Action {@link org.forgerock.openidm.sync.ReconAction}.
      */
     private final ReconAction action;
 
@@ -59,7 +60,7 @@ class Policy {
      * Script for action.
      */
     private final Script script;
-    
+
     /**
      * Script for postAction.
      */
@@ -69,7 +70,7 @@ class Policy {
      * Condition used to determine if policy should be enforced.
      */
     private Condition condition;
-    
+
     /**
      * A Constructor for the Policy class.
      *
@@ -95,17 +96,17 @@ class Policy {
 
     /**
      * Returns the condition for this policy.
-     *  
+     *
      * @return a {@link Condition} object representing
      * * a condition for this policy
      */
     public Condition getCondition() {
         return condition;
     }
-    
+
     /**
      * Returns the situation for this policy.
-     * 
+     *
      * @return a {@link Situation} object representing the situation for this policy
      */
     public Situation getSituation() {
@@ -123,8 +124,8 @@ class Policy {
      * @return a {@link ReconAction} object representing the action for this policy
      * @throws SynchronizationException TODO.
      */
-    public ReconAction getAction(LazyObjectAccessor source, 
-                                 LazyObjectAccessor target, 
+    public ReconAction getAction(LazyObjectAccessor source,
+                                 LazyObjectAccessor target,
                                  final SyncOperation syncOperation,
                                  String linkQualifier,
                                  Context context) throws SynchronizationException {
@@ -163,25 +164,26 @@ class Policy {
 
     /**
      * Evaluates a post action script, if present.
-     * 
+     *
      * @param source a {@link LazyObjectAccessor} representing the source object
      * @param target a {@link LazyObjectAccessor} representing the target object
      * @param action the {@link ReconAction} that was performed
-     * @param linkQualifier the linkQualifier               
+     * @param linkQualifier the linkQualifier
      * @param sourceAction true if this is a source sync operation, false if it is a target sync operation
      * @param reconId a {@link String} representing the ID of the reconciliation
      * @param context a {@link Context} associated with this call
      * @throws SynchronizationException
      */
-    public void evaluatePostAction(LazyObjectAccessor source, 
-                                   LazyObjectAccessor target, 
-                                   ReconAction action, 
-                                   boolean sourceAction, 
+    public void evaluatePostAction(LazyObjectAccessor source,
+                                   LazyObjectAccessor target,
+                                   ReconAction action,
+                                   boolean sourceAction,
                                    String linkQualifier,
                                    String reconId,
                                    Context context) throws SynchronizationException {
         if (postAction != null) {
             Map<String, Object> scope = new HashMap<String, Object>();
+            scope.put("context", context);
             scope.put("linkQualifier", linkQualifier);
             scope.put("sourceAction", sourceAction);
             scope.put("action", action.name());
