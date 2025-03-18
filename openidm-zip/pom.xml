@@ -513,9 +513,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.forgerock.openicf.connectors</groupId>
+            <groupId>org.wrensecurity.wrenicf.connector</groupId>
             <artifactId>ldap-connector</artifactId>
-            <version>${openicf.ldapconnector.version}</version>
+            <version>${wrenicf.ldapconnector.version}</version>
         </dependency>
 
         <dependency>
