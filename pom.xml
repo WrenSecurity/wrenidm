@@ -26,7 +26,7 @@
 
     <groupId>org.wrensecurity.wrenidm</groupId>
     <artifactId>openidm-project</artifactId>
-    <version>7.0.0-M7-SNAPSHOT</version>
+    <version>7.0.0-M7</version>
     <packaging>pom</packaging>
 
     <name>Wren:IDM - Parent</name>
@@ -57,7 +57,7 @@
         <url>https://github.com/WrenSecurity/WrenIDM</url>
         <connection>scm:git:git://github.com/WrenSecurity/WrenIDM.git</connection>
         <developerConnection>scm:git:git@github.com:WrenSecurity/WrenIDM.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>7.0.0-M7</tag>
     </scm>
 
     <distributionManagement>
