@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2018-2024 Wren Security.
+ * Portions Copyright 2018-2025 Wren Security.
  */
 package org.forgerock.openidm.repo.jdbc.impl.handler;
 
@@ -424,7 +424,7 @@ public class MappedTableHandler extends AbstractTableHandler {
         try (var deleteStatement = connection.prepareStatement(deleteSql)) {
             logger.trace("Populating prepared statement {} for {} {} {} {}", deleteStatement, fullId, type, localId, rev);
             deleteStatement.setString(1, localId);
-            deleteStatement.setString(2, rev);
+            deleteStatement.setString(2, existingRev);
             logger.debug("Delete statement: {}", deleteStatement);
 
             int deletedRows = deleteStatement.executeUpdate();
