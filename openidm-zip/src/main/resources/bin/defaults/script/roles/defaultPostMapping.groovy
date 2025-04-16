@@ -12,11 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions copyright 2025 Wren Security
  */
 package bin.defaults.script.roles
 
-import static org.forgerock.json.JsonValue.object
 import static org.forgerock.json.JsonValue.field
+import static org.forgerock.json.JsonValue.object
 import static org.forgerock.json.resource.ResourcePath.resourcePath
 
 import org.forgerock.openidm.util.DateUtil
@@ -38,16 +39,26 @@ try {
         return;
     }
 
-    JsonValue lastSyncEffectiveAssignments = oldSource != null \
+    // Get source object's effective assignments
+    JsonValue sourceEffectiveAssignments = sourceObject.get("effectiveAssignments");
+    if (sourceEffectiveAssignments.isNull()) {
+        return;
+    }
+
+    // Filter out effective assignments of the current mapping
+    JsonValue appliedEffectiveAssignments = JsonValue.json(sourceEffectiveAssignments.asList()
+            .findAll({ it?.mapping == mappingName }))
+
+    // Resolve previously applied effective assignments
+    JsonValue previousEffectiveAssignments = oldSource != null \
         ? oldSource.get("lastSync").get(mappingName).get("effectiveAssignments")
         : sourceObject.get("lastSync").get(mappingName).get("effectiveAssignments");
-    JsonValue sourceObjectEffectiveAssignments = sourceObject.get("effectiveAssignments");
 
-    if (cacheEffectiveAssignments(lastSyncEffectiveAssignments, sourceObjectEffectiveAssignments)) {
+    if (cacheEffectiveAssignments(previousEffectiveAssignments, appliedEffectiveAssignments)) {
         def patch = [["operation" : "replace",
                       "field" : "/lastSync/"+ mappingName,
                       "value" : object(
-                                    field("effectiveAssignments", sourceObjectEffectiveAssignments),
+                                    field("effectiveAssignments", appliedEffectiveAssignments),
                                     field("timestamp", DateUtil.getDateUtil().now()))]];
 
         syncContext.disableSync()
@@ -62,27 +73,12 @@ try {
 }
 
 /**
- * Determine if effective assignments are used and
- * check whether we should cache the effective assignments
+ * Determine if effective assignments are used and check whether we should cache the effective assignments
  * in the lastSync attribute of managed/user if so.
  *
  * @return true to cache; false otherwise
  */
-private boolean cacheEffectiveAssignments(JsonValue lastSyncEffectiveAssignments,
-        JsonValue sourceObjectEffectiveAssignments ) {
-    return sourceObjectEffectiveAssignments.isNotNull() \
-        && !sameAssignments(lastSyncEffectiveAssignments.copy(), sourceObjectEffectiveAssignments.copy())
-}
-
-
-/**
- * Determine if the assignments in the array of assignments
- * are the same.
- *
- * @param lastSyncEA lastSyncEffectiveAssignments JsonValue.
- * @param sourceObjectEA sourceObjectEffectiveAssignments JsonValue.
- * @return true is they are the same; false otherwise
- */
-private boolean sameAssignments(JsonValue lastSyncEA, JsonValue sourceObjectEA) {
-    return lastSyncEA.isEqualTo(sourceObjectEA)
+private boolean cacheEffectiveAssignments(JsonValue previousEffectiveAssignments, JsonValue appliedEffectiveAssignments) {
+    return appliedEffectiveAssignments.isNotNull() \
+            && !previousEffectiveAssignments.isEqualTo(appliedEffectiveAssignments)
 }
