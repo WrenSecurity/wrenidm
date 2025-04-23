@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2016 ForgeRock AS.
- * Portions Copyright 2017-2024 Wren Security
+ * Portions Copyright 2017-2025 Wren Security
  */
 package org.wrensecurity.wrenidm.workflow.flowable.impl.resource;
 
@@ -53,6 +53,7 @@ import org.forgerock.json.resource.ActionRequest;
 import org.forgerock.json.resource.ActionResponse;
 import org.forgerock.json.resource.BadRequestException;
 import org.forgerock.json.resource.CollectionResourceProvider;
+import org.forgerock.json.resource.CountPolicy;
 import org.forgerock.json.resource.CreateRequest;
 import org.forgerock.json.resource.DeleteRequest;
 import org.forgerock.json.resource.InternalServerErrorException;
@@ -165,7 +166,9 @@ public class TaskInstanceResource implements CollectionResourceProvider {
                 applyRequestParams(query, request);
                 applySortKeys(query, request);
             }
-            for (Task task : query.list()) {
+            List<Task> results = request.getPageSize() == 0 ? query.list() : query.listPage(
+                    request.getPagedResultsOffset(), request.getPageSize());
+            for (Task task : results) {
                 JsonValue value = json(mapper.convertValue(task, Map.class));
                 if (DelegationState.PENDING == task.getDelegationState()) {
                     value.add(WorkflowConstants.DELEGATE_ATTR, task.getAssignee());
@@ -174,7 +177,20 @@ public class TaskInstanceResource implements CollectionResourceProvider {
                 }
                 handler.handleResource(newResourceResponse(task.getId(), null, value));
             }
-            return newQueryResponse().asPromise();
+            if (request.getPageSize() == 0) {
+                return newQueryResponse().asPromise();
+            }
+            // Handle paging
+            Integer totalCount = null;
+            if (request.getTotalPagedResultsPolicy() != CountPolicy.NONE) {
+               totalCount = Long.valueOf(query.count()).intValue();
+            }
+            int nextOffset = request.getPagedResultsOffset() + results.size();
+            if (totalCount != null) {
+                return newQueryResponse(totalCount > nextOffset ? String.valueOf(nextOffset) : null, CountPolicy.EXACT, totalCount).asPromise();
+            } else {
+                return newQueryResponse(results.size() >= request.getPageSize() ? String.valueOf(nextOffset) : null).asPromise();
+            }
         } catch (NotSupportedException e) {
             return e.asPromise();
         } catch (Exception e) {
