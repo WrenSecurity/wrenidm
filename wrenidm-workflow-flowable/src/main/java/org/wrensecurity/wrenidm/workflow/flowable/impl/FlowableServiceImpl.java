@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2016 ForgeRock AS.
- * Portions Copyright 2020-2024 Wren Security
+ * Portions Copyright 2020-2025 Wren Security
  */
 package org.wrensecurity.wrenidm.workflow.flowable.impl;
 
@@ -66,7 +66,6 @@ import org.forgerock.openidm.router.RouteService;
 import org.forgerock.script.ScriptRegistry;
 import org.forgerock.services.context.Context;
 import org.forgerock.util.promise.Promise;
-import org.h2.jdbcx.JdbcDataSource;
 import org.osgi.framework.Constants;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
@@ -153,7 +152,7 @@ public class FlowableServiceImpl implements RequestHandler {
 
     @Reference(
             service = DataSourceService.class,
-            cardinality = ReferenceCardinality.MULTIPLE,
+            cardinality = ReferenceCardinality.AT_LEAST_ONE,
             unbind = "unbindDataSourceService",
             policy = ReferencePolicy.DYNAMIC)
     protected void bindDataSourceService(DataSourceService service, Map<String, Object> properties) {
@@ -245,17 +244,7 @@ public class FlowableServiceImpl implements RequestHandler {
                 case embedded: // Create embedded process engine
                     StandaloneProcessEngineConfiguration configuration = new StandaloneProcessEngineConfiguration();
                     // Prepare data store instance
-                    if (!dataSourceServices.containsKey(useDataSource)) {
-                        // Use embedded H2 DB when missing data source with the specified name
-                        JdbcDataSource dataSource = new JdbcDataSource();
-                        File dbFile = IdentityServer.getFileForWorkingPath("db/flowable/database");
-                        dataSource.setURL("jdbc:h2:file:" + URLDecoder.decode(dbFile.getPath(), "UTF-8") + ";DB_CLOSE_DELAY=1000");
-                        dataSource.setUser("sa");
-                        configuration.setDatabaseType("h2");
-                        configuration.setDataSource(dataSource);
-                    } else {
-                        configuration.setDataSource(new DataSourceProxy());
-                    }
+                    configuration.setDataSource(new DataSourceProxy());
 
                     // Configure database-related properties
                     configuration.setDatabaseSchemaUpdate("true");
@@ -367,28 +356,6 @@ public class FlowableServiceImpl implements RequestHandler {
                 logger.error("Unable to destroy workflow installer service.", e);
             }
             worfklowInstallerConfig = null;
-        }
-        // Stop embedded H2 database
-        if (processEngine != null && "h2".equals(processEngine.getProcessEngineConfiguration().getDatabaseType()) &&
-                !dataSourceServices.containsKey(useDataSource)) {
-            DataSource dataSource = processEngine.getProcessEngineConfiguration().getDataSource();
-            Connection conn = null;
-            try {
-                conn = dataSource.getConnection();
-                Statement statement = conn.createStatement();
-                statement.execute("SHUTDOWN");
-                statement.close();
-            } catch (SQLException e) {
-                logger.error("Failed to stop embedded H2 database.", e);
-            } finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException e) {
-                        logger.error("Failed to close embedded H2 database connection.", e);
-                    }
-                }
-            }
         }
         // Destroy process engine factory
         if (processEngineFactory != null) {
