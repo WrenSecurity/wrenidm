@@ -14,7 +14,7 @@
  * "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2025 Wren Security.
  */
 package org.forgerock.openidm.managed;
 
@@ -71,29 +71,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class RelationshipProvider {
-    
+
     /**
      * Setup logging for the {@link RelationshipProvider}.
      */
     private static final Logger logger = LoggerFactory.getLogger(RelationshipProvider.class);
-    
+
     /**
      * The activity logger.
      */
     protected final ActivityLogger activityLogger;
-    
+
     /**
      * A service for sending sync events on managed objects
      */
     protected final ManagedObjectSetService managedObjectSetService;
-    
+
     /** Used for accessing the repo */
     protected final ConnectionFactory connectionFactory;
 
     /** Path to this resource in the repo */
     protected static final ResourcePath REPO_RESOURCE_PATH = new ResourcePath("repo", "relationships");
 
-    /** The resource container that property associated with this provider is a field of.  This will typically be a 
+    /** The resource container that property associated with this provider is a field of.  This will typically be a
      *  managed object path such as: "managed/user" or "managed/role". */
     protected final ResourcePath resourceContainer;
 
@@ -105,10 +105,10 @@ public abstract class RelationshipProvider {
 
     /** An optimized relationship query ID */
     protected static final String RELATIONSHIP_QUERY_ID = "find-relationships-for-resource";
-    
+
     /** A query field representing the full path of the managed object instance of this relationship field  */
     protected static final String QUERY_FIELD_RESOURCE_PATH = "fullResourceId";
-    
+
     /** A query field representing the field name of this relationship field  */
     protected static final String QUERY_FIELD_FIELD_NAME = "resourceFieldName";
 
@@ -117,10 +117,10 @@ public abstract class RelationshipProvider {
 
     /** The name of the secondId field in the repo */
     protected static final String REPO_FIELD_SECOND_ID = "secondId";
-    
+
     /** The name of the firstPropertyName field in the repo */
     protected static final String REPO_FIELD_FIRST_PROPERTY_NAME = "firstPropertyName";
-    
+
     /** The name of the secondPropertyName field in the repo */
     protected static final String REPO_FIELD_SECOND_PROPERTY_NAME = "secondPropertyName";
 
@@ -132,13 +132,13 @@ public abstract class RelationshipProvider {
 
     /** The name of the properties field in resource response */
     public static final JsonPointer FIELD_PROPERTIES = SchemaField.FIELD_PROPERTIES;
-    
+
     /** The name of the secondId field in resource response */
     public static final JsonPointer FIELD_REFERENCE = SchemaField.FIELD_REFERENCE;
-    
+
     /** The name of the field containing the id */
     public static final JsonPointer FIELD_ID = FIELD_PROPERTIES.child(FIELD_CONTENT_ID);
-    
+
     /** The name of the field containing the revision */
     public static final JsonPointer FIELD_REV = FIELD_PROPERTIES.child(FIELD_CONTENT_REVISION);
 
@@ -148,7 +148,7 @@ public abstract class RelationshipProvider {
     protected final RelationshipValidator relationshipValidator;
 
     /**
-     * Returns a Function to format a resource from the repository to that expected by the provider consumer. This is 
+     * Returns a Function to format a resource from the repository to that expected by the provider consumer. This is
      * simply a wrapper of {@link #formatResponseNoException} with a {@link ResourceException} in the signature to
      * allow for use against {@code Promise<ResourceResponse, ResourceException>}
      *
@@ -200,9 +200,9 @@ public abstract class RelationshipProvider {
     protected Function<ResourceResponse, ResourceResponse, NeverThrowsException> formatResponseNoException(
             final Context context, final Request request) {
         return new Function<ResourceResponse, ResourceResponse, NeverThrowsException>() {
-            
+
                 public String resourceFullPath = getResourceFullPath(context, request).toString();
-                
+
                 @Override
                 public ResourceResponse apply(final ResourceResponse raw) {
                     final JsonValue rawContent = raw.getContent();
@@ -300,14 +300,14 @@ public abstract class RelationshipProvider {
 
     /**
      * Create a new relationship set for the given managed resource
-     * 
+     *
      * @param connectionFactory Connection factory used to access the repository
      * @param resourcePath Name of the resource we are handling relationships for eg. managed/user
      * @param schemaField The field used to represent this relationship in the parent object
      * @param activityLogger The audit activity logger to use
      * @param managedObjectSetService Service to send sync events to
      */
-    protected RelationshipProvider(final ConnectionFactory connectionFactory, final ResourcePath resourcePath, 
+    protected RelationshipProvider(final ConnectionFactory connectionFactory, final ResourcePath resourcePath,
             final SchemaField schemaField, final ActivityLogger activityLogger,
             final ManagedObjectSetService managedObjectSetService) {
         this.connectionFactory = connectionFactory;
@@ -336,11 +336,11 @@ public abstract class RelationshipProvider {
      * @return A promise containing the full representation of the relationship on the supplied resourceId
      *         or a ResourceException if an error occurred
      */
-    public abstract Promise<JsonValue, ResourceException> getRelationshipValueForResource(Context context, 
+    public abstract Promise<JsonValue, ResourceException> getRelationshipValueForResource(Context context,
             String resourceId);
 
     /**
-     * Set the supplied {@link JsonValue} as the current state of this relationship. This will support updating any 
+     * Set the supplied {@link JsonValue} as the current state of this relationship. This will support updating any
      * existing relationship (_id is present) and remove any relationship not present in the value from the repository.
      *
      * @param clearExisting If existing relationships not present in the value parameter should be removed from the repository
@@ -357,7 +357,7 @@ public abstract class RelationshipProvider {
             final Context context, final String resourceId, final JsonValue value);
 
     /**
-     * Clear any relationship associated with the given resource. This could be used if for example a resource no longer 
+     * Clear any relationship associated with the given resource. This could be used if for example a resource no longer
      * exists.
      *
      * @param context The current context.
@@ -384,18 +384,18 @@ public abstract class RelationshipProvider {
 
     /**
      * Creates a relationship object.
-     * 
+     *
      * @param context The current context.
      * @param request The current request.
      * @return A promise containing the created relationship object
      */
-    public Promise<ResourceResponse, ResourceException> createInstance(final Context context, 
+    public Promise<ResourceResponse, ResourceException> createInstance(final Context context,
             final CreateRequest request) {
         try {
             final CreateRequest createRequest = Requests.copyOfCreateRequest(request);
             createRequest.setResourcePath(REPO_RESOURCE_PATH);
             createRequest.setContent(convertToRepoObject(firstResourcePath(context, request), request.getContent()));
-            
+
             // If the request is from ManagedObjectSet then create and return the promise after formatting.
             if (context.containsContext(ManagedObjectContext.class)) {
                 return syncReferencedObjectCreateHandler
@@ -419,7 +419,7 @@ public abstract class RelationshipProvider {
 
             // Perform update operations on the managed object
             performUpdateOperations(context, request, afterValue, beforeValue);
-            
+
             return expandFields(context, request, response);
         } catch (ResourceException e) {
             return e.asPromise();
@@ -453,31 +453,31 @@ public abstract class RelationshipProvider {
 
     /**
      * Reads a relationship object.
-     * 
+     *
      * @param context The current context.
      * @param relationshipId The relationship id.
      * @param request The current request.
      * @return A promise containing the relationship object
      */
-    public Promise<ResourceResponse, ResourceException> readInstance(Context context, String relationshipId, 
+    public Promise<ResourceResponse, ResourceException> readInstance(Context context, String relationshipId,
             ReadRequest request) {
         try {
             final ReadRequest readRequest = Requests.newReadRequest(REPO_RESOURCE_PATH.child(relationshipId));
-            
-            Promise<ResourceResponse, ResourceException> promise = 
+
+            Promise<ResourceResponse, ResourceException> promise =
                     getConnection().readAsync(context, readRequest).then(formatResponse(context, request));
-            
+
             // If the request is from ManagedObjectSet then create and return the promise after formatting.
             if (context.containsContext(ManagedObjectContext.class)) {
                 return promise;
             }
-            
+
             // Read the relationship
             final ResourceResponse response = promise.getOrThrow();
-            
+
             // Get the value of the managed object
             final ResourceResponse value = getManagedObject(context);
-            
+
             // Do activity logging.
             activityLogger.log(context, request, "read", getManagedObjectPath(context), null, value.getContent(),
                     Status.SUCCESS);
@@ -492,13 +492,13 @@ public abstract class RelationshipProvider {
 
     /**
      * Updates a relationship object.
-     * 
+     *
      * @param context The current context.
      * @param relationshipId The relationship id.
      * @param request The current request.
      * @return A promise containing the updated relationship object
      */
-    public Promise<ResourceResponse, ResourceException> updateInstance(final Context context, 
+    public Promise<ResourceResponse, ResourceException> updateInstance(final Context context,
             final String relationshipId, final UpdateRequest request) {
         try {
             final String rev = request.getRevision();
@@ -520,16 +520,16 @@ public abstract class RelationshipProvider {
                         });
             }
             ResourceResponse result;
-            
+
             // Get the before value of the managed object
             final JsonValue beforeValue = getManagedObject(context).getContent();
 
             // Read the relationship
             final ResourceResponse oldResource = getConnection().readAsync(context, readRequest).getOrThrow();
-            
+
             // Perform update
             result = updateIfChanged(context, request, relationshipId, rev, oldResource, newValue).getOrThrow();
-            
+
             // Get the after value of the managed object
             final JsonValue afterValue = getManagedObject(context).getContent();
 
@@ -546,13 +546,13 @@ public abstract class RelationshipProvider {
 
     /**
      * Deletes a relationship object.
-     * 
+     *
      * @param context The current context.
      * @param relationshipId The relationship id.
      * @param request The current request.
      * @return A promise containing the deleted relationship object
      */
-    public Promise<ResourceResponse, ResourceException> deleteInstance(final Context context, 
+    public Promise<ResourceResponse, ResourceException> deleteInstance(final Context context,
             final String relationshipId, final DeleteRequest request) {
         final ResourcePath path = REPO_RESOURCE_PATH.child(relationshipId);
         final DeleteRequest deleteRequest = Requests.copyOfDeleteRequest(request);
@@ -566,19 +566,19 @@ public abstract class RelationshipProvider {
 
             // The result of the delete
             ResourceResponse result;
-            
+
             // Get the before value of the managed object
             final JsonValue beforeValue = getManagedObject(context).getContent();
-            
+
             // Perform the delete and wait for result
             result = deleteAsync(context, path, deleteRequest).getOrThrow();
-            
+
             // Get the after value of the managed object
             final JsonValue afterValue = getManagedObject(context).getContent();
 
             // Perform update operations on the managed object
             performUpdateOperations(context, request, afterValue, beforeValue);
-            
+
             return expandFields(context, request, result);
         } catch (ResourceException e) {
             return e.asPromise();
@@ -610,6 +610,7 @@ public abstract class RelationshipProvider {
                          * @throws ResourceException
                          * @see SyncReferencedObjectRequestHandler
                          */
+                        @Override
                         public Promise<ResourceResponse, ResourceException> apply(final ResourceResponse readResponse)
                                 throws ResourceException {
                             if (deleteRequest.getRevision() == null) {
@@ -626,7 +627,7 @@ public abstract class RelationshipProvider {
 
     /**
      * Updates the relationship object if the value has changed and returns a formatted result.
-     * 
+     *
      * @param context the current context
      * @param request The current request.
      * @param id the id of the relationship object
@@ -663,7 +664,7 @@ public abstract class RelationshipProvider {
      * @param request The patch request
      * @return A promised patch response or exception
      */
-    public Promise<ResourceResponse, ResourceException> patchInstance(Context context, String relationshipId, 
+    public Promise<ResourceResponse, ResourceException> patchInstance(Context context, String relationshipId,
             PatchRequest request) {
         Promise<ResourceResponse, ResourceException> promise = null;
         String revision = request.getRevision();
@@ -736,7 +737,7 @@ public abstract class RelationshipProvider {
                 return new InternalServerErrorException(e.getMessage(), e).asPromise();
             }
         } while (retry);
-        
+
         // Return the result
         return promise;
     }
@@ -779,13 +780,13 @@ public abstract class RelationshipProvider {
      * @param request The action request
      * @return A promised action response or exception
      */
-    public Promise<ActionResponse, ResourceException> actionInstance(Context context, String relationshipId, 
+    public Promise<ActionResponse, ResourceException> actionInstance(Context context, String relationshipId,
             ActionRequest request) {
         return notSupportedOnInstance(request).asPromise();
     }
 
     /**
-     * Returns the path of the first resource in this relationship using the firstId parameter from either the URI or 
+     * Returns the path of the first resource in this relationship using the firstId parameter from either the URI or
      * the Request. If firstId is not found in the URI context then the request parameter is used.
      *
      * @param context Context containing a {@link UriRouterContext} to check for template variables
@@ -810,7 +811,7 @@ public abstract class RelationshipProvider {
     }
 
     /**
-     * Returns the full path of the resource in this relationship using the managedObjectId parameter from either the 
+     * Returns the full path of the resource in this relationship using the managedObjectId parameter from either the
      * URI or the Request. If managedObejctId is not found in the URI context then the request parameter is used.
      *
      * @param context Context containing a {@link UriRouterContext} to check for template variables
@@ -887,30 +888,30 @@ public abstract class RelationshipProvider {
             ));
         }
     }
-    
+
     /**
      * Returns the managed object's ID corresponding to the passed in {@link Context}.
-     * 
+     *
      * @param context the Context object.
      * @return a String representing the managed object's ID.
      */
     protected String getManagedObjectId(Context context) {
         return context.asContext(UriRouterContext.class).getUriTemplateVariables().get(PARAM_MANAGED_OBJECT_ID);
     }
-    
+
     /**
      * Returns the managed object's full path corresponding to the passed in {@link Context}.
-     * 
+     *
      * @param context the {@link Context} object.
      * @return a String representing the managed object's ID.
      */
     protected String getManagedObjectPath(Context context) {
         return resourceContainer.child(getManagedObjectId(context)).toString();
     }
-    
+
     /**
      * Reads and returns the managed object associated with the specified context.
-     * 
+     *
      * @param context the {@link Context} object.
      * @return the managed object.
      * @throws ResourceException if an error was encountered while reading the managed object.
@@ -920,10 +921,10 @@ public abstract class RelationshipProvider {
         return getConnection().read(context, Requests.newReadRequest(managedObjectPath)
                 .addField(SchemaField.FIELD_ALL).addField(propertyPtr));
     }
-    
+
     /**
      * Returns a {@link Connection} object.
-     * 
+     *
      * @return a {@link Connection} object.
      * @throws ResourceException
      */
@@ -933,7 +934,7 @@ public abstract class RelationshipProvider {
 
     /**
      * Performs resourceExpansion on the supplied response based on the fields specified in the current request.
-     * 
+     *
      * @param context the current {@link Context} object
      * @param request the current {@link Request} object
      * @param response the {@link ResourceResponse} to expand fields on.
@@ -954,9 +955,10 @@ public abstract class RelationshipProvider {
         }
         if (!refFields.isEmpty()) {
             // Perform the field expansion
-            ReadRequest readRequest = 
+            ReadRequest readRequest =
                     Requests.newReadRequest(response.getContent().get(SchemaField.FIELD_REFERENCE).asString());
             readRequest.addField(refFields.toArray(new JsonPointer[refFields.size()]));
+            readRequest.setAdditionalParameter(ManagedObjectSet.EXECUTE_ON_RETRIEVE_PARAM, Boolean.FALSE.toString());
             ResourceResponse readResponse = getConnection().read(context, readRequest);
             response.getContent().asMap().putAll(readResponse.getContent().asMap());
 
