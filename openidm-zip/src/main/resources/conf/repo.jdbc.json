@@ -1,5 +1,5 @@
 {
-  "useDataSource" : "h2",
+  "useDataSource" : "default",
   "dbType" : "H2",
   "queries" : {
         "genericTables" : {
