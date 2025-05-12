@@ -27,7 +27,8 @@ define([
     "org/forgerock/commons/ui/common/util/Constants",
     "org/forgerock/openidm/ui/admin/util/BackgridUtils",
     "org/forgerock/commons/ui/common/main/Router",
-    "backgrid"
+    "backgrid",
+    "backgrid-paginator"
 ], function($, _,
         AdminAbstractView,
         ResourceDelegate,
@@ -55,7 +56,8 @@ define([
             this.parentRender(_.bind(function() {
                 var processGrid,
                     ProcessModel = AbstractModel.extend({ "url": "/openidm/workflow/processinstance/history" }),
-                    Process = AbstractCollection.extend({ model: ProcessModel });
+                    Process = AbstractCollection.extend({ model: ProcessModel }),
+                    paginator;
 
                 this.model.processes = new Process();
 
@@ -71,8 +73,9 @@ define([
                 });
 
                 this.model.processes.url = "/openidm/workflow/processinstance/history?_queryId=filtered-query&finished=true";
-                this.model.processes.state.pageSize = null;
+                this.model.processes.state.pageSize = 50;
                 this.model.processes.state.sortKey = "-startTime";
+                this.model.processes.state.totalPagedResultsPolicy = "EXACT";
 
                 processGrid = new Backgrid.Grid({
                     className: "table backgrid",
@@ -131,12 +134,18 @@ define([
                     collection: this.model.processes
                 });
 
+                paginator = new Backgrid.Extension.Paginator({
+                    collection: this.model.processes,
+                    windowSize: 0
+                });
+
                 this.$el.find("#processHistoryGridHolder").append(processGrid.render().el);
+                this.$el.find('#processHistoryGridHolder-paginator').append(paginator.render().el);
 
                 this.model.processes.getFirstPage();
 
                 this.$el.find("#processHistoryAssignedTo").selectize({
-                    valueField: '_id',
+                    valueField: 'userName',
                     labelField: 'userName',
                     searchField: ["userName","givenName", "sn"],
                     create: false,
@@ -190,7 +199,7 @@ define([
 
                 this.$el.find("#processHistoryAssignedTo")[0].selectize.addOption({
                     _id : "anyone",
-                    userName: "Anyone",
+                    userName: "anyone",
                     givenName : "Anyone",
                     sn : ""
                 });
