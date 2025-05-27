@@ -106,7 +106,10 @@ public class MappedResultMapper implements ResultMapper<Map<String, Object>> {
                 default:
                     throw new InternalServerErrorException("Unsupported DB column type " + config.valueType);
             }
-            result.putPermissive(config.propertyName, value);
+            // treat NULL as undefined
+            if (value != null) {
+                result.putPermissive(config.propertyName, value);
+            }
         }
         return result.asMap();
     }
