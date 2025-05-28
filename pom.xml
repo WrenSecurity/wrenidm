@@ -178,7 +178,7 @@
         <openicf.groovyconnector.version>1.4.3.0</openicf.groovyconnector.version>
         <openicf.sshconnector.version>1.4.1.0</openicf.sshconnector.version>
         <openicf.kerberosconnector.version>1.4.1.0</openicf.kerberosconnector.version>
-        <wrenicf.ldapconnector.version>1.5.3.0</wrenicf.ldapconnector.version>
+        <wrenicf.ldapconnector.version>1.5.3.1</wrenicf.ldapconnector.version>
 
         <!-- OSGi bundles properties -->
         <openidm.osgi.import.before.defaults />
