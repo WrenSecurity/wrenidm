@@ -215,7 +215,7 @@ define([
 
                 var configProps = this.data.connectorDefaults.configurationProperties,
                     customConfigString = "kadmin { cmd = '/usr/sbin/kadmin.local'; user='<KADMIN USERNAME>'; default_realm='<REALM, e.g. EXAMPLE.COM>' }",
-                    connectorType = "org.forgerock.openicf.connectors.ssh.SSHConnector_1.4";
+                    connectorType = "org.forgerock.openicf.connectors.ssh.SSHConnector_1.5";
 
                 args.connectorType = connectorType;
                 this.data.isKerberos = true;

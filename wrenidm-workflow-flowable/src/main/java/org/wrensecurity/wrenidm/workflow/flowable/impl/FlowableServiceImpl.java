@@ -19,20 +19,19 @@ package org.wrensecurity.wrenidm.workflow.flowable.impl;
 import static org.forgerock.json.JsonValueFunctions.enumConstant;
 import static org.forgerock.openidm.util.ResourceUtil.notSupported;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URLDecoder;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.sql.DataSource;
+import org.flowable.common.engine.impl.scripting.BeansResolverFactory;
 import org.flowable.common.engine.impl.scripting.ResolverFactory;
 import org.flowable.common.engine.impl.scripting.ScriptBindingsFactory;
 import org.flowable.compatibility.DefaultFlowable5CompatibilityHandler;
@@ -40,6 +39,7 @@ import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.flowable.engine.impl.cfg.StandaloneProcessEngineConfiguration;
+import org.flowable.engine.impl.scripting.VariableScopeResolverFactory;
 import org.flowable.osgi.OsgiScriptingEngines;
 import org.flowable.osgi.blueprint.ProcessEngineFactory;
 import org.forgerock.json.JsonValue;
@@ -286,6 +286,14 @@ public class FlowableServiceImpl implements RequestHandler {
                     configuration.setFlowable5CompatibilityEnabled(true);
                     configuration.setFlowable5CompatibilityHandler(new DefaultFlowable5CompatibilityHandler());
 
+                    // Register custom script resolver
+                    List<ResolverFactory> resolverFactories = new ArrayList<>();
+                    resolverFactories.add(new VariableScopeResolverFactory());
+                    resolverFactories.add(new BeansResolverFactory());
+                    resolverFactories.add(new IdmScriptResolverFactory());
+                    configuration.setResolverFactories(resolverFactories);
+                    configuration.setScriptingEngines(new OsgiScriptingEngines(new ScriptBindingsFactory(configuration, resolverFactories)));
+
                     // Retrieve process engine instance
                     processEngineFactory = new ProcessEngineFactory();
                     processEngineFactory.setProcessEngineConfiguration(configuration);
@@ -293,12 +301,8 @@ public class FlowableServiceImpl implements RequestHandler {
                     processEngineFactory.init();
                     processEngine = processEngineFactory.getObject();
 
-                    // Register custom script resolver
-                    List<ResolverFactory> resolverFactories = configuration.getResolverFactories();
-                    resolverFactories.add(new IdmScriptResolverFactory());
-                    configuration.setResolverFactories(resolverFactories);
+                    // Register custom variable types
                     configuration.getVariableTypes().addType(new JsonValueType());
-                    configuration.setScriptingEngines(new OsgiScriptingEngines(new ScriptBindingsFactory(configuration, resolverFactories)));
 
                     // Register the OSGi service to enable deployment of BAR or BPMN files
                     Dictionary<String, String> engineProperties = new Hashtable<>();

@@ -13,7 +13,7 @@
     information: "Portions copyright [year] [name of copyright owner]".
 
     Copyright (c) 2015 ForgeRock AS. All rights reserved.
-    Portions Copyright 2017-2022 Wren Security.
+    Portions Copyright 2017-2025 Wren Security.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -38,22 +38,12 @@
         <!-- maven-compiler-plugin -->
         <maven.compiler.target>1.6</maven.compiler.target>
         <maven.compiler.source>1.6</maven.compiler.source>
-
-        <openicf.osgi.import.defaults>
-            org.codehaus.groovy*;version="[2.2,3)",
-            groovy.*;version="[2.2,3)",
-            groovyjar*;version="[2.2,3)",
-            groovyx.net.http*;resolution:=optional,
-        </openicf.osgi.import.defaults>
-
-        <openicf.osgi.embed />
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <scope>provided</scope>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy</artifactId>
         </dependency>
 
         <dependency>
@@ -131,9 +121,9 @@
                     </dependency>
 
                     <dependency>
-                        <groupId>org.codehaus.groovy</groupId>
-                        <artifactId>groovy-all</artifactId>
-                        <version>2.4.21</version>
+                        <groupId>org.apache.groovy</groupId>
+                        <artifactId>groovy</artifactId>
+                        <version>5.0.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
