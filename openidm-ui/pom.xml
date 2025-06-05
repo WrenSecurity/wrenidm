@@ -31,7 +31,7 @@
     <description>Parent POM for all UI components in Wren:IDM.</description>
 
     <properties>
-        <wrensec-ui.version>23.2.0</wrensec-ui.version>
+        <wrensec-ui.version>23.2.1</wrensec-ui.version>
     </properties>
 
     <modules>
