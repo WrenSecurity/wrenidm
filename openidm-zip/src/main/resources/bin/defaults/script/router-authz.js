@@ -20,7 +20,7 @@
  * with the fields enclosed by brackets [] replaced by
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
- * 
+ *
  * Portions Copyrighted 2024 Wren Security
  */
 
@@ -57,15 +57,15 @@ function matchesResourceIdPattern(id, pattern) {
 }
 
 function containsIgnoreCase(a, o) {
-    var i,str1,str2;
-    if (typeof(a) !== 'undefined' && a !== null) {
+    var i, str1, str2;
+    if (typeof (a) !== 'undefined' && a !== null) {
         for (i = 0; i <= a.length; i++) {
             str1 = o;
             str2 = a[i];
-            if (typeof(o) !== 'undefined' && o !== null) {
+            if (typeof (o) !== 'undefined' && o !== null) {
                 str1 = o.toLowerCase();
             }
-            if (typeof(a[i]) !== 'undefined' && a[i] !== null) {
+            if (typeof (a[i]) !== 'undefined' && a[i] !== null) {
                 str2 = a[i].toLowerCase();
             }
             if (str1 === str2) {
@@ -93,7 +93,7 @@ function containsItems(items, configItems) {
 
 function containsItem(item, configItems) {
     if ((typeof configItems === "string" && configItems === '*') ||
-            (typeof configItems === "object" && configItems.length === 1 && configItems[0] === '*')) {
+        (typeof configItems === "object" && configItems.length === 1 && configItems[0] === '*')) {
         return true;
     }
     return containsIgnoreCase(configItems.split(','), item);
@@ -101,7 +101,7 @@ function containsItem(item, configItems) {
 
 function contains(a, o) {
     var i;
-    if (typeof(a) !== 'undefined' && a !== null) {
+    if (typeof (a) !== 'undefined' && a !== null) {
         for (i = 0; i <= a.length; i++) {
             if (a[i] === o) {
                 return true;
@@ -117,9 +117,9 @@ function isMyTask() {
 
     return taskInstance.assignee === context.security.authenticationId;
 }
-function join (arr, delim) {
-    var returnStr = "",i=0;
-    for (i=0; i<arr.length; i++) {
+function join(arr, delim) {
+    var returnStr = "", i = 0;
+    for (i = 0; i < arr.length; i++) {
         returnStr = returnStr + arr[i] + delim;
     }
     return returnStr.replace(new RegExp(delim + "$"), '');
@@ -127,9 +127,9 @@ function join (arr, delim) {
 
 function isUserCandidateForTask(taskInstanceId) {
     const params = {
-            "_queryId": "filtered-query",
-            "taskId": taskInstanceId,
-            "taskCandidateUser": context.security.authenticationId
+        "_queryId": "filtered-query",
+        "taskId": taskInstanceId,
+        "taskCandidateUser": context.security.authenticationId
     }
     const tasks = openidm.query("workflow/taskinstance", params).result;
     return tasks.length > 0;
@@ -138,9 +138,9 @@ function isUserCandidateForTask(taskInstanceId) {
 function canUpdateTask() {
     const taskInstanceId = request.resourcePath.split("/")[2];
     const params = {
-            "_queryId": "filtered-query",
-            "taskId": taskInstanceId,
-            "taskCandidateOrAssigned": context.security.authenticationId
+        "_queryId": "filtered-query",
+        "taskId": taskInstanceId,
+        "taskCandidateOrAssigned": context.security.authenticationId
     }
     const tasks = openidm.query("workflow/taskinstance", params).result;
     return tasks.length > 0;
@@ -172,15 +172,14 @@ function isAllowedToStartProcess() {
 
 function isOneOfMyWorkflows() {
     var processDefinitionId = request.resourcePath.split("/")[2];
-    return isProcessOnUsersList(function (process) {return (process._id === processDefinitionId); });
+    return isProcessOnUsersList(function (process) { return (process._id === processDefinitionId); });
 }
 
 function isQueryOneOf(allowedQueries) {
     if (
-            allowedQueries[request.resourcePath] &&
-            contains(allowedQueries[request.resourcePath], request.queryId)
-       )
-    {
+        allowedQueries[request.resourcePath] &&
+        contains(allowedQueries[request.resourcePath], request.queryId)
+    ) {
         return true;
     }
 
@@ -228,9 +227,8 @@ function restrictPatchToFields(allowedFields) {
 }
 
 /**
-    Returns a list of fields which have been changed as part of this current request
-*/
-
+ * Returns a list of fields which have been changed as part of this current request
+ */
 function getChangedValues() {
     var currentObject,
         JsonPatch = org.forgerock.json.JsonPatch,
@@ -277,7 +275,7 @@ function getChangedValues() {
  */
 function onlyEditableManagedObjectProperties(objectName, exceptions) {
     var managedConfig = openidm.read("config/managed"),
-        managedObjectConfig = _.findWhere(managedConfig.objects, {"name": objectName});
+        managedObjectConfig = _.findWhere(managedConfig.objects, { "name": objectName });
 
     if (!managedObjectConfig || !managedObjectConfig.schema || !managedObjectConfig.schema.properties) {
         return false;
@@ -294,12 +292,10 @@ function onlyEditableManagedObjectProperties(objectName, exceptions) {
 
 }
 
-
-
 function reauthIfProtectedAttributeChange() {
     if (_.any(getChangedValues(), function (attribute) {
-            return _.indexOf(context.security.authorization.protectedAttributeList, attribute) !== -1;
-        })) {
+        return _.indexOf(context.security.authorization.protectedAttributeList, attribute) !== -1;
+    })) {
         // expect a 403 error to be thrown if this call is unsuccessful
         openidm.action("authentication", "reauthenticate", {}, {});
     }
@@ -309,7 +305,7 @@ function reauthIfProtectedAttributeChange() {
 
 /* DEPRECATED FUNCTION */
 function managedUserRestrictedToAllowedProperties(allowedPropertiesList) {
-    var i = 0,requestedRoles = [],params = {},currentUser = {}, operations,
+    var i = 0, requestedRoles = [], params = {}, currentUser = {}, operations,
         getTopLevelProp = function (prop) {
             // removes a leading slash and only returns the first part of a string before a possible subsequent slash
             return prop.replace(/^\//, '').match(/^[^\/]+/)[0];
@@ -325,12 +321,12 @@ function managedUserRestrictedToAllowedProperties(allowedPropertiesList) {
     }
 
     if (request.method === "patch" || (request.method === "action" && request.action === "patch")) {
-    	if (request.method === "action") {
-    		operations = request.content;
-    	} else if (!request.patchOperations) {
+        if (request.method === "action") {
+            operations = request.content;
+        } else if (!request.patchOperations) {
             return true;
         } else {
-        	operations = request.patchOperations
+            operations = request.patchOperations
         }
         // check each of the fields they are attempting to patch and make sure they are approved
         for (i in operations) {
@@ -349,7 +345,7 @@ function managedUserRestrictedToAllowedProperties(allowedPropertiesList) {
         for (i in request.content) {
             // if the new value does not match the current value, then they must be updating it
             // if the field they are attempting to update isn't allowed for them, then reject request.
-            if (!_.isEqual(currentUser[i], request.content[i]) && !containsIgnoreCase(allowedPropertiesList,i)) {
+            if (!_.isEqual(currentUser[i], request.content[i]) && !containsIgnoreCase(allowedPropertiesList, i)) {
                 return false;
             }
         }
@@ -359,7 +355,7 @@ function managedUserRestrictedToAllowedProperties(allowedPropertiesList) {
         }
         for (i in request.content) {
             // they should only be providing parameters that they are allowed to define
-            if (!containsIgnoreCase(allowedPropertiesList,i)) {
+            if (!containsIgnoreCase(allowedPropertiesList, i)) {
                 return false;
             }
         }
@@ -369,17 +365,17 @@ function managedUserRestrictedToAllowedProperties(allowedPropertiesList) {
 }
 
 function disallowQueryExpression() {
-    return  !request.queryExpression;
+    return !request.queryExpression;
 }
 
 function disallowCommandAction() {
-    return  request.method !== "action" || request.action !== "command";
+    return request.method !== "action" || request.action !== "command";
 }
 
 //////// Do not alter functions below here as part of your authz configuration
 
 function passesAccessConfig(id, roles, method, action) {
-    var i,j,config,pattern,excluded,ex;
+    var i, j, config, pattern, excluded, ex;
 
     for (i = 0; i < httpAccessConfig.configs.length; i++) {
         config = httpAccessConfig.configs[i];
@@ -389,7 +385,7 @@ function passesAccessConfig(id, roles, method, action) {
 
             // Check excludePatterns
             ex = false;
-            if (typeof(config.excludePatterns) !== 'undefined' && config.excludePatterns !== null) {
+            if (typeof (config.excludePatterns) !== 'undefined' && config.excludePatterns !== null) {
                 excluded = config.excludePatterns.split(',');
                 for (j = 0; j < excluded.length; j++) {
                     if (matchesResourceIdPattern(id, excluded[j])) {
@@ -405,7 +401,7 @@ function passesAccessConfig(id, roles, method, action) {
                     if (typeof method === 'undefined' || containsItem(method, config.methods)) {
                         // Check action
                         if (action === 'undefined' || action === "" || containsItem(action, config.actions)) {
-                            if (typeof(config.customAuthz) !== 'undefined' && config.customAuthz !== null) {
+                            if (typeof (config.customAuthz) !== 'undefined' && config.customAuthz !== null) {
                                 if (eval(config.customAuthz)) {
                                     return true;
                                 }
@@ -473,11 +469,11 @@ function allow() {
 load(identityServer.getProjectLocation() + "/script/access.js");
 
 if (!allow()) {
-//    console.log(JSON.stringify(request));
-//    console.log(JSON.stringify(context, null, 4));
+    //    console.log(JSON.stringify(request));
+    //    console.log(JSON.stringify(context, null, 4));
     throw {
-        "code" : 403,
-        "message" : "Access denied"
+        "code": 403,
+        "message": "Access denied"
     };
 } else {
     logger.debug("Request allowed");
