@@ -21,7 +21,7 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  *
- * Portions Copyrighted 2024 Wren Security
+ * Portions Copyrighted 2024-2025 Wren Security
  */
 
 /*
@@ -370,6 +370,38 @@ function disallowQueryExpression() {
 
 function disallowCommandAction() {
     return request.method !== "action" || request.action !== "command";
+}
+
+/**
+ * Restrict request to allowed fields only.
+ *
+ * @example
+ * ```js
+ * // Restrict read `managed/role/*` request to `_id` and `name` fields.
+ * restrictRequestToFields(['_id', 'name'])
+ * ```
+ */
+function restrictRequestToFields(allowedFields) {
+    if (!request.fields.length) {
+        return false;
+    }
+    return !request.fields.some(field => (
+        // Strip leading slash from JSON pointer
+        !allowedFields.includes(field.replace(/^\//, ''))
+    ));
+}
+
+/**
+ * Restrict query request to managed resource's specific relationship.
+ *
+ * @example
+ * ```js
+ * // Restrict query request to `managed/user/<id>/roles` relationship
+ * restrictQueryToRelationship('roles')
+ * ```
+ */
+function restrictQueryToRelationship(relationshipProperty) {
+    return request.resourcePath.split('/')[3] === relationshipProperty;
 }
 
 //////// Do not alter functions below here as part of your authz configuration
