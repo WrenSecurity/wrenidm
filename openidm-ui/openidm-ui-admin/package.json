@@ -9,7 +9,7 @@
   "devDependencies": {
     "@wrensecurity/commons-ui-build": "file:target/ui-libs/wrensecurity-commons-ui-build-0.0.0.tgz",
     "@wrensecurity/eslint-config": "^0.2.0",
-    "express": "^4.18.2",
+    "express": "^5.1.0",
     "gulp": "^5.0.1",
     "node-qunit-puppeteer": "^2.2.1"
   },
