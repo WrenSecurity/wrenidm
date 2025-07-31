@@ -41,6 +41,7 @@ public class WorkflowConstants {
     public static final String PROCESS_DEFINITION_RESOURCE_NAME_ATTR = "processDefinitionResourceName";
     public static final String PROCESS_INSTANCE_BUSINESS_KEY_ATTR = "processInstanceBusinessKey";
     public static final String PROCESS_INSTANCE_ID_ATTR = "processInstanceId";
+    public static final String JOB_ID_ATTR = "jobId";
     public static final String DIAGRAM_RESOURCE_NAME_ATTR = "processDiagramResourceName";
     public static final String FORM_RESOURCE_KEY_ATTR = "formResourceKey";
     public static final String DEPLOYMENT_ID_ATTR = "deploymentId";
@@ -84,6 +85,7 @@ public class WorkflowConstants {
     public static final String STARTED_BEFORE_ATTR = "startedBefore";
     public static final String FINISHED_AFTER_ATTR = "finishedAfter";
     public static final String FINISHED_BEFORE_ATTR = "finishedBefore";
+    public static final String RETRIES_ATTR = "retries";
     public static final JsonPointer DIAGRAM_ATTR = new JsonPointer("/diagram");
     public static final String FORM_PROPERTIES_ATTR = "formProperties";
     public static final String FORM_PROPERTY_ID_ATTR = "id";

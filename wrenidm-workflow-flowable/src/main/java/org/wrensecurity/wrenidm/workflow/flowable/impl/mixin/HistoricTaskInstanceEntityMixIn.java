@@ -82,7 +82,7 @@ public abstract class HistoricTaskInstanceEntityMixIn {
     protected String priority;
 
     @JsonProperty(WorkflowConstants.PROCESS_DEFINITION_ID_ATTR)
-    protected String processDefinitionID;
+    protected String processDefinitionId;
 
     @JsonProperty(WorkflowConstants.PROCESS_INSTANCE_ID_ATTR)
     protected String processInstanceId;

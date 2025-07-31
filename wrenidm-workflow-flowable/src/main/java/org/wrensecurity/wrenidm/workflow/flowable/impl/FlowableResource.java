@@ -39,6 +39,7 @@ import org.forgerock.services.context.Context;
 import org.forgerock.util.Function;
 import org.forgerock.util.promise.NeverThrowsException;
 import org.forgerock.util.promise.Promise;
+import org.wrensecurity.wrenidm.workflow.flowable.impl.resource.DeadLetterJobEntityResource;
 import org.wrensecurity.wrenidm.workflow.flowable.impl.resource.ProcessDefinitionResource;
 import org.wrensecurity.wrenidm.workflow.flowable.impl.resource.ProcessInstanceResource;
 import org.wrensecurity.wrenidm.workflow.flowable.impl.resource.TaskDefinitionResource;
@@ -58,18 +59,21 @@ public class FlowableResource implements RequestHandler {
                 new TaskDefinitionResource(engine));
         resources.addRoute(uriTemplate("/processinstance"), new ProcessInstanceResource(engine,
                 new Function<ProcessEngine, HistoricProcessInstanceQuery, NeverThrowsException>() {
+                    @Override
                     public HistoricProcessInstanceQuery apply(ProcessEngine engine) {
                         return engine.getHistoryService().createHistoricProcessInstanceQuery().unfinished();
                      }
                 }));
         resources.addRoute(uriTemplate("/processinstance/history"), new ProcessInstanceResource(engine,
                 new Function<ProcessEngine, HistoricProcessInstanceQuery, NeverThrowsException>() {
+                    @Override
                     public HistoricProcessInstanceQuery apply(ProcessEngine engine) {
                         return engine.getHistoryService().createHistoricProcessInstanceQuery();
                     }
                 }));
         resources.addRoute(uriTemplate("/taskinstance"), new TaskInstanceResource(engine));
         resources.addRoute(uriTemplate("/taskinstance/history"), new TaskInstanceHistoryResource(engine));
+        resources.addRoute(uriTemplate("/job/deadletter"), new DeadLetterJobEntityResource(engine));
     }
 
     @Override
