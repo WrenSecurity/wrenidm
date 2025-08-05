@@ -238,7 +238,7 @@
         pagedResultsCookie = "";
         do {
             queryResult = getUserSet(query, pageSize, pagedResultsCookie);
-            pagedResultsCookie = queryResult._pagedResultsCookie;
+            pagedResultsCookie = queryResult.pagedResultsCookie;
             currentConditionalMembers = callbackFunction(queryResult.result, currentConditionalMembers);
 
         } while (pagedResultsCookie);
