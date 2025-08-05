@@ -35,7 +35,7 @@
 
         do {
             queryResult = getRolesWithTemporalConstraints(pageSize, pagedResultsCookie);
-            pagedResultsCookie = queryResult._pagedResultsCookie;
+            pagedResultsCookie = queryResult.pagedResultsCookie;
             rolesWithExpiredConstraints = rolesWithExpiredConstraints
                 .concat(queryResult.result.filter(areRoleConstraintsExpired));
         } while (pagedResultsCookie);
