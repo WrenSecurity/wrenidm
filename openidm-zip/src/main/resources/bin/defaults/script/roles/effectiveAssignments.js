@@ -1,4 +1,4 @@
-/** 
+/**
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2014 ForgeRock AS. All rights reserved.
@@ -20,11 +20,13 @@
  * with the fields enclosed by brackets [] replaced by
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
+ *
+ * Portions Copyrighted 2025 Wren Security.
  */
 
-/** 
+/**
  * Calculates the effective assignments, based on the effective roles.
- * 
+ *
  * In the case of a reconciliation run, the assignments and roles will be pre-loaded into the ReconContext. This script
  * will first attempt to find the roles and assignments in the ReconContext and if they are not found will issue a read.
  */
@@ -47,10 +49,10 @@ if (effectiveRolesPropName === undefined) {
 logger.trace("Configured effectiveRolesPropName: {}", effectiveRolesPropName);
 
 /**
- * Returns a managed role object representing the supplied role id.  
- * 
+ * Returns a managed role object representing the supplied role id.
+ *
  * If the ReconContext is present it will use the stored values for roles, otherwise it will issue a read request.
- * 
+ *
  * @param roleId the id of the managed role
  * @returns a managed role object
  */
@@ -64,14 +66,14 @@ function getRole(roleId) {
             }
         }
     }
-    return openidm.read(roleId, null, [ "assignments" ]);
+    return openidm.read(roleId, { executeOnRetrieve: false }, [ "assignments" ]);
 }
 
 /**
- * Returns a managed assignment object representing the supplied assignment id.  
- * 
+ * Returns a managed assignment object representing the supplied assignment id.
+ *
  * If the ReconContext is present it will use the stored values for assignments, otherwise it will issue a read request.
- * 
+ *
  * @param assignmentId the id of the managed assignment
  * @returns a managed assignment object
  */
