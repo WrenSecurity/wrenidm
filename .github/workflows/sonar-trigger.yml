@@ -7,6 +7,10 @@ on:
     types:
       - completed
 
+concurrency:
+  group: trigger-sonar-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -23,6 +27,7 @@ jobs:
     name: Trigger Sonar analysis
     uses: WrenSecurity/.github/.github/workflows/sonar-maven.yml@main
     with:
+      commit_sha: ${{ github.event.workflow_run.head_sha }}
       java_version: 17
       project_key: 'WrenSecurity_wrenidm'
       pull_request: ${{ needs.prepare.outputs.pull_request }}
