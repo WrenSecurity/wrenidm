@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2025 Wren Security.
  */
 
 define([
@@ -167,13 +168,13 @@ function ($, _, Handlebars,
         if (conditionChecked && this.queryEditor) {
             condition = this.queryEditor.getFilterString();
         } else {
-            condition = undefined;
+            condition = null;
         }
 
         if (temporalConstraintsChecked) {
             temporalConstraints = TemporalConstraintsUtils.getTemporalConstraintsValue(this.$el.find('.temporalConstraintsForm'));
         } else {
-            temporalConstraints = undefined;
+            temporalConstraints = [];
         }
 
         returnVal = _.extend(
