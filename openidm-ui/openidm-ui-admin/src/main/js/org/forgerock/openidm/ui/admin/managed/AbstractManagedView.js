@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -53,10 +53,6 @@ define([
             promises.push(ConfigDelegate.updateEntity("managed", {"objects" : saveObject.objects}));
 
             switch (RepoDelegate.getRepoTypeFromConfig(this.data.repoConfig)) {
-                case "orientdb":
-                    this.data.repoConfig = RepoDelegate.addManagedObjectToOrientClasses(this.data.repoConfig, managedObject.name);
-                    promises.push(RepoDelegate.updateEntity(this.data.repoConfig._id, this.data.repoConfig));
-                    break;
                 case "jdbc": {
                     let resourceMapping = RepoDelegate.findGenericResourceMappingForRoute(this.data.repoConfig, "managed/"+managedObject.name);
                     if (resourceMapping && resourceMapping.searchableDefault !== true) {

@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2025 Wren Security.
  */
 
 define([
@@ -28,13 +29,13 @@ define([
     var obj = Object.create(ConfigDelegate);
 
     /**
-     * Queries the config store for a single entry which starts with "repo."
+     * Get repository config. The JDBC repository is currently the only supported type.
      */
-    obj.findRepoConfig = function() {
+    obj.getRepoConfig = function() {
         return obj.serviceCall({
-            url: "?_queryFilter=_id sw 'repo.'",
+            url: "/repo.jdbc",
             type: "GET"
-        }).then((response) => response.result[0]);
+        }).then((response) => response);
     };
 
     /**
@@ -43,39 +44,6 @@ define([
     obj.getRepoTypeFromConfig = function(config) {
         return config._id.replace('repo.', '');
     };
-
-    obj.deleteManagedObject = function (config, managedObjectName) {
-        if (obj.getRepoTypeFromConfig(config) === "orientdb") {
-            config = obj.removeManagedObjectFromOrientClasses(config, managedObjectName);
-            return obj.updateEntity(config._id, config);
-        } else {
-            return $.Deferred().resolve();
-        }
-    };
-
-    obj.addManagedObjectToOrientClasses = function(config, managedObjectName) {
-        var orientClasses = config.dbStructure.orientdbClass;
-
-        if (_.isUndefined(orientClasses["managed_" + managedObjectName])) {
-            orientClasses["managed_" + managedObjectName] = {
-                "index" : [
-                    {
-                        "propertyName" : "_openidm_id",
-                        "propertyType" : "string",
-                        "indexType" : "unique"
-                    }
-                ]
-            };
-        }
-        return config;
-    };
-
-    obj.removeManagedObjectFromOrientClasses = function(config, managedObjectName) {
-        var orientClasses = config.dbStructure.orientdbClass;
-        delete orientClasses["managed_" + managedObjectName];
-        return config;
-    };
-
 
     /**
      * Returns a reference to the appropriate resource mapping section of the config
