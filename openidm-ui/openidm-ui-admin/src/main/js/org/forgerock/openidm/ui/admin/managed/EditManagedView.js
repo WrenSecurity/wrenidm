@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -99,7 +99,7 @@ define([
 
             $.when(
                 ConfigDelegate.readEntity("managed"),
-                RepoDelegate.findRepoConfig()
+                RepoDelegate.getRepoConfig()
             ).then(_.bind(function(managedObjects, repoConfig){
                 this.data.managedObjects = managedObjects;
                 this.data.repoConfig = repoConfig;
@@ -366,7 +366,6 @@ define([
                 }, this);
 
                 promises.push(ConfigDelegate.updateEntity("managed", {"objects" : this.data.managedObjects.objects}));
-                promises.push(RepoDelegate.deleteManagedObject(this.data.repoConfig, this.data.currentManagedObject.name));
 
                 $.when.apply($, promises).then(
                     function(){

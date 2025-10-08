@@ -50,7 +50,7 @@ define([
         render: function(args, callback) {
             $.when(
                 ConfigDelegate.readEntity("managed"),
-                RepoDelegate.findRepoConfig()
+                RepoDelegate.getRepoConfig()
             ).then(_.bind(function(managedObjects, repoConfig) {
                 this.model.managedObjects = managedObjects;
                 this.data.repoConfig = repoConfig;
