@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -63,7 +63,7 @@ define([
             ConfigDelegate.readEntity("managed").then((managed) => {
                 _.each(managed.objects, _.bind(function(managedObject) {
                     if (managedObject.name === "user") {
-                        this.data.preferences = managedObject.schema.properties.preferences.properties;
+                        this.data.preferences = _.get(managedObject, 'schema.properties.preferences.properties', {});
                         this.model.allPreferences = _.keys(this.data.preferences);
                     }
                 }, this));
