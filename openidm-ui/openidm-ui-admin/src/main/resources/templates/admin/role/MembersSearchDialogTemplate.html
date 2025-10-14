@@ -26,5 +26,15 @@
          </div>
       </div>
       <div id="_refProperty-temporalConstraints"></div>
+      {{#each formProperties}}
+         <div class="form-group has-feedback">
+            <label for="_refProperty-{{name}}" class="control-label col-sm-3">{{label}}</label>
+            <div class="col-sm-7">
+               <div class="control-group">
+                  <input class="form-control _refProperties" type="text" id="_refProperty-{{name}}" value="{{value}}" propName="{{name}}">
+               </div>
+            </div>
+         </div>
+      {{/each}}
    </div>
 </form>

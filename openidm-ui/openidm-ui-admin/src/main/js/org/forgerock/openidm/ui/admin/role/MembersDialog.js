@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2025 Wren Security.
  */
 
 define([
@@ -32,7 +33,7 @@ function ($, _, Handlebars,
     var MembersDialog = ResourceCollectionSearchDialog.extend({
         template: "templates/admin/role/MembersSearchDialogTemplate.html",
         setRefProperties : function () {
-            this.data._refProperties = {
+            const baseProperties = {
                 grantType: {
                     label: "Grant Type",
                     name: "_grantType",
@@ -44,6 +45,13 @@ function ($, _, Handlebars,
                     value: (!_.isEmpty(this.data.propertyValue)) ? this.data.propertyValue._refProperties.temporalConstraints : []
                 }
             };
+            // Set schema properties
+            ResourceCollectionSearchDialog.prototype.setRefProperties.call(this);
+            // Handle base role-relationship properties
+            this.data._refProperties = _.extend(this.data._refProperties, baseProperties);
+            this.data.formProperties = _.omitBy(this.data._refProperties, function(property) {
+                return ['_grantType', 'temporalConstraints'].includes(property.name);
+            });
         },
         renderDialog: function(opts, callback) {
             var renderCallback = _.bind(function () {
@@ -68,6 +76,18 @@ function ($, _, Handlebars,
                     if (temporalConstraintsChecked) {
                         refProps.temporalConstraints = TemporalConstraintsUtils.getTemporalConstraintsValue(this.currentDialog.find('.temporalConstraintsForm'));
                     }
+
+                    this.currentDialog.find("._refProperties:input").each(function() {
+                        let propName = $(this).attr("propName");
+                        let oldValue = refProps[propName];
+                        let newValue = $(this).val().trim();
+                        if (newValue.length) {
+                            refProps[propName] = newValue;
+                        } else if (oldValue !== undefined) {
+                            refProps[propName] = null;
+                        }
+                    });
+
                     return refProps;
                 }, this);
 
