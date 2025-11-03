@@ -70,7 +70,7 @@ define([
                     defaultScript = this.model.mapping[eventName];
                 }
 
-                this.model.scriptEditors[eventName]  = InlineScriptEditor.generateScriptEditor({
+                this.model.scriptEditors[eventName] = InlineScriptEditor.generateScriptEditor({
                     "element": this.$el.find(".scriptContainer"),
                     "eventName": eventName,
                     "disableValidation": false,

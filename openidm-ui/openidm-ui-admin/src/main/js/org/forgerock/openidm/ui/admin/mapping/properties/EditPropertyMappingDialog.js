@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -60,8 +60,7 @@ define([
             "change :input[name=source]": "updateProperty",
             "change :input": "validateMapping",
             "onValidate": "onValidate",
-            "click .toggle-view-btn": "conditionalUpdateType",
-            "shown.bs.tab #conditionalScript" : "conditionalTabChange"
+            "click .toggle-view-btn": "conditionalUpdateType"
         },
 
         updateProperty: function (e) {
@@ -201,10 +200,6 @@ define([
             $("#dialogs").hide();
         },
 
-        conditionalTabChange: function () {
-            this.conditional_script_editor.refresh();
-        },
-
         render: function(params, callback) {
             var currentProperties,
                 _this = this,
@@ -297,14 +292,6 @@ define([
 
                             _this.currentDialog.find(".nav-tabs").tabdrop();
 
-                            _this.currentDialog.find(".nav-tabs").on("shown.bs.tab", function (e) {
-                                if ($(e.target).attr("href") === "#Transformation_Script"){
-                                    _this.transform_script_editor.refresh();
-                                } else if ($(e.target).attr("href") === "#Condition_Script") {
-                                    _this.conditional_script_editor.refresh();
-                                }
-                            });
-
                             if (callback){
                                 callback();
                             }
@@ -366,9 +353,7 @@ define([
                     this.transform_script_editor = inlineScriptEditor.generateScriptEditor({
                         "element": this.currentDialog.find("#transformationScriptHolder"),
                         "eventName": "",
-                        "noValidation": true,
                         "scriptData": prop.transform,
-                        "disablePassedVariable": false,
                         "placeHolder": "source.givenName.toLowerCase() + \" .\" + source.sn.toLowerCase()"
                     });
                 }
@@ -411,9 +396,7 @@ define([
             _this.transform_script_editor = inlineScriptEditor.generateScriptEditor({
                 "element": _this.currentDialog.find("#transformationScriptHolder"),
                 "eventName": "transform",
-                "noValidation": true,
                 "scriptData": _this.data.property.transform,
-                "disablePassedVariable": false,
                 "placeHolder" : "source.givenName.toLowerCase() + \" .\" + source.sn.toLowerCase()"
             });
 
@@ -424,9 +407,7 @@ define([
             _this.conditional_script_editor = inlineScriptEditor.generateScriptEditor({
                 "element": _this.currentDialog.find("#conditionScriptHolder"),
                 "eventName": "conditional",
-                "noValidation": true,
-                "scriptData": conditionData,
-                "disablePassedVariable": false
+                "scriptData": conditionData
             });
 
             $('#mappingDialogTabs a', this.currentDialog).click(function (e) {

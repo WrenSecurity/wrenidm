@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -189,14 +189,12 @@ define([
                             this.model.conditionScriptPaneEditor = InlineScriptEditor.generateScriptEditor({
                                 "element": this.$el.find("#conditionScriptPane"),
                                 "eventName": "conditionScriptPane",
-                                "disableValidation": true,
                                 "scriptData": conditionScriptData
                             });
 
                             this.model.postActionScriptPaneEditor = InlineScriptEditor.generateScriptEditor({
                                 "element": this.$el.find("#postActionScript"),
                                 "eventName": "postActionScript",
-                                "disableValidation": true,
                                 "scriptData": this.model.postAction
                             });
 
@@ -214,12 +212,6 @@ define([
                                 "element": "#conditionFilterPane",
                                 "resource" : ""
                             });
-
-                            this.$el.find('a[data-toggle="tab"]').on('shown.bs.tab', _.bind(function (e) {
-                                this.model.actionScriptPaneEditor.refresh();
-                                this.model.conditionScriptPaneEditor.refresh();
-                                this.model.postActionScriptPaneEditor.refresh();
-                            }, this));
 
                             this.model.currentActionTab = this.$el.find("#action .tabButtons .active").attr("id");
 

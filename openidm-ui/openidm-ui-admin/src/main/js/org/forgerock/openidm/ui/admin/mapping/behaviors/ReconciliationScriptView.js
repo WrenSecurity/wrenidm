@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -37,11 +37,6 @@ define([
         render: function() {
             this.parentRender(function () {
                 this.init();
-
-                //Needs to be out of scope since this dom element isn't in the $el and we need access to the script widget
-                $("#reconQueryViewBody").on("shown.bs.collapse", _.bind(function() {
-                    this.model.scriptEditors.result.refresh();
-                }, this));
             });
         }
     });

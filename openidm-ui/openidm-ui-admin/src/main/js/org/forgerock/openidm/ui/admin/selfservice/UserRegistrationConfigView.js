@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -69,11 +69,7 @@ define([
             configUrl: "selfservice/registration",
             msgType: "selfServiceUserRegistration",
             codeMirrorConfig: {
-                lineNumbers: true,
-                autofocus: false,
-                viewportMargin: Infinity,
                 mode: "xml",
-                htmlMode: true,
                 lineWrapping: true
             },
             configList: [],

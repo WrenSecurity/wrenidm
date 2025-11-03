@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -140,23 +140,14 @@ define([
                 this.model.onAssignment = InlineScriptEditor.generateScriptEditor({
                     "element": this.$el.find("#onAssignmentHolder"),
                     "eventName": "onAssignment",
-                    "noValidation": true,
-                    "scriptData": this.data.resource.onAssignment,
-                    "disablePassedVariable": false
+                    "scriptData": this.data.resource.onAssignment
                 });
 
                 this.model.onUnassignment = InlineScriptEditor.generateScriptEditor({
                     "element": this.$el.find("#onUnassignmentHolder"),
                     "eventName": "onUnassignment",
-                    "noValidation": true,
-                    "scriptData": this.data.resource.onUnassignment || this.data.resource.unAssignment,
-                    "disablePassedVariable": false
+                    "scriptData": this.data.resource.onUnassignment || this.data.resource.unAssignment
                 });
-
-                this.$el.find("#assignmentEventsTab").on("shown.bs.tab", _.bind(function (e) {
-                    this.model.onAssignment.refresh();
-                    this.model.onUnassignment.refresh();
-                }, this));
 
                 _.each(this.data.resource.attributes, _.bind(function(attribute) {
                     this.addAttribute(attribute);

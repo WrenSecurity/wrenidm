@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -87,7 +87,6 @@ define([
                 this.model.exceptionFormatterScript = InlineScriptEditor.generateScriptEditor({
                     "element": this.$el.find("#exceptionFormatterScript"),
                     "eventName": "exceptionFormatterScript",
-                    "disableValidation": true,
                     "onBlurPassedVariable": _.bind(this.checkChanges, this),
                     "onDeletePassedVariable": _.bind(this.checkChanges, this),
                     "onAddPassedVariable": _.bind(this.checkChanges, this),

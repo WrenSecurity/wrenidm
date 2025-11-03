@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -20,14 +20,13 @@ define([
     "lodash",
     "form2js",
     "org/forgerock/openidm/ui/admin/authentication/AuthenticationAbstractView",
-    "libs/codemirror/lib/codemirror",
-    "libs/codemirror/mode/xml/xml"
+    "org/forgerock/openidm/ui/admin/util/CodeMirror"
 ], function($, _,
         Form2js,
         AuthenticationAbstractView,
-        codemirror) {
+        CodeMirror) {
 
-    var OpenIDConnectView = AuthenticationAbstractView.extend({
+    var OAuthView = AuthenticationAbstractView.extend({
         template: "templates/admin/authentication/modules/OAUTH.html",
 
         knownProperties: AuthenticationAbstractView.prototype.knownProperties.concat([
@@ -36,11 +35,15 @@ define([
             "resolvers"
         ]),
 
+        model: {
+            defaultIcon: "<button class=\"btn btn-lg btn-default btn-block btn-social-provider\"><img src=\"images/forgerock_logo.png\">Sign in with OpenAM</button>"
+        },
+
         getConfig: function () {
             var config = AuthenticationAbstractView.prototype.getConfig.call(this);
 
-            if (this.model.iconCode && _.has(config, "properties.resolvers[0].icon")) {
-                config.properties.resolvers[0].icon  = this.model.iconCode.getValue();
+            if (this.model.iconCode) {
+                config.properties.resolvers[0].icon = this.model.iconCode.getValue() || "";
             }
 
             if (_.has(config, "properties.resolvers[0].client_id")) {
@@ -54,7 +57,6 @@ define([
                 // this will restore the previous value for it, if there had been one
                 config.properties.resolvers[0].client_secret = this.data.config.properties.resolvers[0].client_secret;
             }
-
 
             return config;
         },
@@ -72,7 +74,6 @@ define([
             this.data.customProperties = this.getCustomPropertiesList(this.knownProperties, this.data.config.properties || {});
             this.data.userOrGroupDefault = this.getUserOrGroupDefault(this.data.config || {});
 
-
             this.parentRender(() => {
                 this.postRenderComponents({
                     "customProperties": this.data.customProperties,
@@ -81,11 +82,10 @@ define([
                     "userOrGroup": this.data.userOrGroupDefault
                 });
 
-                this.model.iconCode = codemirror.fromTextArea(this.$el.find(".button-html")[0], {
-                    lineNumbers: true,
-                    viewportMargin: Infinity,
+                const iconCodeValue = this.data.config.properties.resolvers[0].icon ?? this.model.defaultIcon;
+                this.model.iconCode = CodeMirror(this.$el.find(".button-html")[0], {
                     mode: "xml",
-                    htmlMode: true,
+                    value: iconCodeValue,
                     lineWrapping: true
                 });
 
@@ -94,5 +94,5 @@ define([
 
     });
 
-    return new OpenIDConnectView();
+    return new OAuthView();
 });
