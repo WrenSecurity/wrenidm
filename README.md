@@ -9,7 +9,7 @@
 # Wren:IDM
 
 [![License](https://img.shields.io/badge/license-CDDL-blue.svg)](https://github.com/WrenSecurity/wrenidm/blob/main/LICENSE)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/WrenSecurity)
+[![Gitter](https://img.shields.io/matrix/wrensecurity_lobby%3Agitter.im?server_fqdn=matrix.org)](https://matrix.to/#/#WrenSecurity_Lobby:gitter.im)
 
 Wren:IDM is a community‐developed identity management system with a flexible data model, multiple extension points
 and scripting support, including JavaScript and Groovy. It can connect to and manage a wide range of systems through
@@ -61,7 +61,7 @@ Following software is needed to build the project:
 
 | Software  | Required Version |
 | --------- | -------------    |
-| OpenJDK   | 8 and above      |
+| OpenJDK   | 11 and above     |
 | Git       | 2.0 and above    |
 | Maven     | 3.0 and above    |
 
