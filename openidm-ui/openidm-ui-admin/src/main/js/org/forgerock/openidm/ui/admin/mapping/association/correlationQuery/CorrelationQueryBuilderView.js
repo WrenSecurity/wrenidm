@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -155,7 +155,6 @@ define([
                 this.model.scriptEditor = InlineScriptEditor.generateScriptEditor({
                     "element": $(".queryScript"),
                     "eventName": "",
-                    "noValidation": true,
                     "scriptData": this.model.scriptData,
                     "onChange" :  _.bind(this.validate, this),
                     "onBlur" :  _.bind(this.validate, this)

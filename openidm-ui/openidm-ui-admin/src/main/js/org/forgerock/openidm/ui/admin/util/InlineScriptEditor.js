@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -21,19 +21,13 @@ define([
     "jsonEditor",
     "org/forgerock/commons/ui/common/main/AbstractView",
     "org/forgerock/commons/ui/common/main/ValidatorsManager",
-    "libs/codemirror/lib/codemirror",
-    "libs/codemirror/mode/groovy/groovy",
-    "libs/codemirror/mode/javascript/javascript",
-    "libs/codemirror/addon/display/placeholder",
+    "org/forgerock/openidm/ui/admin/util/CodeMirror",
     "org/forgerock/openidm/ui/admin/delegates/ScriptDelegate",
     "org/forgerock/openidm/ui/admin/util/WorkflowWidget"
 ], function($, _, JSONEditor,
         AbstractView,
         validatorsManager,
-        codeMirror,
-        groovyMode,
-        jsMode,
-        placeHolder,
+        CodeMirror,
         ScriptDelegate,
         WorkflowWidget) {
     var seInstance = {},
@@ -53,8 +47,6 @@ define([
                 scriptData: null,
                 eventName: null,
                 disablePassedVariable: false,
-                setScriptHook: null,
-                onBlur: null,
                 onChange: null,
                 onFocus:null,
                 validationCallback: null,
@@ -128,13 +120,18 @@ define([
                         this.$el.find(".preview-pane .preview-button").bind("click", _.bind(this.previewScript, this));
                     }
 
-                    this.cmBox = codeMirror.fromTextArea(this.$el.find(".scriptSourceCode")[0], {
-                        lineNumbers: true,
-                        autofocus: this.model.autoFocus,
-                        viewportMargin: Infinity,
-                        mode: mode
+                    const editorDiv = this.$el.find(".scriptSourceCode")[0];
+                    this.cmBox = CodeMirror(editorDiv, {
+                        mode: mode,
+                        height: this.model.codeMirrorHeight,
+                        value: _.get(this.model.scriptData, 'source'),
+                        placeholder: this.model.placeHolder,
+                        readonly: this.data.scriptData && this.data.scriptData.file
                     });
 
+                    if (this.data.autoFocus) {
+                        this.cmBox.focus();
+                    }
 
                     if (this.data.scriptData) {
                         if (this.data.scriptData.file === "workflow/triggerWorkflowGeneric.js") {
@@ -164,7 +161,6 @@ define([
                             this.customValidate();
                         }, this));
                     }
-                    this.cmBox.setSize(this.model.codeMirrorWidth, this.model.codeMirrorHeight);
 
                     if (this.data.eventName) {
                         currentScriptSelection = this.$el.find("input[name=" + this.data.eventName + "_scriptType]:checked").val();
@@ -173,7 +169,7 @@ define([
                     }
 
                     if (currentScriptSelection !== "inline-code") {
-                        this.cmBox.setOption("readOnly", "nocursor");
+                        this.cmBox.setReadonly(true);
                         this.$el.find(".inline-code").toggleClass("code-mirror-disabled");
                     }
 
@@ -186,32 +182,20 @@ define([
                         this.$el.find(":input").trigger("check");
                     }
 
-                    this.cmBox.on("focus", _.bind(function (cm, changeObject) {
-                        this.saveEvent(this.model.onFocus, cm, changeObject);
-                    }, this));
-
-                    this.cmBox.on("change", _.bind(function (cm, changeObject) {
-                        this.saveEvent(this.model.onChange, cm, changeObject);
+                    this.cmBox.addUpdateListener((update) => {
+                        if (this.model.onChange) {
+                            this.model.onChange(this.cmBox, update);
+                        }
 
                         if (!this.data.disableValidation) {
-
-                            if (cm.getValue().length > 0) {
+                            if (this.cmBox.getValue().length > 0) {
                                 this.model.codeMirrorValid = true;
                             } else {
                                 this.model.codeMirrorValid = false;
                             }
-
                             this.customValidate();
                         }
-                    }, this));
-
-                    this.cmBox.on("blur", _.bind(function (cm, changeObject) {
-                        this.saveEvent(this.model.onBlur, cm, changeObject);
-                    }, this));
-
-                    this.cmBox.on("keypress", _.bind(function (cm, changeObject) {
-                        this.saveEvent(this.model.onKeypress, cm, changeObject);
-                    }, this));
+                    });
 
                     if (this.model.onKeypress) {
                         this.$el.find("input:radio, .scriptFilePath").bind("keypress", _.bind(function () {
@@ -241,7 +225,7 @@ define([
                         this.model.onLoadComplete();
                     }
 
-                    //Load up passed variables
+                    // Load up passed variables
                     _.each(this.model.passedVariables, _.bind(function(value, key){
                         this.addPassedVariable(key, value);
                     }, this));
@@ -304,14 +288,6 @@ define([
                 }
             },
 
-            saveEvent: function(callback, cm, changeObject) {
-                this.cmBox.save();
-
-                if (callback) {
-                    callback(cm, changeObject);
-                }
-            },
-
             localScriptChange: function (event) {
                 var currentSelection;
 
@@ -343,10 +319,6 @@ define([
 
                     this.customValidate();
                 }
-            },
-
-            refresh: function() {
-                this.cmBox.refresh();
             },
 
             //If either the file name or inline script are empty this function will return null
@@ -382,7 +354,7 @@ define([
                         }
 
                     } else {
-                        scriptObject.source = this.$el.find("textarea").val();
+                        scriptObject.source = this.cmBox ? this.cmBox.getValue() : "";
 
                         if (scriptObject.source.length === 0) {
                             emptyCheck = true;
@@ -460,10 +432,10 @@ define([
                     this.model.onChange();
                 }
 
-                this.cmBox.setOption("mode", mode);
+                this.cmBox.setLanguage(mode);
             },
 
-            scriptSelect: function(event, codeMirror) {
+            scriptSelect: function(event) {
                 event.preventDefault();
 
                 var currentSelection,
@@ -478,16 +450,15 @@ define([
 
                 if (currentSelection === "inline-code") {
                     this.setSelectedScript(filePath, sourceCode);
-                    this.cmBox.setOption("readOnly", "");
+                    this.cmBox.setReadonly(false);
                     this.$el.find(".inline-code").toggleClass("code-mirror-disabled", false);
-                    codeMirror.refresh();
 
                     if (this.model.autoFocus) {
-                        codeMirror.focus();
+                        this.cmBox.focus();
                     }
                 } else {
                     this.setSelectedScript(sourceCode, filePath);
-                    this.cmBox.setOption("readOnly", "nocursor");
+                    this.cmBox.setReadonly(true);
                     this.$el.find(".inline-code").toggleClass("code-mirror-disabled", true);
 
                     if (this.model.autoFocus) {

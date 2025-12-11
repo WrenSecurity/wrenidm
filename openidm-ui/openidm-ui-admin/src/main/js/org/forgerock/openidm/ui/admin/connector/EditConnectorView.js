@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -293,7 +293,6 @@ define([
                                 this.postActionBlockScript = InlineScriptEditor.generateScriptEditor({
                                     "element": this.$el.find(".postActionBlock .script"),
                                     "eventName": "",
-                                    "deleteElement": false,
                                     "scriptData": data.syncFailureHandler.postRetryAction.script
                                 });
                                 this.$el.find(".postActionBlock .script").show();
@@ -766,8 +765,7 @@ define([
             if (!this.postActionBlockScript) {
                 this.postActionBlockScript = InlineScriptEditor.generateScriptEditor({
                     "element": this.$el.find(".postActionBlock .script"),
-                    "eventName": "",
-                    "deleteElement": false
+                    "eventName": ""
                 });
             }
         },

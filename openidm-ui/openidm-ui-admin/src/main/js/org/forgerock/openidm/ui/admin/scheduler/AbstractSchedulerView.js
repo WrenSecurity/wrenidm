@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2025 Wren Security.
  */
 
 define([
@@ -144,11 +145,9 @@ define([
             let element = this.$el.find(".script-editor-container");
             let options = {
                 element,
-                noValidation: true,
                 onChange: () => { element.trigger("change"); },
                 onAddPassedVariable: () => { element.trigger("change"); },
                 onLoadComplete: () => {
-
                     this.$el.find(".script-body select").selectize();
                     let serviceType = this.serviceType(this.data.schedule.invokeService);
                     this.updateInvokeContextVisibleElement(serviceType);

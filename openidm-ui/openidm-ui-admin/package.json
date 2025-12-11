@@ -14,7 +14,12 @@
     "node-qunit-puppeteer": "^2.2.1"
   },
   "dependencies": {
-    "codemirror": "^4.10.0",
+    "@babel/eslint-parser": "^7.22.15",
+    "@codemirror/lang-javascript": "^6.2.4",
+    "@codemirror/language": "^6.11.3",
+    "@codemirror/legacy-modes": "^6.5.2",
+    "@codemirror/state": "^6.5.2",
+    "codemirror": "^6.0.2",
     "d3": "^3.5.5",
     "dragula": "^3.6.7",
     "moment-timezone": "^0.5.45",

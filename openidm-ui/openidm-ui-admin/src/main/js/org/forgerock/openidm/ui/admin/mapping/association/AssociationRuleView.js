@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -137,7 +137,6 @@ define([
                     "eventName": "correlationScript",
                     "disableValidation": false,
                     "scriptData": scriptData,
-                    "disablePassedVariable": false,
                     "placeHolder" : "['test', 'default']",
                     "validationCallback": _.bind(function(valid) {
                         if (this.$el.find(".correlationQueryType").val() === "script") {

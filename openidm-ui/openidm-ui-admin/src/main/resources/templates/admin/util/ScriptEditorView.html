@@ -31,11 +31,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="codemirror-holder col-sm-12">
-                        {{#if scriptData.file}}
-                        <textarea class="scriptSourceCode" placeholder="{{placeHolder}}"  name="sourceCode" disabled="true"></textarea>
-                        {{else}}
-                        <textarea class="scriptSourceCode" placeholder="{{placeHolder}}" name="sourceCode">{{scriptData.source}}</textarea>
-                        {{/if}}
+                        <div class="scriptSourceCode" name="sourceCode"></div>
 
                         {{#unless disableValidation}}
                         <span></span>

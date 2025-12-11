@@ -11,7 +11,7 @@
  * Header, with the fields enclosed by brackets [] replaced by your own identifying
  * information: "Portions copyright [year] [name of copyright owner]".
  *
- * Copyright 2023 Wren Security.
+ * Copyright 2023-2025 Wren Security.
  */
 const {
     useBuildScripts,
@@ -19,7 +19,8 @@ const {
     useLocalResources,
     useModuleResources,
     useLessStyles,
-    useBuildRequire
+    useBuildRequire,
+    useBuildModule
 } = require("@wrensecurity/commons-ui-build");
 const express = require('express');
 const gulp = require("gulp");
@@ -35,14 +36,7 @@ const MODULE_RESOURCES = {
     "dragula/dist/dragula.min.js": "libs/dragula.js",
     "moment-timezone/builds/moment-timezone-with-data.min.js": "libs/moment-timezone-with-data.js",
     "qunit/qunit/qunit.css": "css/qunit.css",
-    "qunit/qunit/qunit.js": "libs/qunit.js",
-    //~ Code mirror resources
-    "codemirror/addon/display/placeholder.js": "libs/codemirror/addon/display/placeholder.js",
-    "codemirror/lib/codemirror.css": "css/codemirror/codemirror.css",
-    "codemirror/lib/codemirror.js": "libs/codemirror/lib/codemirror.js",
-    "codemirror/mode/groovy/groovy.js": "libs/codemirror/mode/groovy/groovy.js",
-    "codemirror/mode/javascript/javascript.js": "libs/codemirror/mode/javascript/javascript.js",
-    "codemirror/mode/xml/xml.js": "libs/codemirror/mode/xml/xml.js",
+    "qunit/qunit/qunit.js": "libs/qunit.js"
 };
 
 const LOCAL_RESOURCES = {
@@ -64,6 +58,12 @@ gulp.task("build:assets", useLocalResources({ "src/main/resources/**": "" }, { d
 gulp.task("build:scripts", useLocalResources({ "src/main/js/**/*.js": "" }, { dest: TARGET_PATH }));
 
 gulp.task("build:compose", useLocalResources({ "target/ui-compose/**": "" }, { dest: TARGET_PATH }));
+
+gulp.task("build:editor", useBuildModule({
+    id: "org/forgerock/openidm/ui/admin/util/CodeMirror",
+    src: "src/main/js/org/forgerock/openidm/ui/admin/util/CodeMirror.jsm",
+    dest: join(TARGET_PATH, "org/forgerock/openidm/ui/admin/util/CodeMirror.js")
+}));
 
 gulp.task("build:libs", async () => {
     await useModuleResources(MODULE_RESOURCES, { path: __filename, dest: TARGET_PATH })();
@@ -119,6 +119,7 @@ gulp.task("build", gulp.series(
         "build:assets",
         "build:scripts",
         "build:compose",
+        "build:editor",
         "build:libs",
         "test:sinon"
     ),
@@ -135,6 +136,10 @@ gulp.task("test", gulp.series(
 
 gulp.task("watch", () => {
     gulp.watch("src/main/js/**", gulp.parallel("build:scripts"));
+    gulp.watch(
+        "src/main/js/org/forgerock/openidm/ui/admin/util/CodeMirror.jsm",
+        gulp.series("build:editor", "deploy")
+    );
 });
 
 gulp.task("default", gulp.series("eslint", "build", "test"));

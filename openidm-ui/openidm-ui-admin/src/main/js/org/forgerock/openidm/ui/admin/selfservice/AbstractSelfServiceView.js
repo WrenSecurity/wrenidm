@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2025 Wren Security.
  */
 
 define([
@@ -32,9 +32,7 @@ define([
     "selectize",
     "org/forgerock/commons/ui/common/util/AutoScroll",
     "dragula",
-    "libs/codemirror/lib/codemirror",
-    "libs/codemirror/mode/xml/xml",
-    "libs/codemirror/addon/display/placeholder"
+    "org/forgerock/openidm/ui/admin/util/CodeMirror"
 ], function($, _,
         bootstrap,
         handlebars,
@@ -50,7 +48,7 @@ define([
         selectize,
         AutoScroll,
         dragula,
-        codeMirror) {
+        CodeMirror) {
 
     var AbstractSelfServiceView = AdminAbstractView.extend({
         events: {
@@ -80,15 +78,7 @@ define([
             resources: null,
             emailRequired: false,
             emailConfigured: false,
-            EMAIL_STEPS: ["emailUsername", "emailValidation"],
-            codeMirrorConfig: {
-                lineNumbers: true,
-                autofocus: false,
-                viewportMargin: Infinity,
-                mode: "xml",
-                htmlMode: true,
-                lineWrapping: true
-            }
+            EMAIL_STEPS: ["emailUsername", "emailValidation"]
         },
 
         checkAddTranslation: function(e) {
@@ -105,7 +95,7 @@ define([
                 }
             // This function was triggered from the codeMirror onchange
             } else {
-                container = $(this.cmBox.getTextArea()).closest(".translationMapGroup");
+                container = $(this.cmBox.getParent()).closest(".translationMapGroup");
                 usesCodeMirror = true;
             }
 
@@ -155,13 +145,15 @@ define([
                     );
 
                 if (useCodeMirror) {
-                    codeMirror.fromTextArea(
-                        translationMapGroup.find(".email-message-code-mirror-disabled:last")[0],
-                        _.extend({readOnly: true, cursorBlinkRate: -1}, this.data.codeMirrorConfig)
-                    );
+                    const editorDiv = translationMapGroup.find(".email-message-code-mirror-disabled:last")[0];
+                    this.disabledCmBoxes.push(CodeMirror(editorDiv, {
+                        mode: "xml",
+                        value: text,
+                        readonly: true,
+                        lineWrapping: true
+                    }));
 
                     this.cmBox.setValue("");
-
                 } else {
                     translationMapGroup.find(".newTranslationText").val("");
                 }
@@ -177,15 +169,24 @@ define([
                 field = translationMapGroup.attr("field"),
                 localeField = translationMapGroup.find(".newTranslationLocale"),
                 textField = translationMapGroup.find(".newTranslationText"),
-                localeValue = $(e.target).closest("li").attr("locale"),
-                textValue = $(e.target).closest("li").find(".localizedText").text();
+                deletedLocale = $(e.target).closest("li").attr("locale"),
+                deletedField = $(e.target).closest("li").find(".localizedText"),
+                usesCodeMirror = $(textField).hasClass('email-message-code-mirror');
 
-            delete currentStageConfig[field][localeValue];
-            translationMapGroup.find("li[locale='"+localeValue+"']").remove();
+            delete currentStageConfig[field][deletedLocale];
+            translationMapGroup.find("li[locale='"+deletedLocale+"']").remove();
 
-            localeField.val(localeValue);
-            textField.val(textValue).focus();
+            localeField.val(deletedLocale);
 
+            if (usesCodeMirror) {
+                const disabledCmBox = this.disabledCmBoxes.find((cmBox) => deletedField[0].isEqualNode(cmBox.getParent()));
+                const textValue = disabledCmBox.getValue();
+                this.cmBox.setValue(textValue);
+                this.cmBox.focus();
+            } else {
+                const textValue = deletedField.text();
+                textField.val(textValue).focus();
+            }
         },
         createConfig: function () {
             this.setKBAEnabled();
@@ -391,14 +392,23 @@ define([
                     size: BootstrapDialog.SIZE_WIDE,
                     message: $(handlebars.compile("{{> selfservice/_" + type + "}}")(currentData)),
                     onshown: _.bind(function (dialogRef) {
-                        _.each(dialogRef.$modalBody.find(".email-message-code-mirror-disabled"), (instance) => {
-                            codeMirror.fromTextArea(instance, _.extend({readOnly: true, cursorBlinkRate: -1}, this.data.codeMirrorConfig));
-                        });
+                        this.disabledCmBoxes = _(dialogRef.$modalBody.find(".email-message-code-mirror-disabled"))
+                            .map((instance) => CodeMirror(instance, {
+                                mode: "xml",
+                                value: instance.nextElementSibling.textContent || "",
+                                readonly: true,
+                                lineWrapping: true
+                            })).value();
 
                         if (dialogRef.$modalBody.find(".email-message-code-mirror")[0]) {
-                            this.cmBox = codeMirror.fromTextArea(dialogRef.$modalBody.find(".email-message-code-mirror")[0], this.data.codeMirrorConfig);
-                            this.cmBox.on("change", () => {
-                                this.checkAddTranslation();
+                            const editorDiv = dialogRef.$modalBody.find(".email-message-code-mirror")[0];
+                            this.cmBox = CodeMirror(editorDiv, {
+                                mode: "xml",
+                                placeholder: $(editorDiv).attr('placeholder'),
+                                lineWrapping: true,
+                                updateCallbacks: [() => {
+                                    this.checkAddTranslation();
+                                }]
                             });
                         }
 

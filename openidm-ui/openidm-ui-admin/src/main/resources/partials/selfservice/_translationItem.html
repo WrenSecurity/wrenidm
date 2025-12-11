@@ -6,9 +6,10 @@
 
         <div class="col-sm-8">
             {{#if useCodeMirror}}
-            <textarea class="email-message-code-mirror-disabled localizedText form-control" disabled="true">{{text}}</textarea>
+                <div class="email-message-code-mirror-disabled localizedText"></div>
+                <textarea class="email-message-code-mirror-hidden">{{text}}</textarea>
             {{else}}
-            <p class="localizedText">{{text}}</p>
+                <p class="localizedText">{{text}}</p>
             {{/if}}
         </div>
 
