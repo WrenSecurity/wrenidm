@@ -26,12 +26,12 @@ your own identifying information:
 
 This is a custom scripted connector bundler used to generate the boilerplate necessary to produce a
 custom connector based on the ForgeRock OpenICF Groovy connector.  Having this code pre-generated for
-you will save a lot of time and effort, accelerating the process of creating your own custom 
-connector.  
+you will save a lot of time and effort, accelerating the process of creating your own custom
+connector.
 
-When given a JSON configuration file this will produce all of the required source code to then build an 
-OSGi-compatible jar file usable in any OpenICF-compliant project such as OpenIDM.  See below for a template 
-example.  
+When given a JSON configuration file this will produce all of the required source code to then build an
+OSGi-compatible jar file usable in any OpenICF-compliant project such as OpenIDM.  See below for a template
+example.
 
 For the connector to serve any useful purpose the generated Groovy templates must be populated with
 code appropriate to the resource to be accessed.  The templates contain notes and, where appropriate,
@@ -39,7 +39,7 @@ code appropriate to the resource to be accessed.  The templates contain notes an
 
 ### Step by step
 
-First obtain a copy of this project either in source or binary form.  If in source form first build 
+First obtain a copy of this project either in source or binary form.  If in source form first build
 the binary jar with 'mvn install'.
 
 Place your JSON configuration file in a clean directory and execute the jar:
@@ -93,7 +93,7 @@ directly from within the jar.  To identify the filename grep the jar's catalog:
 The file should appear in a conf/ directory.  Next extract the file to the conf directory on your local filesystem:
 
     jar -xvf <filename>.jar <provisioner filename>
-    
+
 
 #### OpenIDM UI Connector Template
 
@@ -101,19 +101,19 @@ The Admin UI provides a default template for configuration of connectors that la
 you prefer to have a specialized template to use with your new connector there is one in the connector bundle
 for this purpose. Because the UI template is named after this connector you must first identify the file:
 
-    jar -tvf <filename>.jar | grep "1.4.html"
-    
+    jar -tvf <filename>.jar | grep "1.5.html"
+
 Using the sample configuration this will be named:
 
-    ui/org.forgerock.openicf.connectors.awesome.AwesomeConnector_1.4.html
-    
+    ui/org.forgerock.openicf.connectors.awesome.AwesomeConnector_1.5.html
+
 Next extract the file from the connector jar (using the example above):
 
-    jar -xvf ui/org.forgerock.openicf.connectors.awesome.AwesomeConnector_1.4.html
-    
+    jar -xvf ui/org.forgerock.openicf.connectors.awesome.AwesomeConnector_1.5.html
+
 Then move it to the correct directory for the UI to find it:
 
-    mv ui/org.forgerock.openicf.connectors.awesome.AwesomeConnector_1.4.html \
+    mv ui/org.forgerock.openicf.connectors.awesome.AwesomeConnector_1.5.html \
     ui/default/admin/public/templates/admin/connector/
 
 
@@ -241,8 +241,8 @@ Then move it to the correct directory for the UI to find it:
             } ]
         } ]
     }
-    
-#### Base connector types 
+
+#### Base connector types
     The possible values for the param baseConnectorType are:
          1. GROOVY              Non-pooled Groovy connector
          2. POOLABLEGROOVY      Poolable Groovy connector
@@ -253,10 +253,10 @@ Then move it to the correct directory for the UI to find it:
 #### ProvidedProperties vs. Properties
     ProvidedProperties are those already provided by the base configuration class for your connector.  For example,
     if you choose SQL as your connector type then ScriptedSQLConfiguration will be your base configuration class. This
-    base class already provides properties for "username", "password", etc.  There is no need for you to define them 
+    base class already provides properties for "username", "password", etc.  There is no need for you to define them
     yourself but you will need to provide a default value if you want them to show up in the provisioner file.  To do
     so simply add them as ProvidedProperties.
-    
+
     The other type, Properties, defines new and unique properties you want your connector to support. This is where you
     define the attributes of each new custom property your connector will have that the base configuration class did
     not provide.

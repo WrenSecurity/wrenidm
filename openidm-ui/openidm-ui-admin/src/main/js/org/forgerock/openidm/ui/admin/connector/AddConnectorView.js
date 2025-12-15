@@ -91,8 +91,8 @@ define([
                 this.data.versionDisplay = _.filter(this.data.versionDisplay, _.bind(function(version) {
                     var bundleName = version.versions[0].bundleName,
                         excludes = [
-                            "org.forgerock.openicf.connectors.ssh-connector",
-                            "org.forgerock.openicf.connectors.groovy-connector"
+                            "org.wrensecurity.wrenicf.connector.ssh-connector",
+                            "org.wrensecurity.wrenicf.connector.groovy-connector"
                         ];
                     return !_.includes(excludes, bundleName);
                 }, this));

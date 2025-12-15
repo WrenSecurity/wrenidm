@@ -13,7 +13,7 @@
     information: "Portions copyright [year] [name of copyright owner]".
 
     Copyright 2011-2016 ForgeRock AS.
-    Portions Copyright 2017-2022 Wren Security.
+    Portions Copyright 2017-2025 Wren Security.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -143,13 +143,31 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy</artifactId>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.forgerock.openicf.connectors</groupId>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy-json</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy-jsr223</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy-xml</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wrensecurity.wrenicf.connector</groupId>
             <artifactId>groovy-connector</artifactId>
             <version>${openicf.groovyconnector.version}</version>
             <scope>test</scope>
@@ -158,7 +176,7 @@
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jdbc</artifactId>
-            <version>7.0.53</version>
+            <version>9.0.112</version>
             <scope>test</scope>
         </dependency>
 
@@ -227,7 +245,7 @@
                                     <version>${openicf.csvconnector.version}</version>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>org.forgerock.openicf.connectors</groupId>
+                                    <groupId>org.wrensecurity.wrenicf.connector</groupId>
                                     <artifactId>groovy-connector</artifactId>
                                     <version>${openicf.groovyconnector.version}</version>
                                 </artifactItem>
@@ -248,7 +266,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.forgerock.openicf.connectors</groupId>
+                                    <groupId>org.wrensecurity.wrenicf.connector</groupId>
                                     <artifactId>groovy-connector</artifactId>
                                     <version>${openicf.groovyconnector.version}</version>
                                     <classifier>samples</classifier>

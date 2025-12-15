@@ -13,7 +13,7 @@
     information: "Portions copyright [year] [name of copyright owner]".
 
     Copyright 2011-2016 ForgeRock AS. All Rights Reserved
-    Portions Copyright 2017-2022 Wren Security.
+    Portions Copyright 2017-2025 Wren Security.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -373,6 +373,12 @@
             <artifactId>org.apache.felix.fileinstall</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.aries.spifly</groupId>
+            <artifactId>org.apache.aries.spifly.dynamic.bundle</artifactId>
+            <version>1.3.7</version>
+        </dependency>
+
         <!-- Declarative Services support -->
         <dependency>
             <groupId>org.apache.felix</groupId>
@@ -452,8 +458,23 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy-json</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy-jsr223</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy-xml</artifactId>
         </dependency>
 
         <dependency>
@@ -525,33 +546,35 @@
         </dependency>
 
         <dependency>
-            <groupId>org.forgerock.openicf.connectors</groupId>
+            <groupId>org.wrensecurity.wrenicf.connector</groupId>
             <artifactId>groovy-connector</artifactId>
             <version>${openicf.groovyconnector.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.forgerock.openicf.connectors</groupId>
+            <groupId>org.wrensecurity.wrenicf.connector</groupId>
             <artifactId>ssh-connector</artifactId>
             <version>${openicf.sshconnector.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.forgerock.openicf.connectors</groupId>
+            <groupId>org.wrensecurity.wrenicf.connector</groupId>
             <artifactId>kerberos-connector</artifactId>
             <version>${openicf.kerberosconnector.version}</version>
         </dependency>
-        <!-- tomcat-jdbc and juli needed for scriptedsql 1.4 -->
+
+        <!-- Tomcat JDBC is needed for ScriptedSQL connector -->
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jdbc</artifactId>
-            <version>7.0.53</version>
-        </dependency>
+            <version>9.0.112</version>
 
-        <dependency>
-            <groupId>org.apache.geronimo.ext.tomcat</groupId>
-            <artifactId>juli</artifactId>
-            <version>7.0.39.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-juli</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

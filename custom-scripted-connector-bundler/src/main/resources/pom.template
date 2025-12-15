@@ -22,20 +22,21 @@
  with the fields enclosed by brackets [] replaced by
  your own identifying information:
  "Portions Copyrighted [year] [name of copyright owner]"
+ Portions Copyright 2025 Wren Security.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.forgerock.openicf.connectors</groupId>
-        <artifactId>connectors-parent</artifactId>
-        <version>1.5.0.0</version>
+        <groupId>org.wrensecurity.wrenicf.connector</groupId>
+        <artifactId>connector-bundle-parent</artifactId>
+        <version>1.5.3.2</version>
     </parent>
 
-    <groupId>org.forgerock.openicf.connectors</groupId>
+    <groupId>org.wrensecurity.wrenicf.connector</groupId>
     <artifactId>{{lower packageName}}-connector</artifactId>
-    <version>1.4.{{version}}</version>
+    <version>1.5.{{version}}</version>
     <packaging>bundle</packaging>
 
     <name>{{name}}</name>
@@ -47,15 +48,6 @@
         <maven.compiler.source>1.6</maven.compiler.source>
         <connectorPackage>org.forgerock.openicf</connectorPackage>
         <connectorClass>{{packageName}}Connector</connectorClass>
-
-        <openicf.osgi.import.defaults>
-            org.codehaus.groovy*;version="[2.2,3)",
-            groovy.*;version="[2.2,3)",
-            groovyjar*;version="[2.2,3)",
-            groovyx.net.http*;resolution:=optional,
-        </openicf.osgi.import.defaults>
-
-        <openicf.osgi.embed/>
     </properties>
 
     <repositories>
@@ -89,9 +81,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>2.4.21</version>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <version>5.0.2</version>
             <scope>provided</scope>
         </dependency>
 
@@ -99,7 +91,7 @@
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jdbc</artifactId>
-            <version>7.0.53</version>
+            <version>9.0.112</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -187,9 +179,9 @@
                     </dependency>
 
                     <dependency>
-                        <groupId>org.codehaus.groovy</groupId>
-                        <artifactId>groovy-all</artifactId>
-                        <version>2.4.21</version>
+                        <groupId>org.apache.groovy</groupId>
+                        <artifactId>groovy</artifactId>
+                        <version>5.0.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -201,7 +193,6 @@
 
                 <configuration>
                     <instructions>
-                        <Require-Bundle>groovy-all</Require-Bundle>
                         <Export-Package>org.forgerock.openicf.connectors.{{lower packageName}}.*</Export-Package>
                     </instructions>
                 </configuration>

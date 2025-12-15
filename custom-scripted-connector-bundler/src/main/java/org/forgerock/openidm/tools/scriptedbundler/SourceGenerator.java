@@ -21,6 +21,7 @@
  * with the fields enclosed by brackets [] replaced by
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
+ * Portions Copyright 2025 Wren Security.
  */
 
 package org.forgerock.openidm.tools.scriptedbundler;
@@ -134,7 +135,7 @@ public class SourceGenerator {
         }
 
         SourceTemplate uiTemplate = new SourceTemplate(config.getBaseConnectorType().getUITemplate(),
-                "org.forgerock.openicf.connectors.{{lower packageName}}.{{packageName}}Connector_1.4.html",
+                "org.forgerock.openicf.connectors.{{lower packageName}}.{{packageName}}Connector_1.5.html",
                 "./src/main/resources/ui/");
 
         try {
