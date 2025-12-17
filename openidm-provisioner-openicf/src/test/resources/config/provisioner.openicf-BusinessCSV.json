@@ -1,7 +1,7 @@
 {
     "name" : "business",
     "connectorRef" : {
-        "bundleName" : "org.forgerock.openicf.connectors.csvfile-connector",
+        "bundleName" : "org.wrensecurity.wrenicf.connector.csvfile-connector",
         "bundleVersion" : "1.5.1.4",
         "connectorName" : "org.forgerock.openicf.csvfile.CSVFileConnector",
         "connectorHostRef" : "testServer"

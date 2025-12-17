@@ -246,7 +246,7 @@
                                     <version>${openicf.xmlconnector.version}</version>
                                 </artifactItem>
                                 <artifactItem>
-                                    <groupId>org.forgerock.openicf.connectors</groupId>
+                                    <groupId>org.wrensecurity.wrenicf.connector</groupId>
                                     <artifactId>csvfile-connector</artifactId>
                                     <version>${openicf.csvconnector.version}</version>
                                 </artifactItem>
