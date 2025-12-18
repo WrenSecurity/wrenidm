@@ -173,7 +173,7 @@
 
         <!-- Wren:ICF Framework and Connector versions -->
         <openicf.framework.version>1.5.3.2</openicf.framework.version>
-        <openicf.xmlconnector.version>1.1.0.3</openicf.xmlconnector.version>
+        <openicf.xmlconnector.version>1.5.3.0</openicf.xmlconnector.version>
         <openicf.csvconnector.version>1.5.3.0</openicf.csvconnector.version>
         <openicf.dbtableconnector.version>1.1.0.2</openicf.dbtableconnector.version>
         <openicf.remoteconnectorserver.version />
