@@ -138,7 +138,7 @@ public class ConnectorInfoProviderServiceTest {
         // TODO: Find a better way to do this that doesn't include hard-coding the connector revision
         ConnectorReference ref =
                 new ConnectorReference(new ConnectorKey(
-                        "org.forgerock.openicf.connectors.xml-connector", "1.1.0.3",
+                        "org.wrensecurity.wrenicf.connector.xml-connector", "1.5.3.0",
                         "org.forgerock.openicf.connectors.xml.XMLConnector"));
         assertThat(testableConnectorInfoProvider.findConnectorInfo(ref))
                 .isNotNull()
@@ -151,11 +151,11 @@ public class ConnectorInfoProviderServiceTest {
         // TODO: Find a better way to do this that doesn't include hard-coding the connector revision
         ConnectorReference connectorReference =
                 new ConnectorReference(new ConnectorKey(
-                        "org.forgerock.openicf.connectors.xml-connector", "1.1.0.3",
+                        "org.wrensecurity.wrenicf.connector.xml-connector", "1.5.3.0",
                         "org.forgerock.openicf.connectors.xml.XMLConnector"));
         ConnectorInfo xmlConnectorInfo = null;
         ConnectorKey key =
-                new ConnectorKey("org.forgerock.openicf.connectors.xml-connector", "1.1.0.3",
+                new ConnectorKey("org.wrensecurity.wrenicf.connector.xml-connector", "1.5.3.0",
                         "org.forgerock.openicf.connectors.xml.XMLConnector");
         for (ConnectorInfo info : testableConnectorInfoProvider.getAllConnectorInfo()) {
             if (key.equals(info.getConnectorKey())) {
