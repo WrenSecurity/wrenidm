@@ -490,7 +490,7 @@ class CollectionRelationshipProvider extends RelationshipProvider implements Col
 
         @Override
         public QueryFilter<JsonPointer> visitNotFilter(Boolean isReverse, QueryFilter<JsonPointer> subFilter) {
-            return not(subFilter.accept(new RelationshipQueryFilterVisitor(), null));
+            return not(subFilter.accept(new RelationshipQueryFilterVisitor(), isReverse));
         }
 
         @Override
