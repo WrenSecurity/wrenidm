@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   prepare:
-    if: github.event.workflow_run.conclusion == 'success'
+    if: github.event.workflow_run.conclusion == 'success' && github.repository_owner == 'WrenSecurity'
     uses: WrenSecurity/.github/.github/workflows/sonar-prepare.yml@main
     name: Prepare analysis context
     with:
