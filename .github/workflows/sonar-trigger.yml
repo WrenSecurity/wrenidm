@@ -23,7 +23,7 @@ jobs:
       workflow_run: ${{ toJSON(github.event.workflow_run) }}
   trigger:
     needs: prepare
-    if: needs.prepare.outputs.sonar_allowed
+    if: needs.prepare.outputs.sonar_allowed == 'true'
     name: Trigger Sonar analysis
     uses: WrenSecurity/.github/.github/workflows/sonar-maven.yml@main
     with:
