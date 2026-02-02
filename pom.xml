@@ -128,7 +128,7 @@
         <maven.compiler.release>17</maven.compiler.release>
 
         <!-- Commons versions -->
-        <wrensec.commons.version>22.6.1</wrensec.commons.version>
+        <wrensec.commons.version>22.6.2</wrensec.commons.version>
         <commons.script.version>4.8.0</commons.script.version>
 
         <!-- Third party dependency versions -->
