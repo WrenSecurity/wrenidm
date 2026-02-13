@@ -24,7 +24,7 @@ import static org.forgerock.util.test.assertj.AssertJPromiseAssert.assertThatPro
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import javax.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.MessageInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

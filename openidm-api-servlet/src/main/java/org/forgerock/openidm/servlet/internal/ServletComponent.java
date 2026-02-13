@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2013-2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2026 Wren Security
  */
 package org.forgerock.openidm.servlet.internal;
 
@@ -27,8 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.script.ScriptException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
 
 import org.forgerock.http.ApiProducer;
 import org.forgerock.http.DescribedHttpApplication;
@@ -64,7 +64,6 @@ import org.osgi.service.component.propertytypes.ServiceVendor;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventHandler;
 import org.osgi.service.event.propertytypes.EventTopics;
-import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -156,7 +155,7 @@ public class ServletComponent implements EventHandler {
     private HttpServlet servlet;
 
     @Activate
-    protected void activate(ComponentContext context) throws ServletException, NamespaceException {
+    protected void activate(ComponentContext context) throws ServletException {
         logger.debug("Registering servlet at {}", SERVLET_ALIAS);
 
         final Handler handler = CrestHttp.newHttpHandler(

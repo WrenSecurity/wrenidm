@@ -12,15 +12,14 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2026 Wren Security.
  */
+package org.forgerock.openidm.servlet.internal;
 
-package org.forgerock.openidm.jetty;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -29,44 +28,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.eclipse.jetty.http.HttpHeader;
-import org.eclipse.jetty.http.MimeTypes;
-import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.Response;
-
 /**
- * Custom {@code org.eclipse.jetty.server.handler.ErrorHandler} implementation that removes sensitive information
- * from HTTP error-responses.
+ * Utility for rendering custom error pages from the {@code ui/errors/} directory.
+ * Removes sensitive information from HTTP error responses.
  */
-public class JettyErrorHandler extends org.eclipse.jetty.server.handler.ErrorHandler {
+public final class ErrorPageHandler {
 
-    /**
-     * Handles Jetty errors originating from HTTP requests. Add the following entry to
-     * {@code jetty.xml} or directly to an {@code org.eclipse.jetty.server.Server} instance.
-     *
-     * <pre>{@code
-     * <Configure id="Server" class="org.eclipse.jetty.server.Server">
-     *   ...
-     *   <Call name="addBean">
-     *     <Arg>
-     *       <New class="org.forgerock.openidm.jetty.JettyErrorHandler"/>
-     *     </Arg>
-     *   </Call>
-     *   ...
-     * </Configure>
-     * }</pre>
-     *
-     * @param target The target of the request, which is either a URI, name, or {@code null}.
-     * @param baseRequest Jetty HTTP request
-     * @param request Servlet HTTP request
-     * @param response Servlet HTTP response
-     * @throws IOException I/O error
-     */
-    @Override
-    public void handle(final String target, final Request baseRequest, final HttpServletRequest request,
-            final HttpServletResponse response) throws IOException {
-        baseRequest.setHandled(true);
-        outputErrorPageResponse(request, response);
+    private ErrorPageHandler() {
     }
 
     /**
@@ -89,11 +57,9 @@ public class JettyErrorHandler extends org.eclipse.jetty.server.handler.ErrorHan
             status = 500;
         }
 
-        response.setContentType(MimeTypes.Type.TEXT_HTML_UTF_8.asString());
-        response.setHeader(HttpHeader.CACHE_CONTROL.asString(), "must-revalidate,no-cache,no-store");
-
-        // clear any error-reasons from the response
-        ((Response) response).setStatusWithReason(status, null);
+        response.setContentType("text/html;charset=utf-8");
+        response.setHeader("Cache-Control", "must-revalidate,no-cache,no-store");
+        response.setStatus(status);
 
         Path path = Paths.get(String.format("ui/errors/%1$d.html", status));
         if (!Files.exists(path)) {
@@ -118,5 +84,4 @@ public class JettyErrorHandler extends org.eclipse.jetty.server.handler.ErrorHan
         }
         response.flushBuffer();
     }
-
 }

@@ -164,6 +164,7 @@
             <plugin>
                 <groupId>org.wrensecurity.commons</groupId>
                 <artifactId>i18n-maven-plugin</artifactId>
+                <version>23.0.0-M2</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>

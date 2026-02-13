@@ -13,7 +13,7 @@
     information: "Portions copyright [year] [name of copyright owner]".
 
     Copyright 2011-2016 ForgeRock AS. All Rights Reserved
-    Portions Copyright 2017-2025 Wren Security.
+    Portions Copyright 2017-2026 Wren Security.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -90,12 +90,6 @@
 
         <dependency>
             <groupId>org.wrensecurity.wrenidm</groupId>
-            <artifactId>openidm-jetty-fragment</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.wrensecurity.wrenidm</groupId>
             <artifactId>openidm-policy</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -160,11 +154,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.wrensecurity.wrenidm</groupId>
-            <artifactId>openidm-security-jetty</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.wrensecurity.wrenidm</groupId>
@@ -198,6 +187,12 @@
         <dependency>
             <groupId>org.wrensecurity.wrenidm</groupId>
             <artifactId>openidm-selfservice</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wrensecurity.wrenidm</groupId>
+            <artifactId>wrenidm-jetty-config</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -317,11 +312,6 @@
         </dependency>
 
         <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
@@ -385,7 +375,39 @@
             <artifactId>org.apache.felix.scr</artifactId>
         </dependency>
 
-        <!-- Pax Dependencies -->
+        <!-- Felix HTTP Jetty -->
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.http.jetty12</artifactId>
+        </dependency>
+
+        <!-- Servlet APIs -->
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.http.servlet-api</artifactId>
+            <version>6.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
+        <!-- Jetty EE10 utility servlets (provides CrossOriginFilter) -->
+        <dependency>
+            <groupId>org.eclipse.jetty.ee10</groupId>
+            <artifactId>jetty-ee10-servlets</artifactId>
+            <version>12.0.30</version>
+        </dependency>
+
+        <!-- Pax Swissbox (used by openidm-script for bundle watching) -->
+        <dependency>
+            <groupId>org.ops4j.pax.swissbox</groupId>
+            <artifactId>pax-swissbox-extender</artifactId>
+            <version>1.8.5</version>
+        </dependency>
+
         <dependency>
             <groupId>org.ops4j.base</groupId>
             <artifactId>ops4j-base-lang</artifactId>
@@ -480,49 +502,6 @@
         <dependency>
             <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-xml</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.ops4j.pax.swissbox</groupId>
-            <artifactId>pax-swissbox-extender</artifactId>
-            <version>${pax.swissbox.extender.version}</version>
-        </dependency>
-
-        <!-- Paxweb 4.2.4 Dependencies -->
-        <dependency>
-            <groupId>org.ops4j.pax.web</groupId>
-            <artifactId>pax-web-spi</artifactId>
-            <version>${paxweb.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.xbean</groupId>
-            <artifactId>xbean-finder</artifactId>
-            <version>${xbean.version}</version>
-
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.xbean</groupId>
-                    <artifactId>xbean-asm-util</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm</artifactId>
-            <version>${asm.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm-commons</artifactId>
-            <version>${asm.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm-tree</artifactId>
-            <version>${asm.version}</version>
         </dependency>
 
         <!-- Wren:ICF Connectors -->

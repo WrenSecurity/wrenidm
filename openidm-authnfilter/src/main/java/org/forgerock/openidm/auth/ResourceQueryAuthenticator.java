@@ -12,14 +12,12 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2015 ForgeRock AS.
+ * Portions Copyright 2026 Wren Security
  */
-
 package org.forgerock.openidm.auth;
 
 import static org.forgerock.json.resource.ResourceException.newResourceException;
 
-import org.eclipse.jetty.jaas.spi.UserInfo;
-import org.eclipse.jetty.util.security.Password;
 import org.forgerock.json.crypto.JsonCryptoException;
 import org.forgerock.json.resource.ConnectionFactory;
 import org.forgerock.json.resource.InternalServerErrorException;
@@ -90,6 +88,7 @@ class ResourceQueryAuthenticator implements Authenticator {
      * @param context the Context to use
      * @return True if authentication is successful, otherwise false.
      */
+    @Override
     public AuthenticatorResult authenticate(String username, String password, Context context) throws ResourceException {
 
         Reject.ifNull(username, "Provided username was null");
@@ -111,11 +110,10 @@ class ResourceQueryAuthenticator implements Authenticator {
                     throw new InternalServerErrorException(jce.getMessage(), jce);
                 }
             } else {
-                final UserInfo userInfo = getRepoUserInfo(username, resource);
-                if (userInfo == null) {
-                    // getResource already logged why
+                final String retrievedCred = getDecryptedCredential(username, resource);
+                if (retrievedCred == null) {
                     return AuthenticatorResult.FAILED;
-                } else if (userInfo.checkCredential(password)) {
+                } else if (retrievedCred.equals(password)) {
                     logger.debug("Authentication succeeded for {}", username);
                     return AuthenticatorResult.authenticationSuccess(resource);
                 }
@@ -159,7 +157,7 @@ class ResourceQueryAuthenticator implements Authenticator {
         return result.iterator().next(); // the retrieved resource
     }
 
-    private UserInfo getRepoUserInfo(String username, ResourceResponse resource) throws ResourceException {
+    private String getDecryptedCredential(String username, ResourceResponse resource) throws ResourceException {
         final CryptoService cryptoService = cryptoServiceProvider.get();
         if (cryptoService == null) {
             throw new InternalServerErrorException("No CryptoService available");
@@ -168,9 +166,6 @@ class ResourceQueryAuthenticator implements Authenticator {
             return null;
         }
 
-        final String retrievedCred =
-                cryptoService.decryptIfNecessary(resource.getContent().get(userCredentialProperty)).asString();
-
-        return new UserInfo(username, new Password(retrievedCred), null);
+        return cryptoService.decryptIfNecessary(resource.getContent().get(userCredentialProperty)).asString();
     }
 }

@@ -18,7 +18,7 @@
  */
 package org.forgerock.openidm.auth.modules;
 
-import static javax.security.auth.message.AuthStatus.SEND_FAILURE;
+import static jakarta.security.auth.message.AuthStatus.SEND_FAILURE;
 import static org.forgerock.caf.authentication.framework.AuthenticationFramework.ATTRIBUTE_AUTH_CONTEXT;
 import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
@@ -30,8 +30,8 @@ import static org.forgerock.openidm.servletregistration.ServletRegistration.SERV
 import javax.script.ScriptException;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.message.AuthStatus;
-import javax.security.auth.message.MessagePolicy;
+import jakarta.security.auth.message.AuthStatus;
+import jakarta.security.auth.message.MessagePolicy;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.ArrayList;

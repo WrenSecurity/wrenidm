@@ -306,17 +306,6 @@ public final class IdentityServer implements PropertyAccessor {
         return getProperty(name, null, String.class);
     }
 
-    // Case insensitive retrieval of system properties
-    private String getSystemPropertyIgnoreCase(String name) {
-        Properties allProps = System.getProperties();
-        for (Object key : allProps.keySet()) {
-            if (((String) key).equalsIgnoreCase(name)) {
-                return (String) allProps.get(key);
-            }
-        }
-        return null;
-    }
-
     /**
      * Retrieves the path to the root directory for this instance of the
      * Identity Server.

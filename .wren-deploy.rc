@@ -1,3 +1,0 @@
-export MAVEN_PACKAGE="openidm"
-export BINTRAY_PACKAGE="wrenidm"
-export JFROG_PACKAGE="org/forgerock/openidm"

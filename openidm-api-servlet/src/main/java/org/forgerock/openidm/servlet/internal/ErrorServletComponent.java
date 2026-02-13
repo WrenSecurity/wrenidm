@@ -12,36 +12,31 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2026 Wren Security.
  */
 
 package org.forgerock.openidm.servlet.internal;
 
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Hashtable;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
-import org.forgerock.openidm.jetty.JettyErrorHandler;
-import org.forgerock.openidm.servletregistration.ServletRegistration;
-import org.ops4j.pax.web.service.WebContainer;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A component to create and register a Jetty error-handler servlet.
+ * A component to create and register an error-handler servlet via OSGi HTTP Whiteboard.
  */
 @Component(
         name = ErrorServletComponent.PID,
@@ -53,41 +48,40 @@ public class ErrorServletComponent {
 
     private final static Logger logger = LoggerFactory.getLogger(ServletComponent.class);
 
-    private static final String ERROR_SERVLET_ALIAS = "/error";
-
-    @Reference
-    private ServletRegistration servletRegistration;
-
-    @Reference
-    private WebContainer httpService;
-
-    private HttpServlet errorServlet;
+    private ServiceRegistration<Servlet> errorServletRegistration;
 
     @Activate
-    protected void activate(ComponentContext context) throws ServletException, NamespaceException {
-        errorServlet = new HttpServlet() {
+    protected void activate(ComponentContext context) {
+        BundleContext bundleContext = context.getBundleContext();
+
+        HttpServlet errorServlet = new HttpServlet() {
             private static final long serialVersionUID = 1L;
 
             @Override
-            protected void doGet(final HttpServletRequest request, final HttpServletResponse response)
+            protected void service(final HttpServletRequest request, final HttpServletResponse response)
                     throws ServletException, IOException {
-                JettyErrorHandler.outputErrorPageResponse(request, response);
+                ErrorPageHandler.outputErrorPageResponse(request, response);
             }
         };
-        @SuppressWarnings("rawtypes")
-        final Dictionary params = new Hashtable();
-        servletRegistration.registerServlet(ERROR_SERVLET_ALIAS, errorServlet, params);
-        logger.info("Registered servlet at {}", ERROR_SERVLET_ALIAS);
 
-        httpService.registerErrorPage(ErrorPageErrorHandler.GLOBAL_ERROR_PAGE, ERROR_SERVLET_ALIAS,
-                httpService.getDefaultSharedHttpContext());
+        // Register error servlet via OSGi HTTP Whiteboard with error page properties
+        Dictionary<String, Object> props = new Hashtable<>();
+        props.put("osgi.http.whiteboard.servlet.name", "ErrorServlet");
+        props.put("osgi.http.whiteboard.servlet.errorPage", new String[] {
+                "java.lang.Throwable",
+                "400", "401", "403", "404", "405", "406", "408", "409", "410",
+                "500", "501", "502", "503", "504"
+        });
+        errorServletRegistration = bundleContext.registerService(Servlet.class, errorServlet, props);
+        logger.info("Registered error servlet via OSGi HTTP Whiteboard");
     }
 
     @Deactivate
     protected synchronized void deactivate(ComponentContext context) {
-        servletRegistration.unregisterServlet(errorServlet);
-        httpService.unregisterErrorPage(ErrorPageErrorHandler.GLOBAL_ERROR_PAGE,
-                httpService.getDefaultSharedHttpContext());
+        if (errorServletRegistration != null) {
+            errorServletRegistration.unregister();
+            errorServletRegistration = null;
+        }
     }
 
 }

@@ -79,7 +79,7 @@ import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.crypto.CryptoService;
 import org.forgerock.openidm.router.IDMConnectionFactory;
 import org.forgerock.openidm.router.RouteService;
-import org.forgerock.openidm.util.JettyPropertyUtil;
+import org.forgerock.openidm.util.ConfigPropertyUtil;
 import org.forgerock.script.Script;
 import org.forgerock.script.ScriptEntry;
 import org.forgerock.script.ScriptRegistry;
@@ -707,9 +707,9 @@ public class AuditServiceImpl implements AuditService {
     protected KeyStoreHandlerProvider createKeyStoreHandlerProvider() throws Exception {
         final Map<String, KeyStoreHandler> keystoreHandlers = new LinkedHashMap<>(1);
         keystoreHandlers.put(OPENIDM_KEYSTORE_NAME, new JcaKeyStoreHandler(
-                JettyPropertyUtil.getProperty(OPENIDM_KEYSTORE_TYPE, false),
-                JettyPropertyUtil.getProperty(OPENIDM_KEYSTORE_LOCATION, false),
-                JettyPropertyUtil.getProperty(OPENIDM_KEYSTORE_PASSWORD, false)));
+                ConfigPropertyUtil.getProperty(OPENIDM_KEYSTORE_TYPE, false),
+                ConfigPropertyUtil.getProperty(OPENIDM_KEYSTORE_LOCATION, false),
+                ConfigPropertyUtil.getProperty(OPENIDM_KEYSTORE_PASSWORD, false)));
         return new DefaultKeyStoreHandlerProvider(keystoreHandlers);
     }
 

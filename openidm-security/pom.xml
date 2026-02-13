@@ -39,13 +39,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- TODO Remove this jetty dependency -->
-        <dependency>
-            <groupId>org.wrensecurity.wrenidm</groupId>
-            <artifactId>openidm-jetty-fragment</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.wrensecurity.wrenidm</groupId>
             <artifactId>openidm-repo</artifactId>

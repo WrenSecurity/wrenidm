@@ -103,7 +103,7 @@ import org.forgerock.openidm.idp.impl.api.IdentityProviderServiceResourceWithNoS
 import org.forgerock.openidm.keystore.SharedKeyService;
 import org.forgerock.openidm.router.IDMConnectionFactory;
 import org.forgerock.openidm.util.HeaderUtil;
-import org.forgerock.openidm.util.JettyPropertyUtil;
+import org.forgerock.openidm.util.ConfigPropertyUtil;
 import org.forgerock.script.ScriptRegistry;
 import org.forgerock.services.context.AttributesContext;
 import org.forgerock.services.context.Context;
@@ -632,13 +632,13 @@ public class AuthenticationService implements SingletonResourceProvider, Identit
         if (moduleProperties.isDefined("privateKeyPassword")) {
             // decrypt/de-obfuscate privateKey password
             moduleProperties.put("privateKeyPassword",
-                    JettyPropertyUtil.decryptOrDeobfuscate(moduleProperties.get("privateKeyPassword").asString()));
+                    ConfigPropertyUtil.decryptOrDeobfuscate(moduleProperties.get("privateKeyPassword").asString()));
         }
 
         if (moduleProperties.isDefined("keystorePassword")) {
             // decrypt/de-obfuscate keystore password
             moduleProperties.put("keystorePassword",
-                    JettyPropertyUtil.decryptOrDeobfuscate(moduleProperties.get("keystorePassword").asString()));
+                    ConfigPropertyUtil.decryptOrDeobfuscate(moduleProperties.get("keystorePassword").asString()));
         }
 
         // wrap all auth modules in our wrapper to apply the IDM business logic

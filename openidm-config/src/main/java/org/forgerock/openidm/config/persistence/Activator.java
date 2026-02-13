@@ -22,6 +22,7 @@
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
  *
+ * Portions Copyrighted 2026 Wren Security
  */
 package org.forgerock.openidm.config.persistence;
 
@@ -30,7 +31,6 @@ import java.util.Hashtable;
 import org.apache.felix.cm.PersistenceManager;
 import org.apache.felix.fileinstall.ArtifactInstaller;
 import org.forgerock.openidm.config.installer.JSONConfigInstaller;
-import org.forgerock.openidm.config.paxweb.PaxWeb;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.logging.OsgiLogHandler;
 import org.osgi.framework.BundleActivator;
@@ -46,7 +46,8 @@ public class Activator implements BundleActivator {
     final static Logger logger = LoggerFactory.getLogger(Activator.class);
 
     JSONConfigInstaller installer;
-    
+
+    @Override
     public void start(BundleContext context) {
         logger.debug("Config Bundle starting");
         // Re-direct OSGi logging to the same openidm log
@@ -72,16 +73,14 @@ public class Activator implements BundleActivator {
         installer.start(context);
         Hashtable<String, String> installerProp = new Hashtable<String, String>();
         installerProp.put("service.description", "Config installer for JSON files");
-        context.registerService(new String[] {ArtifactInstaller.class.getName(), ConfigurationListener.class.getName()}, 
+        context.registerService(new String[] {ArtifactInstaller.class.getName(), ConfigurationListener.class.getName()},
                  installer, installerProp);
         logger.debug("JSON configuration installer service registered");
-
-        // Configure pax web properties
-        PaxWeb.configurePaxWebProperties();
 
         logger.info("Wren:IDM is starting from {}", IdentityServer.getInstance().getServerRoot());
     }
 
+    @Override
     public void stop(BundleContext context) {
         if (installer != null) {
             installer.stop(context);
