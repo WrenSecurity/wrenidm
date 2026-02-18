@@ -142,30 +142,31 @@
         <groovy.version>5.0.2</groovy.version>
 
         <!-- OSGi / Felix versions -->
-        <osgi.core.version>7.0.0</osgi.core.version>
+        <osgi.core.version>8.0.0</osgi.core.version>
         <osgi.compendium.version>7.0.0</osgi.compendium.version>
         <osgi.enterprise.version>7.0.0</osgi.enterprise.version>
-        <osgi.promise.version>1.1.1</osgi.promise.version>
-        <osgi.function.version>1.1.0</osgi.function.version>
-        <osgi.pushstream.version>1.0.1</osgi.pushstream.version>
+        <osgi.promise.version>1.3.0</osgi.promise.version>
+        <osgi.function.version>1.2.0</osgi.function.version>
+        <osgi.pushstream.version>1.1.0</osgi.pushstream.version>
+        <osgi.service.component.version>1.5.1</osgi.service.component.version>
 
-        <felix.framework.version>6.0.5</felix.framework.version>
-        <felix.configadmin.version>1.9.20</felix.configadmin.version>
-        <felix.eventadmin.version>1.6.2</felix.eventadmin.version>
+        <felix.framework.version>7.0.5</felix.framework.version>
+        <felix.configadmin.version>1.9.26</felix.configadmin.version>
+        <felix.eventadmin.version>1.6.4</felix.eventadmin.version>
         <felix.gogo.shell.version>1.1.4</felix.gogo.shell.version>
-        <felix.inventory.version>1.0.6</felix.inventory.version>
+        <felix.inventory.version>2.0.0</felix.inventory.version>
         <felix.metatype.version>1.2.4</felix.metatype.version>
-        <felix.fileinstall.version>3.6.8</felix.fileinstall.version>
-        <felix.log.version>1.2.4</felix.log.version>
-        <felix.scr.version>2.1.24</felix.scr.version>
+        <felix.fileinstall.version>3.7.4</felix.fileinstall.version>
+        <felix.log.version>1.3.0</felix.log.version>
+        <felix.scr.version>2.2.14</felix.scr.version>
         <felix.shell.version>1.4.3</felix.shell.version>
         <felix.shell.tui.version>1.4.1</felix.shell.tui.version>
-        <felix.webconsole.version>4.6.0</felix.webconsole.version>
-        <felix.webconsole.ds.version>2.1.0</felix.webconsole.ds.version>
-        <felix.webconsole.event.version>1.1.8</felix.webconsole.event.version>
-        <felix.webconsole.memoryusage.version>1.0.10</felix.webconsole.memoryusage.version>
-        <felix.webconsole.obr.version>1.0.4</felix.webconsole.obr.version>
-        <felix.webconsole.packageadmin.version>1.0.4</felix.webconsole.packageadmin.version>
+        <felix.webconsole.version>5.0.18</felix.webconsole.version>
+        <felix.webconsole.ds.version>2.3.0</felix.webconsole.ds.version>
+        <felix.webconsole.event.version>1.2.0</felix.webconsole.event.version>
+        <felix.webconsole.memoryusage.version>1.1.0</felix.webconsole.memoryusage.version>
+        <felix.webconsole.obr.version>1.1.0</felix.webconsole.obr.version>
+        <felix.webconsole.packageadmin.version>1.1.0</felix.webconsole.packageadmin.version>
 
         <!-- Wren:ICF Framework and Connector versions -->
         <openicf.framework.version>1.5.4.0-M1</openicf.framework.version>
@@ -455,6 +456,12 @@
 
             <dependency>
                 <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.service.component</artifactId>
+                <version>${osgi.service.component.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.osgi</groupId>
                 <artifactId>org.osgi.util.promise</artifactId>
                 <version>${osgi.promise.version}</version>
             </dependency>
@@ -674,6 +681,14 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.http.jetty12</artifactId>
                 <version>${felix.http.version}</version>
+
+                <exclusions>
+                    <exclusion>
+                        <!-- Base already included in jetty12 -->
+                        <groupId>org.apache.felix</groupId>
+                        <artifactId>org.apache.felix.http.base</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- H2 Database -->
