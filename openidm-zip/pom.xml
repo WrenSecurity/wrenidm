@@ -33,6 +33,47 @@
     </description>
 
     <dependencies>
+        <!-- XXX remove after upgrading Swagger in api-descriptor -->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-core</artifactId>
+            <version>1.6.16</version>
+        </dependency>
+
+        <!-- XXX remove after upgrading Swagger in api-descriptor -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>32.1.2-android</version>
+
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.code.findbugs</groupId>
+                    <artifactId>jsr305</artifactId>
+                </exclusion>
+
+                <exclusion>
+                    <groupId>com.google.errorprone</groupId>
+                    <artifactId>error_prone_annotations</artifactId>
+                </exclusion>
+
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>listenablefuture</artifactId>
+                </exclusion>
+
+                <exclusion>
+                    <groupId>com.google.j2objc</groupId>
+                    <artifactId>j2objc-annotations</artifactId>
+                </exclusion>
+
+                <exclusion>
+                    <groupId>org.checkerframework</groupId>
+                    <artifactId>checker-qual</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <dependency>
             <groupId>org.wrensecurity.wrenidm</groupId>
             <artifactId>openidm-launcher</artifactId>
@@ -466,6 +507,12 @@
             <artifactId>chf-http-core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.wrensecurity.wrends</groupId>
+            <artifactId>opendj-core</artifactId>
+            <version>5.0.4</version>
+        </dependency>
+
         <!-- Wren:ICF -->
         <dependency>
             <groupId>org.wrensecurity.wrenicf.framework</groupId>
@@ -595,21 +642,6 @@
                 <exclusion>
                     <groupId>org.apache.httpcomponents</groupId>
                     <artifactId>httpclient</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- ldap connector dependencies -->
-        <dependency>
-            <groupId>org.forgerock.opendj</groupId>
-            <artifactId>opendj-ldap-sdk</artifactId>
-            <version>2.6.10</version>
-
-            <exclusions>
-                <exclusion>
-                    <!-- We are getting managed version from ICF -->
-                    <groupId>org.glassfish.grizzly</groupId>
-                    <artifactId>grizzly-framework</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

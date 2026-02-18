@@ -15,15 +15,17 @@
  */
 package org.forgerock.openidm.crypto;
 
-import static org.forgerock.json.JsonValue.*;
+import static org.forgerock.json.JsonValue.field;
+import static org.forgerock.json.JsonValue.json;
+import static org.forgerock.json.JsonValue.object;
 
 import java.io.StringWriter;
 import java.security.Key;
 import java.security.PrivateKey;
-
 import javax.crypto.SecretKey;
-
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.openssl.PEMWriter;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ResourceResponse;
 import org.forgerock.util.encode.Base64;
@@ -50,6 +52,19 @@ public class KeyRepresentation {
             content.put("secret", getSecretKeyMap(key).asMap());
         }
         return content;
+    }
+
+    /**
+     * Returns a JsonValue map representing key
+     *
+     * @param keyInfo  The subject key info
+     * @return a JsonValue map representing the key
+     * @throws Exception
+     */
+    public static JsonValue getKeyMap(SubjectPublicKeyInfo keyInfo) throws Exception {
+        return getKeyMap(new JcaPEMKeyConverter()
+                .setProvider("BC")
+                .getPublicKey(keyInfo));
     }
 
     /**
