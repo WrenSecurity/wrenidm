@@ -545,7 +545,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.forgerock.openicf.connectors</groupId>
+            <groupId>org.wrensecurity.wrenicf.connector</groupId>
             <artifactId>databasetable-connector</artifactId>
             <version>${openicf.dbtableconnector.version}</version>
         </dependency>
