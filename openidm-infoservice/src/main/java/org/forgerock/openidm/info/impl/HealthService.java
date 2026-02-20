@@ -205,6 +205,7 @@ public class HealthService
         "org.wrensecurity.http.chf-http-servlet",
 
         // Wren:IDM Bundles
+        "org.wrensecurity.wrenidm.jetty-config",
         "org.wrensecurity.wrenidm.openidm-api-servlet",
         "org.wrensecurity.wrenidm.openidm-audit",
         "org.wrensecurity.wrenidm.openidm-authnfilter",
@@ -234,7 +235,6 @@ public class HealthService
         "org.wrensecurity.wrenidm.openidm-system",
         "org.wrensecurity.wrenidm.openidm-util",
         "org.wrensecurity.wrenidm.openidm-keystore",
-        "org.wrensecurity.wrenidm.wrenidm-jetty-config",
 
         // 3rd Party Bundles
         "org.apache.felix.http.jetty12"
