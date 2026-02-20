@@ -27,7 +27,7 @@ package org.forgerock.openidm.servletregistration.impl;
 import java.util.Objects;
 import java.util.UUID;
 
-import javax.servlet.Filter;
+import jakarta.servlet.Filter;
 
 import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.servletregistration.RegisteredFilter;

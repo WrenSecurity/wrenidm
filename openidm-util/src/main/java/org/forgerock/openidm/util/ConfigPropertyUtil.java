@@ -12,20 +12,18 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2026 Wren Security
  */
-
 package org.forgerock.openidm.util;
 
 import java.security.GeneralSecurityException;
 
 import org.forgerock.openidm.core.IdentityServer;
-
 /**
- * Utility for handling Jetty configuration properties, including properties
- * that may need to be encrypted/obfuscated, and/or may be encrypted/obfuscated
- *
+ * Utility for handling configuration properties, including properties that may need
+ * to be encrypted/obfuscated, and/or may be encrypted/obfuscated
  */
-public class JettyPropertyUtil {
+public class ConfigPropertyUtil {
 
     /**
      * Gets a Jetty configuration property. If obfuscated is true, it will

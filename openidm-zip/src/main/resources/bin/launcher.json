@@ -22,10 +22,9 @@
             {
                 "location":"bundle",
                 "includes":[
-                    "**/openidm-security-jetty*.jar",
-                    "**/openidm-jetty-fragment*.jar",
                     "**/openidm-quartz-fragment*.jar",
                     "**/openidm-config*.jar",
+                    "**/wrenidm-jetty-config*.jar",
                     "**/snappy-java*.jar",
                     "**/openidm-httpclient-fragment*.jar"
                 ],
@@ -54,7 +53,6 @@
                 "location":"bundle",
                 "includes":[
                     "**/openidm-cluster*.jar",
-                    "**/openidm-httpcontext-*.jar",
                     "**/groovy-*.jar"
                 ],
                 "start-level":9,
@@ -65,12 +63,11 @@
                 "includes":["*.jar"],
                 "excludes":[
                     "**/openidm-system-*.jar",
-                    "**/openidm-security-jetty*.jar",
                     "**/openidm-jaas-loginmodule-repo*.jar",
-                    "**/openidm-jetty-fragment*.jar",
                     "**/openidm-quartz-fragment*.jar",
                     "**/openidm-cluster*.jar",
                     "**/openidm-config*.jar",
+                    "**/wrenidm-jetty-config*.jar",
                     "**/openidm-repo-jdbc*.jar",
                     "**/org.apache.felix.scr-*.jar",
                     "**/org.apache.felix.configadmin*.jar",
@@ -78,8 +75,7 @@
                     "**/org.apache.felix.log*.jar",
                     "**/javax.transaction-*.jar",
                     "**/org.apache.servicemix.transaction-*.jar",
-                    "**/openidm-httpcontext-*.jar",
-                    "**/pax-web-jetty-bundle*.jar",
+                    "**/org.apache.felix.http.jetty12*.jar",
                     "**/openidm-scheduler*.jar",
                     "**/groovy-*.jar",
                     "**/openidm-httpclient-fragment*.jar"
@@ -88,7 +84,7 @@
             {
                 "location":"bundle",
                 "includes":[
-                    "**/pax-web-jetty-bundle*.jar"
+                    "**/org.apache.felix.http.jetty12*.jar"
                 ],
                 "start-level":11,
                 "action":"install.start"

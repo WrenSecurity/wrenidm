@@ -216,9 +216,7 @@ public class HealthService
         "org.wrensecurity.wrenidm.openidm-enhanced-config",
         "org.wrensecurity.wrenidm.openidm-external-email",
         "org.wrensecurity.wrenidm.openidm-external-rest",
-        "org.wrensecurity.wrenidm.openidm-httpcontext",
         "org.wrensecurity.wrenidm.openidm-infoservice",
-        "org.wrensecurity.wrenidm.openidm-jetty-fragment",
         "org.wrensecurity.wrenidm.openidm-maintenance",
         "org.wrensecurity.wrenidm.openidm-policy",
         "org.wrensecurity.wrenidm.openidm-provisioner",
@@ -229,7 +227,6 @@ public class HealthService
         "org.wrensecurity.wrenidm.openidm-router",
         "org.wrensecurity.wrenidm.openidm-scheduler",
         "org.wrensecurity.wrenidm.openidm-security",
-        "org.wrensecurity.wrenidm.openidm-security-jetty",
         "org.wrensecurity.wrenidm.openidm-servlet",
         "org.wrensecurity.wrenidm.openidm-servlet-registrator",
         "org.wrensecurity.wrenidm.openidm-smartevent",
@@ -237,9 +234,10 @@ public class HealthService
         "org.wrensecurity.wrenidm.openidm-system",
         "org.wrensecurity.wrenidm.openidm-util",
         "org.wrensecurity.wrenidm.openidm-keystore",
+        "org.wrensecurity.wrenidm.wrenidm-jetty-config",
 
         // 3rd Party Bundles
-        "org.ops4j.pax.web.pax-web-jetty-bundle"
+        "org.apache.felix.http.jetty12"
     };
 
     /**

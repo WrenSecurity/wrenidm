@@ -13,7 +13,7 @@
     information: "Portions copyright [year] [name of copyright owner]".
 
     Copyright (c) 2011-2015 ForgeRock AS. All Rights Reserved
-    Portions Copyright 2017-2022 Wren Security.
+    Portions Copyright 2017-2026 Wren Security.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -50,12 +50,6 @@
 
         <dependency>
             <groupId>org.wrensecurity.wrenidm</groupId>
-            <artifactId>openidm-httpcontext</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.wrensecurity.wrenidm</groupId>
             <artifactId>openidm-enhanced-config</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -63,12 +57,6 @@
             <groupId>org.wrensecurity.wrenidm</groupId>
             <artifactId>openidm-identity-provider</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <!-- Third party dependencies -->
-        <dependency>
-            <groupId>org.ops4j.pax.web</groupId>
-            <artifactId>pax-web-jetty-bundle</artifactId>
         </dependency>
 
         <!-- Forgerock commons dependencies -->

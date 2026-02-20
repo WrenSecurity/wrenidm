@@ -2,7 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2012-2015 ForgeRock AS. All Rights Reserved
- * Portions Copyright 2018-2020 Wren Security.
+ * Portions Copyright 2018-2026 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -42,10 +42,10 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.Filter;
-import javax.servlet.Servlet;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
+import jakarta.servlet.Filter;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.forgerock.json.JsonValue;
@@ -54,15 +54,13 @@ import org.forgerock.openidm.servletregistration.RegisteredFilter;
 import org.forgerock.openidm.servletregistration.ServletFilterRegistrator;
 import org.forgerock.openidm.servletregistration.ServletRegistration;
 import org.forgerock.util.Function;
-import org.ops4j.pax.web.service.WebContainer;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,10 +86,13 @@ public class ServletRegistrationSingleton implements ServletRegistration {
     // Context of this scr component
     private BundleContext bundleContext;
 
-    @Reference
-    private WebContainer webContainer;
-
     private List<RegisteredFilterImpl> filters = new ArrayList<RegisteredFilterImpl>();
+
+    /** Tracks OSGi Whiteboard servlet registrations for unregistration. */
+    private Map<Servlet, ServiceRegistration<Servlet>> servletRegistrations = new HashMap<>();
+
+    /** Tracks OSGi Whiteboard filter registrations for unregistration. */
+    private Map<Filter, ServiceRegistration<Filter>> filterRegistrations = new HashMap<>();
 
     private final static Object registrationLock = new Object();
 
@@ -120,8 +121,14 @@ public class ServletRegistrationSingleton implements ServletRegistration {
      */
     @Override
     @SuppressWarnings("rawtypes")
-    public void registerServlet(String alias, Servlet servlet, Dictionary initParams) throws ServletException, NamespaceException {
-        webContainer.registerServlet(alias, servlet, initParams, webContainer.getDefaultSharedHttpContext());
+    public void registerServlet(String alias, Servlet servlet, Dictionary initParams) throws ServletException {
+        Dictionary<String, Object> whiteboardProps = new Hashtable<>();
+        String pattern = alias.endsWith("/*") ? alias : alias + "/*";
+        whiteboardProps.put("osgi.http.whiteboard.servlet.pattern", pattern);
+        whiteboardProps.put("osgi.http.whiteboard.servlet.name", servlet.getClass().getName() + "-" + alias);
+        ServiceRegistration<Servlet> registration = bundleContext.registerService(
+                Servlet.class, servlet, whiteboardProps);
+        servletRegistrations.put(servlet, registration);
     }
 
     /**
@@ -129,7 +136,10 @@ public class ServletRegistrationSingleton implements ServletRegistration {
      */
     @Override
     public void unregisterServlet(Servlet servlet) {
-        webContainer.unregisterServlet(servlet);
+        ServiceRegistration<Servlet> registration = servletRegistrations.remove(servlet);
+        if (registration != null) {
+            registration.unregister();
+        }
     }
     /**
      * {@inheritDoc}
@@ -229,12 +239,19 @@ public class ServletRegistrationSingleton implements ServletRegistration {
                 new Class<?>[] { Filter.class },
                 new FilterProxy(filter, filterCL, preInvokeReqAttributes));
 
-        // Register filter
-        webContainer.registerFilter(proxiedFilter,
-                urlPatterns.toArray(new String[urlPatterns.size()]),
-                servletNames.toArray(new String[servletNames.size()]),
-                new Hashtable<String, Object>(initParams),
-                webContainer.getDefaultSharedHttpContext());
+        // Register filter via OSGi HTTP Whiteboard
+        Dictionary<String, Object> whiteboardProps = new Hashtable<>();
+        whiteboardProps.put("osgi.http.whiteboard.filter.pattern", urlPatterns.toArray(new String[urlPatterns.size()]));
+        whiteboardProps.put("osgi.http.whiteboard.filter.name", filterClass);
+        whiteboardProps.put("osgi.http.whiteboard.filter.dispatcher",
+                new String[] { "REQUEST", "FORWARD", "INCLUDE", "ERROR" });
+        // Pass init params as servlet.init.* properties for the whiteboard
+        for (Map.Entry<String, String> entry : initParams.entrySet()) {
+            whiteboardProps.put("servlet.init." + entry.getKey(), entry.getValue());
+        }
+        ServiceRegistration<Filter> registration = bundleContext.registerService(
+                Filter.class, proxiedFilter, whiteboardProps);
+        filterRegistrations.put(proxiedFilter, registration);
         return proxiedFilter;
     }
 
@@ -254,7 +271,10 @@ public class ServletRegistrationSingleton implements ServletRegistration {
     }
 
     public void unregisterFilterWithWebContainer(Filter filter) {
-        webContainer.unregisterFilter(filter);
+        ServiceRegistration<Filter> registration = filterRegistrations.remove(filter);
+        if (registration != null) {
+            registration.unregister();
+        }
     }
 
     /**
@@ -309,4 +329,3 @@ public class ServletRegistrationSingleton implements ServletRegistration {
         }
     }
 }
-

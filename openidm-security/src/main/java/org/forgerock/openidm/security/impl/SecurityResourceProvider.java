@@ -29,15 +29,15 @@ import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
-import org.bouncycastle.jce.PKCS10CertificationRequest;
 import org.bouncycastle.jce.PrincipalUtil;
-import org.bouncycastle.jce.X509Principal;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.bouncycastle.pkcs.PKCS10CertificationRequest;
+import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequestBuilder;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.BadRequestException;
 import org.forgerock.json.resource.InternalServerErrorException;
@@ -60,9 +60,9 @@ import org.slf4j.LoggerFactory;
  * A class containing common members and methods of a Security ResourceProvider implementation.
  */
 public class SecurityResourceProvider {
-    
+
     private final static Logger logger = LoggerFactory.getLogger(SecurityResourceProvider.class);
-    
+
     public static final String ACTION_GENERATE_CERT = "generateCert";
     public static final String ACTION_GENERATE_CSR = "generateCSR";
 
@@ -70,7 +70,7 @@ public class SecurityResourceProvider {
     public static final String DEFAULT_ALGORITHM = "RSA";
     public static final String DEFAULT_CERTIFICATE_TYPE = "X509";
     public static final int DEFAULT_KEY_SIZE = 2048;
-    
+
     public static final String KEYS_CONTAINER = "security/keys";
 
     /**
@@ -94,9 +94,9 @@ public class SecurityResourceProvider {
      * The resource name, "truststore" or "keystore".
      */
     protected String resourceName = null;
-    
+
     private String cryptoAlias;
-    
+
     private String cryptoCipher;
 
     public SecurityResourceProvider(String resourceName, KeyStore keyStore, KeyStoreService keyStoreService,
@@ -112,7 +112,7 @@ public class SecurityResourceProvider {
 
     /**
      * Returns a JsonValue map representing a certificate
-     * 
+     *
      * @param alias  the certificate alias
      * @param cert  The certificate
      * @return a JsonValue map representing the certificate
@@ -142,7 +142,7 @@ public class SecurityResourceProvider {
 
     /**
      * Returns a JsonValue map representing a CSR
-     * 
+     *
      * @param alias  the certificate alias
      * @param csr  The CSR
      * @return a JsonValue map representing the CSR
@@ -152,13 +152,13 @@ public class SecurityResourceProvider {
         JsonValue content = new JsonValue(new LinkedHashMap<String, Object>());
         content.put(ResourceResponse.FIELD_CONTENT_ID, alias);
         content.put("csr", CertUtil.getCertString(csr));
-        content.put("publicKey", KeyRepresentation.getKeyMap(csr.getPublicKey()).getObject());
+        content.put("publicKey", KeyRepresentation.getKeyMap(csr.getSubjectPublicKeyInfo()).getObject());
         return content;
     }
-    
+
     /**
      * Generates a CSR request.
-     * 
+     *
      * @param alias
      * @param algorithm
      * @param signatureAlgorithm
@@ -171,7 +171,7 @@ public class SecurityResourceProvider {
             String signatureAlgorithm, int keySize, JsonValue params) throws Exception {
 
         // Construct the distinguished name
-        StringBuilder sb = new StringBuilder(); 
+        StringBuilder sb = new StringBuilder();
         sb.append("CN=").append(params.get("CN").required().asString().replaceAll(",", "\\\\,"));
         sb.append(", OU=").append(params.get("OU").defaultTo("None").asString().replaceAll(",", "\\\\,"));
         sb.append(", O=").append(params.get("O").defaultTo("None").asString().replaceAll(",", "\\\\,"));
@@ -180,31 +180,31 @@ public class SecurityResourceProvider {
         sb.append(", C=").append(params.get("C").defaultTo("None").asString().replaceAll(",", "\\\\,"));
 
         // Create the principle subject name
-        X509Principal subjectName = new X509Principal(sb.toString());
-        
+        X500Name subjectName = new X500Name(sb.toString());
+
         //store.getStore().
-        
+
         // Generate the key pair
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm);  
-        keyPairGenerator.initialize(keySize); 
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(algorithm);
+        keyPairGenerator.initialize(keySize);
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
         PublicKey publicKey = keyPair.getPublic();
         PrivateKey privateKey = keyPair.getPrivate();
-        
+
         // Generate the certificate request
-        PKCS10CertificationRequest cr = new PKCS10CertificationRequest(signatureAlgorithm, subjectName, publicKey,
-                null, privateKey);
-        
+        PKCS10CertificationRequest cr = new JcaPKCS10CertificationRequestBuilder(subjectName, publicKey)
+                .build(new JcaContentSignerBuilder(signatureAlgorithm).setProvider("BC").build(privateKey));
+
         // Store the private key to use when the signed cert is return and updated
         logger.debug("Storing private key with alias {}", alias);
         storeKeyPair(alias, keyPair);
-        
+
         return Pair.of(cr, privateKey);
-    }   
+    }
 
     /**
      * Stores a KeyPair (associated with a CSR request on the specified alias) in the repository.
-     * 
+     *
      * @param alias the alias from the CSR
      * @param keyPair the KeyPair object
      * @throws ResourceException
@@ -220,9 +220,9 @@ public class SecurityResourceProvider {
         } catch (Exception e) {
             throw new InternalServerErrorException(e.getMessage(), e);
         }
-        
+
     }
-    
+
     /**
      * Stores an object in the repository
      * @param id the object's id
@@ -242,10 +242,10 @@ public class SecurityResourceProvider {
         updateRequest.setRevision(oldResource.getRevision());
         repoService.update(updateRequest);
     }
-    
+
     /**
      * Returns a stored KeyPair (associated with a CSR request on the specified alias) from the repository.
-     * 
+     *
      * @param alias the alias from the CSR
      * @return the KeyPair
      * @throws ResourceException
@@ -264,10 +264,10 @@ public class SecurityResourceProvider {
             throw new InternalServerErrorException(e.getMessage(), e);
         }
     }
-    
+
     /**
      * Verifies that the supplied private key and signed certificate match by signing/verifying some test data.
-     * 
+     *
      * @param privateKey A private key
      * @param cert the certificate
      * @throws ResourceException if the verification fails, or an error is encountered.
@@ -292,10 +292,10 @@ public class SecurityResourceProvider {
             throw new BadRequestException("Private key does not match signed certificate");
         }
     }
-    
+
     /**
      * Adds an attribute to an issuer map object if it exists in the supplied X500Name object.
-     * 
+     *
      * @param issuer The issuer to add to
      * @param name The X500Name object
      * @param attribute the name of the attribute
@@ -307,6 +307,6 @@ public class SecurityResourceProvider {
         RDN [] rdns = name.getRDNs(oid);
         if (rdns != null && rdns.length > 0) {
             issuer.put(attribute, rdns[0].getFirst().getValue().toString());
-        } 
+        }
     }
 }

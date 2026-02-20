@@ -15,6 +15,8 @@
 # replaced by your own identifying information:
 # "Portions copyright [year] [name of copyright owner]".
 #
+# Portions copyright 2026 Wren Security 
+#
 
 abspath() {
     if [ -d "$1" ]; then
@@ -32,25 +34,12 @@ abspath() {
     fi
 }
 
-JAVA_VER=$(java -version 2>&1 | sed 's/.* version "\([[:digit:]]\+\)\.\([[:digit:]]\+\)\..*".*/\1\2/; 1q')
-if [ "$JAVA_VER" -lt 17 ]; then
-  echo "Java version 1.7 or higher required";
-  exit 1;
-fi
-
 # Enable reflective access to classloader for newer JDK versions
 # Workaround from felix issue - https://issues.apache.org/jira/browse/FELIX-5765
-
-COMPATIBILITY_OPTS=""
-if [ $JAVA_VER -gt 18 ]; then
-    COMPATIBILITY_OPTS="--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED
-        --add-opens=java.base/java.lang=ALL-UNNAMED
-        --add-opens=java.base/java.net=ALL-UNNAMED
-        --add-opens=java.base/java.util=ALL-UNNAMED"
-    # Hides warning caused by Groovy 2.4.7, remove this once Groovy is upgraded (#97
-    COMPATIBILITY_OPTS="$COMPATIBILITY_OPTS
-        --add-opens=java.base/java.lang.invoke=ALL-UNNAMED"
-fi
+COMPATIBILITY_OPTS="$COMPATIBILITY_OPTS --add-opens=java.base/jdk.internal.loader=ALL-UNNAMED"
+COMPATIBILITY_OPTS="$COMPATIBILITY_OPTS --add-opens=java.base/java.lang=ALL-UNNAMED"
+COMPATIBILITY_OPTS="$COMPATIBILITY_OPTS --add-opens=java.base/java.net=ALL-UNNAMED"
+COMPATIBILITY_OPTS="$COMPATIBILITY_OPTS --add-opens=java.base/java.util=ALL-UNNAMED"
 
 # clean up left over pid files if necessary
 cleanupPidFile() {

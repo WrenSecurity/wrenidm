@@ -14,15 +14,14 @@
  * "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2013-2015 ForgeRock AS.
- * Portions Copyright 2018 Wren Security.
+ * Portions Copyright 2018-2026 Wren Security.
  */
 package org.forgerock.openidm.servletregistration;
 
-import javax.servlet.Servlet;
-import javax.servlet.ServletException;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletException;
 
 import org.forgerock.json.JsonValue;
-import org.osgi.service.http.NamespaceException;
 
 import java.util.Dictionary;
 
@@ -76,7 +75,7 @@ public interface ServletRegistration {
     void unregisterFilter(RegisteredFilter filter) throws Exception;
 
     /**
-     * Registers a servlet using OSGi.
+     * Registers a servlet using OSGi HTTP Whiteboard.
      *
      * @param   alias
      *          Name in the URI namespace at which the servlet is registered.
@@ -87,12 +86,10 @@ public interface ServletRegistration {
      *          This argument is used by the servlet's <code>ServletConfig</code> object.
      * @throws  ServletException
      *          If a problem occurs registering a servlet filter.
-     * @throws  NamespaceException
-     *          If a URI namespace used by the servlet is already in use.
      */
     @SuppressWarnings("rawtypes")
     void registerServlet(String alias, Servlet servlet, Dictionary initParams)
-    throws ServletException, NamespaceException;
+    throws ServletException;
 
     /**
      * Unregisters a servlet in OSGI

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  * Portions copyright 2013-2015 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2026 Wren Security
  */
 package org.forgerock.openidm.ui.internal.service;
 
@@ -28,16 +28,17 @@ import java.net.URLConnection;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
 import org.forgerock.openidm.core.IdentityServer;
 import org.forgerock.openidm.core.PropertyUtil;
-import org.ops4j.pax.web.service.WebContainer;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -46,7 +47,6 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferencePolicy;
-import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,21 +82,20 @@ public final class ResourceServlet extends HttpServlet {
     private String extensionDir;
     private String contextRoot;
 
-    @Reference
-    private WebContainer webContainer;
+    private ServiceRegistration<Servlet> servletRegistration;
 
     /**vn comEnhanced configuration service. */
     @Reference(policy = ReferencePolicy.DYNAMIC)
     private volatile EnhancedConfig enhancedConfig;
 
     @Activate
-    protected void activate(ComponentContext context) throws ServletException, NamespaceException {
+    protected void activate(ComponentContext context) throws ServletException {
         logger.info("Activating resource servlet with configuration {}", context.getProperties());
         init(context);
     }
 
     @Modified
-    protected void modified(ComponentContext context) throws ServletException, NamespaceException {
+    protected void modified(ComponentContext context) throws ServletException {
         logger.info("Modifying resource servlet with configuration {}", context.getProperties());
         clear();
         init(context);
@@ -113,14 +112,12 @@ public final class ResourceServlet extends HttpServlet {
             throws ServletException, IOException {
         logger.debug("GET call on {}", req);
 
-        // the request pathInfo is always null for root contexts
-        String target = ("/".equals(contextRoot))
-                ? req.getServletPath()
-                : req.getPathInfo();
-        if (target == null || "".equals(target)) {
+        if (req.getPathInfo() == null && !req.getRequestURI().equals("/")) {
             res.sendRedirect(req.getServletPath() + "/");
         } else {
-            if ("/".equals(target)) {
+            String target = req.getPathInfo();
+
+            if (target == null || "/".equals(target)) {
                 target = "/index.html";
             }
 
@@ -160,13 +157,12 @@ public final class ResourceServlet extends HttpServlet {
     }
 
     /**
-     * Initializes the servlet and registers it with the WebContainer.
+     * Initializes the servlet and registers it via OSGi HTTP Whiteboard.
      *
      * @param context the ComponentContext containing the configuration
      * @throws ServletException
-     * @throws NamespaceException
      */
-    private void init(ComponentContext context) throws ServletException, NamespaceException {
+    private void init(ComponentContext context) throws ServletException {
         JsonValue config = enhancedConfig.getConfigurationAsJson(context);
 
         if (!config.get(CONFIG_ENABLED).isNull() && Boolean.FALSE.equals(config.get(CONFIG_ENABLED).asBoolean())) {
@@ -189,17 +185,22 @@ public final class ResourceServlet extends HttpServlet {
         extensionDir = config.get(CONFIG_EXTENSION_DIR).asString();
         contextRoot = prependSlash(config.get(CONFIG_CONTEXT_ROOT).asString());
 
+        // Register via OSGi HTTP Whiteboard
         Dictionary<String, Object> props = new Hashtable<>();
-        webContainer.registerServlet(contextRoot, this,  props, webContainer.getDefaultSharedHttpContext());
+        String pattern = "/".equals(contextRoot) ? "/*" : contextRoot + "/*";
+        props.put("osgi.http.whiteboard.servlet.pattern", pattern);
+        props.put("osgi.http.whiteboard.servlet.name", "ResourceServlet-" + contextRoot);
+        servletRegistration = context.getBundleContext().registerService(Servlet.class, this, props);
         logger.debug("Registered UI servlet at {}", contextRoot);
     }
 
     /**
-     * Clears the servlet, unregistering it with the WebContainer and removing the bundle listener.
+     * Clears the servlet, unregistering the OSGi HTTP Whiteboard service.
      */
     private void clear() {
-        if (contextRoot != null) {
-            webContainer.unregister(contextRoot);
+        if (servletRegistration != null) {
+            servletRegistration.unregister();
+            servletRegistration = null;
             logger.debug("Unregistered UI servlet at {}", contextRoot);
         }
     }
