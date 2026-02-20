@@ -15,8 +15,6 @@
  */
 package org.wrensecurity.wrenidm.jetty.config;
 
-import org.forgerock.openidm.util.ConfigPropertyUtil;
-
 /**
  * Configures Felix HTTP Jetty by setting the required system properties.
  */
@@ -29,23 +27,7 @@ public final class HttpServiceConfig {
      * Sets the Felix HTTP Jetty system properties for HTTP/HTTPS configuration.
      */
     public static void configureHttpServiceProperties() {
-        setProperty("org.osgi.service.http.port",
-                ConfigPropertyUtil.getProperty("openidm.port.http", false));
-        setProperty("org.osgi.service.http.port.secure",
-                ConfigPropertyUtil.getProperty("openidm.port.https", false));
-        setProperty("org.apache.felix.https.keystore",
-                ConfigPropertyUtil.getPathProperty("openidm.keystore.location"));
-        setProperty("org.apache.felix.https.keystore.type",
-                ConfigPropertyUtil.getProperty("openidm.keystore.type", false));
-        setProperty("org.apache.felix.https.keystore.password",
-                ConfigPropertyUtil.getProperty("openidm.keystore.password", false));
-        setProperty("org.apache.felix.https.keystore.key.password",
-                ConfigPropertyUtil.getProperty("openidm.keystore.password", false));
-        setProperty("org.apache.felix.https.truststore",
-                ConfigPropertyUtil.getPathProperty("openidm.truststore.location"));
-        setProperty("org.apache.felix.https.truststore.password",
-                ConfigPropertyUtil.getProperty("openidm.truststore.password", false));
-        setProperty("org.apache.felix.https.clientcertificate", "wants");
+        setProperty("org.osgi.service.http.port", JettyConfigParams.getHttpPort());
     }
 
     private static void setProperty(String key, String value) {
@@ -53,4 +35,5 @@ public final class HttpServiceConfig {
             System.setProperty(key, value);
         }
     }
+
 }

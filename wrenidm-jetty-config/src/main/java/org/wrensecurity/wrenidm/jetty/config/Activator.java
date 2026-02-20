@@ -17,13 +17,12 @@ package org.wrensecurity.wrenidm.jetty.config;
 
 import java.util.Hashtable;
 import org.apache.felix.http.jetty.ConnectorFactory;
-import org.forgerock.openidm.util.ConfigPropertyUtil;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 /**
  * Bundle activator that configures Felix HTTP Jetty properties and registers
- * the mTLS {@link ConnectorFactory} service.
+ * the HTTPS and HTTPS+mTLS {@link ConnectorFactory} service.
  */
 public class Activator implements BundleActivator {
 
@@ -32,11 +31,22 @@ public class Activator implements BundleActivator {
         // Configure Felix HTTP Jetty system properties before the Jetty bundle starts
         HttpServiceConfig.configureHttpServiceProperties();
 
+        // Register HTTPS conector factory
+        String httpsPort = JettyConfigParams.getHttpsPort();
+        if (httpsPort != null && !httpsPort.isBlank() && Integer.valueOf(httpsPort) > 0) {
+            context.registerService(
+                    ConnectorFactory.class.getName(),
+                    new HttpsConnectorFactory("https", Integer.valueOf(httpsPort), false),
+                    new Hashtable<String, String>());
+        }
+
         // Register mTLS connector factory
-        String mtlsPort = ConfigPropertyUtil.getProperty("openidm.port.mutualauth", false);
+        String mtlsPort = JettyConfigParams.getMutualAuthPort();
         if (mtlsPort != null && !mtlsPort.isBlank() && Integer.valueOf(mtlsPort) > 0) {
-            context.registerService(ConnectorFactory.class.getName(),
-                    new MutualAuthConfig(), new Hashtable<String, String>());
+            context.registerService(
+                    ConnectorFactory.class.getName(),
+                    new HttpsConnectorFactory("mutualauth", Integer.valueOf(mtlsPort), true),
+                    new Hashtable<String, String>());
         }
     }
 
