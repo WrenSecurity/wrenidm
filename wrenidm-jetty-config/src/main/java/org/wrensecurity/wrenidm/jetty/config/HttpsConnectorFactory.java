@@ -23,37 +23,48 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.forgerock.openidm.util.ConfigPropertyUtil;
 
 /**
- * Required mTLS connector factory.
+ * HTTPS connector factory (allows for non-supported parameters).
  */
-public class MutualAuthConfig implements ConnectorFactory {
+public final class HttpsConnectorFactory implements ConnectorFactory {
+
+    private final String name;
+
+    private final int port;
+
+    private final boolean mutualAuth;
+
+    public HttpsConnectorFactory(String name, int port, boolean mutualAuth) {
+        this.name = name;
+        this.port = port;
+        this.mutualAuth = mutualAuth;
+    }
 
     @Override
     public ServerConnector createConnector(Server server) {
-        String mtlsPort = ConfigPropertyUtil.getProperty("openidm.port.mutualauth", false);
-
         // 1. SSL context (keystore, passwords, etc.)
         SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
-        sslContextFactory.setKeyStorePath(ConfigPropertyUtil.getPathProperty("openidm.keystore.location"));
-        sslContextFactory.setKeyStoreType(ConfigPropertyUtil.getProperty("openidm.keystore.type", false));
-        sslContextFactory.setKeyStorePassword(ConfigPropertyUtil.getProperty("openidm.keystore.password", false));
-        sslContextFactory.setTrustStorePath(ConfigPropertyUtil.getPathProperty("openidm.truststore.location"));
-        sslContextFactory.setTrustStoreType(ConfigPropertyUtil.getProperty("openidm.truststore.type", false));
-        sslContextFactory.setTrustStorePassword(ConfigPropertyUtil.getProperty("openidm.truststore.password", false));
-        sslContextFactory.setNeedClientAuth(true);
+        sslContextFactory.setKeyStorePath(JettyConfigParams.getKeyStorePath());
+        sslContextFactory.setKeyStoreType(JettyConfigParams.getKeyStoreType());
+        sslContextFactory.setKeyStorePassword(JettyConfigParams.getKeyStorePassword());
+        sslContextFactory.setTrustStorePath(JettyConfigParams.getTrustStorePath());
+        sslContextFactory.setTrustStoreType(JettyConfigParams.getTrustStoreType());
+        sslContextFactory.setTrustStorePassword(JettyConfigParams.getTrustStorePassword());
+        sslContextFactory.setCertAlias(JettyConfigParams.getDefaultCertAlias());
+        sslContextFactory.setWantClientAuth(!mutualAuth);
+        sslContextFactory.setNeedClientAuth(mutualAuth);
 
         // 2. HTTP configuration for TLS
         HttpConfiguration httpsConfig = new HttpConfiguration();
-        httpsConfig.addCustomizer(new SecureRequestCustomizer());
+        httpsConfig.addCustomizer(new SecureRequestCustomizer(/* sniHostCheck */ false));
 
         // 3. Create the actual Connector
         ServerConnector connector = new ServerConnector(server,
                 new SslConnectionFactory(sslContextFactory, "http/1.1"),
                 new HttpConnectionFactory(httpsConfig));
-        connector.setPort(Integer.valueOf(mtlsPort));
-        connector.setName("mutual-tls");
+        connector.setName(name);
+        connector.setPort(port);
 
         return connector;
     }
