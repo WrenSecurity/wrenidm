@@ -33,6 +33,11 @@
     </description>
 
     <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>osgi-over-slf4j</artifactId>
+        </dependency>
+
         <!-- XXX remove after upgrading Swagger in api-descriptor -->
         <dependency>
             <groupId>io.swagger</groupId>
