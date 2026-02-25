@@ -40,7 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 import org.apache.commons.lang3.StringUtils;
 import org.forgerock.api.annotations.Actions;

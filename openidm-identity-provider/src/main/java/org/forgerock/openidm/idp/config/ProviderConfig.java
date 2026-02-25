@@ -15,7 +15,7 @@
  */
 package org.forgerock.openidm.idp.config;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 

@@ -22,7 +22,7 @@ import static org.wrensecurity.guava.common.collect.FluentIterable.from;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jms.Message;
+import jakarta.jms.Message;
 
 import org.wrensecurity.guava.common.base.Function;
 import org.wrensecurity.guava.common.base.Predicate;

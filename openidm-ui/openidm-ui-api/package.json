@@ -8,6 +8,9 @@
   "devDependencies": {
     "@wrensecurity/commons-ui-build": "file:target/ui-libs/wrensecurity-commons-ui-build-0.0.0.tgz",
     "gulp": "^5.0.1",
-    "swagger-ui-dist": "^5.11.10"
+    "swagger-ui-dist": "^5.32.0"
+  },
+  "scarfSettings": {
+    "enabled": false
   }
 }

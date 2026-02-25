@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 /**
  * Authenticator class which performs authentication against managed/internal user tables using a queryId to fetch

@@ -15,7 +15,7 @@
  */
 package org.forgerock.openidm.messaging.jms.common;
 
-import javax.jms.Session;
+import jakarta.jms.Session;
 
 /**
  * Configuration wrapper for JMS {@link Session#getAcknowledgeMode()} SessionMode setting.

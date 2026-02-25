@@ -15,7 +15,7 @@
  */
 package org.forgerock.openidm.external.rest.api;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;

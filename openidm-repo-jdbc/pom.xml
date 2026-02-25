@@ -33,7 +33,7 @@
 
     <properties>
         <openidm.osgi.import.before.defaults>
-            !org.testng.annotations,!sun.misc,!org.w3c.dom,javax.inject;resolution:=optional
+            !org.testng.annotations,!sun.misc,!org.w3c.dom,jakarta.inject;resolution:=optional
         </openidm.osgi.import.before.defaults>
         <testcontainers.version>1.19.3</testcontainers.version>
     </properties>
