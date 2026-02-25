@@ -397,7 +397,7 @@
                 "registerAccount" : "Register",
                 "problemLoggingQuestion" : "Having trouble logging in?",
                 "resetPassword" : "Reset your password",
-                "loginWithOpenAM": "Login with OpenAM",
+                "loginWithOpenAM": "Login with Wren Security",
                 "forgotUsername" : "Forgot Username?",
                 "orSignInNormally" : "or login with your username and password"
             },
@@ -1325,7 +1325,7 @@
                 "title": "Providers",
                 "desc": "Select an authentication provider",
                 "providerServiceHeader": "Configure Access Manager OAuth2 Provider Service",
-                "providerServiceHelp": "In OpenAM, select Realm > Services > OAuth 2 Provider.",
+                "providerServiceHelp": "In Wren Security, select Realm > Services > OAuth 2 Provider.",
                 "allowIDTokensLabel": "Allow ID Tokens as SSOTokens",
                 "skipConsentLabel": "Allow clients to skip consent",
                 "boolValEnabled": "Enabled",
@@ -1338,10 +1338,10 @@
                 "tokenSigningAlgorithmValue": "RS256",
                 "impliedConsent": "Implied Consent",
                 "postLogoutRedirectURIs": "Post Logout Redirect URIs",
-                "wellKnownError": "Specify the endpoint with OpenAM's OpenID Provider configuration",
-                "providerDialogTitle": "Configure ForgeRock Identity Provider",
+                "wellKnownError": "Specify the endpoint with Wren Security's OpenID Provider configuration",
+                "providerDialogTitle": "Configure Wren Security Identity Provider",
                 "am": "Configure Access Manager",
-                "oauthHelp": "Configure the OpenAM OpenID Connect Client Agent with these properties. Visit the ",
+                "oauthHelp": "Configure the Wren Security OpenID Connect Client Agent with these properties. Visit the ",
                 "oauthHelpLink": "OpenID Connect 1.0 Guide",
                 "oauthHelp2": " for more information.",
                 "enterConfigure" : "Enter configuration details",
@@ -1352,8 +1352,8 @@
                 "localLabel": "Local",
                 "localDesc1": "Local authentication modules configured with",
                 "localDesc2": "social providers",
-                "amLabel": "ForgeRock Identity Provider",
-                "amDesc": "Use the ForgeRock platform to enable features such as multifactor authentication and single sign-on"
+                "amLabel": "Wren Security Identity Provider",
+                "amDesc": "Use the Wren Security platform to enable features such as multifactor authentication and single sign-on"
             },
             "session": {
                 "title": "Session",
@@ -1395,7 +1395,7 @@
                 "group": "Group",
                 "allowedAuthIdPatterns": "Allowed Authentication ID Patterns",
                 "pattern": "Pattern",
-                "openamDeploymentUrlConfirmation" : "OpenAM Deployment URL is invalid. Would you like to continue?",
+                "openamDeploymentUrlConfirmation" : "Wren Security Deployment URL is invalid. Would you like to continue?",
                 "basicProperties": "BASIC PROPERTIES",
                 "advancedProperties": "ADVANCED PROPERTIES",
                 "moduleEnabled": "Module Enabled",
@@ -1410,13 +1410,13 @@
                 "authenticationIdAttribute": "Authentication ID attribute for the User ID",
                 "authTokenHeader": "OAuth Token Header",
                 "authResolverHeader": "OAuth Resolver Header",
-                "routeToOpenAMUserDataStore": "Route to OpenAM User Datastore",
-                "openamDeploymentUrl": "OpenAM Deployment URL",
-                "openamUseExclusively": "Require OpenAM Authentication",
-                "openamLoginUrl": "OpenAM Login URL",
-                "openamLoginLinkText": "OpenAM Login Link Text",
-                "openamSSOTokenCookieName": "OpenAM SSO Token Cookie Name",
-                "openamUserAttribute": "OpenAM User Attribute",
+                "routeToOpenAMUserDataStore": "Route to Wren Security User Datastore",
+                "openamDeploymentUrl": "Wren Security Deployment URL",
+                "openamUseExclusively": "Require Wren Security Authentication",
+                "openamLoginUrl": "Wren Security Login URL",
+                "openamLoginLinkText": "Wren Security Login Link Text",
+                "openamSSOTokenCookieName": "Wren Security SSO Token Cookie Name",
+                "openamUserAttribute": "Wren Security User Attribute",
                 "truststoreType": "Truststore Type",
                 "truststorePath": "Truststore Path",
                 "truststorePassword": "Truststore Password",
@@ -1448,8 +1448,8 @@
                     "msg": "Queries the OpenIDM repository for external users"
                 },
                 "OPENAM_SESSION": {
-                    "name": "OpenAM Session",
-                    "msg": "Uses OpenAM for authentication"
+                    "name": "Wren Security Session",
+                    "msg": "Uses Wren Security for authentication"
                 },
                 "INTERNAL_USER": {
                     "name": "Internal User",

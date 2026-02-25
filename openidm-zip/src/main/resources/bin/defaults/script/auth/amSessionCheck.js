@@ -37,13 +37,13 @@ try {
     if (!response.valid) {
         throw {
             "code": 401,
-            "message": "OpenAM session invalid"
+            "message": "Wren Security session invalid"
         };
     }
 } catch (e) {
     throw {
         "code": 401,
-        "message": "OpenAM session invalid"
+        "message": "Wren Security session invalid"
     };
 }
 
