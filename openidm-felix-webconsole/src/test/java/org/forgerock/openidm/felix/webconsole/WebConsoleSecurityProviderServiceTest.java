@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2026 Wren Security
  */
 package org.forgerock.openidm.felix.webconsole;
 
@@ -19,11 +20,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.forgerock.json.JsonValue.json;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Base64;
 import java.util.Hashtable;
 
 import org.forgerock.http.util.Json;
@@ -67,9 +72,13 @@ public class WebConsoleSecurityProviderServiceTest {
         // given
         final WebConsoleSecurityProviderService webConsoleSecurityProviderService =
                 createWebConsoleSecurityProviderService(CORRECT_PASSWORD);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        String authHeader = "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
+        when(request.getHeader(eq("Authorization"))).thenReturn(authHeader);
 
         // when
-        final Object user = webConsoleSecurityProviderService.authenticate(username, password);
+        final Object user = webConsoleSecurityProviderService.authenticate(request, response);
 
         // then
         if (valid) {

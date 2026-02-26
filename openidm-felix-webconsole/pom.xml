@@ -48,6 +48,13 @@
             <artifactId>org.apache.felix.webconsole</artifactId>
         </dependency>
 
+        <!-- Jakarta EE -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Provided OSGI Dependencies -->
         <dependency>
             <groupId>org.osgi</groupId>
