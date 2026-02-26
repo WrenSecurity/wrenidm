@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2026 Wren Security
  */
 package org.forgerock.openidm.felix.webconsole;
 
@@ -20,9 +20,12 @@ import static org.forgerock.json.JsonValue.field;
 import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Dictionary;
-
-import org.apache.felix.webconsole.WebConsoleSecurityProvider;
+import org.apache.felix.webconsole.spi.SecurityProvider;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
 import org.forgerock.openidm.core.ServerConstants;
@@ -38,7 +41,7 @@ import org.osgi.service.component.propertytypes.ServiceDescription;
 import org.osgi.service.component.propertytypes.ServiceVendor;
 
 /**
- * Creates a WebConsoleSecurityProvider service that the felix web console will use to delegate authentication attempts.
+ * Creates a SecurityProvider service that the felix web console will use to delegate authentication attempts.
  */
 @Component(
         name = WebConsoleSecurityProviderService.PID,
@@ -46,12 +49,13 @@ import org.osgi.service.component.propertytypes.ServiceVendor;
         configurationPolicy = ConfigurationPolicy.REQUIRE)
 @ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
 @ServiceDescription("OpenIDM Felix Web Console Security Provider")
-public class WebConsoleSecurityProviderService implements WebConsoleSecurityProvider {
+public class WebConsoleSecurityProviderService implements SecurityProvider {
 
     public static final String PID = "org.forgerock.openidm.felix.webconsole";
     private static final String USER_NAME = "username";
     private static final String PASSWORD = "password";
     private static final String AUTHENTICATED = "authenticated";
+    private static final String BASIC_AUTHORIZATION_HEADER_PREFIX = "Basic ";
 
     /** Enhanced configuration service. */
     @Reference(policy = ReferencePolicy.DYNAMIC)
@@ -83,20 +87,38 @@ public class WebConsoleSecurityProviderService implements WebConsoleSecurityProv
 
     // TODO Enhance this to use CAF?
     @Override
-    public Object authenticate(final String username, final String password) {
-        if (username == null || password == null || this.userId == null || this.password == null) {
-            return null;
-        } else if (username.equals(userId)
-                && password.equals(cryptoService.decryptIfNecessary(this.password).asString())) {
-            return json(object(field(AUTHENTICATED, true))).asMap();
-        } else {
+    public Object authenticate(final HttpServletRequest request, final HttpServletResponse response) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith(BASIC_AUTHORIZATION_HEADER_PREFIX)) {
+            String[] credentials = new String(Base64.getDecoder().decode(authHeader.substring(
+                    BASIC_AUTHORIZATION_HEADER_PREFIX.length()))).split(":", 2);
+            if (credentials.length < 2) {
+                return null;
+            }
+            String username = credentials[0];
+            String password = credentials[1];
+            if (username != null && password != null && username.equals(userId) && password.equals(
+                    cryptoService.decryptIfNecessary(this.password).asString())) {
+              return json(object(field(AUTHENTICATED, true))).asMap();
+            }
             return null;
         }
+        try {
+            response.setHeader("WWW-Authenticate", "Basic realm=\"Wren:IDM Felix Web Console\"");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        } catch (IOException e) {
+            // Ignore - response already committed or connection closed
+        }
+        return null;
     }
 
     @Override
     public boolean authorize(final Object user, final String role) {
         // accept all roles
         return true;
+    }
+
+    @Override
+    public void logout(final HttpServletRequest request, final HttpServletResponse response) {
     }
 }
