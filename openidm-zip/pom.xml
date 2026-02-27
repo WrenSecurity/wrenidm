@@ -179,7 +179,6 @@
             <version>${project.version}</version>
         </dependency>
 
-
         <dependency>
             <groupId>org.wrensecurity.wrenidm</groupId>
             <artifactId>openidm-security</artifactId>

@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2016 ForgeRock AS.
- * Portions Copyright 2020-2025 Wren Security
+ * Portions Copyright 2020-2026 Wren Security
  */
 package org.wrensecurity.wrenidm.workflow.flowable.impl;
 
@@ -34,13 +34,14 @@ import javax.sql.DataSource;
 import org.flowable.common.engine.impl.scripting.BeansResolverFactory;
 import org.flowable.common.engine.impl.scripting.ResolverFactory;
 import org.flowable.common.engine.impl.scripting.ScriptBindingsFactory;
+import org.flowable.common.engine.impl.scripting.ScriptingEngines;
 import org.flowable.compatibility.DefaultFlowable5CompatibilityHandler;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.flowable.engine.impl.cfg.StandaloneProcessEngineConfiguration;
 import org.flowable.engine.impl.scripting.VariableScopeResolverFactory;
-import org.flowable.osgi.OsgiScriptingEngines;
+import org.flowable.osgi.OsgiJSR223FlowableScriptEngine;
 import org.flowable.osgi.blueprint.ProcessEngineFactory;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.ActionRequest;
@@ -292,7 +293,7 @@ public class FlowableServiceImpl implements RequestHandler {
                     resolverFactories.add(new BeansResolverFactory());
                     resolverFactories.add(new IdmScriptResolverFactory());
                     configuration.setResolverFactories(resolverFactories);
-                    configuration.setScriptingEngines(new OsgiScriptingEngines(new ScriptBindingsFactory(configuration, resolverFactories)));
+                    configuration.setScriptingEngines(new ScriptingEngines(new OsgiJSR223FlowableScriptEngine(), new ScriptBindingsFactory(configuration, resolverFactories)));
 
                     // Retrieve process engine instance
                     processEngineFactory = new ProcessEngineFactory();
