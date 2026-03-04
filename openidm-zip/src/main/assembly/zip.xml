@@ -13,17 +13,18 @@
   information: "Portions Copyrighted [year] [name of copyright owner]".
 
   Copyright (c) 2011-2016 ForgeRock AS. All rights reserved.
-  Portions Copyright 2020-2025 Wren Security
+  Portions Copyright 2020-2026 Wren Security
 -->
-<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
     <id>bin</id>
     <baseDirectory>/</baseDirectory>
+
     <formats>
         <format>zip</format>
     </formats>
+
     <fileSets>
+        <!-- Security files -->
         <fileSet>
             <directory>${basedir}/src/main/resources/security</directory>
             <outputDirectory>/wrenidm/security</outputDirectory>
@@ -31,14 +32,11 @@
             <directoryMode>0700</directoryMode>
         </fileSet>
 
-        <fileSet>
-            <directory>${project.build.directory}/bar-files</directory>
-            <outputDirectory>/wrenidm</outputDirectory>
-        </fileSet>
-
+        <!-- Base resources -->
         <fileSet>
             <directory>${basedir}/src/main/resources</directory>
             <outputDirectory>/wrenidm</outputDirectory>
+
             <excludes>
                 <exclude>**/*.sh</exclude>
                 <exclude>**/*.command</exclude>
@@ -47,223 +45,206 @@
                 <exclude>**/*.patch.*</exclude>
             </excludes>
         </fileSet>
+
+        <!-- Unix scripts -->
         <fileSet>
             <directory>${basedir}/src/main/resources</directory>
             <outputDirectory>/wrenidm</outputDirectory>
             <fileMode>754</fileMode>
+            <filtered>true</filtered>
+
             <includes>
                 <include>**/*.sh</include>
                 <include>**/*.command</include>
             </includes>
-            <filtered>true</filtered>
         </fileSet>
+
+        <!-- Windows scripts -->
         <fileSet>
             <directory>${basedir}/src/main/resources</directory>
             <outputDirectory>/wrenidm</outputDirectory>
             <fileMode>754</fileMode>
+            <lineEnding>windows</lineEnding>
+            <filtered>true</filtered>
+
             <includes>
                 <include>**/*.bat</include>
             </includes>
-            <lineEnding>windows</lineEnding>
-            <filtered>true</filtered>
         </fileSet>
-        <!-- Include the Forgerock binary license file if exists -->
+
+        <!-- Logs directory  -->
         <fileSet>
             <directory>${project.build.directory}</directory>
-            <outputDirectory>/wrenidm/legal-notices</outputDirectory>
-            <includes>
-                <include>Forgerock_License.txt</include>
-            </includes>
-        </fileSet>
-        <!-- Create empty logs directory  -->
-        <fileSet>
-            <directory>${project.build.directory}</directory>
+            <outputDirectory>/wrenidm/logs</outputDirectory>
+
             <excludes>
                 <exclude>**/*</exclude>
             </excludes>
-            <outputDirectory>/wrenidm/logs</outputDirectory>
         </fileSet>
     </fileSets>
+
     <dependencySets>
+        <!-- OSGi bundles -->
         <dependencySet>
-            <useProjectArtifact>false</useProjectArtifact>
             <outputDirectory>/wrenidm/bundle</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useTransitiveFiltering>true</useTransitiveFiltering>
             <scope>runtime</scope>
+
             <excludes>
-                <exclude>org.apache.felix:org.apache.felix.framework</exclude>
-                <exclude>org.osgi:osgi.core</exclude>
-                <exclude>org.osgi:osgi.cmpn</exclude>
-                <exclude>org.apache.felix:osgi.core</exclude>
-                <exclude>org.apache.felix:osgi.cmpn</exclude>
-                <exclude>org.apache.felix:org.osgi.foundation</exclude>
-                <exclude>org.apache.felix:javax.servlet</exclude>
-                <exclude>org.forgerock.openicf.connectors:*</exclude>
-                <exclude>org.wrensecurity.wrends:opendj-*</exclude>
-                <exclude>org.wrensecurity.wrenicf.connector:*</exclude>
-                <exclude>org.wrensecurity.wrenidm:openidm-launcher</exclude>
-                <exclude>org.wrensecurity.wrenidm:openidm-shell</exclude>
-                <exclude>org.wrensecurity.wrenidm:openidm-ui-ria*</exclude>
-                <exclude>org.wrensecurity.wrenidm:openidm-ui</exclude>
-                <exclude>org.wrensecurity.wrenidm:wrenidm-workflow-flowable:**:jar-with-dependencies</exclude>
-                <exclude>org.apache.felix:*gogo*</exclude>
-                <exclude>stax:*</exclude>
-                <exclude>snappy:*</exclude>
-                <exclude>colt:*</exclude>
-                <exclude>concurrent:concurrent</exclude>
-                <exclude>org.json:*</exclude>
-                <exclude>org.hibernate.javax.persistence:*</exclude>
-                <exclude>org.javassist:*</exclude>
-                <exclude>*:*:js</exclude>
-                <exclude>*:*:css</exclude>
-                <exclude>*:*:less</exclude>
                 <exclude>*:*:zip</exclude>
-                <exclude>*:*:pom</exclude>
-                <exclude>org.apache.olingo:*</exclude>
                 <exclude>com.fasterxml:aalto-xml</exclude>
-                <exclude>org.forgerock.openidm.tools:custom-scripted-connector-bundler:*</exclude>
-                <!--exclude>javax.persistence:persistence-api</exclude>
-                <exclude>javax.transaction:jta</exclude>
-                <exclude>org.apache.felix:org.apache.felix.main</exclude>
-                <exclude>org.apache.felix:org.osgi.foundation</exclude>
-                <exclude>net.sf.kxml:kxml2</exclude>
-                <exclude>xmlpull:xmlpull</exclude-->
-                <!-- Exclude sample scriptedrest2dj dependencies -->
+                <exclude>com.github.cverges:expect4j</exclude>
+                <exclude>com.jcraft:jsch</exclude>
                 <exclude>commons-beanutils:commons-beanutils</exclude>
                 <exclude>commons-collections:commons-collections</exclude>
                 <exclude>commons-lang:commons-lang</exclude>
-                <exclude>commons-logging:commons-logging</exclude>
-                <exclude>net.sf.ezmorph:ezmorph</exclude>
-                <exclude>org.codehaus.groovy.modules.http-builder:http-builder</exclude>
-                <exclude>net.sf.json-lib:json-lib</exclude>
-                <exclude>net.sourceforge.nekohtml:nekohtml</exclude>
-                <exclude>xerces:xercesImpl</exclude>
-                <exclude>xml-apis:xml-apis</exclude>
-                <exclude>xml-resolver:xml-resolver</exclude>
-                <exclude>org.apache.httpcomponents:httpcore-nio</exclude>
+                <exclude>org.apache.felix:org.apache.felix.framework</exclude>
+                <exclude>org.apache.olingo:odata-client-core</exclude>
                 <exclude>org.apache.tomcat:tomcat-jdbc</exclude>
-                <exclude>com.github.cverges:expect4j:*</exclude>
-                <exclude>oro:oro:*</exclude>
-                <exclude>com.jcraft:jsch:*</exclude>
+                <exclude>org.codehaus.groovy.modules.http-builder:http-builder</exclude>
+                <exclude>oro:oro</exclude>
+                <exclude>org.osgi:osgi.cmpn</exclude>
+                <exclude>org.wrensecurity.wrends:opendj-core</exclude>
+                <exclude>org.wrensecurity.wrenicf.connector:*</exclude>
+                <exclude>org.wrensecurity.wrenidm:openidm-launcher</exclude>
+                <exclude>org.wrensecurity.wrenidm:openidm-shell</exclude>
+                <exclude>org.wrensecurity.wrenidm.tools:custom-scripted-connector-bundler</exclude>
             </excludes>
         </dependencySet>
-        <!-- Explode UI for easy modification -->
+
+        <!-- Enduser UI arfifacts -->
         <dependencySet>
+            <outputDirectory>/wrenidm/ui/selfservice</outputDirectory>
             <unpack>true</unpack>
             <fileMode>644</fileMode>
             <directoryMode>755</directoryMode>
-            <outputDirectory>/wrenidm/ui/selfservice</outputDirectory>
+
             <includes>
                 <include>org.wrensecurity.wrenidm:openidm-ui-enduser</include>
             </includes>
         </dependencySet>
+
+        <!-- Admin UI arfifacts -->
         <dependencySet>
+            <outputDirectory>/wrenidm/ui/admin</outputDirectory>
             <unpack>true</unpack>
             <fileMode>644</fileMode>
             <directoryMode>755</directoryMode>
-            <outputDirectory>/wrenidm/ui/admin</outputDirectory>
+
             <includes>
                 <include>org.wrensecurity.wrenidm:openidm-ui-admin</include>
             </includes>
         </dependencySet>
+
+        <!-- API UI arfifacts -->
         <dependencySet>
+            <outputDirectory>/wrenidm/ui/api</outputDirectory>
             <unpack>true</unpack>
             <fileMode>644</fileMode>
             <directoryMode>755</directoryMode>
-            <outputDirectory>/wrenidm/ui/api</outputDirectory>
+
             <includes>
                 <include>org.wrensecurity.wrenidm:openidm-ui-api</include>
             </includes>
         </dependencySet>
+
+        <!-- Wren:ICF connectors -->
         <dependencySet>
-            <useProjectArtifact>false</useProjectArtifact>
             <outputDirectory>/wrenidm/connectors</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+
             <includes>
-                <include>org.forgerock.openicf.connectors:*-connector</include>
                 <include>org.wrensecurity.wrenicf.connector:*-connector</include>
             </includes>
         </dependencySet>
-        <dependencySet>
-            <useProjectArtifact>false</useProjectArtifact>
-            <outputDirectory>/wrenidm/lib</outputDirectory>
-            <includes>
-                <include>org.apache.olingo:*</include>
-                <include>com.fasterxml:aalto-xml</include>
-                <include>org.apache.tomcat:tomcat-jdbc</include>
-                <include>org.wrensecurity.wrends:opendj-*</include>
-                <include>org.wrensecurity.wrenicf.connector:groovy-connector</include>
-                <include>org.wrensecurity.wrenicf.connector:ssh-connector</include>
-                <include>com.github.cverges:expect4j</include>
-                <include>oro:oro</include>
-                <include>com.jcraft:jsch</include>
-            </includes>
-        </dependencySet>
-        <dependencySet>
-            <unpack>false</unpack>
-            <outputFileNameMapping>felix.jar</outputFileNameMapping>
-            <includes>
-                <include>org.apache.felix:org.apache.felix.framework</include>
-            </includes>
-            <outputDirectory>/wrenidm/bin</outputDirectory>
-        </dependencySet>
-        <dependencySet>
-            <unpack>true</unpack>
-            <scope>compile</scope>
-            <includes>
-                <include>commons-daemon:commons-daemon</include>
-            </includes>
-            <outputDirectory>/wrenidm/bin</outputDirectory>
-        </dependencySet>
-        <dependencySet>
-            <unpack>false</unpack>
-            <scope>compile</scope>
-            <outputFileNameMapping>launcher.jar</outputFileNameMapping>
-            <includes>
-                <include>org.wrensecurity.wrenidm:openidm-launcher</include>
-            </includes>
-            <outputDirectory>/wrenidm/bin</outputDirectory>
-        </dependencySet>
-        <dependencySet>
-            <unpack>false</unpack>
-            <outputFileNameMapping>openidm.jar</outputFileNameMapping>
-            <includes>
-                <include>org.wrensecurity.wrenidm:openidm-shell</include>
-            </includes>
-            <outputDirectory>/wrenidm/bin</outputDirectory>
-        </dependencySet>
-        <dependencySet>
-            <unpack>false</unpack>
-            <includes>
-                <include>org.apache.felix:org.apache.felix.gogo.runtime</include>
-                <include>org.apache.felix:org.apache.felix.gogo.shell</include>
-            </includes>
-            <outputDirectory>/wrenidm/bin</outputDirectory>
-        </dependencySet>
-        <dependencySet>
-            <unpack>false</unpack>
-            <includes>
-                <include>org.forgerock.openidm.tools:custom-scripted-connector-bundler:*</include>
-            </includes>
-            <outputDirectory>/wrenidm/tools</outputDirectory>
-        </dependencySet>
 
+        <!-- Non-OSGi libraries -->
         <dependencySet>
-            <useProjectArtifact>false</useProjectArtifact>
             <outputDirectory>/wrenidm/lib</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+
             <includes>
+                <include>com.fasterxml:aalto-xml</include>
+                <include>com.github.cverges:expect4j</include>
+                <include>com.jcraft:jsch</include>
                 <include>commons-beanutils:commons-beanutils</include>
                 <include>commons-collections:commons-collections</include>
                 <include>commons-lang:commons-lang</include>
                 <include>commons-logging:commons-logging</include>
                 <include>net.sf.ezmorph:ezmorph</include>
-                <include>org.codehaus.groovy.modules.http-builder:http-builder</include>
                 <include>net.sf.json-lib:json-lib</include>
                 <include>net.sourceforge.nekohtml:nekohtml</include>
+                <include>org.apache.olingo:*</include>
+                <include>org.apache.tomcat:tomcat-jdbc</include>
+                <include>org.codehaus.groovy.modules.http-builder:http-builder</include>
+                <include>org.wrensecurity.wrenicf.connector:groovy-connector</include>
+                <include>org.wrensecurity.wrenicf.connector:ssh-connector</include>
+                <include>org.wrensecurity.wrends:opendj-*</include>
+                <include>oro:oro</include>
                 <include>xerces:xercesImpl</include>
-                <include>xml-apis:xml-apis</include>
                 <include>xml-resolver:xml-resolver</include>
-                <include>org.apache.httpcomponents:httpcore-nio</include>
             </includes>
         </dependencySet>
 
+        <dependencySet>
+            <outputDirectory>/wrenidm/bin</outputDirectory>
+            <outputFileNameMapping>felix.jar</outputFileNameMapping>
+            <unpack>false</unpack>
+
+            <includes>
+                <include>org.apache.felix:org.apache.felix.framework</include>
+            </includes>
+        </dependencySet>
+
+        <dependencySet>
+            <outputDirectory>/wrenidm/bin</outputDirectory>
+            <unpack>true</unpack>
+            <scope>compile</scope>
+
+            <includes>
+                <include>commons-daemon:commons-daemon</include>
+            </includes>
+        </dependencySet>
+
+        <dependencySet>
+            <outputDirectory>/wrenidm/bin</outputDirectory>
+            <outputFileNameMapping>launcher.jar</outputFileNameMapping>
+            <unpack>false</unpack>
+            <scope>compile</scope>
+
+            <includes>
+                <include>org.wrensecurity.wrenidm:openidm-launcher</include>
+            </includes>
+        </dependencySet>
+
+        <dependencySet>
+            <outputDirectory>/wrenidm/bin</outputDirectory>
+            <outputFileNameMapping>openidm.jar</outputFileNameMapping>
+            <unpack>false</unpack>
+
+            <includes>
+                <include>org.wrensecurity.wrenidm:openidm-shell</include>
+            </includes>
+        </dependencySet>
+
+        <dependencySet>
+            <outputDirectory>/wrenidm/bin</outputDirectory>
+            <unpack>false</unpack>
+
+            <includes>
+                <include>org.apache.felix:org.apache.felix.gogo.runtime</include>
+                <include>org.apache.felix:org.apache.felix.gogo.shell</include>
+            </includes>
+        </dependencySet>
+
+        <dependencySet>
+            <outputDirectory>/wrenidm/tools</outputDirectory>
+            <unpack>false</unpack>
+
+            <includes>
+                <include>org.wrensecurity.wrenidm.tools:custom-scripted-connector-bundler</include>
+            </includes>
+        </dependencySet>
     </dependencySets>
 </assembly>

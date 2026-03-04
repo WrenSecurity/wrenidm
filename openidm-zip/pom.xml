@@ -98,6 +98,13 @@
             <groupId>org.wrensecurity.wrenidm</groupId>
             <artifactId>openidm-shell</artifactId>
             <version>${project.version}</version>
+
+            <exclusions>
+                <exclusion>
+                    <groupId>org.wrensecurity.http</groupId>
+                    <artifactId>chf-client-apache-async</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -196,6 +203,7 @@
             <artifactId>openidm-ui-admin</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.wrensecurity.wrenidm</groupId>
             <artifactId>openidm-ui-api</artifactId>
@@ -491,6 +499,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.wrensecurity.commons</groupId>
+            <artifactId>forgerock-util</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.wrensecurity.http</groupId>
             <artifactId>chf-http-core</artifactId>
         </dependency>
@@ -499,6 +512,18 @@
             <groupId>org.wrensecurity.wrends</groupId>
             <artifactId>opendj-core</artifactId>
             <version>5.0.4</version>
+
+            <exclusions>
+                <exclusion>
+                    <groupId>org.wrensecurity.commons</groupId>
+                    <artifactId>i18n-core</artifactId>
+                </exclusion>
+
+                <exclusion>
+                    <groupId>org.wrensecurity.commons</groupId>
+                    <artifactId>i18n-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Wren:ICF -->
