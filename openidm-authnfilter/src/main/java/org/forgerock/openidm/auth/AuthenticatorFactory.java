@@ -16,7 +16,7 @@
 
 package org.forgerock.openidm.auth;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 import org.wrensecurity.guava.common.base.Function;
 import org.forgerock.json.JsonValue;

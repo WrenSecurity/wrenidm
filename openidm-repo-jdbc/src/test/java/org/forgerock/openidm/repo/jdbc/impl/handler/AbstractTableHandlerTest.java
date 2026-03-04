@@ -34,10 +34,11 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-import com.google.common.collect.Lists;
 import java.lang.reflect.Method;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -342,7 +343,9 @@ public abstract class AbstractTableHandlerTest {
                 .collect(Collectors.toList());
 
         assertNotEquals(ascendingIds, descendingIds);
-        assertEquals(ascendingIds, Lists.reverse(descendingIds));
+        var expectedIds = new ArrayList<>(descendingIds);
+        Collections.reverse(expectedIds);
+        assertEquals(ascendingIds, expectedIds);
     }
 
     @Test

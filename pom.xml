@@ -122,20 +122,20 @@
     </issueManagement>
 
     <properties>
-        <pgpVerifyKeysVersion>1.9.9</pgpVerifyKeysVersion>
+        <pgpVerifyKeysVersion>1.9.13</pgpVerifyKeysVersion>
 
         <maven.compiler.release>17</maven.compiler.release>
 
         <!-- Commons versions -->
-        <wrensec.commons.version>23.0.0-M2</wrensec.commons.version>
-        <commons.script.version>5.0.0-M1</commons.script.version>
+        <wrensec.commons.version>23.0.0</wrensec.commons.version>
+        <commons.script.version>5.0.0</commons.script.version>
 
         <!-- Third party dependency versions -->
-        <joda-time.version>2.10.9</joda-time.version>
+        <joda-time.version>2.14.0</joda-time.version>
         <h2.version>2.2.220</h2.version>
         <felix.http.version>1.1.6</felix.http.version>
+        <inject-api.version>2.0.1</inject-api.version>
         <pax.swissbox.extender.version>1.8.5</pax.swissbox.extender.version>
-        <javax.inject.version>1_3</javax.inject.version>
         <!-- quartz 2.x is not compatible yet -->
         <quartz.version>1.8.6_1</quartz.version>
         <rhino.version>1.7.15_1</rhino.version>
@@ -641,9 +641,9 @@
             </dependency>
 
             <dependency>
-                <groupId>org.apache.servicemix.bundles</groupId>
-                <artifactId>org.apache.servicemix.bundles.javax-inject</artifactId>
-                <version>${javax.inject.version}</version>
+                <groupId>jakarta.inject</groupId>
+                <artifactId>jakarta.inject-api</artifactId>
+                <version>${inject-api.version}</version>
             </dependency>
 
             <dependency>
@@ -723,13 +723,6 @@
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
                 <version>${joda-time.version}</version>
-            </dependency>
-
-            <!-- Downgrade guava to be compliant with version required by swagger-core -->
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>31.1-android</version>
             </dependency>
 
             <!-- Additional dependencies lost due to commons upgrade (will be sorted later) -->

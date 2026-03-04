@@ -15,8 +15,8 @@
  */
 package org.forgerock.openidm.messaging.jms.common;
 
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.Destination;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.util.Hashtable;

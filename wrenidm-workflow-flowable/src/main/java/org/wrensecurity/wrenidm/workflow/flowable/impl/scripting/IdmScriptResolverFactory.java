@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2015 ForgeRock AS.
- * Portions copyright 2017-2024 Wren Security
+ * Portions copyright 2017-2026 Wren Security
  */
 package org.wrensecurity.wrenidm.workflow.flowable.impl.scripting;
 
@@ -26,6 +26,7 @@ import org.flowable.bpmn.model.Process;
 import org.flowable.bpmn.model.ScriptTask;
 import org.flowable.bpmn.model.UserTask;
 import org.flowable.common.engine.api.FlowableException;
+import org.flowable.common.engine.api.variable.VariableContainer;
 import org.flowable.common.engine.impl.AbstractEngineConfiguration;
 import org.flowable.common.engine.impl.scripting.Resolver;
 import org.flowable.common.engine.impl.scripting.ResolverFactory;
@@ -33,7 +34,6 @@ import org.flowable.engine.impl.context.Context;
 import org.flowable.engine.impl.persistence.entity.ExecutionEntity;
 import org.flowable.engine.impl.util.ProcessDefinitionUtil;
 import org.flowable.task.service.impl.persistence.entity.TaskEntity;
-import org.flowable.variable.api.delegate.VariableScope;
 import org.forgerock.json.JsonValue;
 import org.forgerock.script.ScriptEntry;
 import org.forgerock.script.ScriptName;
@@ -52,21 +52,21 @@ public class IdmScriptResolverFactory implements ResolverFactory {
     protected static final Logger logger = LoggerFactory.getLogger(IdmScriptResolverFactory.class);
 
     @Override
-    public Resolver createResolver(AbstractEngineConfiguration engineConfiguration, VariableScope variableScope) {
+    public Resolver createResolver(AbstractEngineConfiguration engineConfiguration, VariableContainer scopeContainer, VariableContainer inputVariableContainer) {
         // Retrieve script registry to get script to execute
         IdmSession session = Context.getCommandContext().getSession(IdmSession.class);
         ScriptRegistry scriptRegistry = session.getIdmScriptRegistry();
         // Prepare IdM context
-        JsonValue idmContext = (JsonValue) variableScope.getVariable(WorkflowConstants.OPENIDM_CONTEXT);
-        if (idmContext == null && variableScope instanceof ExecutionEntity) {
+        JsonValue idmContext = (JsonValue) scopeContainer.getVariable(WorkflowConstants.OPENIDM_CONTEXT);
+        if (idmContext == null && scopeContainer instanceof ExecutionEntity) {
             // Copy context from the parent execution entity
-            ExecutionEntity parentEntity = ((ExecutionEntity) variableScope).getSuperExecution();
-            String entityId = ((ExecutionEntity) variableScope).getId();
+            ExecutionEntity parentEntity = ((ExecutionEntity) scopeContainer).getSuperExecution();
+            String entityId = ((ExecutionEntity) scopeContainer).getId();
             String parentEntityId = parentEntity.getId();
             if (entityId != null && parentEntityId != null && !entityId.equals(parentEntity.getId())) {
                 JsonValue parentContext = (JsonValue) parentEntity.getVariable(WorkflowConstants.OPENIDM_CONTEXT);
                 if (parentContext != null) {
-                    variableScope.setVariable(WorkflowConstants.OPENIDM_CONTEXT, parentContext);
+                    scopeContainer.setVariable(WorkflowConstants.OPENIDM_CONTEXT, parentContext);
                     idmContext = parentContext;
                 } else {
                     throw new FlowableException("Unable to find idmcontext in parent execution activity.");
@@ -74,7 +74,7 @@ public class IdmScriptResolverFactory implements ResolverFactory {
             }
         }
         // Resolve script language
-        String language = resolveScriptLanguage(variableScope);
+        String language = resolveScriptLanguage(scopeContainer);
         // Prepare script bindings
         Bindings bindings = null;
         try {
@@ -98,13 +98,13 @@ public class IdmScriptResolverFactory implements ResolverFactory {
      * Resolve language (i.e. groovy or javascript) for the specified entity.
      * Groovy language is returned if no language can be resolved.
      */
-    private String resolveScriptLanguage(VariableScope variableScope) {
+    private String resolveScriptLanguage(VariableContainer variableContainer) {
         String resolved = null;
         try {
-            if (variableScope instanceof ExecutionEntity) {
-                resolved = resolveScriptLanguage((ExecutionEntity) variableScope);
-            } else if (variableScope instanceof TaskEntity) {
-                resolved = resolveScriptLanguage((TaskEntity) variableScope);
+            if (variableContainer instanceof ExecutionEntity) {
+                resolved = resolveScriptLanguage((ExecutionEntity) variableContainer);
+            } else if (variableContainer instanceof TaskEntity) {
+                resolved = resolveScriptLanguage((TaskEntity) variableContainer);
             } else {
                 logger.info("Script language could not be determined, using default groovy instead.");
             }
@@ -115,7 +115,7 @@ public class IdmScriptResolverFactory implements ResolverFactory {
     }
 
     /**
-     * See {@link #resolveScriptLanguage(VariableScope)}
+     * See {@link #resolveScriptLanguage(VariableContainer)}
      */
     private String resolveScriptLanguage(ExecutionEntity entity) {
         if (entity.getCurrentFlowElement() != null && entity.getCurrentFlowElement() instanceof ScriptTask) {
@@ -128,7 +128,7 @@ public class IdmScriptResolverFactory implements ResolverFactory {
     }
 
     /**
-     * See {@link #resolveScriptLanguage(VariableScope)}
+     * See {@link #resolveScriptLanguage(VariableContainer)}
      */
     private String resolveScriptLanguage(TaskEntity entity) {
         Process process = ProcessDefinitionUtil.getProcess(entity.getProcessDefinitionId());
@@ -144,7 +144,7 @@ public class IdmScriptResolverFactory implements ResolverFactory {
     }
 
     /**
-     * See {@link #resolveScriptLanguage(VariableScope)}
+     * See {@link #resolveScriptLanguage(VariableContainer)}
      */
     private String resolveScriptLanguage(FlowableListener listener) {
         if (listener.getFieldExtensions() == null) {

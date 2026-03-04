@@ -16,7 +16,7 @@
 
 package org.forgerock.openidm.auth.api;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.forgerock.api.annotations.Description;

@@ -1,6 +1,6 @@
 package org.forgerock.openidm.external.rest.api;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import org.forgerock.api.annotations.Description;
 

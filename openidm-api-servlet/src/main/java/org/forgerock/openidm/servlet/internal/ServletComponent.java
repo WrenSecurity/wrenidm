@@ -19,17 +19,17 @@ package org.forgerock.openidm.servlet.internal;
 import static org.forgerock.openidm.servletregistration.ServletRegistration.SERVLET_FILTER_AUGMENT_SECURITY_CONTEXT;
 import static org.forgerock.openidm.servletregistration.ServletRegistration.SERVLET_FILTER_SCRIPT_EXTENSIONS;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import javax.script.ScriptException;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-
 import org.forgerock.http.ApiProducer;
 import org.forgerock.http.DescribedHttpApplication;
 import org.forgerock.http.Filter;
@@ -66,9 +66,6 @@ import org.osgi.service.event.EventHandler;
 import org.osgi.service.event.propertytypes.EventTopics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import io.swagger.models.Info;
-import io.swagger.models.Swagger;
 
 /**
  * A component to create and register the "API" Servlet; that is, the CHF Servlet that
@@ -179,7 +176,7 @@ public class ServletComponent implements EventHandler {
         servlet = new HttpFrameworkServlet(
                 new DescribedHttpApplication() {
                     @Override
-                    public ApiProducer<Swagger> getApiProducer() {
+                    public ApiProducer<OpenAPI> getApiProducer() {
                         return new SwaggerApiProducer(new Info().title(API_TITLE));
                     }
 

@@ -18,7 +18,7 @@ package org.forgerock.openidm.auth;
 
 import static org.forgerock.util.Reject.checkNotNull;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 import org.forgerock.json.resource.ActionResponse;
 import org.forgerock.json.resource.ConnectionFactory;

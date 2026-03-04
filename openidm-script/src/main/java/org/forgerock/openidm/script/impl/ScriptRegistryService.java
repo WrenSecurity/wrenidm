@@ -20,6 +20,7 @@ package org.forgerock.openidm.script.impl;
 import static org.forgerock.json.resource.Responses.newActionResponse;
 import static org.forgerock.util.promise.Promises.newResultPromise;
 
+import jakarta.xml.bind.DatatypeConverter;
 import java.io.File;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -33,11 +34,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
-import javax.xml.bind.DatatypeConverter;
-
 import org.apache.commons.lang3.StringUtils;
 import org.forgerock.audit.events.AuditEvent;
 import org.forgerock.json.JsonValue;
