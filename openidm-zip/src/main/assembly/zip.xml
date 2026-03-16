@@ -106,7 +106,7 @@
                 <exclude>oro:oro</exclude>
                 <exclude>org.osgi:osgi.cmpn</exclude>
                 <exclude>org.wrensecurity.wrends:opendj-core</exclude>
-                <exclude>org.wrensecurity.wrenicf.connector:*</exclude>
+                <exclude>org.wrensecurity.wrenicf.connectors:*</exclude>
                 <exclude>org.wrensecurity.wrenidm:openidm-launcher</exclude>
                 <exclude>org.wrensecurity.wrenidm:openidm-shell</exclude>
                 <exclude>org.wrensecurity.wrenidm.tools:custom-scripted-connector-bundler</exclude>
@@ -155,7 +155,7 @@
             <useProjectArtifact>false</useProjectArtifact>
 
             <includes>
-                <include>org.wrensecurity.wrenicf.connector:*-connector</include>
+                <include>org.wrensecurity.wrenicf.connectors:*-connector</include>
             </includes>
         </dependencySet>
 
@@ -178,8 +178,8 @@
                 <include>org.apache.olingo:*</include>
                 <include>org.apache.tomcat:tomcat-jdbc</include>
                 <include>org.codehaus.groovy.modules.http-builder:http-builder</include>
-                <include>org.wrensecurity.wrenicf.connector:groovy-connector</include>
-                <include>org.wrensecurity.wrenicf.connector:ssh-connector</include>
+                <include>org.wrensecurity.wrenicf.connectors:groovy-connector</include>
+                <include>org.wrensecurity.wrenicf.connectors:ssh-connector</include>
                 <include>org.wrensecurity.wrends:opendj-*</include>
                 <include>oro:oro</include>
                 <include>xerces:xercesImpl</include>
