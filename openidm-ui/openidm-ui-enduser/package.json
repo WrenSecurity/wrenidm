@@ -12,6 +12,9 @@
     "gulp": "^5.0.1",
     "node-qunit-puppeteer": "^2.2.1"
   },
+  "overrides": {
+    "puppeteer": "24.39.1"
+  },
   "dependencies": {
     "d3": "^3.5.5",
     "qunit": "^2.24.1",
