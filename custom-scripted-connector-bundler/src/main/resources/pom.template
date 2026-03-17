@@ -29,12 +29,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.wrensecurity.wrenicf.connector</groupId>
+        <groupId>org.wrensecurity.wrenicf.connectors</groupId>
         <artifactId>connector-bundle-parent</artifactId>
-        <version>1.5.3.2</version>
+        <version>1.5.4.1</version>
     </parent>
 
-    <groupId>org.wrensecurity.wrenicf.connector</groupId>
+    <groupId>org.wrensecurity.wrenicf.connectors</groupId>
     <artifactId>{{lower packageName}}-connector</artifactId>
     <version>1.5.{{version}}</version>
     <packaging>bundle</packaging>
@@ -69,15 +69,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.forgerock.openicf.connectors</groupId>
+            <groupId>org.wrensecurity.wrenicf.connectors</groupId>
             <artifactId>groovy-connector</artifactId>
-            <version>1.4.2.0</version>
+            <version>1.5.3.1</version>
         </dependency>
 
         <dependency>
             <groupId>org.wrensecurity.wrenicf.framework</groupId>
             <artifactId>connector-framework-core</artifactId>
-            <version>1.5.3.0</version>
         </dependency>
 
         <dependency>

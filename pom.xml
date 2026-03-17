@@ -169,15 +169,15 @@
         <felix.webconsole.packageadmin.version>1.1.0</felix.webconsole.packageadmin.version>
 
         <!-- Wren:ICF Framework and Connector versions -->
-        <openicf.framework.version>1.5.4.0</openicf.framework.version>
-        <openicf.xmlconnector.version>1.5.3.0</openicf.xmlconnector.version>
-        <openicf.csvconnector.version>1.5.3.0</openicf.csvconnector.version>
-        <openicf.dbtableconnector.version>1.5.3.0</openicf.dbtableconnector.version>
+        <openicf.framework.version>1.5.4.1</openicf.framework.version>
+        <openicf.xmlconnector.version>1.5.3.1</openicf.xmlconnector.version>
+        <openicf.csvconnector.version>1.5.3.1</openicf.csvconnector.version>
+        <openicf.dbtableconnector.version>1.5.3.1</openicf.dbtableconnector.version>
         <openicf.remoteconnectorserver.version />
-        <openicf.groovyconnector.version>1.5.3.0</openicf.groovyconnector.version>
-        <openicf.sshconnector.version>1.5.3.0</openicf.sshconnector.version>
-        <openicf.kerberosconnector.version>1.5.3.0</openicf.kerberosconnector.version>
-        <wrenicf.ldapconnector.version>1.5.3.1</wrenicf.ldapconnector.version>
+        <openicf.groovyconnector.version>1.5.3.1</openicf.groovyconnector.version>
+        <openicf.sshconnector.version>1.5.3.1</openicf.sshconnector.version>
+        <openicf.kerberosconnector.version>1.5.3.1</openicf.kerberosconnector.version>
+        <wrenicf.ldapconnector.version>1.5.3.2</wrenicf.ldapconnector.version>
 
         <!-- OSGi bundles properties -->
         <openidm.osgi.import.before.defaults />

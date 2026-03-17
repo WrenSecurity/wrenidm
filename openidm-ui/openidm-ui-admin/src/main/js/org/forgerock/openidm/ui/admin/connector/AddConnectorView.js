@@ -91,8 +91,8 @@ define([
                 this.data.versionDisplay = _.filter(this.data.versionDisplay, _.bind(function(version) {
                     var bundleName = version.versions[0].bundleName,
                         excludes = [
-                            "org.wrensecurity.wrenicf.connector.ssh-connector",
-                            "org.wrensecurity.wrenicf.connector.groovy-connector"
+                            "org.wrensecurity.wrenicf.connectors.ssh-connector",
+                            "org.wrensecurity.wrenicf.connectors.groovy-connector"
                         ];
                     return !_.includes(excludes, bundleName);
                 }, this));
