@@ -31,7 +31,7 @@
     <description>Parent POM for all UI components in Wren:IDM.</description>
 
     <properties>
-        <wrensec-ui.version>23.2.3</wrensec-ui.version>
+        <wrensec-ui.version>23.2.4</wrensec-ui.version>
     </properties>
 
     <modules>
@@ -51,8 +51,8 @@
 
                     <configuration>
                         <installDirectory>${project.parent.basedir}</installDirectory>
-                        <nodeVersion>v20.15.0</nodeVersion>
-                        <npmVersion>10.7.0</npmVersion>
+                        <nodeVersion>v24.14.0</nodeVersion>
+                        <npmVersion>11.9.0</npmVersion>
                         <nodeDownloadRoot>https://nodejs.org/dist/</nodeDownloadRoot>
                         <npmDownloadRoot>https://wrensecurity.jfrog.io/artifactory/api/npm/npm-virtual/npm/-/</npmDownloadRoot>
                     </configuration>
