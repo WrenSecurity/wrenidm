@@ -11,7 +11,8 @@
     "swagger-ui-dist": "^5.32.0"
   },
   "overrides": {
-    "globals": "17.4.0"
+    "globals": "17.4.0",
+    "lodash": "4.17.23"
   },
   "scarfSettings": {
     "enabled": false

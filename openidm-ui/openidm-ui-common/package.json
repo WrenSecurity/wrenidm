@@ -13,5 +13,8 @@
     "gulp": "^5.0.1",
     "gulp-replace": "^1.1.4",
     "yargs": "^17.7.2"
+  },
+  "overrides": {
+    "lodash": "4.17.23"
   }
 }
