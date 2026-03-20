@@ -8,13 +8,14 @@
   },
   "devDependencies": {
     "@wrensecurity/commons-ui-build": "file:target/ui-libs/wrensecurity-commons-ui-build-0.0.0.tgz",
-    "@wrensecurity/eslint-config": "^0.2.0",
+    "@wrensecurity/eslint-config": "^0.4.0",
     "express": "^5.2.1",
     "gulp": "^5.0.1",
     "node-qunit-puppeteer": "^2.2.1"
   },
   "overrides": {
-    "puppeteer": "24.39.1"
+    "globals": "17.4.0",
+    "puppeteer": "24.40.0"
   },
   "dependencies": {
     "@babel/eslint-parser": "^7.22.15",
