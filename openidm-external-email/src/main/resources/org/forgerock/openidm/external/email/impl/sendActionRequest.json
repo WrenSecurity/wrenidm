@@ -59,15 +59,35 @@
       "type": "string",
       "default": "<empty subject>"
     },
-    "body": {
+    "text": {
       "type": "string",
-      "default": "<empty message>"
+      "description": "Plain text body"
     },
-    "type": {
-      "label": "MIME Type",
+    "html": {
       "type": "string",
-      "default": "text/plain"
+      "description": "HTML body"
+    },
+    "attachments": {
+      "type": "array",
+      "description": "File attachments",
+      "items": {
+        "type": "object",
+        "required": ["type", "body"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "MIME type of the attachment (e.g. application/pdf, image/png)"
+          },
+          "content": {
+            "type": "string",
+            "description": "Base64 encoded attachment content"
+          },
+          "name": {
+            "type": "string",
+            "description": "Filename"
+          }
+        }
+      }
     }
   }
 }
-

@@ -21,21 +21,31 @@
  * with the fields enclosed by brackets [] replaced by
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
+ * Portions Copyright 2026 Wren Security.
  */
 package org.forgerock.openidm.external.email.impl;
 
+import org.eclipse.angus.mail.smtp.SMTPTransport;
 import org.eclipse.angus.mail.util.MailSSLSocketFactory;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.resource.BadRequestException;
-
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Properties;
+import jakarta.activation.DataHandler;
+import jakarta.mail.BodyPart;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
+import jakarta.mail.Multipart;
+import jakarta.mail.Part;
 import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
+import jakarta.mail.util.ByteArrayDataSource;
 
 /**
  * Email client.
@@ -96,25 +106,56 @@ public class EmailClient {
         session = Session.getInstance(props);
     }
 
-    /**
-     * Send the email according to the parameters in <em>params</em>:
-     *
-     * from : the From: address
-     * to : The To: recipients - a comma separated email address strings
-     * cc: The Cc: recipients - a comma separated email address strings
-     * bcc: The Bcc: recipients - a comma separated email address strings
-     * subject: The subject
-     * body : the message body
-     *
-     * @param   params
-     *          A JsonValue containing the {@code from}, {@code to}, {@code cc}, {@code bcc},
-     *          {@code subject}, and {@code body} parameters.
-     *
-     * @throws  BadRequestException
-     *          If the one or more of the {@code from}, {@code to}, {@code cc}, {@code bcc},
-     *          {@code subject}, or {@code body} parameters are missing or improperly formatted.
-     */
     public void send(JsonValue params) throws BadRequestException {
+        ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+        try {
+            // In OSGi, MailcapCommandMap scans META-INF/mailcap resources using the thread context
+            // classloader (TCCL). The TCCL on Felix HTTP threads does not have visibility into the
+            // angus-mail bundle, so the multipart/* DataContentHandler is never registered and
+            // Transport.sendMessage() fails with UnsupportedDataTypeException. Switching TCCL to
+            // the angus-mail bundle classloader (via class SMTPTransport) lets MailcapCommandMap
+            // find the mailcap file and register the handlers before the message is written.
+            // See https://github.com/eclipse-ee4j/angus-mail/issues/148
+            Thread.currentThread().setContextClassLoader(SMTPTransport.class.getClassLoader());
+            MimeMessage message = buildMessage(applyLegacyParams(params));
+            Transport transport = session.getTransport("smtp");
+            if (smtpAuth) {
+                transport.connect(username, password);
+            } else {
+                transport.connect();
+            }
+            transport.sendMessage(message, message.getAllRecipients());
+            transport.close();
+        } catch (MessagingException e) {
+            throw new BadRequestException(e);
+        } finally {
+            Thread.currentThread().setContextClassLoader(tccl);
+        }
+    }
+
+    /**
+     * Build MimeMessage instance according to the parameters in <em>params</em>.
+     *
+     * <p>Envelope fields:
+     * <ul>
+     *   <li>{@code from} - From: address (falls back to configured default)</li>
+     *   <li>{@code to} - To: recipients, comma-separated</li>
+     *   <li>{@code cc} - Cc: recipients, comma-separated</li>
+     *   <li>{@code bcc} - Bcc: recipients, comma-separated</li>
+     *   <li>{@code subject} - message subject</li>
+     * </ul>
+     *
+     * <p>Body fields (semantic):
+     * <ul>
+     *   <li>{@code text} - plain-text body</li>
+     *   <li>{@code html} - HTML body</li>
+     *   <li>{@code attachments} - array of {@code {type, body (Base64), name}} objects</li>
+     * </ul>
+     * The correct multipart structure is chosen automatically based on which fields are present.
+     *
+     * @throws BadRequestException if required fields are absent or malformed.
+     */
+    protected MimeMessage buildMessage(JsonValue params) throws BadRequestException {
         InternetAddress from = null;
         InternetAddress[] to = null;
         InternetAddress[] cc = null;
@@ -126,13 +167,13 @@ public class EmailClient {
                 .asString();
 
         try {
-            if (!params.get("from").isNull()) {
+            if (params.get("from").isNotNull()) {
                 from = new InternetAddress(params.get("from").asString());
-            } else if (!params.get("_from").isNull()) {
+            } else if (params.get("_from").isNotNull()) {
                 from = new InternetAddress(params.get("_from").asString());
             } else if (fromAddr != null) {
                 from = new InternetAddress(fromAddr);
-            } else { // we don't have a from, need to throw
+            } else {
                 throw new BadRequestException("From: email address is absent");
             }
         } catch (AddressException ae) {
@@ -146,9 +187,9 @@ public class EmailClient {
         }
 
         try {
-            if (!params.get("cc").isNull()) {
+            if (params.get("cc").isNotNull()) {
                 cc = InternetAddress.parse(params.get("cc").asString());
-            } else if (!params.get("cc").isNull()) {
+            } else if (params.get("_cc").isNotNull()) {
                 cc = InternetAddress.parse(params.get("_cc").asString());
             }
         } catch (AddressException ae) {
@@ -156,9 +197,9 @@ public class EmailClient {
         }
 
         try {
-            if (!params.get("bcc").isNull()) {
+            if (params.get("bcc").isNotNull()) {
                 bcc = InternetAddress.parse(params.get("bcc").asString());
-            } else if (!params.get("_bcc").isNull()) {
+            } else if (params.get("_bcc").isNotNull()) {
                 bcc = InternetAddress.parse(params.get("_bcc").asString());
             }
         } catch (AddressException ae) {
@@ -166,7 +207,7 @@ public class EmailClient {
         }
 
         try {
-            Message message = new MimeMessage(session);
+            MimeMessage message = new MimeMessage(session);
             message.setFrom(from);
             message.setRecipients(Message.RecipientType.TO, to);
             if (cc != null) {
@@ -176,42 +217,80 @@ public class EmailClient {
                 message.setRecipients(Message.RecipientType.BCC, bcc);
             }
             message.setSubject(subject);
-
-            String type = params.get("type")
-                    .defaultTo(params.get("_type"))
-                    .defaultTo("text/plain")
-                    .asString();
-            Object body = params.get("body")
-                    .defaultTo(params.get("_body"))
-                    .getObject();
-
-            if (type.equalsIgnoreCase("text/plain") || type.equalsIgnoreCase("text/html") || type.equalsIgnoreCase("text/xml")) {
-                if (body != null && body instanceof String) {
-                    message.setContent(body, type);
-                } else {
-                    message.setText("<empty message>");
-                }
-            } else {
-                // no idea what this is... let's throw
-                throw new BadRequestException("Email type: " + type + " is not handled");
-            }
-
-            Transport transport = session.getTransport("smtp");
-
-            if (smtpAuth) {
-                transport.connect(username, password);
-            } else {
-                transport.connect();
-            }
+            setMessageContent(message, params);
             message.saveChanges();
-            transport.sendMessage(message, message.getAllRecipients());
-            transport.close();
-
+            return message;
         } catch (MessagingException e) {
             throw new BadRequestException(e);
         }
     }
 
-    public void format() {
+    private void setMessageContent(Message message, JsonValue params) throws MessagingException, BadRequestException {
+        String text = params.get("text").asString();
+        String html = params.get("html").asString();
+        JsonValue attachments = params.get("attachments");
+        if (attachments.size() == 0) {
+            setPartContent(message, text, html);
+        } else {
+            MimeMultipart mixed = new MimeMultipart("mixed");
+            MimeBodyPart bodyPart = new MimeBodyPart();
+            setPartContent(bodyPart, text, html);
+            mixed.addBodyPart(bodyPart);
+            for (JsonValue attachment : attachments) {
+                mixed.addBodyPart(buildAttachmentBodyPart(attachment));
+            }
+            message.setContent(mixed);
+        }
     }
+
+    private void setPartContent(Part part, String text, String html) throws MessagingException {
+        if (text != null && html != null) {
+            Multipart result = new MimeMultipart("alternative");
+            BodyPart textPart = new MimeBodyPart();
+            textPart.setContent(text, "text/plain; charset=UTF-8");
+            result.addBodyPart(textPart);
+            BodyPart htmlPart = new MimeBodyPart();
+            htmlPart.setContent(html, "text/html; charset=UTF-8");
+            result.addBodyPart(htmlPart);
+            part.setContent(result);
+        } else if (text != null) {
+            part.setContent(text, "text/plain; charset=UTF-8");
+        } else if (html != null) {
+            part.setContent(html, "text/html; charset=UTF-8");
+        } else {
+            part.setContent("", "text/plain; charset=UTF-8");
+        }
+    }
+
+    private BodyPart buildAttachmentBodyPart(JsonValue attachment) throws MessagingException, BadRequestException {
+        String type = attachment.get("type").required().asString();
+        String content = attachment.get("content").required().asString();
+        BodyPart bodyPart = new MimeBodyPart();
+        byte[] bytes = Base64.getDecoder().decode(content.getBytes(StandardCharsets.UTF_8));
+        bodyPart.setDataHandler(new DataHandler(new ByteArrayDataSource(bytes, type)));
+        String name = attachment.get("name").asString();
+        if (name != null) {
+            bodyPart.setFileName(name);
+        }
+        return bodyPart;
+    }
+
+    /**
+     * Translate legacy parameters to their current equivalents for backward compatibility.
+     */
+    private JsonValue applyLegacyParams(JsonValue params) {
+        JsonValue result = params.copy();
+        String body = result.get("body").defaultTo(result.get("_body")).asString();
+        if (body == null) {
+            return result;
+        }
+        String type = result.get("type").defaultTo(result.get("_type")).defaultTo("text/plain").asString();
+        if (type.equalsIgnoreCase("text/html")) {
+            result.put("html", body);
+        } else {
+            result.put("text", body);
+        }
+        return result;
+    }
+
 }
