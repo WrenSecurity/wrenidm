@@ -11,11 +11,16 @@
  * Header, with the fields enclosed by brackets [] replaced by your own identifying
  * information: "Portions copyright [year] [name of copyright owner]".
  *
- * Copyright 2024 Wren Security
+ * Copyright 2024-2026 Wren Security
  */
 package org.forgerock.openidm.repo.jdbc.impl.vendor;
 
+import static org.forgerock.openidm.repo.jdbc.Constants.OBJECT_ID;
+import static org.testng.Assert.assertEquals;
+
 import java.sql.Connection;
+import java.util.List;
+import java.util.Map;
 import org.forgerock.openidm.repo.jdbc.TableHandler;
 import org.forgerock.openidm.repo.jdbc.impl.handler.AbstractMappedTableHandlerTest;
 import org.testng.annotations.Test;
@@ -38,6 +43,39 @@ public class PostgreSQLMappedTableHandlerIT extends AbstractMappedTableHandlerTe
             getCommandConfig(),
             getExceptionHandler()
         );
+    }
+
+    @Test
+    public void testQueryFilterJsonListEquals() throws Exception {
+        createResource("resource-1", Map.of("tags", List.of("foo", "bar")));
+        createResource("resource-2", Map.of("tags", List.of("foo", "baz")));
+        createResource("resource-3", Map.of("tags", List.of(1, 2)));
+        createResource("resource-4", Map.of("tags", List.of(1, 3)));
+        createResource("resource-5", Map.of("tags", List.of(true)));
+        createResource("resource-6", Map.of("tags", List.of(false)));
+
+        var fooResult = queryResource("tags eq \"foo\"");
+        assertEquals(fooResult.size(), 2);
+        assertEquals(fooResult.stream().map(r -> r.get(OBJECT_ID)).sorted().toList(),
+                List.of("resource-1", "resource-2"));
+
+        var bazResult = queryResource("tags eq \"baz\"");
+        assertEquals(bazResult.size(), 1);
+        assertEquals(bazResult.stream().map(r -> r.get(OBJECT_ID)).toList(),
+                List.of("resource-2"));
+
+        var numberResult = queryResource("tags eq 1");
+        assertEquals(numberResult.size(), 2);
+        assertEquals(numberResult.stream().map(r -> r.get(OBJECT_ID)).toList(),
+                List.of("resource-3", "resource-4"));
+
+        var booleanResult = queryResource("tags eq true");
+        assertEquals(booleanResult.size(), 1);
+        assertEquals(booleanResult.stream().map(r -> r.get(OBJECT_ID)).toList(),
+                List.of("resource-5"));
+
+        var noResult = queryResource("tags eq \"hello\"");
+        assertEquals(noResult.size(), 0);
     }
 
 }

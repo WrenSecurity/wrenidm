@@ -12,10 +12,11 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015 ForgeRock AS.
- * Portions Copyright 2024 Wren Security.
+ * Portions Copyright 2024-2026 Wren Security.
  */
 package org.forgerock.openidm.repo.jdbc.impl.vendor;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.forgerock.json.JsonPointer;
@@ -76,6 +77,19 @@ public class PostgreSQLMappedTableHandler extends MappedTableHandler {
                     MappedColumnConfig config, String operand, JsonPointer field, Object valueAssertion) {
                 String paramName = collector.register("v", valueAssertion);
                 return new StringSQLRenderer(config.columnName + " " + operand + " " + "${" + paramName + "}");
+            }
+
+            @Override
+            protected StringSQLRenderer visitJsonListAssertion(NamedParameterCollector collector,
+                    MappedColumnConfig config, JsonPointer field, Object valueAssertion) {
+                String jsonValue;
+                try {
+                    jsonValue = objectMapper.writeValueAsString(valueAssertion);
+                } catch (JsonProcessingException e) {
+                    throw new IllegalStateException("Failed to serialize JSON value.", e);
+                }
+                String paramName = collector.register("v", "[" + jsonValue + "]");
+                return new StringSQLRenderer(config.columnName + "::jsonb @> ${" + paramName + "}::jsonb");
             }
         };
     }
