@@ -28,6 +28,7 @@ public class MSSQLTestConnectionProvider extends AbstractTestConnectionProvider 
 
     private static final String IMAGE_NAME = "mcr.microsoft.com/mssql/server:2019-CU14-ubuntu-20.04";
 
+    @SuppressWarnings("resource")
     private static JdbcDatabaseContainer container = new MSSQLServerContainer(IMAGE_NAME)
             .acceptLicense()
             .withInitScript("vendor/mssql.sql");

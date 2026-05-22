@@ -11,7 +11,7 @@
  * Header, with the fields enclosed by brackets [] replaced by your own identifying
  * information: "Portions copyright [year] [name of copyright owner]".
  *
- * Copyright 2024 Wren Security
+ * Copyright 2024-2026 Wren Security
  */
 package org.forgerock.openidm.repo.jdbc.impl.handler;
 
@@ -298,6 +298,21 @@ public abstract class AbstractTableHandlerTest {
 
         var result = queryResource("name eq 'non-existent'");
         assertTrue(result.isEmpty());
+    }
+
+    @Test(expectedExceptions = UnsupportedOperationException.class)
+    public void testQueryFilterJsonList() throws Exception {
+        queryResource("tags eq 'foo'");
+    }
+
+    @Test(expectedExceptions = UnsupportedOperationException.class)
+    public void testQueryFilterJsonMap() throws Exception {
+        queryResource("meta/owner eq 'john'");
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testQueryFilterInvalidField() throws Exception {
+        queryResource("tags/owner eq 'john'");
     }
 
     @Test

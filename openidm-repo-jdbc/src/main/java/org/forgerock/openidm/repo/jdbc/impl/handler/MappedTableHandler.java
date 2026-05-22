@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2018-2025 Wren Security.
+ * Portions Copyright 2018-2026 Wren Security.
  */
 package org.forgerock.openidm.repo.jdbc.impl.handler;
 
@@ -45,6 +45,7 @@ import org.forgerock.json.resource.SortKey;
 import org.forgerock.openidm.repo.jdbc.Constants;
 import org.forgerock.openidm.repo.jdbc.SQLExceptionHandler;
 import org.forgerock.openidm.repo.jdbc.impl.SQLBuilder;
+import org.forgerock.openidm.repo.jdbc.impl.handler.MappedColumnConfig.ValueType;
 import org.forgerock.openidm.repo.jdbc.impl.mapper.MappedResultMapper;
 import org.forgerock.openidm.repo.jdbc.impl.mapper.ResultMapper;
 import org.forgerock.openidm.repo.jdbc.impl.mapper.ResultMappers;
@@ -471,14 +472,21 @@ public class MappedTableHandler extends AbstractTableHandler {
      * @return new configuration resolver instance
      */
     protected MappedConfigResolver createConfigResolver() {
-        Map<JsonPointer, MappedColumnConfig> columnConfig = columnMapping.values().stream()
+        Map<JsonPointer, MappedColumnConfig> columnConfigs = columnMapping.values().stream()
                 .collect(Collectors.toMap(value -> value.propertyName, value -> value));
         return field -> {
-            var config = columnConfig.get(field);
-            if (config == null) {
-                throw new IllegalArgumentException("Unknown object field: " + field.toString());
-            }
-            return config;
+            var columnPath = field;
+            do {
+                var config = columnConfigs.get(columnPath);
+                if (config == null) {
+                    continue;
+                }
+                if (columnPath != field && config.valueType != ValueType.JSON_MAP) {
+                    break; // only JSON_MAP can be mapped to parent path
+                }
+                return config;
+            } while ((columnPath = columnPath.parent()) != null);
+            throw new IllegalArgumentException("Unknown object field: " + field.toString());
         };
     }
 

@@ -11,7 +11,7 @@
  * Header, with the fields enclosed by brackets [] replaced by your own identifying
  * information: "Portions copyright [year] [name of copyright owner]".
  *
- * Copyright 2024 Wren Security
+ * Copyright 2024-2026 Wren Security
  */
 package org.forgerock.openidm.repo.jdbc.impl.query;
 
@@ -53,16 +53,15 @@ public class MappedSQLQueryFilterVisitor extends StringSQLQueryFilterVisitor<Nam
             return visitBooleanAssertion(collector, config, operand, field, valueAssertion);
         }
 
-        String paramValue;
-        try {
-            paramValue = valueAssertion instanceof String
-                    ? (String) valueAssertion
-                    : objectMapper.writeValueAsString(valueAssertion);
-        } catch (JsonProcessingException e) {
-            throw new IllegalStateException("Unexpected JSON conversion error", e);
+        if (config.valueType == ValueType.JSON_LIST) {
+            return visitJsonListAssertion(collector, config, operand, field, valueAssertion);
         }
 
-        String paramName = collector.register("v", paramValue);
+        if (config.valueType == ValueType.JSON_MAP) {
+            return visitJsonMapAssertion(collector, config, operand, field, valueAssertion);
+        }
+
+        String paramName = collector.register("v", toJson(valueAssertion));
         return new StringSQLRenderer(
                 config.columnName
                 + " " + operand + " "
@@ -89,6 +88,16 @@ public class MappedSQLQueryFilterVisitor extends StringSQLQueryFilterVisitor<Nam
                 + "${" + paramName + "}");
     }
 
+    protected StringSQLRenderer visitJsonListAssertion(NamedParameterCollector collector, MappedColumnConfig config,
+            String operand, JsonPointer field, Object valueAssertion) {
+        throw new UnsupportedOperationException("JSON_LIST value assertions are not supported");
+    }
+
+    protected StringSQLRenderer visitJsonMapAssertion(NamedParameterCollector collector, MappedColumnConfig config,
+            String operand, JsonPointer field, Object valueAssertion) {
+        throw new UnsupportedOperationException("JSON_LIST value assertions are not supported");
+    }
+
     @Override
     public StringSQLRenderer visitPresentFilter(NamedParameterCollector collector, JsonPointer field) {
         MappedColumnConfig config = configResolver.resolve(field);
@@ -100,6 +109,16 @@ public class MappedSQLQueryFilterVisitor extends StringSQLQueryFilterVisitor<Nam
                 || valueAssertion instanceof Long
                 || valueAssertion instanceof Float
                 || valueAssertion instanceof Double;
+    }
+
+    protected String toJson(Object valueAssertion) {
+        try {
+            return valueAssertion instanceof String
+                    ? (String) valueAssertion
+                    : objectMapper.writeValueAsString(valueAssertion);
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException("Unexpected JSON conversion error", e);
+        }
     }
 
 }

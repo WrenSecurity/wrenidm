@@ -55,7 +55,7 @@ public class PostgreSQLMappedTableHandler extends MappedTableHandler {
                     + columnMapping.values().stream()
                             .map(config -> config.isJson() ? "?::json" : "?")
                             .collect(Collectors.joining(", "))
-                +")");
+                + ")");
         result.put(ImplicitSqlType.UPDATE,
                 "UPDATE ${_dbSchema}.${_table} "
                 + "SET "

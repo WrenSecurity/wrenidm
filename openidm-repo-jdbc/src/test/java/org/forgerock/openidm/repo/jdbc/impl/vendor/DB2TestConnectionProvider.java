@@ -24,6 +24,7 @@ import org.testcontainers.containers.Db2Container;
 
 public class DB2TestConnectionProvider extends AbstractTestConnectionProvider {
 
+    @SuppressWarnings("resource")
     private static Db2Container container = new Db2Container("icr.io/db2_community/db2:11.5.9.0")
             .acceptLicense()
             .withDatabaseName("wrenidm")
