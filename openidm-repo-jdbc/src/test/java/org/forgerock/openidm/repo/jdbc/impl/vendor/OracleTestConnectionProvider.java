@@ -28,6 +28,7 @@ public class OracleTestConnectionProvider extends AbstractTestConnectionProvider
 
     private static final String IMAGE_NAME = "gvenzl/oracle-xe:21-slim-faststart";
 
+    @SuppressWarnings("resource")
     private static JdbcDatabaseContainer container = new OracleContainer(IMAGE_NAME)
             .withDatabaseName("wrenidm")
             .withUsername("wrenidm")

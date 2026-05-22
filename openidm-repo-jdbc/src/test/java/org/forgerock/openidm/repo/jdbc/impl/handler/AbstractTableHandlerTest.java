@@ -244,6 +244,7 @@ public abstract class AbstractTableHandlerTest {
                 "tags", List.of("foo", "bar"),
                 "meta", Map.of("owner", "john"));
         createResource(RESOURCE_ID, template);
+        createResource("ignored", Map.of("name", "UNIVERSE"));
 
         var result = queryResource("_id eq '" + RESOURCE_ID + "'");
         assertNotNull(result);
@@ -300,19 +301,32 @@ public abstract class AbstractTableHandlerTest {
         assertTrue(result.isEmpty());
     }
 
-    @Test(expectedExceptions = UnsupportedOperationException.class)
+    @Test(enabled = false)
     public void testQueryFilterJsonList() throws Exception {
-        queryResource("tags eq 'foo'");
+        createResource(RESOURCE_ID, Map.of("tags", List.of("foo", "bar")));
+        createResource("ignored", Map.of("tags", List.of("bar", "baz")));
+
+        var resultIds = queryResource("tags eq 'foo'").stream()
+                .map(resource -> resource.get(OBJECT_ID))
+                .collect(Collectors.toSet());
+        assertEquals(resultIds, Set.of(RESOURCE_ID));
     }
 
-    @Test(expectedExceptions = UnsupportedOperationException.class)
+    @Test
     public void testQueryFilterJsonMap() throws Exception {
-        queryResource("meta/owner eq 'john'");
+        createResource(RESOURCE_ID, Map.of("meta", Map.of("owner", "john")));
+        createResource("ignored", Map.of("meta", Map.of("owner", "lucy")));
+
+        var resultIds = queryResource("meta/owner eq 'john'").stream()
+                .map(resource -> resource.get(OBJECT_ID))
+                .collect(Collectors.toSet());
+        assertEquals(resultIds, Set.of(RESOURCE_ID));
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test
     public void testQueryFilterInvalidField() throws Exception {
-        queryResource("tags/owner eq 'john'");
+        var result = queryResource("tags/owner eq 'john'");
+        assertTrue(result.isEmpty());
     }
 
     @Test

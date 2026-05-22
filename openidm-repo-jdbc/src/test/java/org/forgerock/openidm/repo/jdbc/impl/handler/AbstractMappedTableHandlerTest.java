@@ -11,7 +11,7 @@
  * Header, with the fields enclosed by brackets [] replaced by your own identifying
  * information: "Portions copyright [year] [name of copyright owner]".
  *
- * Copyright 2024 Wren Security
+ * Copyright 2024-2026 Wren Security
  */
 package org.forgerock.openidm.repo.jdbc.impl.handler;
 
@@ -131,6 +131,28 @@ public abstract class AbstractMappedTableHandlerTest extends AbstractTableHandle
         var doubleResult = queryResource("name eq 7.0");
         assertEquals(doubleResult.size(), 1);
         assertEquals(doubleResult.get(0).get(OBJECT_ID), "stringified-double");
+    }
+
+    @Test(expectedExceptions = UnsupportedOperationException.class)
+    @Override
+    public void testQueryFilterJsonList() throws Exception {
+        queryResource("tags eq 'foo'");
+    }
+
+    @Test(expectedExceptions = UnsupportedOperationException.class)
+    @Override
+    public void testQueryFilterJsonMap() throws Exception {
+        queryResource("meta/owner eq 'john'");
+    }
+
+    @Test(
+        expectedExceptions = IllegalArgumentException.class,
+        expectedExceptionsMessageRegExp = "Unknown object field: /tags/owner"
+    )
+    @Override
+    // XXX Maybe this can be implemented by mapping to an unsatisfiable predicate
+    public void testQueryFilterInvalidField() throws Exception {
+        queryResource("tags/owner eq 'john'");
     }
 
     @Test(

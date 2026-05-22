@@ -63,7 +63,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Generic table handler that supports objects stored as JSON string with a separate properies table used for
+ * Generic table handler that supports objects stored as JSON string with a separate properties table used for
  * indexing and querying objects by property value filters.
  *
  * <p>
@@ -419,8 +419,8 @@ public class GenericTableHandler extends AbstractTableHandler {
     /**
      * Remove properties of a resource stored under the specified database identifier from the properties table.
      *
-     * @param databaseId the identifier that link the properties table with the main table (foreign key)
      * @param fullId the qualified identifier of the owner object
+     * @param databaseId the identifier that link the properties table with the main table (foreign key)
      * @param connection the DB connection
      * @throws SQLException if the insert failed
      */
