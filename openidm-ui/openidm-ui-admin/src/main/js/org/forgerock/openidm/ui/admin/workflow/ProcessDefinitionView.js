@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2026 Wren Security.
  */
 
 define([
@@ -33,23 +33,18 @@ define([
             },
             render: function(args, callback) {
                 this.model = new ProcessModel();
-
                 this.model.id = args[0];
 
-                this.model.fetch().then(_.bind(function () {
-
+                this.model.fetch({ data: { _fields: ",diagram" }}).then(_.bind(function () {
                     this.data.processDefinition = this.model.toJSON();
-
-                    this.data.diagramUrl = "/openidm/workflow/processdefinition/" + this.model.id + "?_fields=/diagram&_mimeType=image/png";
+                    this.data.diagramDataUri = "data:image/png;base64," + this.model.get("/diagram");
 
                     this.parentRender(_.bind(function(){
-
                         if (callback) {
                             callback();
                         }
-                    },this));
-
-                },this));
+                    }, this));
+                }, this));
             }
         });
 
