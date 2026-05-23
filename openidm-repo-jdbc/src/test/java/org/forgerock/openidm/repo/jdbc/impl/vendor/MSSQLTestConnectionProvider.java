@@ -21,7 +21,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import org.forgerock.openidm.repo.jdbc.impl.handler.AbstractTestConnectionProvider;
 import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.MSSQLServerContainer;
+import org.testcontainers.mssqlserver.MSSQLServerContainer;
 
 @SuppressWarnings("rawtypes")
 public class MSSQLTestConnectionProvider extends AbstractTestConnectionProvider {
