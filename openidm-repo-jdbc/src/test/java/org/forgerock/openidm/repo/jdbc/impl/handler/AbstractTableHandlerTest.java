@@ -301,12 +301,15 @@ public abstract class AbstractTableHandlerTest {
         assertTrue(result.isEmpty());
     }
 
-    @Test(enabled = false)
+    @Test
     public void testQueryFilterJsonList() throws Exception {
         createResource(RESOURCE_ID, Map.of("tags", List.of("foo", "bar")));
         createResource("ignored", Map.of("tags", List.of("bar", "baz")));
 
-        var resultIds = queryResource("tags eq 'foo'").stream()
+        var result = queryResource("tags eq 'foo'");
+        assertEquals(result.size(), 1);
+
+        var resultIds = result.stream()
                 .map(resource -> resource.get(OBJECT_ID))
                 .collect(Collectors.toSet());
         assertEquals(resultIds, Set.of(RESOURCE_ID));

@@ -13,7 +13,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2024 Wren Security
+ * Portions Copyright 2024-2026 Wren Security
  */
 package org.forgerock.openidm.repo.jdbc.impl.handler;
 
@@ -26,13 +26,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
@@ -347,13 +348,13 @@ public class GenericTableHandler extends AbstractTableHandler {
             return; // no searchable properties, no need to index
         }
 
-        Map<JsonPointer, Object> pairs = new LinkedHashMap<JsonPointer, Object>();
-        extractValueProperties(value, pairs::put);
+        List<Entry<JsonPointer, Object>> pairs = new ArrayList<>();
+        extractValueProperties(value, (p, v) -> pairs.add(new SimpleEntry<JsonPointer, Object>(p, v)), false);
 
         try (var createStatement = resolveImplicitStatement(ImplicitSqlType.PROPCREATE, false, connection)) {
             int batchingCount = 0;
 
-            for (var pair : pairs.entrySet()) {
+            for (var pair : pairs) {
                 // prepare index properties
                 var object = pair.getValue();
                 var idxkey = pair.getKey().toString();
@@ -401,18 +402,22 @@ public class GenericTableHandler extends AbstractTableHandler {
      *
      * @param value JSON value (array or object)
      * @param collector callback for collecting extracted property values
+     * @param unwrap whether to collect primitive values under the parent pointer
      */
-    private void extractValueProperties(JsonValue json, BiConsumer<JsonPointer, Object> collector) {
+    private void extractValueProperties(JsonValue json, BiConsumer<JsonPointer, Object> collector, boolean unwrap) {
         for (JsonValue entry : json) {
             JsonPointer pointer = entry.getPointer();
             if (!tableConfig.isSearchable(pointer)) {
                 continue;
             }
             if (entry.isMap() || entry.isList()) {
-                extractValueProperties(entry, collector);
-                continue;
+                extractValueProperties(entry, collector, entry.isList());
+            } else {
+                collector.accept(pointer, entry.getObject());
             }
-            collector.accept(pointer, entry.getObject());
+            if (unwrap) {
+                collector.accept(pointer.parent(), entry.getObject());
+            }
         }
     }
 
@@ -640,7 +645,7 @@ public class GenericTableHandler extends AbstractTableHandler {
      * @return new GenericSQLQueryFilterVisitor instance
      */
     protected GenericSQLQueryFilterVisitor createFilterVisitor(SQLBuilder builder) {
-        return new GenericSQLQueryFilterVisitor(getSearchableLength(), builder);
+        return new GenericSQLQueryFilterVisitor(getSearchableLength());
     }
 
     @Override

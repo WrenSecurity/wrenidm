@@ -2,7 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2015 ForgeRock AS. All rights reserved.
- * Portions Copyright 2024 Wren Security.
+ * Portions Copyright 2024-2026 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.forgerock.json.JsonPointer;
-import org.forgerock.openidm.repo.jdbc.impl.SQLBuilder;
 import org.forgerock.openidm.repo.jdbc.impl.statement.NamedParameterCollector;
 import org.forgerock.openidm.repo.util.AbstractSQLQueryFilterVisitor;
 import org.forgerock.openidm.repo.util.Clause;
@@ -48,22 +47,17 @@ import org.forgerock.util.query.QueryFilterVisitor;
  * Filter visitor does not support <i>contains</i> filters for collection members. Only simple <code>string</code>
  * based <i>contains</i> is supported.
  */
-// TODO support collection based assertions
 public class GenericSQLQueryFilterVisitor extends AbstractSQLQueryFilterVisitor<Clause, NamedParameterCollector> {
 
     private final int searchableLength;
-
-    private final SQLBuilder builder;
 
     /**
      * Construct a QueryFilterVisitor to produce SQL for managed objects using the generic table structure.
      *
      * @param searchableLength the searchable length; properties longer than this will be trimmed to this length
-     * @param builder the {@link SQLBuilder} to use to keep track of the select columns, table joins, and order by lists
      */
-    public GenericSQLQueryFilterVisitor(final int searchableLength, SQLBuilder builder) {
+    public GenericSQLQueryFilterVisitor(final int searchableLength) {
         this.searchableLength = searchableLength;
-        this.builder = builder;
     }
 
     private boolean isNumeric(final Object valueAssertion) {
@@ -136,8 +130,8 @@ public class GenericSQLQueryFilterVisitor extends AbstractSQLQueryFilterVisitor<
             return where("obj.objectid " + operand + " ${" + valueParam + "}");
         }
 
-        String propParam = collector.register("k", field.toString());
         String joinAlias = collector.generate("p");
+        String propParam = collector.register("k", field.toString());
         final Clause valueClause;
         if (isNumeric(valueAssertion)) {
             valueClause = buildNumericValueClause(joinAlias, operand, valueParam);
@@ -146,10 +140,11 @@ public class GenericSQLQueryFilterVisitor extends AbstractSQLQueryFilterVisitor<
         } else {
             valueClause = buildStringValueClause(joinAlias, operand, valueParam);
         }
-        builder.leftJoin("${_dbSchema}.${_propTable}", joinAlias)
-                .on(where(joinAlias + ".${_mainTable}_id = obj.id")
-                        .and(where(joinAlias + ".propkey = ${" + propParam + "}")));
-        return valueClause;
+
+        return where("EXISTS (SELECT 1 FROM ${_dbSchema}.${_propTable} " + joinAlias + " WHERE "
+                + joinAlias + ".${_mainTable}_id = obj.id"
+                + " AND " + joinAlias + ".propkey = ${" + propParam + "}"
+                + " AND " + valueClause.toSQL() + ")");
     }
 
     /**
@@ -182,10 +177,9 @@ public class GenericSQLQueryFilterVisitor extends AbstractSQLQueryFilterVisitor<
         } else {
             var propParam = collector.register("k", field.toString());
             var joinAlias = collector.generate("p");
-            builder.leftJoin("${_dbSchema}.${_propTable}", joinAlias)
-                    .on(where(joinAlias + ".${_mainTable}_id = obj.id")
-                            .and(joinAlias + ".propkey = ${" + propParam + "}"));
-            return where(joinAlias + ".propvalue IS NOT NULL");
+            return where("EXISTS (SELECT 1 FROM ${_dbSchema}.${_propTable} " + joinAlias + " WHERE "
+                    + joinAlias + ".${_mainTable}_id = obj.id"
+                    + " AND " + joinAlias + ".propkey = ${" + propParam + "})");
         }
     }
 
