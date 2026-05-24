@@ -41,6 +41,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.wrensecurity.wrenidm</groupId>
             <artifactId>openidm-enhanced-config</artifactId>
             <version>${project.version}</version>

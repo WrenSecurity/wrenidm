@@ -49,7 +49,9 @@ import org.forgerock.openidm.repo.jdbc.impl.handler.MappedColumnConfig.ValueType
 import org.forgerock.openidm.repo.jdbc.impl.mapper.MappedResultMapper;
 import org.forgerock.openidm.repo.jdbc.impl.mapper.ResultMapper;
 import org.forgerock.openidm.repo.jdbc.impl.mapper.ResultMappers;
-import org.forgerock.openidm.repo.jdbc.impl.query.MappedSQLQueryFilterVisitor;
+import org.forgerock.openidm.repo.jdbc.impl.query.SQLRendererFieldFilterVisitor;
+import org.forgerock.openidm.repo.jdbc.impl.query.SQLRendererQueryFilterVisitor;
+import org.forgerock.openidm.repo.jdbc.impl.query.SimpleFieldFilterVisitor;
 import org.forgerock.openidm.repo.jdbc.impl.query.TableQueryHandler;
 import org.forgerock.openidm.repo.jdbc.impl.statement.NamedParameterCollector;
 import org.forgerock.openidm.repo.jdbc.impl.statement.NamedParameterSql;
@@ -511,13 +513,29 @@ public class MappedTableHandler extends AbstractTableHandler {
     }
 
     /**
-     * Create new {@link MappedSQLQueryFilterVisitor} to render query filter queries.
+     * Create new {@link SQLRendererQueryFilterVisitor} to render query filter queries.
      *
      * @param configResolver column configuration resolver
-     * @return new MappedSQLQueryFilterVisitor instance
+     * @return new query filter visitor instance
      */
-    protected MappedSQLQueryFilterVisitor createFilterVisitor(MappedConfigResolver configResolver) {
-        return new MappedSQLQueryFilterVisitor(configResolver, objectMapper);
+    protected SQLRendererQueryFilterVisitor createFilterVisitor(MappedConfigResolver configResolver) {
+        return new SQLRendererQueryFilterVisitor(field -> {
+            var columnConfig = configResolver.resolve(field);
+            switch (columnConfig.valueType) {
+            case JSON_LIST, JSON_MAP:
+                return createJsonFieldVisitor(columnConfig);
+            default:
+                return createSimpleFieldVisitor(columnConfig);
+            }
+        });
+    }
+
+    protected SQLRendererFieldFilterVisitor createSimpleFieldVisitor(MappedColumnConfig columnConfig) {
+        return new SimpleFieldFilterVisitor(columnConfig, objectMapper);
+    }
+
+    protected SQLRendererFieldFilterVisitor createJsonFieldVisitor(MappedColumnConfig columnConfig) {
+        throw new UnsupportedOperationException("JSON based field filtering not supported");
     }
 
     @Override

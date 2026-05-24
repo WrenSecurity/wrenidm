@@ -349,7 +349,7 @@ public class GenericTableHandler extends AbstractTableHandler {
         }
 
         List<Entry<JsonPointer, Object>> pairs = new ArrayList<>();
-        extractValueProperties(value, (p, v) -> pairs.add(new SimpleEntry<JsonPointer, Object>(p, v)), false);
+        extractValueProperties(value, (p, v) -> pairs.add(new SimpleEntry<>(p, v)), false);
 
         try (var createStatement = resolveImplicitStatement(ImplicitSqlType.PROPCREATE, false, connection)) {
             int batchingCount = 0;

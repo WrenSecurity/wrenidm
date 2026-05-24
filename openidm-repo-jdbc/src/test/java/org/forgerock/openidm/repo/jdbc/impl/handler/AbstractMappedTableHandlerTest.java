@@ -133,24 +133,12 @@ public abstract class AbstractMappedTableHandlerTest extends AbstractTableHandle
         assertEquals(doubleResult.get(0).get(OBJECT_ID), "stringified-double");
     }
 
-    @Test(expectedExceptions = UnsupportedOperationException.class)
-    @Override
-    public void testQueryFilterJsonList() throws Exception {
-        queryResource("tags eq 'foo'");
-    }
-
-    @Test(expectedExceptions = UnsupportedOperationException.class)
-    @Override
-    public void testQueryFilterJsonMap() throws Exception {
-        queryResource("meta/owner eq 'john'");
-    }
-
     @Test(
         expectedExceptions = IllegalArgumentException.class,
         expectedExceptionsMessageRegExp = "Unknown object field: /tags/owner"
     )
     @Override
-    // XXX Maybe this can be implemented by mapping to an unsatisfiable predicate
+    // XXX Maybe this can be implemented by mapping to an always false condition
     public void testQueryFilterInvalidField() throws Exception {
         queryResource("tags/owner eq 'john'");
     }

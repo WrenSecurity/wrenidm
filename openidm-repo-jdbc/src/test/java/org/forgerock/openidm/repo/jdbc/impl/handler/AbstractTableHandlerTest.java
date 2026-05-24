@@ -54,6 +54,7 @@ import org.forgerock.openidm.repo.jdbc.TableHandler;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 /**
@@ -253,14 +254,29 @@ public abstract class AbstractTableHandlerTest {
         assertResourceValues(result.get(0), template);
     }
 
-    @Test
-    public void testQueryFilterComplex() throws Exception {
+    @DataProvider
+    public Object[] getQueryFilterComplexData() {
+        // We try to hit as many query filter processing code paths as possible
+        return new Object[][] {
+                { "name sw 'HELLO' and score eq 70 and ! visible eq false" },
+                { "_id eq 'hello' and true" },
+                { "_id eq 'hello' and ! false" },
+                { "_id eq 'hello' and ! ( name co 'BYE' )" },
+                { "_id eq 'hello' and ! ( name lt 'HELLO TO' or name gt 'HELLO TO' )" },
+                { "_id eq 'hello' and ! ( name le 'A' or name ge 'Z' )" },
+                { "_id eq 'hello' and ! ( score lt 70 or score gt 70 )" },
+                { "_id eq 'hello' and ! ( score le 8 or score ge 80 )" },
+        };
+    }
+
+    @Test(dataProvider = "getQueryFilterComplexData")
+    public void testQueryFilterComplex(String filter) throws Exception {
         createResource(RESOURCE_ID, Map.of("name", "HELLO TO", "score", 70, "visible", true));
         createResource("with-different-name", Map.of("name", "GOOD BYE", "score", 70, "visible", true));
         createResource("with-lower-score", Map.of("name", "HELLO TO", "score", 8, "visible", true));
         createResource("with-not-visible", Map.of("name", "HELLO TO", "score", 80, "visible", false));
 
-        var resultIds = queryResource("name sw 'HELLO' and score eq 70 and visible eq true").stream()
+        var resultIds = queryResource(filter).stream()
                 .map(resource -> resource.get(OBJECT_ID))
                 .collect(Collectors.toSet());
         assertEquals(resultIds, Set.of(RESOURCE_ID));
