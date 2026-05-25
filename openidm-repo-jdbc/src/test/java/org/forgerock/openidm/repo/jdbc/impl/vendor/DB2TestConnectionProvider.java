@@ -20,10 +20,11 @@ import static org.testng.Assert.assertFalse;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import org.forgerock.openidm.repo.jdbc.impl.handler.AbstractTestConnectionProvider;
-import org.testcontainers.containers.Db2Container;
+import org.testcontainers.db2.Db2Container;
 
 public class DB2TestConnectionProvider extends AbstractTestConnectionProvider {
 
+    @SuppressWarnings("resource")
     private static Db2Container container = new Db2Container("icr.io/db2_community/db2:11.5.9.0")
             .acceptLicense()
             .withDatabaseName("wrenidm")

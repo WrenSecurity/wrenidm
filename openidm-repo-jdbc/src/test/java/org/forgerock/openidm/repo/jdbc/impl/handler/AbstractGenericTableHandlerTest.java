@@ -11,7 +11,7 @@
  * Header, with the fields enclosed by brackets [] replaced by your own identifying
  * information: "Portions copyright [year] [name of copyright owner]".
  *
- * Copyright 2024 Wren Security
+ * Copyright 2024-2026 Wren Security
  */
 package org.forgerock.openidm.repo.jdbc.impl.handler;
 
@@ -22,6 +22,7 @@ import static org.forgerock.json.JsonValue.object;
 import java.util.Map;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.repo.jdbc.SQLExceptionHandler;
+import org.testng.annotations.Test;
 
 /**
  * Common superclass for {@link GenericTableHandler} test cases.
@@ -85,6 +86,12 @@ public abstract class AbstractGenericTableHandlerTest extends AbstractTableHandl
     @Override
     protected String getParamQueryExpression() {
         return "SELECT * FROM wrenidm.genericobjects WHERE objectid IN (${list:ids})";
+    }
+
+    @Test(enabled = false)
+    @Override
+    public void testQueryFilterJsonList() throws Exception {
+        // XXX not yet supported
     }
 
 }

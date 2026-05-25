@@ -13,7 +13,7 @@
     information: "Portions copyright [year] [name of copyright owner]".
 
     Copyright (c) 2011-2013 ForgeRock AS. All Rights Reserved
-    Portions Copyright 2017-2024 Wren Security.
+    Portions Copyright 2017-2026 Wren Security.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -35,10 +35,17 @@
         <openidm.osgi.import.before.defaults>
             !org.testng.annotations,!sun.misc,!org.w3c.dom,jakarta.inject;resolution:=optional
         </openidm.osgi.import.before.defaults>
-        <testcontainers.version>1.19.3</testcontainers.version>
+        <testcontainers.version>2.0.5</testcontainers.version>
+        <testcontainers-module.version>2.0.1</testcontainers-module.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.wrensecurity.wrenidm</groupId>
             <artifactId>openidm-enhanced-config</artifactId>
@@ -118,8 +125,8 @@
 
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>db2</artifactId>
-            <version>${testcontainers.version}</version>
+            <artifactId>testcontainers-db2</artifactId>
+            <version>${testcontainers-module.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -132,8 +139,8 @@
 
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>mssqlserver</artifactId>
-            <version>${testcontainers.version}</version>
+            <artifactId>testcontainers-mssqlserver</artifactId>
+            <version>${testcontainers-module.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -146,8 +153,8 @@
 
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>oracle-xe</artifactId>
-            <version>${testcontainers.version}</version>
+            <artifactId>testcontainers-oracle-xe</artifactId>
+            <version>${testcontainers-module.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -160,8 +167,8 @@
 
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>mysql</artifactId>
-            <version>${testcontainers.version}</version>
+            <artifactId>testcontainers-mysql</artifactId>
+            <version>${testcontainers-module.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -174,8 +181,8 @@
 
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${testcontainers.version}</version>
+            <artifactId>testcontainers-postgresql</artifactId>
+            <version>${testcontainers-module.version}</version>
             <scope>test</scope>
         </dependency>
 

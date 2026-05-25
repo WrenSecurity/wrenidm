@@ -11,7 +11,7 @@
  * Header, with the fields enclosed by brackets [] replaced by your own identifying
  * information: "Portions copyright [year] [name of copyright owner]".
  *
- * Copyright 2024 Wren Security
+ * Copyright 2024-2026 Wren Security
  */
 package org.forgerock.openidm.repo.jdbc.impl.handler;
 
@@ -131,6 +131,16 @@ public abstract class AbstractMappedTableHandlerTest extends AbstractTableHandle
         var doubleResult = queryResource("name eq 7.0");
         assertEquals(doubleResult.size(), 1);
         assertEquals(doubleResult.get(0).get(OBJECT_ID), "stringified-double");
+    }
+
+    @Test(
+        expectedExceptions = IllegalArgumentException.class,
+        expectedExceptionsMessageRegExp = "Unknown object field: /tags/owner"
+    )
+    @Override
+    // XXX Maybe this can be implemented by mapping to an always false condition
+    public void testQueryFilterInvalidField() throws Exception {
+        queryResource("tags/owner eq 'john'");
     }
 
     @Test(

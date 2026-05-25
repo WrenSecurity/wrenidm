@@ -11,20 +11,19 @@
  * Header, with the fields enclosed by brackets [] replaced by your own identifying
  * information: "Portions copyright [year] [name of copyright owner]".
  *
- * Copyright 2024 Wren Security
+ * Copyright 2024-2026 Wren Security
  */
 package org.forgerock.openidm.repo.jdbc.impl.vendor;
 
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.repo.jdbc.SQLExceptionHandler;
 import org.forgerock.openidm.repo.jdbc.impl.handler.MappedColumnConfig;
-import org.forgerock.openidm.repo.jdbc.impl.handler.MappedConfigResolver;
 import org.forgerock.openidm.repo.jdbc.impl.handler.MappedTableHandler;
-import org.forgerock.openidm.repo.jdbc.impl.query.MappedSQLQueryFilterVisitor;
+import org.forgerock.openidm.repo.jdbc.impl.query.SimpleFieldFilterVisitor;
 import org.forgerock.openidm.repo.jdbc.impl.statement.NamedParameterCollector;
+import org.forgerock.openidm.repo.util.SQLRenderer;
 import org.forgerock.openidm.repo.util.StringSQLRenderer;
 
 /**
@@ -65,13 +64,13 @@ public class H2MappedTableHandler extends MappedTableHandler {
     }
 
     @Override
-    protected MappedSQLQueryFilterVisitor createFilterVisitor(MappedConfigResolver configResolver) {
-        return new MappedSQLQueryFilterVisitor(configResolver, objectMapper) {
+    protected SimpleFieldFilterVisitor createSimpleFieldVisitor(MappedColumnConfig columnConfig) {
+        return new SimpleFieldFilterVisitor(columnConfig, objectMapper) {
             @Override
-            protected StringSQLRenderer visitBooleanAssertion(NamedParameterCollector collector,
-                    MappedColumnConfig config, String operand, JsonPointer field, Object valueAssertion) {
+            protected SQLRenderer<String> visitBooleanAssertion(NamedParameterCollector collector, String operand,
+                    Object valueAssertion) {
                 String paramName = collector.register("v", valueAssertion);
-                return new StringSQLRenderer(config.columnName + " " + operand + " " + "${" + paramName + "}");
+                return new StringSQLRenderer(columnConfig.columnName + " " + operand + " " + "${" + paramName + "}");
             }
         };
     }

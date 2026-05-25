@@ -111,7 +111,7 @@ public class JDBCDataSourceService implements DataSourceService {
             final Iterable<Map.Entry<String, JsonNode>> fields = new Iterable<Map.Entry<String, JsonNode>>() {
                 @Override
                 public Iterator<Map.Entry<String, JsonNode>> iterator() {
-                    return node.fields();
+                    return node.properties().iterator();
                 }
             };
             for (Map.Entry<String, JsonNode> element : fields) {

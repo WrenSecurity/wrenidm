@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015 ForgeRock AS.
- * Portions Copyright 2024 Wren Security.
+ * Portions Copyright 2024-2026 Wren Security.
  */
 package org.forgerock.openidm.repo.jdbc.impl.vendor;
 
@@ -22,10 +22,13 @@ import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.repo.jdbc.SQLExceptionHandler;
 import org.forgerock.openidm.repo.jdbc.impl.handler.MappedColumnConfig;
-import org.forgerock.openidm.repo.jdbc.impl.handler.MappedConfigResolver;
 import org.forgerock.openidm.repo.jdbc.impl.handler.MappedTableHandler;
-import org.forgerock.openidm.repo.jdbc.impl.query.MappedSQLQueryFilterVisitor;
+import org.forgerock.openidm.repo.jdbc.impl.query.JsonFieldFilterVisitor;
+import org.forgerock.openidm.repo.jdbc.impl.query.SQLJSONUtils;
+import org.forgerock.openidm.repo.jdbc.impl.query.SQLRendererFieldFilterVisitor;
+import org.forgerock.openidm.repo.jdbc.impl.query.SimpleFieldFilterVisitor;
 import org.forgerock.openidm.repo.jdbc.impl.statement.NamedParameterCollector;
+import org.forgerock.openidm.repo.util.SQLRenderer;
 import org.forgerock.openidm.repo.util.StringSQLRenderer;
 
 /**
@@ -55,7 +58,7 @@ public class PostgreSQLMappedTableHandler extends MappedTableHandler {
                     + columnMapping.values().stream()
                             .map(config -> config.isJson() ? "?::json" : "?")
                             .collect(Collectors.joining(", "))
-                +")");
+                + ")");
         result.put(ImplicitSqlType.UPDATE,
                 "UPDATE ${_dbSchema}.${_table} "
                 + "SET "
@@ -69,15 +72,35 @@ public class PostgreSQLMappedTableHandler extends MappedTableHandler {
 
 
     @Override
-    protected MappedSQLQueryFilterVisitor createFilterVisitor(MappedConfigResolver configResolver) {
-        return new MappedSQLQueryFilterVisitor(configResolver, objectMapper) {
+    protected SimpleFieldFilterVisitor createSimpleFieldVisitor(MappedColumnConfig columnConfig) {
+        return new SimpleFieldFilterVisitor(columnConfig, objectMapper) {
             @Override
-            protected StringSQLRenderer visitBooleanAssertion(NamedParameterCollector collector,
-                    MappedColumnConfig config, String operand, JsonPointer field, Object valueAssertion) {
+            protected SQLRenderer<String> visitBooleanAssertion(NamedParameterCollector collector, String operand,
+                    Object valueAssertion) {
                 String paramName = collector.register("v", valueAssertion);
-                return new StringSQLRenderer(config.columnName + " " + operand + " " + "${" + paramName + "}");
+                return new StringSQLRenderer(columnConfig.columnName + " " + operand + " " + "${" + paramName + "}");
             }
         };
+    }
+
+    @Override
+    protected SQLRendererFieldFilterVisitor createJsonFieldVisitor(MappedColumnConfig columnConfig) {
+        return new JsonFieldFilterVisitor(columnConfig, objectMapper) {
+            @Override
+            protected SQLRenderer<String> visitJsonAssertion(NamedParameterCollector collector, String operand,
+                    JsonPointer nestedPath, Object valueAssertion) {
+                String pathExpression = SQLJSONUtils.toSqlJsonPath(nestedPath) + " " + operand + " "
+                        + toJsonValue(valueAssertion);
+                String paramName = collector.register("v", pathExpression);
+                return new StringSQLRenderer(columnConfig.columnName + "::JSONB @@ ${" + paramName + "}::JSONPATH");
+            }
+
+            @Override
+            public SQLRenderer<String> visitPresentFilter(NamedParameterCollector collector, JsonPointer field) {
+                String paramName = collector.register("v", SQLJSONUtils.toSqlJsonPath(toRelativePointer(field)));
+                return new StringSQLRenderer(columnConfig.columnName + "::JSONB @? ${" + paramName + "}::JSONPATH");
+            }
+      };
     }
 
 }

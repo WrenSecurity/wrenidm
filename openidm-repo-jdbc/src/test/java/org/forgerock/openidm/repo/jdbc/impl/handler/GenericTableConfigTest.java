@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014 ForgeRock AS.
- * Portions Copyright 2024 Wren Security
+ * Portions Copyright 2024-2026 Wren Security
  */
 package org.forgerock.openidm.repo.jdbc.impl.handler;
 
@@ -20,9 +20,9 @@ import static org.forgerock.json.JsonValue.field;
 import static org.forgerock.json.JsonValue.json;
 import static org.forgerock.json.JsonValue.object;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import org.forgerock.json.JsonPointer;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
@@ -48,16 +48,16 @@ public class GenericTableConfigTest {
         // simple property
         assertFalse(tableConfig.isSearchable(new JsonPointer("/arbitrary")));
         // map/object property
-        Assert.assertFalse(tableConfig.isSearchable(new JsonPointer("/arbitrary2/map/x")));
+        assertFalse(tableConfig.isSearchable(new JsonPointer("/arbitrary2/map/x")));
         // list/array property
-        Assert.assertFalse(tableConfig.isSearchable(new JsonPointer("/arbitrary3/list/0")));
+        assertFalse(tableConfig.isSearchable(new JsonPointer("/arbitrary3/list/0")));
 
         // simple property
-        Assert.assertTrue(tableConfig.isSearchable(new JsonPointer("/userName")));
+        assertTrue(tableConfig.isSearchable(new JsonPointer("/userName")));
         // map/object property
-        Assert.assertTrue(tableConfig.isSearchable(new JsonPointer("/addresses/home/street")));
+        assertTrue(tableConfig.isSearchable(new JsonPointer("/addresses/home/street")));
         // list/array property
-        Assert.assertTrue(tableConfig.isSearchable(new JsonPointer("/roles/3")));
+        assertTrue(tableConfig.isSearchable(new JsonPointer("/roles/3")));
     }
 
 }

@@ -11,7 +11,7 @@
  * Header, with the fields enclosed by brackets [] replaced by your own identifying
  * information: "Portions copyright [year] [name of copyright owner]".
  *
- * Copyright 2024 Wren Security
+ * Copyright 2024-2026 Wren Security
  */
 package org.forgerock.openidm.repo.jdbc.impl.handler;
 
@@ -54,6 +54,7 @@ import org.forgerock.openidm.repo.jdbc.TableHandler;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 /**
@@ -244,6 +245,7 @@ public abstract class AbstractTableHandlerTest {
                 "tags", List.of("foo", "bar"),
                 "meta", Map.of("owner", "john"));
         createResource(RESOURCE_ID, template);
+        createResource("ignored", Map.of("name", "UNIVERSE"));
 
         var result = queryResource("_id eq '" + RESOURCE_ID + "'");
         assertNotNull(result);
@@ -252,14 +254,29 @@ public abstract class AbstractTableHandlerTest {
         assertResourceValues(result.get(0), template);
     }
 
-    @Test
-    public void testQueryFilterComplex() throws Exception {
+    @DataProvider
+    public Object[] getQueryFilterComplexData() {
+        // We try to hit as many query filter processing code paths as possible
+        return new Object[][] {
+                { "name sw 'HELLO' and score eq 70 and ! visible eq false" },
+                { "_id eq 'hello' and true" },
+                { "_id eq 'hello' and ! false" },
+                { "_id eq 'hello' and ! ( name co 'BYE' )" },
+                { "_id eq 'hello' and ! ( name lt 'HELLO TO' or name gt 'HELLO TO' )" },
+                { "_id eq 'hello' and ! ( name le 'A' or name ge 'Z' )" },
+                { "_id eq 'hello' and ! ( score lt 70 or score gt 70 )" },
+                { "_id eq 'hello' and ! ( score le 8 or score ge 80 )" },
+        };
+    }
+
+    @Test(dataProvider = "getQueryFilterComplexData")
+    public void testQueryFilterComplex(String filter) throws Exception {
         createResource(RESOURCE_ID, Map.of("name", "HELLO TO", "score", 70, "visible", true));
         createResource("with-different-name", Map.of("name", "GOOD BYE", "score", 70, "visible", true));
         createResource("with-lower-score", Map.of("name", "HELLO TO", "score", 8, "visible", true));
         createResource("with-not-visible", Map.of("name", "HELLO TO", "score", 80, "visible", false));
 
-        var resultIds = queryResource("name sw 'HELLO' and score eq 70 and visible eq true").stream()
+        var resultIds = queryResource(filter).stream()
                 .map(resource -> resource.get(OBJECT_ID))
                 .collect(Collectors.toSet());
         assertEquals(resultIds, Set.of(RESOURCE_ID));
@@ -297,6 +314,37 @@ public abstract class AbstractTableHandlerTest {
         createResource(RESOURCE_ID, Map.of("name", "HELLO"));
 
         var result = queryResource("name eq 'non-existent'");
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testQueryFilterJsonList() throws Exception {
+        createResource(RESOURCE_ID, Map.of("tags", List.of("foo", "bar")));
+        createResource("ignored", Map.of("tags", List.of("bar", "baz")));
+
+        var result = queryResource("tags eq 'foo'");
+        assertEquals(result.size(), 1);
+
+        var resultIds = result.stream()
+                .map(resource -> resource.get(OBJECT_ID))
+                .collect(Collectors.toSet());
+        assertEquals(resultIds, Set.of(RESOURCE_ID));
+    }
+
+    @Test
+    public void testQueryFilterJsonMap() throws Exception {
+        createResource(RESOURCE_ID, Map.of("meta", Map.of("owner", "john")));
+        createResource("ignored", Map.of("meta", Map.of("owner", "lucy")));
+
+        var resultIds = queryResource("meta/owner eq 'john'").stream()
+                .map(resource -> resource.get(OBJECT_ID))
+                .collect(Collectors.toSet());
+        assertEquals(resultIds, Set.of(RESOURCE_ID));
+    }
+
+    @Test
+    public void testQueryFilterInvalidField() throws Exception {
+        var result = queryResource("tags/owner eq 'john'");
         assertTrue(result.isEmpty());
     }
 

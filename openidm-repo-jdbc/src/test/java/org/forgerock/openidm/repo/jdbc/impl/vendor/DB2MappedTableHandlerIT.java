@@ -11,7 +11,7 @@
  * Header, with the fields enclosed by brackets [] replaced by your own identifying
  * information: "Portions copyright [year] [name of copyright owner]".
  *
- * Copyright 2024 Wren Security
+ * Copyright 2024-2026 Wren Security
  */
 package org.forgerock.openidm.repo.jdbc.impl.vendor;
 
@@ -38,6 +38,18 @@ public class DB2MappedTableHandlerIT extends AbstractMappedTableHandlerTest {
             getCommandConfig(),
             getExceptionHandler()
         );
+    }
+
+    @Test(expectedExceptions = UnsupportedOperationException.class)
+    @Override
+    public void testQueryFilterJsonList() throws Exception {
+        queryResource("tags eq 'foo'");
+    }
+
+    @Test(expectedExceptions = UnsupportedOperationException.class)
+    @Override
+    public void testQueryFilterJsonMap() throws Exception {
+        queryResource("meta/owner eq 'john'");
     }
 
 }

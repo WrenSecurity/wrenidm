@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2018-2025 Wren Security.
+ * Portions Copyright 2018-2026 Wren Security.
  */
 package org.forgerock.openidm.repo.jdbc.impl.handler;
 
@@ -45,10 +45,13 @@ import org.forgerock.json.resource.SortKey;
 import org.forgerock.openidm.repo.jdbc.Constants;
 import org.forgerock.openidm.repo.jdbc.SQLExceptionHandler;
 import org.forgerock.openidm.repo.jdbc.impl.SQLBuilder;
+import org.forgerock.openidm.repo.jdbc.impl.handler.MappedColumnConfig.ValueType;
 import org.forgerock.openidm.repo.jdbc.impl.mapper.MappedResultMapper;
 import org.forgerock.openidm.repo.jdbc.impl.mapper.ResultMapper;
 import org.forgerock.openidm.repo.jdbc.impl.mapper.ResultMappers;
-import org.forgerock.openidm.repo.jdbc.impl.query.MappedSQLQueryFilterVisitor;
+import org.forgerock.openidm.repo.jdbc.impl.query.SQLRendererFieldFilterVisitor;
+import org.forgerock.openidm.repo.jdbc.impl.query.SQLRendererQueryFilterVisitor;
+import org.forgerock.openidm.repo.jdbc.impl.query.SimpleFieldFilterVisitor;
 import org.forgerock.openidm.repo.jdbc.impl.query.TableQueryHandler;
 import org.forgerock.openidm.repo.jdbc.impl.statement.NamedParameterCollector;
 import org.forgerock.openidm.repo.jdbc.impl.statement.NamedParameterSql;
@@ -471,14 +474,21 @@ public class MappedTableHandler extends AbstractTableHandler {
      * @return new configuration resolver instance
      */
     protected MappedConfigResolver createConfigResolver() {
-        Map<JsonPointer, MappedColumnConfig> columnConfig = columnMapping.values().stream()
+        Map<JsonPointer, MappedColumnConfig> columnConfigs = columnMapping.values().stream()
                 .collect(Collectors.toMap(value -> value.propertyName, value -> value));
         return field -> {
-            var config = columnConfig.get(field);
-            if (config == null) {
-                throw new IllegalArgumentException("Unknown object field: " + field.toString());
-            }
-            return config;
+            var columnPath = field;
+            do {
+                var config = columnConfigs.get(columnPath);
+                if (config == null) {
+                    continue;
+                }
+                if (columnPath != field && config.valueType != ValueType.JSON_MAP) {
+                    break; // only JSON_MAP can be mapped to parent path
+                }
+                return config;
+            } while ((columnPath = columnPath.parent()) != null);
+            throw new IllegalArgumentException("Unknown object field: " + field.toString());
         };
     }
 
@@ -503,13 +513,29 @@ public class MappedTableHandler extends AbstractTableHandler {
     }
 
     /**
-     * Create new {@link MappedSQLQueryFilterVisitor} to render query filter queries.
+     * Create new {@link SQLRendererQueryFilterVisitor} to render query filter queries.
      *
      * @param configResolver column configuration resolver
-     * @return new MappedSQLQueryFilterVisitor instance
+     * @return new query filter visitor instance
      */
-    protected MappedSQLQueryFilterVisitor createFilterVisitor(MappedConfigResolver configResolver) {
-        return new MappedSQLQueryFilterVisitor(configResolver, objectMapper);
+    protected SQLRendererQueryFilterVisitor createFilterVisitor(MappedConfigResolver configResolver) {
+        return new SQLRendererQueryFilterVisitor(field -> {
+            var columnConfig = configResolver.resolve(field);
+            switch (columnConfig.valueType) {
+            case JSON_LIST, JSON_MAP:
+                return createJsonFieldVisitor(columnConfig);
+            default:
+                return createSimpleFieldVisitor(columnConfig);
+            }
+        });
+    }
+
+    protected SQLRendererFieldFilterVisitor createSimpleFieldVisitor(MappedColumnConfig columnConfig) {
+        return new SimpleFieldFilterVisitor(columnConfig, objectMapper);
+    }
+
+    protected SQLRendererFieldFilterVisitor createJsonFieldVisitor(MappedColumnConfig columnConfig) {
+        throw new UnsupportedOperationException("JSON based field filtering not supported");
     }
 
     @Override
