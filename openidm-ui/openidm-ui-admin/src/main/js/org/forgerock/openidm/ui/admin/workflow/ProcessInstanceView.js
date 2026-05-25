@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2023-2025 Wren Security.
+ * Portions Copyright 2023-2026 Wren Security.
  */
 
 define([
@@ -104,27 +104,31 @@ define([
 
                         this.data.processDefinition = processDefinition.toJSON();
 
+                        const renderCallback = _.bind(function() {
+                            this.parentRender(_.bind(function() {
+                                this.buildTasksGrid();
+                                if (callback) {
+                                    callback();
+                                }
+                            }, this));
+                        }, this);
+
                         if (this.data.processDefinition.processDiagramResourceName) {
-                            this.data.showDiagram = true;
-                            if (!this.model.get("endTime")) {
-                                this.data.diagramUrl = "/openidm/workflow/processinstance/" + this.model.id + "?_fields=/diagram&_mimeType=image/png";
-                            } else {
-                                this.data.diagramUrl = "/openidm/workflow/processdefinition/" + this.data.processDefinition._id + "?_fields=/diagram&_mimeType=image/png";
-                            }
+                            const diagramSource = !this.model.get("endTime") ? this.model : processDefinition;
+                            diagramSource.fetch({ data: { _fields: "diagram" }}).then(_.bind(function() {
+                                const diagramData = diagramSource.get("/diagram");
+                                if (diagramData) {
+                                    this.data.diagramDataUri = "data:image/png;base64," + diagramData;
+                                }
+                                renderCallback();
+                            }, this));
+                        } else {
+                            renderCallback();
                         }
 
-                        this.parentRender(_.bind(function(){
+                    }, this));
 
-                            this.buildTasksGrid();
-
-                            if (callback) {
-                                callback();
-                            }
-                        },this));
-
-                    },this));
-
-                },this));
+                }, this));
             },
             buildTasksGrid: function () {
                 var processTasks = new TaskInstanceCollection(_.sortBy(this.model.attributes.tasks, "startTime").reverse()),
