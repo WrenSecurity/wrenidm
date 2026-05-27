@@ -11,7 +11,7 @@
  * Header, with the fields enclosed by brackets [] replaced by your own identifying
  * information: "Portions copyright [year] [name of copyright owner]".
  *
- * Copyright 2024 Wren Security
+ * Copyright 2024-2026 Wren Security
  */
 package org.forgerock.openidm.repo.jdbc.impl.query;
 
@@ -53,6 +53,13 @@ public class MappedSQLQueryFilterVisitor extends StringSQLQueryFilterVisitor<Nam
             return visitBooleanAssertion(collector, config, operand, field, valueAssertion);
         }
 
+        if (config.valueType == ValueType.JSON_LIST) {
+            if (!"=".equals(operand)) {
+                throw new UnsupportedOperationException("Unsupported operand '" + operand + "' for JSON_LIST column");
+            }
+            return visitJsonListAssertion(collector, config, field, valueAssertion);
+        }
+
         String paramValue;
         try {
             paramValue = valueAssertion instanceof String
@@ -87,6 +94,11 @@ public class MappedSQLQueryFilterVisitor extends StringSQLQueryFilterVisitor<Nam
                 "CAST(" + config.columnName + " AS BIT)"
                 + " " + operand + " "
                 + "${" + paramName + "}");
+    }
+
+    protected StringSQLRenderer visitJsonListAssertion(NamedParameterCollector collector, MappedColumnConfig config,
+            JsonPointer field, Object valueAssertion) {
+        throw new UnsupportedOperationException("JSON_LIST value assertion is not supported for this database");
     }
 
     @Override
