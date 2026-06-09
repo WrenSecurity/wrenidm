@@ -1,9 +1,9 @@
-FROM --platform=$BUILDPLATFORM debian:bullseye-slim AS project-build
+FROM --platform=$BUILDPLATFORM debian:trixie-slim AS project-build
 
 # Install build dependencies
 RUN \
   apt-get update && \
-  apt-get install -y --no-install-recommends openjdk-17-jdk maven unzip chromium vainfo && \
+  apt-get install -y --no-install-recommends openjdk-21-jdk maven unzip chromium vainfo && \
   # Workaround Chromium binary path for arm64 (see https://github.com/puppeteer/puppeteer/blob/v4.0.0/src/Launcher.ts#L110)
   ln -s /usr/bin/chromium /usr/bin/chromium-browser
 
@@ -30,7 +30,7 @@ RUN \
   unzip openidm-zip/target/wrenidm-$WRENIDM_VERSION.zip -d /build
 
 
-FROM eclipse-temurin:17-jdk-ubi9-minimal
+FROM eclipse-temurin:21-jdk-ubi10-minimal
 
 # Create wrenidm user
 ARG WRENIDM_UID=1000
