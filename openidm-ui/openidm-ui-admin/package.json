@@ -16,7 +16,7 @@
   "overrides": {
     "globals": "17.4.0",
     "lodash": "4.17.23",
-    "puppeteer": "24.40.0"
+    "puppeteer": "25.1.0"
   },
   "dependencies": {
     "@babel/eslint-parser": "^7.22.15",
