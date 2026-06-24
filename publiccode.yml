@@ -1,0 +1,106 @@
+publiccodeYmlVersion: "0.5.0"
+
+name: Wren:IDM
+applicationSuite: Wren Security
+url: "https://github.com/WrenSecurity/wrenidm"
+landingURL: "https://wrensecurity.org/projects/wrenidm/"
+logo: "https://wrensecurity.org/publiccode/wrenidm-logo.svg"
+roadmap: "https://github.com/WrenSecurity/wrenidm/issues"
+
+platforms:
+  - web
+
+categories:
+  - identity-management
+  - it-security
+
+organisation:
+  uri: https://orchi.tech/
+  name: Orchitech s.r.o.
+
+developmentStatus: stable
+
+softwareType: "standalone/web"
+
+description:
+  en:
+    localisedName: Wren:IDM
+    shortDescription: >
+      IDM/IGA platform for identity lifecycle management and access governance
+      with comprehensive auditability and compliance support.
+
+    longDescription: |
+      Wren:IDM is an open-source identity management and governance platform
+      from the Wren Security suite. The platform centralizes identity data,
+      governs access through policies and workflows, automates lifecycle changes
+      across connected systems, and provides full traceability for internal
+      control and compliance. Rather than imposing a rigid organizational model,
+      Wren:IDM is configuration-driven: the data model, role structure,
+      lifecycle policies, synchronization rules, and approval workflows
+      all adapt to the organization's actual environment.
+
+      **Core capabilities include:**
+
+      - **Identity lifecycle automation** — onboarding, role changes, and
+        offboarding triggered by authoritative sources; mappings propagate
+        changes to target systems synchronously or via async workflows
+      - **Role and policy management** — RBAC combined with attribute-based
+        logic; effective role assignments computed from direct assignments,
+        organizational structure, and auto-assigned provisioning policies
+      - **Workflow engine** — Flowable BPMN 2 engine supporting sequential and
+        parallel workflows, multi-level approval chains, and delegation of
+        approval tasks and work duties to designated substitutes
+      - **Reconciliation and LiveSync** — full reconciliation detects orphaned
+        accounts and attribute drift; LiveSync propagates incremental changes in
+        near real time with configurable situation-based reactions
+      - **Technical identity management** — service accounts and privileged
+        accounts managed as first-class objects with defined ownership and
+        lifecycle controls
+      - **Password management and synchronization** — centralized policy
+        enforcement, distribution across connected systems, and real-time
+        Active Directory Password Change Handler for domain password events
+      - **Connector framework (Wren:ICF)** — generic connectors for LDAP, SQL,
+        CSV, Groovy, PowerShell, SSH, and XML and a range of specific connectors
+      - **Audit logging** — structured audit records across access,
+        authentication, activity, sync, and recon categories with correlation
+        identifiers; stored in relational DB, CSV/JSON files, syslog, Splunk,
+        JMS, or Elasticsearch
+      - **Flexible data model and configuration as code** — fully configurable
+        object types, attributes, and mappings expressed as JSON files
+        deployable via git; JavaScript and Groovy scripting at extension points
+      - **Admin and self-service web UIs** — administration console for
+        platform management and a built-in self-service UI for end users
+
+      Wren:IDM scales from a lightweight identity synchronization engine — keeping
+      accounts consistent across two or three systems — to a comprehensive
+      IGA platform governing the full identity lifecycle across an entire enterprise.
+
+    documentation: "https://docs.wrensecurity.org/wrenidm/latest/index.html"
+
+    features:
+      - Identity lifecycle automated across all connected systems
+      - Access enforced through flexible RBAC and ABAC policies
+      - Orphaned accounts and drift eliminated by reconciliation and LiveSync
+      - Multi-level approval workflows with escalation and delegation
+      - Password policies enforced and credentials synchronized across systems
+      - Any directory, database, or application connected through range of Wren:ICF connectors
+      - Complete audit trail for every access and governance change
+      - Flexible data model adaptable to the organisation's structure
+      - Self-service requests and approvals
+
+legal:
+  license: CDDL-1.0
+
+maintenance:
+  type: "community"
+
+  contacts:
+    - name: Ondřej Urbánek
+      email: "ondrej.urbanek@orchitech.cz"
+      affiliation: Orchitech s.r.o.
+      phone: "+420 728 365 526"
+
+localisation:
+  localisationReady: true
+  availableLanguages:
+    - en
