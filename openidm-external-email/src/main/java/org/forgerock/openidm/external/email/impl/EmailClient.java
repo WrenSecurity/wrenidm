@@ -103,34 +103,26 @@ public class EmailClient {
         }
 
         fromAddr = config.get(CONFIG_MAIL_FROM).asString();
-        session = Session.getInstance(props);
+        session = withAngusMailClassLoader(() -> Session.getInstance(props));
     }
 
     public void send(JsonValue params) throws BadRequestException {
-        ClassLoader tccl = Thread.currentThread().getContextClassLoader();
-        try {
-            // In OSGi, MailcapCommandMap scans META-INF/mailcap resources using the thread context
-            // classloader (TCCL). The TCCL on Felix HTTP threads does not have visibility into the
-            // angus-mail bundle, so the multipart/* DataContentHandler is never registered and
-            // Transport.sendMessage() fails with UnsupportedDataTypeException. Switching TCCL to
-            // the angus-mail bundle classloader (via class SMTPTransport) lets MailcapCommandMap
-            // find the mailcap file and register the handlers before the message is written.
-            // See https://github.com/eclipse-ee4j/angus-mail/issues/148
-            Thread.currentThread().setContextClassLoader(SMTPTransport.class.getClassLoader());
-            MimeMessage message = buildMessage(applyLegacyParams(params));
-            Transport transport = session.getTransport("smtp");
-            if (smtpAuth) {
-                transport.connect(username, password);
-            } else {
-                transport.connect();
+        withAngusMailClassLoader(() -> {
+            try {
+                MimeMessage message = buildMessage(applyLegacyParams(params));
+                Transport transport = session.getTransport("smtp");
+                if (smtpAuth) {
+                    transport.connect(username, password);
+                } else {
+                    transport.connect();
+                }
+                transport.sendMessage(message, message.getAllRecipients());
+                transport.close();
+                return null;
+            } catch (MessagingException e) {
+                throw new BadRequestException(e);
             }
-            transport.sendMessage(message, message.getAllRecipients());
-            transport.close();
-        } catch (MessagingException e) {
-            throw new BadRequestException(e);
-        } finally {
-            Thread.currentThread().setContextClassLoader(tccl);
-        }
+        });
     }
 
     /**
@@ -291,6 +283,32 @@ public class EmailClient {
             result.put("text", body);
         }
         return result;
+    }
+
+    /**
+     * Runs {@code action} with the thread context classloader (TCCL) temporarily switched to the
+     * angus-mail bundle classloader.
+     *
+     * <p>In OSGi, jakarta.mail resolves several services (e.g. {@code StreamProvider} used by
+     * {@code Session}, and the {@code MailcapCommandMap} entries used by {@code Transport}) via
+     * the TCCL. The TCCL on Felix SCR/DS and HTTP threads has no visibility into the angus-mail
+     * bundle, so these lookups fail unless the TCCL is temporarily switched to a classloader that
+     * can see angus-mail.
+     * See https://github.com/eclipse-ee4j/angus-mail/issues/148
+     */
+    private static <T, E extends Exception> T withAngusMailClassLoader(ThrowingSupplier<T, E> action) throws E {
+        ClassLoader previous = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(SMTPTransport.class.getClassLoader());
+        try {
+            return action.get();
+        } finally {
+            Thread.currentThread().setContextClassLoader(previous);
+        }
+    }
+
+    @FunctionalInterface
+    private interface ThrowingSupplier<T, E extends Exception> {
+        T get() throws E;
     }
 
 }
