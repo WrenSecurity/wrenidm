@@ -5,7 +5,7 @@ on:
     types: [published]
 
 permissions:
-  content: read
+  contents: read
 
 jobs:
   push_to_registry:
