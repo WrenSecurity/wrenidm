@@ -9,7 +9,11 @@
 # Wren:IDM
 
 [![License](https://img.shields.io/badge/license-CDDL-blue.svg)](https://github.com/WrenSecurity/wrenidm/blob/main/LICENSE)
-[![Gitter](https://img.shields.io/matrix/wrensecurity_lobby%3Agitter.im?server_fqdn=matrix.org)](https://matrix.to/#/#WrenSecurity_Lobby:gitter.im)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/WrenSecurity/wrenidm/badge)](https://scorecard.dev/viewer/?uri=github.com/WrenSecurity/wrenidm)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13855/badge)](https://www.bestpractices.dev/projects/13855)
+[![OpenSSF Baseline](https://www.bestpractices.dev/projects/13855/baseline)](https://www.bestpractices.dev/projects/13855)
+[![CodeQL](https://github.com/WrenSecurity/wrenidm/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/WrenSecurity/wrenidm/actions/workflows/github-code-scanning/codeql)
+[![Quality gate status](https://sonarcloud.io/api/project_badges/measure?project=WrenSecurity_wrenidm&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=WrenSecurity_wrenidm)
 
 Wren:IDM is a community‐developed identity management system with a flexible data model, multiple extension points
 and scripting support, including JavaScript and Groovy. It can connect to and manage a wide range of systems through
