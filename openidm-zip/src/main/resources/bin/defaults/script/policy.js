@@ -179,7 +179,7 @@ policyImpl = (function (){
                 : (Array.isArray(value) || Object.prototype.toString.call(value) === "[object ScriptableList]")
                         ? "array"
                         : typeof(value);
-        if (value !== undefined && !_.contains(params.types, type)) {
+        if (value !== undefined && !_.includes(params.types, type)) {
             return [
                 {
                     "policyRequirement" : "VALID_TYPE",
@@ -710,7 +710,7 @@ policyProcessor = (function (policyConfig,policyImpl){
         });
         if (_.isObject(obj) && _.isObject(obj.schema) && _.isObject(obj.schema.properties)) {
             return _.chain(obj.schema.properties)
-                    .pairs()
+                    .toPairs()
                     .map(function (pair) {
                         var customPolicies = _.map(pair[1].policies), // will always result in a standard array
                             conditionalPoliciesx = pair[1].conditionalPolicies,
@@ -718,20 +718,20 @@ policyProcessor = (function (policyConfig,policyImpl){
                             standardPolicies = [],
                             types = [];
 
-                        if (_.contains(obj.schema.required, pair[0])) {
+                        if (_.includes(obj.schema.required, pair[0])) {
                             standardPolicies.push({
                                 "policyId" : "required"
                             });
                         }
 
-                        if ((_.isArray(pair[1].type) && !_.contains(pair[1].type, "null")) ||
+                        if ((_.isArray(pair[1].type) && !_.includes(pair[1].type, "null")) ||
                             (_.isNumber(pair[1].minLength) && pair[1].minLength > 0)) {
                             standardPolicies.push({
                                 "policyId" : "not-empty"
                             });
                         }
 
-                        if ((_.isArray(pair[1].type) && _.contains(pair[1].type, "string")) ||
+                        if ((_.isArray(pair[1].type) && _.includes(pair[1].type, "string")) ||
                             (pair[1].type === "string")) {
 
                             if (!isNaN(parseInt(pair[1].minLength))) {

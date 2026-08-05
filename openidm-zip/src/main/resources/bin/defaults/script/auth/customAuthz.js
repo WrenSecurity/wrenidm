@@ -31,7 +31,7 @@
                     return modifiedMap.component === "managed/" + object.name;
                 }).schema.properties
             )
-            .pairs()
+            .toPairs()
             .map(function (property) {
                 var propertyName = property[0],
                     propertySchema = property[1];

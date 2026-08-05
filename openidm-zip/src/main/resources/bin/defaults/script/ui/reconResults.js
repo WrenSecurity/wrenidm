@@ -92,7 +92,7 @@
                 queryFilter += buildINClause(
 
                     _(sourceSearchResults)
-                        .pluck('_id')
+                        .map('_id')
                         .map(function (id) { return source + "/" + id; })
                         .value(),
 
@@ -112,7 +112,7 @@
                 queryFilter += buildINClause(
 
                     _(targetSearchResults)
-                        .pluck('_id')
+                        .map('_id')
                         .map(function (id) { return target + "/" + id; })
                         .value(),
 

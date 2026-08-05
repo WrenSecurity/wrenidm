@@ -277,7 +277,7 @@ function getChangedValues() {
  */
 function onlyEditableManagedObjectProperties(objectName, exceptions) {
     var managedConfig = openidm.read("config/managed"),
-        managedObjectConfig = _.findWhere(managedConfig.objects, {"name": objectName});
+        managedObjectConfig = _.find(managedConfig.objects, {"name": objectName});
 
     if (!managedObjectConfig || !managedObjectConfig.schema || !managedObjectConfig.schema.properties) {
         return false;
@@ -297,7 +297,7 @@ function onlyEditableManagedObjectProperties(objectName, exceptions) {
 
 
 function reauthIfProtectedAttributeChange() {
-    if (_.any(getChangedValues(), function (attribute) {
+    if (_.some(getChangedValues(), function (attribute) {
             return _.indexOf(context.security.authorization.protectedAttributeList, attribute) !== -1;
         })) {
         // expect a 403 error to be thrown if this call is unsuccessful
