@@ -65,7 +65,15 @@
         <dependency>
             <groupId>com.github.jknack</groupId>
             <artifactId>handlebars</artifactId>
-            <version>4.3.1</version>
+            <version>4.5.4</version>
+
+            <exclusions>
+                <!-- Nashorn is only needed for JavaScript helpers, which this tool does not use -->
+                <exclusion>
+                    <groupId>org.openjdk.nashorn</groupId>
+                    <artifactId>nashorn-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
