@@ -175,7 +175,7 @@
         <openicf.dbtableconnector.version>1.5.3.1</openicf.dbtableconnector.version>
         <openicf.remoteconnectorserver.version />
         <openicf.groovyconnector.version>1.5.3.1</openicf.groovyconnector.version>
-        <openicf.sshconnector.version>1.5.3.1</openicf.sshconnector.version>
+        <openicf.sshconnector.version>1.5.3.2</openicf.sshconnector.version>
         <openicf.kerberosconnector.version>1.5.3.1</openicf.kerberosconnector.version>
         <wrenicf.ldapconnector.version>1.5.3.2</wrenicf.ldapconnector.version>
 
