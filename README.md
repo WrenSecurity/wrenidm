@@ -84,6 +84,46 @@ Built binary can be found in `${GIT_REPOSITORIES}/wrenidm/openidm-zip/target/wre
 
 You can also run Wren:IDM in a Docker container. Official Wren:IDM Docker images can be found [here](https://hub.docker.com/r/wrensecurity/wrenidm).
 
+### Software Bill of Materials (SBOM)
+
+Each release provides CycloneDX SBOMs signed as [GitHub artifact attestations](https://docs.github.com/en/actions/concepts/security/artifact-attestations). The attestations can be verified with [GitHub CLI](https://cli.github.com/). In the examples below, set `VERSION` to the release version (e.g. `export VERSION=7.2.0`).
+
+**Maven dependencies**
+
+The SBOM of the Maven dependencies (`sbom-source-deps.cdx.json`) is attached to the GitHub release and as an attestation to the binary release (`wrenidm-${VERSION}.zip`). Download the ZIP from the GitHub release, verify the attestation and save the signed SBOM with:
+
+```
+$ gh attestation verify wrenidm-${VERSION}.zip \
+    -R WrenSecurity/wrenidm \
+    --predicate-type https://cyclonedx.org/bom \
+    --format json --jq '.[0].verificationResult.statement.predicate' \
+    > sbom-source-deps.cdx.json
+```
+
+**Docker image**
+
+The SBOMs of the Docker image are attached as attestations to each platform-specific image (`linux/amd64` and `linux/arm64`). The attestations are stored in GitHub and in Docker Hub.
+
+The following example is for the `linux/amd64` image. First, get the digest of the platform-specific image:
+
+```
+$ PLATFORM_DIGEST=$(docker buildx imagetools inspect wrensecurity/wrenidm:${VERSION} --raw \
+    | jq -r '.manifests[] | select(.platform.os == "linux" and .platform.architecture == "amd64") | .digest')
+```
+
+Then verify the attestation and save the signed SBOM with:
+
+```
+$ gh attestation verify \
+    oci://docker.io/wrensecurity/wrenidm@${PLATFORM_DIGEST} \
+    -R WrenSecurity/wrenidm \
+    --predicate-type https://cyclonedx.org/bom \
+    --format json --jq '.[0].verificationResult.statement.predicate' \
+    > sbom-docker-image-amd64.cdx.json
+```
+
+The command fails if the attestation cannot be verified. Add `--bundle-from-oci` to fetch the attestation from Docker Hub instead of GitHub.
+
 ## Documentation
 
 Project documentation can be found in our documentation platform ([docs.wrensecurity.org](https://docs.wrensecurity.org/wrenidm/latest/index.html)).
