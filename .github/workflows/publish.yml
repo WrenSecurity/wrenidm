@@ -12,7 +12,7 @@ jobs:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     outputs:
-      image-digest: ${{ steps.build.outputs.digest }}
+      platform-images: ${{ steps.platform_images.outputs.images }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -47,27 +47,62 @@ jobs:
           platforms: linux/amd64,linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          sbom: true
+
+      - name: Resolve platform-specific images
+        id: platform_images
+        env:
+          IMAGE: wrensecurity/wrenidm@${{ steps.build.outputs.digest }}
+        run: |
+          images=$(docker buildx imagetools inspect "${IMAGE}" --raw | jq -ec '[
+            .manifests[] | select(.platform.os == "linux") | {
+              platform: (.platform.architecture + (if .platform.variant then "-" + .platform.variant else "" end)),
+              digest
+            }
+          ]')
+          echo "images=${images}" >> "${GITHUB_OUTPUT}"
 
   sbom_image:
-    name: Generate SBOM for Docker image
+    name: Generate and attest SBOM for Docker image (${{ matrix.platform }})
     needs: push_to_registry
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      attestations: write
+    strategy:
+      matrix:
+        include: ${{ fromJSON(needs.push_to_registry.outputs.platform-images) }}
     steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Generate SBOM
         uses: anchore/sbom-action@3ad7283483fc7af8ff2b4ea19663c2d5ca935e26 # v0.24.2
         with:
-          image: "wrensecurity/wrenidm@${{ needs.push_to_registry.outputs.image-digest }}"
+          image: wrensecurity/wrenidm@${{ matrix.digest }}
           syft-version: v1.52.0
           format: cyclonedx-json
           output-file: sbom-docker-image.cdx.json
-          artifact-name: sbom-docker-image
-          upload-artifact-retention: 90
+          upload-artifact: false
           upload-release-assets: false
 
+      - name: Attest SBOM
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          subject-name: docker.io/wrensecurity/wrenidm
+          subject-digest: ${{ matrix.digest }}
+          sbom-path: sbom-docker-image.cdx.json
+          push-to-registry: true
+
   sbom_source:
-    name: Generate SBOM for Maven dependencies
+    name: Generate and attest SBOM for Maven dependencies
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -83,11 +118,16 @@ jobs:
         run: mvn -B clean install -DskipTests
 
       - name: Generate SBOM
-        run: mvn -B org.cyclonedx:cyclonedx-maven-plugin:2.9.3:makeAggregateBom -DoutputName=sbom-source-deps -DoutputFormat=json
+        run: mvn -B org.cyclonedx:cyclonedx-maven-plugin:2.9.3:makeAggregateBom -DoutputName=sbom-source-deps.cdx -DoutputFormat=json
 
-      - name: Upload SBOM
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - name: Attest SBOM
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
         with:
-          name: sbom-source-dependencies
-          path: target/sbom-source-deps.json
-          retention-days: 90
+          subject-path: target/sbom-source-deps.cdx.json
+
+      - name: Upload SBOM to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          gh release upload "${TAG}" --clobber target/sbom-source-deps.cdx.json
