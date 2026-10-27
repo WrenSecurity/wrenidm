@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Portions copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2026 Wren Security
  */
 package org.forgerock.openidm.sync.impl;
 
@@ -98,7 +98,7 @@ public class SynchronizationService implements SingletonResourceProvider, Schedu
 
     /** Actions supported by this service. */
     public enum SyncServiceAction {
-        notifyCreate, notifyUpdate, notifyDelete, recon, performAction, getLinkedResources
+        notifyCreate, notifyUpdate, notifyDelete, recon, performAction, getLinkedResources, applyMappings
     }
 
     /** Logger */
@@ -362,6 +362,14 @@ public class SynchronizationService implements SingletonResourceProvider, Schedu
                     return newActionResponse(json(object(field("status", "OK")))).asPromise();
                 case getLinkedResources:
                     return getLinkedResources(context, resourcePath(request.getAdditionalParameter(ACTION_PARAM_RESOURCE_NAME)));
+                case applyMappings:
+                    logger.debug("Synchronization action=applyMappings, params={}", _params);
+                    ObjectMapping sourceMapping = mappings.getMapping(_params.get("mapping").required().asString());
+                    String linkQualifier = _params.get("linkQualifier").defaultTo(Link.DEFAULT_LINK_QUALIFIER).asString();
+                    JsonValue content = request.getContent();
+                    JsonValue mappedObject = sourceMapping.applyMappings(context, content.get("source").required(), content.get("oldSource"),
+                            content.get("target").defaultTo(object()), content.get("existingTarget"), linkQualifier);
+                    return newActionResponse(mappedObject).asPromise();
                 default:
                     throw new BadRequestException("Action" + request.getAction() + " is not supported.");
             }

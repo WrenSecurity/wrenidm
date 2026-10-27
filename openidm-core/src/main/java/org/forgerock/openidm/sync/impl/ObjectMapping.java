@@ -14,7 +14,7 @@
  * "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2018-2024 Wren Security.
+ * Portions Copyright 2018-2026 Wren Security.
  */
 package org.forgerock.openidm.sync.impl;
 
@@ -522,6 +522,26 @@ class ObjectMapping {
             return doSourceSync(context, resourceId, null, true, oldValue); // synchronous for now
         }
         return json(null);
+    }
+
+    /**
+     * Apply property mappings to the given source object and return the resulting target object.
+     * No synchronization is performed; this is a pure mapping evaluation for preview purposes.
+     *
+     * @param context the current request context
+     * @param source the source object to map
+     * @param oldSource the previous source object before a change, or {@code null} if not applicable
+     * @param target the starting target object, modified in place by the mapping
+     * @param existingTarget the full existing target object for reference in scripts, or {@code null}
+     * @param linkQualifier the link qualifier to use during mapping evaluation
+     * @return the target object after all property mappings have been applied
+     * @throws SynchronizationException if applying the mappings fails
+     */
+    public JsonValue applyMappings(Context context, JsonValue source, JsonValue oldSource,
+            JsonValue target, JsonValue existingTarget, String linkQualifier) throws SynchronizationException {
+        SourceSyncOperation operation = new SourceSyncOperation(this, context);
+        operation.applyMappings(context, source, oldSource, target, existingTarget, linkQualifier, null);
+        return target;
     }
 
     /**
