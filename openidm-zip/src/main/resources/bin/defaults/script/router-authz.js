@@ -20,8 +20,8 @@
  * with the fields enclosed by brackets [] replaced by
  * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
- * 
- * Portions Copyrighted 2024 Wren Security
+ *
+ * Portions Copyrighted 2024-2026 Wren Security
  */
 
 /*
@@ -283,14 +283,13 @@ function onlyEditableManagedObjectProperties(objectName, exceptions) {
         return false;
     }
 
-    return _.reduce(getChangedValues(), function (result, propertyName) {
-        return result &&
-            (
-                _.isObject(managedObjectConfig.schema.properties[propertyName]) &&
-                managedObjectConfig.schema.properties[propertyName].userEditable === true
-            )
-            || _.indexOf(exceptions, propertyName) > -1;
-    }, true);
+    return _.every(getChangedValues(), function (propertyName) {
+        return (
+            _.isObject(managedObjectConfig.schema.properties[propertyName]) &&
+            managedObjectConfig.schema.properties[propertyName].userEditable === true
+        )
+        || _.indexOf(exceptions, propertyName) > -1;
+    });
 
 }
 
