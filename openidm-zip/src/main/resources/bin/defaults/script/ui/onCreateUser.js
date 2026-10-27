@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2026 Wren Security.
  */
 
 (function () {
@@ -50,20 +51,32 @@
      * @param object managed user
      */
     exports.createIdpRelationships = function (object) {
-        // if managed object contains identity provider data
-        if (object.idpData) {
-            object.idps = Object.keys(object.idpData).filter(function (provider) {
-                // filter on which identity providers have been enabled
-                return object.idpData[provider].enabled !== false;
-            }).map(function (provider) {
-                // creates an entry in managed/idpData, returns entry ref to be associated with a managed user
-                // so that the relationship can be created
-                openidm.create("managed/" + provider, object.idpData[provider].subject, object.idpData[provider].rawProfile);
-                return {
-                    _ref: "managed/" + provider + "/" + object.idpData[provider].subject
-                };
-            });
+        // nothing to do if the managed object contains no identity provider data
+        if (!object.idpData) {
+            return;
         }
+
+        const configuredProviders = (() => {
+            try {
+                return openidm.read('identityProviders');
+            } catch (e) {
+                return null;
+            }
+        })();
+        const enabledProviderNames = (configuredProviders && configuredProviders.providers)
+            ? configuredProviders.providers.map(provider => provider.name) : [];
+
+        object.idps = Object.keys(object.idpData).filter(function (provider) {
+            // filter on which identity providers have been enabled
+            return object.idpData[provider].enabled !== false && enabledProviderNames.includes(provider);
+        }).map(function (provider) {
+            // creates an entry in managed/idpData, returns entry ref to be associated with a managed user
+            // so that the relationship can be created
+            openidm.create("managed/" + provider, object.idpData[provider].subject, object.idpData[provider].rawProfile);
+            return {
+                _ref: "managed/" + provider + "/" + object.idpData[provider].subject
+            };
+        });
     };
 
 }());
