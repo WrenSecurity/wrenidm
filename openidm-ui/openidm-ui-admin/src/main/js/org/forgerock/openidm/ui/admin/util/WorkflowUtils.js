@@ -61,12 +61,12 @@ define([
                         options: candidateUsers,
                         render: {
                             item: function (item, escape) {
-                                return '<div class="item">' + item.givenName + ' ' + item.sn +
-                                       '<br/> <span class="text-muted">' + item.userName + '</span></div>';
+                                return '<div class="item">' + escape(item.givenName) + ' ' + escape(item.sn) +
+                                       '<br/> <span class="text-muted">' + escape(item.userName) + '</span></div>';
                             },
                             option: function (item, escape) {
-                                return '<div class="option">' + item.givenName + ' ' + item.sn +
-                                       '<br/> <span class="text-muted">' + item.userName + '</span></div>';
+                                return '<div class="option">' + escape(item.givenName) + ' ' + escape(item.sn) +
+                                       '<br/> <span class="text-muted">' + escape(item.userName) + '</span></div>';
                             }
                         },
                         load: _.bind(function(query, callback) {
