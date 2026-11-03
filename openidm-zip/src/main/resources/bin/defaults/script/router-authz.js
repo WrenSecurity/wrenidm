@@ -203,41 +203,58 @@ function ownDataOnly() {
 }
 
 /**
+ * Removes leading slashes from a jsonpointer field specification
+ * and returns only the first path item in the jsonpointer path.
+ */
+function getTopLevelField(pointer) {
+    return String(pointer).replace(/^\//, "").split("/")[0];
+}
+
+/**
+ * Returns the patch operations of the given request, or null if the request is not a patch.
+ */
+function getPatchOperations(request) {
+    if (request.method === "patch") {
+        return request.patchOperations;
+    } else if (request.method === "action" && request.action === "patch") {
+        return request.content;
+    }
+    return null;
+}
+
+/**
+ * Returns the top-level fields touched by the given patch operations: the target field of each
+ * operation and, for copy and move operations, also the source ("from") field.
+ */
+function getPatchFields(patchOps) {
+    return _(patchOps)
+        .flatMap(patchOp => _.compact([patchOp.field, patchOp.from]))
+        .map(getTopLevelField)
+        .value();
+}
+
+/**
  * Look through the whole patchOperation set and return false if any
  * field in the set refers to something other than those provided in the argument
  * @param {Array} allowedFields - The list of fields which the patch operations are allowed to target
  * @returns {Boolean}
  */
 function restrictPatchToFields(allowedFields) {
-    var patchOps;
-
-    if (request.method === "patch") {
-        patchOps = request.patchOperations;
-    } else if (request.method === "action" && request.action === "patch") {
-        patchOps = request.content;
-    } else {
+    const patchOps = getPatchOperations(request);
+    if (!patchOps) {
         return false;
     }
-
-    return _.reduce(patchOps, function (result, patchOp) {
-        // removes leading slashses from jsonpointer field specifications,
-        // and only considers the first path item in the jsonpointer path
-        var simpleField = patchOp.field.replace(/^\//, '').split("/")[0];
-        return result && (_.indexOf(allowedFields, simpleField) !== -1);
-    }, true);
+    return _.every(getPatchFields(patchOps), field => _.includes(allowedFields, field));
 }
 
 /**
     Returns a list of fields which have been changed as part of this current request
 */
-
 function getChangedValues() {
     var currentObject,
+        patchOps = getPatchOperations(request),
         JsonPatch = org.forgerock.json.JsonPatch,
-        JsonValue = org.forgerock.json.JsonValue,
-        simplePatchField = function (field) {
-            return field.replace(/^\//, '').split("/")[0];
-        };
+        JsonValue = org.forgerock.json.JsonValue;
 
     if (request.method === "create") {
         // all supplied fields are considered "changed" during a create
@@ -252,18 +269,27 @@ function getChangedValues() {
                 JsonValue(currentObject[propertyName])
             ).asList().size() !== 0;
         });
-    } else if (request.method === "patch") {
+    } else if (patchOps) {
         // every field that is supplied as a patch operation is considered "changed"
-        return _.map(request.patchOperations, function (patchOp) {
-            return simplePatchField(patchOp.field);
-        });
-    } else if (request.method === "action" && request.action === "patch") {
-        return _.map(request.content, function (patchOp) {
-            return simplePatchField(patchOp.field);
-        });
+        return getPatchFields(patchOps);
     } else {
         return [];
     }
+}
+
+/**
+ * Ensure that no patch operation of the given request copies or moves a value out of
+ * a private property, as that would expose its (decrypted) value.
+ * @param {Object} request - the request to inspect
+ * @param {Object} properties - the schema properties of the managed object
+ * @returns {Boolean} false if a copy or move operation reads from a private property, true otherwise
+ */
+function checkPrivateFieldPatchOp(request, properties) {
+    return !_(getPatchOperations(request))
+        .map("from")
+        .compact()
+        .map(getTopLevelField)
+        .some(field => _.get(properties, [field, "scope"]) === "private");
 }
 
 /**
@@ -280,6 +306,10 @@ function onlyEditableManagedObjectProperties(objectName, exceptions) {
         managedObjectConfig = _.find(managedConfig.objects, {"name": objectName});
 
     if (!managedObjectConfig || !managedObjectConfig.schema || !managedObjectConfig.schema.properties) {
+        return false;
+    }
+
+    if (!checkPrivateFieldPatchOp(request, managedObjectConfig.schema.properties)) {
         return false;
     }
 
