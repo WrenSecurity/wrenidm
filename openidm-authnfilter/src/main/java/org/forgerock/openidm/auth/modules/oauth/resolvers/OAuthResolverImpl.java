@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2026 Wren Security.
  */
 package org.forgerock.openidm.auth.modules.oauth.resolvers;
 
@@ -26,11 +27,12 @@ import org.forgerock.http.protocol.Request;
 import org.forgerock.http.protocol.Response;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.auth.modules.oauth.exceptions.OAuthVerificationException;
-import org.forgerock.util.Function;
-import org.forgerock.util.promise.NeverThrowsException;
 
 /**
  * Implementation for OAuth 2.0 resolvers.
+ *
+ * <p>A single instance is shared by all requests for the given identity provider, so it must not
+ * hold any per-request state.
  */
 public class OAuthResolverImpl implements OAuthResolver {
 
@@ -38,8 +40,6 @@ public class OAuthResolverImpl implements OAuthResolver {
     private final Client httpClient;
     private final String resolver;
     private final String subjectKey;
-
-    private String subject;
 
     public OAuthResolverImpl(final String resolver, final JsonValue resolverConfig, final Client httpClient) {
         this.config = resolverConfig;
@@ -58,22 +58,17 @@ public class OAuthResolverImpl implements OAuthResolver {
      * if there is an account associated with that subject.
      *
      * @param accessToken access token to verify.
+     * @return the subject extracted from the user profile
      * @throws OAuthVerificationException if the accessToken is unable to be verified
      */
     @Override
-    public void validateIdentity(final String accessToken) throws OAuthVerificationException {
-        final JsonValue response = sendGetRequest(
-                URI.create(config.get(USER_INFO_ENDPOINT).asString()), accessToken);
-        if (response.get(this.subjectKey) != null) {
-            this.subject = response.get(this.subjectKey).asString();
-        } else {
+    public String validateIdentity(final String accessToken) throws OAuthVerificationException {
+        final JsonValue profile = sendGetRequest(URI.create(config.get(USER_INFO_ENDPOINT).asString()), accessToken);
+        final JsonValue subject = profile.isMap() ? profile.get(subjectKey) : null;
+        if (subject == null || !subject.isString() || subject.asString().isEmpty()) {
             throw new OAuthVerificationException("Unable to validate identity.");
         }
-    }
-
-    @Override
-    public String getSubject() {
-        return this.subject;
+        return subject.asString();
     }
 
     @Override
@@ -81,31 +76,18 @@ public class OAuthResolverImpl implements OAuthResolver {
         return this.resolver;
     }
 
-    private JsonValue sendGetRequest(URI uri, String access_token) {
+    private JsonValue sendGetRequest(final URI uri, final String accessToken) throws OAuthVerificationException {
         final Request request = new Request()
                 .setMethod("GET")
                 .setUri(uri);
-        request.getHeaders().put(new GenericHeader("Authorization", "Bearer " + access_token));
-        return httpClient
-                .send(request)
-                .then(
-                        new Function<Response, JsonValue, NeverThrowsException>() {
-                            @Override
-                            public JsonValue apply(Response response) {
-                                try {
-                                    return json(response.getEntity().getJson());
-                                } catch (IOException e) {
-                                    throw new IllegalStateException("Unable to perform request", e);
-                                }
-                            }
-                        },
-                        new Function<NeverThrowsException, JsonValue, NeverThrowsException>() {
-                            @Override
-                            public JsonValue apply(NeverThrowsException e) {
-                                // return null on Exceptions
-                                return null;
-                            }
-                        })
-                .getOrThrowUninterruptibly();
+        request.getHeaders().put(new GenericHeader("Authorization", "Bearer " + accessToken));
+        try (Response response = httpClient.send(request).getOrThrowUninterruptibly()) {
+            if (!response.getStatus().isSuccessful()) {
+                throw new OAuthVerificationException("User info request failed with status " + response.getStatus().getCode());
+            }
+            return json(response.getEntity().getJson());
+        } catch (IOException e) {
+            throw new OAuthVerificationException("Unable to read user info response", e);
+        }
     }
 }
