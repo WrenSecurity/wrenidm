@@ -317,8 +317,8 @@ var httpAccessConfig =
         {
             "pattern"   : "workflow/processdefinition/*",
             "roles"     : "openidm-authorized",
-            "methods"   : "*",
-            "actions"   : "read",
+            "methods"   : "read",
+            "actions"   : "",
             "customAuthz": "isOneOfMyWorkflows()"
         },
         // Clients authenticated via SSL mutual authentication
