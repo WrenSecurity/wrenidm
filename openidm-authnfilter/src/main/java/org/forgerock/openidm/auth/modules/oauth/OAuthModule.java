@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2018-2020 Wren Security.
+ * Portions Copyright 2018-2026 Wren Security.
  */
 
 package org.forgerock.openidm.auth.modules.oauth;
@@ -163,9 +163,9 @@ public class OAuthModule implements AsyncServerAuthModule {
 
         try {
             // validate the access token against the Idp
-            resolver.validateIdentity(access_token);
+            final String subject = resolver.validateIdentity(access_token);
             callbackHandler.handle(new Callback[]{
-                    new CallerPrincipalCallback(clientSubject, resolver.getSubject())
+                    new CallerPrincipalCallback(clientSubject, subject)
             });
 
         } catch (OAuthVerificationException e) {

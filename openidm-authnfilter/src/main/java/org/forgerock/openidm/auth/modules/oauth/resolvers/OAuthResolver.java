@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2026 Wren Security.
  */
 package org.forgerock.openidm.auth.modules.oauth.resolvers;
 
@@ -45,16 +46,10 @@ public interface OAuthResolver {
      * Validates the supplied access token against an identity provider(Idp).
      *
      * @param accessToken access token to verify
+     * @return the subject used to link the identity provider account to known account information
      * @throws OAuthVerificationException if the accessToken is unable to be verified
      */
-    void validateIdentity(final String accessToken) throws OAuthVerificationException;
-
-    /**
-     * Returns the subject used to link the identity provider account to known account information.
-     *
-     * @return the subject which to associate the user to
-     */
-    String getSubject();
+    String validateIdentity(final String accessToken) throws OAuthVerificationException;
 
     /**
      * Returns identity provider for which this resolver will resolve identities.
