@@ -319,7 +319,7 @@ define([
             }
 
             if (id && newAssignee !== assignee) {
-                workflowManager.assignTaskToUser(id, newAssignee, _.bind(function() {
+                workflowManager.assignTaskToUser(id, newAssignee === "null" ? null : newAssignee, _.bind(function() {
                     $(event.target).parent().parent().find("input[name=assignedUser]").val(newAssignee);
                     eventManager.sendEvent("refreshMyTasksMenu");
                 }, this), function() {
