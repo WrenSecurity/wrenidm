@@ -163,11 +163,11 @@ function isProcessOnUsersList(processFilter) {
 }
 
 function isAllowedToStartProcess() {
-    var processDefinitionId = request.content._processDefinitionId;
-    var key = request.content._key;
-    return isProcessOnUsersList(function (process) {
-        return (process._id === processDefinitionId) || (process.key === key);
-    });
+    const processDefinitionId = request.content._processDefinitionId;
+    const key = request.content._key;
+    return isProcessOnUsersList(processDefinitionId != null
+        ? process => process._id === processDefinitionId
+        : process => process.key === key);
 }
 
 function isOneOfMyWorkflows() {
