@@ -98,7 +98,7 @@ define([
                                     className += " unassigned";
                                 }
 
-                                html = '<a class="' + className + '" data-id="' + this.model.id + '">' + username + '</a>';
+                                html = '<a class="' + className + '" data-id="' + this.model.id + '">' + _.escape(username) + '</a>';
 
                                 this.$el.html(html);
 

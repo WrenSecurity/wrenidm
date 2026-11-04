@@ -135,6 +135,11 @@ function isUserCandidateForTask(taskInstanceId) {
     return tasks.length > 0;
 }
 
+/**
+ * Allows access to tasks the user is a candidate for or assigned to. Updates can only change the assignee:
+ * users can claim the task for themselves or return it to the queue, administrators and task managers
+ * can also assign it to other users.
+ */
 function canUpdateTask() {
     const taskInstanceId = request.resourcePath.split("/")[2];
     const params = {
@@ -143,7 +148,20 @@ function canUpdateTask() {
             "taskCandidateOrAssigned": context.security.authenticationId
     }
     const tasks = openidm.query("workflow/taskinstance", params).result;
-    return tasks.length > 0;
+    if (tasks.length === 0) {
+        return false;
+    }
+    if (request.method !== "update") {
+        return true;
+    }
+    // Check request content
+    const fields = Object.keys(request.content);
+    if (fields.length !== 1 || fields[0] !== "assignee") {
+        return false;
+    }
+    // Check assignee change
+    return request.content.assignee === null || request.content.assignee === context.security.authenticationId
+            || _.some(context.security.authorization.roles, role => role === "openidm-admin" || role === "openidm-tasks-manager");
 }
 
 function isProcessOnUsersList(processFilter) {
