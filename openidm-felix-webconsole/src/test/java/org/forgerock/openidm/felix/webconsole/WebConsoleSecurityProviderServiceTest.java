@@ -71,7 +71,7 @@ public class WebConsoleSecurityProviderServiceTest {
             throws IOException {
         // given
         final WebConsoleSecurityProviderService webConsoleSecurityProviderService =
-                createWebConsoleSecurityProviderService(CORRECT_PASSWORD);
+                createWebConsoleSecurityProviderService(getConfiguration(FELIX_WEBCONSOLE_JSON_CONFIG));
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
         String authHeader = "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
@@ -88,17 +88,50 @@ public class WebConsoleSecurityProviderServiceTest {
         }
     }
 
-    private WebConsoleSecurityProviderService createWebConsoleSecurityProviderService(final String password)
+    @DataProvider(name = "unsetPasswordData")
+    public Object[][] unsetPasswordData() {
+        return new Object[][] {
+                { null, "" },
+                { null, "admin" },
+                { "", "" },
+                { "", "admin" }
+        };
+    }
+
+    @Test(dataProvider = "unsetPasswordData")
+    public void testLoginNotPossibleWithoutConfiguredPassword(String configuredPassword, String attemptedPassword)
             throws IOException {
+        // given
+        final JsonValue config = getConfiguration(FELIX_WEBCONSOLE_JSON_CONFIG);
+        config.remove("password");
+        if (configuredPassword != null) {
+            config.put("password", configuredPassword);
+        }
+        final WebConsoleSecurityProviderService webConsoleSecurityProviderService =
+                createWebConsoleSecurityProviderService(config);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        String authHeader = "Basic " + Base64.getEncoder().encodeToString(
+                (CORRECT_USERNAME + ":" + attemptedPassword).getBytes());
+        when(request.getHeader(eq("Authorization"))).thenReturn(authHeader);
+
+        // when
+        final Object user = webConsoleSecurityProviderService.authenticate(request, response);
+
+        // then
+        assertThat(user).isNull();
+    }
+
+    private WebConsoleSecurityProviderService createWebConsoleSecurityProviderService(final JsonValue config) {
         final WebConsoleSecurityProviderService webConsoleSecurityProviderService =
                 new WebConsoleSecurityProviderService();
         final JSONEnhancedConfig jsonEnhancedConfig = mock(JSONEnhancedConfig.class);
         final CryptoService cryptoService = mock(CryptoService.class);
         ComponentContext context = mock(ComponentContext.class);
-        when(cryptoService.decryptIfNecessary(any(JsonValue.class))).thenReturn(json(password));
+        when(cryptoService.decryptIfNecessary(any(JsonValue.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(context.getProperties()).thenReturn(new Hashtable<String, Object>());
         when(jsonEnhancedConfig.getConfiguration(ArgumentMatchers.<Hashtable<String, Object>>any(), ArgumentMatchers.<String>any(), anyBoolean()))
-                .thenReturn(getConfiguration(FELIX_WEBCONSOLE_JSON_CONFIG));
+                .thenReturn(config);
         webConsoleSecurityProviderService.bindCryptoService(cryptoService);
         webConsoleSecurityProviderService.bindEnhancedConfig(jsonEnhancedConfig);
         webConsoleSecurityProviderService.activate(context);

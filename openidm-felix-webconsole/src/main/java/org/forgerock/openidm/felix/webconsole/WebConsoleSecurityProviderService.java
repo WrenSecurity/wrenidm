@@ -23,6 +23,7 @@ import static org.forgerock.json.JsonValue.object;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Dictionary;
 import org.apache.felix.webconsole.spi.SecurityProvider;
@@ -42,6 +43,9 @@ import org.osgi.service.component.propertytypes.ServiceVendor;
 
 /**
  * Creates a SecurityProvider service that the felix web console will use to delegate authentication attempts.
+ * <p>
+ * If no password is configured, a random password is generated and never revealed, so nobody can log in to the
+ * web console until a password is set in the configuration.
  */
 @Component(
         name = WebConsoleSecurityProviderService.PID,
@@ -83,6 +87,11 @@ public class WebConsoleSecurityProviderService implements SecurityProvider {
         final JsonValue config = enhancedConfig.getConfiguration(dict, servicePid, false);
         userId = config.get(USER_NAME).asString();
         password = config.get(PASSWORD);
+        if (password.isNull() || cryptoService.decryptIfNecessary(password).asString().isEmpty()) {
+            final byte[] randomBytes = new byte[32];
+            new SecureRandom().nextBytes(randomBytes);
+            password = new JsonValue(Base64.getEncoder().encodeToString(randomBytes));
+        }
     }
 
     // TODO Enhance this to use CAF?
