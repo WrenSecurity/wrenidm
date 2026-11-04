@@ -23,39 +23,50 @@ import static org.forgerock.json.JsonValue.object;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Dictionary;
+import java.util.Hashtable;
 import org.apache.felix.webconsole.spi.SecurityProvider;
 import org.forgerock.json.JsonValue;
 import org.forgerock.openidm.config.enhanced.EnhancedConfig;
 import org.forgerock.openidm.core.ServerConstants;
 import org.forgerock.openidm.crypto.CryptoService;
 import org.osgi.framework.Constants;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.propertytypes.ServiceDescription;
 import org.osgi.service.component.propertytypes.ServiceVendor;
 
 /**
- * Creates a SecurityProvider service that the felix web console will use to delegate authentication attempts.
+ * Security provider the Felix web console delegates authentication to.
  * <p>
- * If no password is configured, a random password is generated and never revealed, so nobody can log in to the
- * web console until a password is set in the configuration.
+ * The web console is disabled unless the configuration sets {@code "enabled" : true}. Only an enabled provider is
+ * registered with the identifier {@value #SECURITY_PROVIDER_ID} that the framework property
+ * {@code felix.webconsole.security.providers} requires, so a disabled web console is not registered at all. Without
+ * that framework property, a disabled provider still takes precedence over the built-in Felix provider and rejects
+ * all requests with {@code 404 Not Found}.
  */
 @Component(
         name = WebConsoleSecurityProviderService.PID,
         immediate = true,
+        service = {},
         configurationPolicy = ConfigurationPolicy.REQUIRE)
 @ServiceVendor(ServerConstants.SERVER_VENDOR_NAME)
 @ServiceDescription("OpenIDM Felix Web Console Security Provider")
 public class WebConsoleSecurityProviderService implements SecurityProvider {
 
     public static final String PID = "org.forgerock.openidm.felix.webconsole";
+    /** Service property identifying a web console security provider */
+    public static final String SECURITY_PROVIDER_ID_PROPERTY = "webconsole.security.provider.id";
+    /** Identifier of this security provider */
+    public static final String SECURITY_PROVIDER_ID = "wrenidm";
+    private static final String ENABLED = "enabled";
     private static final String USER_NAME = "username";
     private static final String PASSWORD = "password";
     private static final String AUTHENTICATED = "authenticated";
@@ -70,6 +81,8 @@ public class WebConsoleSecurityProviderService implements SecurityProvider {
 
     private String userId;
     private JsonValue password;
+    private volatile boolean enabled;
+    private ServiceRegistration<SecurityProvider> registration;
 
     void bindEnhancedConfig(EnhancedConfig enhancedConfig) {
         this.enhancedConfig = enhancedConfig;
@@ -87,16 +100,36 @@ public class WebConsoleSecurityProviderService implements SecurityProvider {
         final JsonValue config = enhancedConfig.getConfiguration(dict, servicePid, false);
         userId = config.get(USER_NAME).asString();
         password = config.get(PASSWORD);
-        if (password.isNull() || cryptoService.decryptIfNecessary(password).asString().isEmpty()) {
-            final byte[] randomBytes = new byte[32];
-            new SecureRandom().nextBytes(randomBytes);
-            password = new JsonValue(Base64.getEncoder().encodeToString(randomBytes));
+        enabled = config.get(ENABLED).defaultTo(false).asBoolean();
+
+        final Dictionary<String, Object> properties = new Hashtable<>();
+        properties.put(Constants.SERVICE_VENDOR, ServerConstants.SERVER_VENDOR_NAME);
+        if (enabled) {
+            properties.put(SECURITY_PROVIDER_ID_PROPERTY, SECURITY_PROVIDER_ID);
+        }
+        registration = context.getBundleContext().registerService(SecurityProvider.class, this, properties);
+    }
+
+    @Deactivate
+    public void deactivate(ComponentContext context) {
+        enabled = false;
+        if (registration != null) {
+            registration.unregister();
+            registration = null;
         }
     }
 
     // TODO Enhance this to use CAF?
     @Override
     public Object authenticate(final HttpServletRequest request, final HttpServletResponse response) {
+        if (!enabled) {
+            try {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            } catch (IOException e) {
+                // Ignore - response already committed or connection closed
+            }
+            return null;
+        }
         String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith(BASIC_AUTHORIZATION_HEADER_PREFIX)) {
             String[] credentials = new String(Base64.getDecoder().decode(authHeader.substring(
@@ -123,8 +156,8 @@ public class WebConsoleSecurityProviderService implements SecurityProvider {
 
     @Override
     public boolean authorize(final Object user, final String role) {
-        // accept all roles
-        return true;
+        // accept all roles while the web console is enabled
+        return enabled;
     }
 
     @Override
