@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2026 Wren Security.
  */
 package org.forgerock.openidm.config.installer;
 
@@ -89,7 +90,7 @@ public class JSONConfigInstaller implements ArtifactInstaller, ConfigurationList
         if (this.configAdmin != null) {
             logger.debug("Starting JSON configuration listener");
         } else {
-            logger.debug("ConfigAdmin is not yet available for JSON configuration listener, " 
+            logger.debug("ConfigAdmin is not yet available for JSON configuration listener, "
                     + " will not handle JSON configuration files until it is available.");
         }
     }
@@ -98,7 +99,7 @@ public class JSONConfigInstaller implements ArtifactInstaller, ConfigurationList
     public void stop(BundleContext ctx) {
         this.context = null;
         this.configAdmin = null;
-        logger.debug("Stopped JSON configuration listener");        
+        logger.debug("Stopped JSON configuration listener");
     }
 
     public boolean canHandle(File artifact) {
@@ -138,11 +139,8 @@ public class JSONConfigInstaller implements ArtifactInstaller, ConfigurationList
                 configurationEvent, configurationEvent.getPid(), configurationEvent.getFactoryPid(),
                 configurationEvent.getType());
         // Check if writing back configurations has been disabled.
-        Object obj = this.context.getProperty(DirectoryWatcher.DISABLE_CONFIG_SAVE);
-        if (obj != null) {
-            obj = Boolean.valueOf((String) obj);
-        }
-        if (Boolean.FALSE.equals(obj)) {
+        String enableConfigSave = this.context.getProperty(DirectoryWatcher.ENABLE_CONFIG_SAVE);
+        if (enableConfigSave != null && !Boolean.parseBoolean(enableConfigSave)) {
             return;
         }
 
@@ -176,7 +174,7 @@ public class JSONConfigInstaller implements ArtifactInstaller, ConfigurationList
                                     + " factory pid: {} assigned pid {}", factoryPid, pid);
                             return;
                         }
-                        fileName = toConfigKey(new File(confDir, unqualifiedFactoryPid + "-" + alias + 
+                        fileName = toConfigKey(new File(confDir, unqualifiedFactoryPid + "-" + alias +
                                 ConfigBootstrapHelper.JSON_CONFIG_FILE_EXT));
                     } else {
                         fileName = toConfigKey(new File(confDir, unqualified + ConfigBootstrapHelper.JSON_CONFIG_FILE_EXT));
@@ -204,7 +202,7 @@ public class JSONConfigInstaller implements ArtifactInstaller, ConfigurationList
                                 String jsonConfig = "";
                                 Object entry = dict.get(JSON_CONFIG_PROPERTY);
                                 if (entry != null) {
-                                    jsonConfig = entry.toString(); 
+                                    jsonConfig = entry.toString();
                                 }
                                 try (Writer writer = new OutputStreamWriter(new FileOutputStream(file), fileEncoding)) {
                                     writer.write(jsonConfig);
@@ -264,11 +262,11 @@ public class JSONConfigInstaller implements ArtifactInstaller, ConfigurationList
     }
 
     /**
-     * Load the specified configuration file as hashtable. 
-     * 
+     * Load the specified configuration file as hashtable.
+     *
      * May also be called by other clients that want direct access to a given configuration file
      * without going through the configuration admin service.
-     * 
+     *
      * @param f
      * @return
      * @throws java.io.IOException
@@ -399,7 +397,7 @@ public class JSONConfigInstaller implements ArtifactInstaller, ConfigurationList
     /**
      * Whether the JSON configuration is the same
      * Ignores meta-data such as whether factory pid has been assigned yet
-     * 
+     *
      * @param newCfg
      * @param oldCfg
      * @param strict Whether to compare the _id and _rev attributes
@@ -409,7 +407,7 @@ public class JSONConfigInstaller implements ArtifactInstaller, ConfigurationList
         if (newCfg == null || oldCfg == null) {
             return oldCfg == newCfg;
         }
-        
+
         Dictionary<String, Object> newCompare = new Hashtable<>(new DictionaryAsMap<>(newCfg));
         String newPropVal = (String)newCompare.get(JSONEnhancedConfig.JSON_CONFIG_PROPERTY);
         JsonValue newJsonConfig = JsonUtil.parseStringified(newPropVal);
@@ -417,7 +415,7 @@ public class JSONConfigInstaller implements ArtifactInstaller, ConfigurationList
         Dictionary<String, Object> oldCompare = new Hashtable<>(new DictionaryAsMap<>(oldCfg));
         String oldPropVal = (String)oldCompare.get(JSONEnhancedConfig.JSON_CONFIG_PROPERTY);
         JsonValue oldJsonConfig = JsonUtil.parseStringified(oldPropVal);
-        
+
         if (!strict) {
             // Remove the '_id' and '_rev' attributes if present
             newJsonConfig.remove(ResourceResponse.FIELD_CONTENT_ID);
@@ -425,7 +423,7 @@ public class JSONConfigInstaller implements ArtifactInstaller, ConfigurationList
             oldJsonConfig.remove(ResourceResponse.FIELD_CONTENT_ID);
             oldJsonConfig.remove(ResourceResponse.FIELD_CONTENT_REVISION);
         }
-        
+
         return oldJsonConfig.isEqualTo(newJsonConfig);
     }
 
