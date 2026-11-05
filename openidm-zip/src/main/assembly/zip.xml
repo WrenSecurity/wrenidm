@@ -107,7 +107,6 @@
                 <exclude>org.osgi:osgi.cmpn</exclude>
                 <exclude>org.wrensecurity.wrends:opendj-core</exclude>
                 <exclude>org.wrensecurity.wrenicf.connectors:*</exclude>
-                <exclude>org.wrensecurity.wrenidm:openidm-launcher</exclude>
                 <exclude>org.wrensecurity.wrenidm:openidm-shell</exclude>
                 <exclude>org.wrensecurity.wrenidm.tools:custom-scripted-connector-bundler</exclude>
             </excludes>

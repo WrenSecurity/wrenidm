@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2013 ForgeRock AS.
- * Portions Copyright 2020-2024 Wren Security.
+ * Portions Copyright 2020-2026 Wren Security.
  */
 package org.forgerock.commons.launcher;
 
@@ -130,7 +130,6 @@ public class OSGiFrameworkServiceTest {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void parserTestOk() throws Exception {
         OSGiFrameworkService testable = new OSGiFrameworkService();

@@ -12,13 +12,16 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2012-2013 ForgeRock AS.
- * Portions Copyright 2020-2024 Wren Security.
+ * Portions Copyright 2020-2026 Wren Security.
  */
 package org.forgerock.commons.launcher;
 
 import static org.kohsuke.args4j.ExampleMode.ALL;
 import static org.kohsuke.args4j.ExampleMode.REQUIRED;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.Strictness;
+import com.google.gson.ToNumberPolicy;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,7 +48,6 @@ import java.util.regex.Pattern;
 import org.forgerock.commons.launcher.support.DirectoryScanner;
 import org.forgerock.json.JsonValue;
 import org.forgerock.json.JsonValueTraverseFunction;
-import org.json.simple.parser.JSONParser;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -109,7 +111,7 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
     private String configFile;
 
     @Option(name = "-P", usage = "custom parameters to configure the container", metaVar = "attribute=value")
-    private Map bootParameters;
+    private Map<String, Object> bootParameters;
 
     // receives other command line parameters than options
     // Disallow other arguments https://bugster.forgerock.org/jira/browse/OPENIDM-1021
@@ -227,11 +229,11 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
         this.storageDir = storageDir;
     }
 
-    public Map getBootParameters() {
+    public Map<String, Object> getBootParameters() {
         return bootParameters;
     }
 
-    public void setBootParameters(Map bootParameters) {
+    public void setBootParameters(Map<String, Object> bootParameters) {
         this.bootParameters = bootParameters;
     }
 
@@ -333,7 +335,14 @@ public class OSGiFrameworkService extends AbstractOSGiFrameworkService {
                                     + Main.class.getResource("/").toString() + "/launcher.json");
                 }
             }
-            launcherConfiguration = transformer.apply(new JsonValue((new JSONParser()).parse(input)));
+            Object config = new GsonBuilder()
+                    // Reject non-standard JSON (comments, unquoted names, single quotes, ...)
+                    .setStrictness(Strictness.STRICT)
+                    // Parse integral numbers as Long and others as Double (Gson's default is Double for all numbers)
+                    .setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
+                    .create()
+                    .fromJson(input, Object.class);
+            launcherConfiguration = transformer.apply(new JsonValue(config));
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         } finally {
