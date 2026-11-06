@@ -75,7 +75,7 @@
             <artifactId>openidm-launcher</artifactId>
             <version>${project.version}</version>
             <!-- Prevent transitive dependencies from being picked up in zip assembly -->
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
