@@ -2,7 +2,7 @@
     "name": "groovy",
     "connectorRef": {
         "bundleName": "org.wrensecurity.wrenicf.connectors.groovy-connector",
-        "bundleVersion": "1.5.3.1",
+        "bundleVersion": "1.5.4.0",
         "connectorName": "org.forgerock.openicf.connectors.groovy.ScriptedConnector"
     },
     "poolConfigOption": {
@@ -28,7 +28,7 @@
         "enableAttributesToGetSearchResultsHandler": true
     },
     "configurationProperties": {
-        "scriptRoots": ["&{launcher.working.location}samples/groovy-connector-1.5.3.1/groovy/"],
+        "scriptRoots": ["&{launcher.working.location}samples/groovy-connector-1.5.4.0/groovy/"],
         "authenticateScriptFileName": "AuthenticateScript.groovy",
         "createScriptFileName": "CreateScript.groovy",
         "deleteScriptFileName": "DeleteScript.groovy",
