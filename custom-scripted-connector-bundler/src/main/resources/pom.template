@@ -22,7 +22,7 @@
  with the fields enclosed by brackets [] replaced by
  your own identifying information:
  "Portions Copyrighted [year] [name of copyright owner]"
- Portions Copyright 2025 Wren Security.
+ Portions Copyright 2025-2026 Wren Security.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -71,7 +71,7 @@
         <dependency>
             <groupId>org.wrensecurity.wrenicf.connectors</groupId>
             <artifactId>groovy-connector</artifactId>
-            <version>1.5.3.1</version>
+            <version>1.5.4.0</version>
         </dependency>
 
         <dependency>
@@ -96,20 +96,6 @@
         </dependency>
 
         <!-- Scripted REST -->
-        <dependency>
-            <groupId>org.codehaus.groovy.modules.http-builder</groupId>
-            <artifactId>http-builder</artifactId>
-            <version>0.7.1</version>
-            <scope>provided</scope>
-            <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpclient</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore-osgi</artifactId>
