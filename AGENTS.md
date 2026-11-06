@@ -21,7 +21,7 @@ Guidance for AI agents (and humans) working in this repository. Start with
 
 ## Build and test
 
-Requirements: JDK 17 or later, Maven 3.6 or later. The UI build downloads Node and npm itself
+Requirements: JDK 17 or later, Maven 3.9 or later. The UI build downloads Node and npm itself
 (`frontend-maven-plugin`) and runs its tests in headless Chromium (Puppeteer).
 
 ```sh
