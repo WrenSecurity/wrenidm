@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2015-2016 ForgeRock AS.
+ * Portions Copyright 2026 Wren Security.
  */
 
 define([
@@ -87,7 +88,7 @@ define([
                 ],
                 "snapshotToken" : {
                     "type": "jwt",
-                    "jweAlgorithm" : "RSAES_PKCS1_V1_5",
+                    "jweAlgorithm" : "RSA_OAEP_256",
                     "encryptionMethod" : "A128CBC_HS256",
                     "jwsAlgorithm" : "HS256",
                     "tokenExpiry": 1800
