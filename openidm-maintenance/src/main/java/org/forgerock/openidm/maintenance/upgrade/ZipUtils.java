@@ -40,6 +40,7 @@ public class ZipUtils {
 
     /**
      * Extract the contents of the specified zip file to the specified target directory.
+     * Entries that would be extracted outside the target directory are rejected.
      * @param zipFilePath Zip file to unzip. Never null.
      * @param fileMatcher Matcher to restrict extracted files. Can be null.
      * @param targetDir Target directory. Never null.
@@ -48,6 +49,7 @@ public class ZipUtils {
         if (!Files.isDirectory(targetDir)) {
             throw new IllegalArgumentException("Invalid target directory to unzip file.");
         }
+        Path normalizedTargetDir = targetDir.toAbsolutePath().normalize();
         try (ZipFile zipFile = new ZipFile(zipFilePath.toString())) {
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
@@ -55,18 +57,30 @@ public class ZipUtils {
                 if (fileMatcher != null && !fileMatcher.matches(Path.of(entry.getName()))) {
                     continue;
                 }
+                Path entryPath = resolveEntryPath(normalizedTargetDir, entry);
                 if (entry.isDirectory()) {
-                    Files.createDirectories(targetDir.resolve(entry.getName()));
+                    Files.createDirectories(entryPath);
                 } else {
-                    Files.createDirectories(targetDir.resolve(entry.getName()).getParent());
+                    Files.createDirectories(entryPath.getParent());
                     try (InputStream inputStream = zipFile.getInputStream(entry)) {
-                        Files.copy(inputStream, targetDir.resolve(entry.getName()));
+                        Files.copy(inputStream, entryPath);
                     }
                 }
             }
         } catch (IOException e) {
             throw new IllegalStateException("Failed to unzip '" + zipFilePath + "' file.", e);
         }
+    }
+
+    /**
+     * Resolve the target path of the zip entry and make sure it stays within the target directory.
+     */
+    private static Path resolveEntryPath(Path targetDir, ZipEntry entry) throws IOException {
+        Path entryPath = targetDir.resolve(entry.getName()).normalize();
+        if (!entryPath.startsWith(targetDir)) {
+            throw new IOException("Zip entry '" + entry.getName() + "' is outside of the target directory.");
+        }
+        return entryPath;
     }
 
 }
