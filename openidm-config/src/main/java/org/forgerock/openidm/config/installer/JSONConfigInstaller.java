@@ -248,14 +248,12 @@ public class JSONConfigInstaller implements ArtifactInstaller, ConfigurationList
     }
 
     public ConfigurationAdmin getConfigurationAdmin() {
-        // TOOD: better guarding against this service not (yet) being there.
         if (configAdmin == null) {
             this.configAdmin = lookupConfigAdmin(context);
-            if (this.configAdmin != null) {
-                logger.info("ConfigAdmin service detected by JSON configuration listener");
-            } else {
-                logger.warn("JSON Configuration listener could not find ConfigAdmin service");
+            if (this.configAdmin == null) {
+                throw new IllegalStateException("JSON Configuration listener could not find ConfigAdmin service");
             }
+            logger.info("ConfigAdmin service detected by JSON configuration listener");
         }
 
         return configAdmin;

@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 2011-2015 ForgeRock AS. All Rights Reserved
+ * Portions Copyright 2026 Wren Security.
  *
  * The contents of this file are subject to the terms
  * of the Common Development and Distribution License
@@ -83,7 +84,9 @@ public class ConfigCrypto {
     private ConfigCrypto(BundleContext context, ProviderListener delayedHandler) {
         this.context = context;
         this.delayedHandler = delayedHandler;
-        this.delayedHandler.init(this);
+        if (delayedHandler != null) {
+            delayedHandler.init(this);
+        }
         alias = IdentityServer.getInstance().getProperty("openidm.config.crypto.alias", "openidm-config-default");
         logger.info("Using keystore alias {} to handle config encryption", alias);
 
