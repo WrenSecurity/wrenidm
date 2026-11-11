@@ -12,53 +12,52 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2014-2016 ForgeRock AS.
- * Portions Copyright 2023 Wren Security.
+ * Portions Copyright 2023-2026 Wren Security.
  */
 
 define([
     "jquery",
     "lodash",
     "org/forgerock/openidm/ui/common/util/Constants",
-    "org/forgerock/commons/ui/common/main/EventManager"
-], function($, _, constants, eventManager) {
-    var ignorePassword = false,
-        obj = [
-            {
-                startEvent: constants.EVENT_POLICY_FAILURE,
-                description: "Failure to save record due to policy validation",
-                dependencies: [ ],
-                processDescription: function(event) {
-                    var response = event.error.responseObj,
-                        failedProperties,
-                        errors = "Unknown";
+    "org/forgerock/commons/ui/common/components/Messages"
+], ($, _, constants, messagesManager) => {
+    const POLICY_FAILURE_MESSAGES = ["Failed policy validation", "Policy validation failed"];
 
-                    if (typeof response === "object" && response !== null &&
-                        typeof response.detail === "object" && (response.message === "Failed policy validation" || response.message === "Policy validation failed")) {
+    // Translated without interpolation escaping, the whole text is escaped once instead.
+    const translateRequirement = ({ policyRequirement, params }) => _.escape(
+        $.t(`common.form.validation.${policyRequirement}`, _.assign({}, params, { interpolation: { escapeValue: false } }))
+    );
 
-                        errors = _.chain(response.detail.failedPolicyRequirements)
-                            .groupBy('property')
-                            .toPairs()
-                            .map(function (a) {
-                                return " - " + a[0] + ": " +
-                                            _.chain(a[1])
-                                                .map('policyRequirements')
-                                                .map(function (pr) {
-                                                    return _.map(pr, function (p) {
-                                                        return $.t("common.form.validation." + p.policyRequirement, p.params);
-                                                    });
-                                                })
-                                                .value()
-                                                .join(", ");
-                            })
-                            .value()
-                            .join(" <br/> ");
+    const formatValidationErrors = (failedPolicyRequirements) =>
+        Object.entries(_.groupBy(failedPolicyRequirements, "property"))
+            .map(([property, failures]) => {
+                const requirements = failures.flatMap(({ policyRequirements }) =>
+                    _.map(policyRequirements, translateRequirement));
+                return ` - ${_.escape(property)}: ${requirements.join(", ")}`;
+            })
+            .join(" <br/> ");
 
-                    }
+    return [
+        {
+            startEvent: constants.EVENT_POLICY_FAILURE,
+            description: "Failure to save record due to policy validation",
+            dependencies: [],
+            processDescription(event) {
+                const response = event.error.responseObj;
+                const errors = _.isObject(_.get(response, "detail")) && POLICY_FAILURE_MESSAGES.includes(response.message)
+                    ? formatValidationErrors(response.detail.failedPolicyRequirements)
+                    : "Unknown";
 
-                    eventManager.sendEvent(constants.EVENT_DISPLAY_MESSAGE_REQUEST, {key: "resourceValidationError", validationErrors: errors});
-                }
+                // The message contains HTML line breaks; the dynamic parts are escaped above.
+                messagesManager.messages.addMessage({
+                    type: "error",
+                    message: $.t("config.messages.AdminMessages.resourceValidationError", {
+                        validationErrors: errors,
+                        interpolation: { escapeValue: false }
+                    }),
+                    escape: false
+                });
             }
-        ];
-
-    return obj;
+        }
+    ];
 });
