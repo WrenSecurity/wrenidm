@@ -11,12 +11,13 @@
  * Header, with the fields enclosed by brackets [] replaced by your own identifying
  * information: "Portions copyright [year] [name of copyright owner]".
  *
- * Copyright 2023-2024 Wren Security. All rights reserved.
+ * Copyright 2023-2026 Wren Security. All rights reserved.
  */
 package org.forgerock.openidm.maintenance.upgrade;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 
 import java.io.BufferedOutputStream;
@@ -30,6 +31,7 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Comparator;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -68,6 +70,24 @@ public class ZipUtilsTest {
         assertTrue(Files.exists(targetDir.resolve(nestedFilename)));
         assertEquals(Files.readString(targetDir.resolve(nestedFilename)),
                 Files.readString(sourceDir.resolve(nestedFilename)));
+    }
+
+    @Test
+    public void testUnzipFileRejectsEntriesOutsideTargetDir() throws IOException {
+        Path workDir = Files.createTempDirectory("zipUtilsTest");
+        Path targetDir = Files.createDirectory(workDir.resolve("target"));
+
+        for (String entryName : List.of("../evil.txt", "folder/../../evil.txt",
+                workDir.resolve("evil.txt").toAbsolutePath().toString())) {
+            Path zipFile = workDir.resolve("evil.zip");
+            try (ZipOutputStream zos = new ZipOutputStream(Files.newOutputStream(zipFile))) {
+                zos.putNextEntry(new ZipEntry(entryName));
+                zos.write("Evil content".getBytes());
+                zos.closeEntry();
+            }
+            assertThrows(IllegalStateException.class, () -> ZipUtils.unzipFile(zipFile, targetDir));
+            assertFalse(Files.exists(workDir.resolve("evil.txt")), entryName);
+        }
     }
 
     private void cleanDirectory(Path path) throws IOException {
