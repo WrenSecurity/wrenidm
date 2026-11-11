@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2026 Wren Security
  */
 package org.forgerock.openidm.external.rest;
 
@@ -291,11 +291,10 @@ public class RestService implements SingletonResourceProvider {
         }
 
         final boolean forceWrap;
-        final Request request;
+        final Request request = new Request();
         try {
             forceWrap = content.get(ARG_FORCE_WRAP).defaultTo(false).asBoolean();
-            request = new Request()
-                    .setMethod(content.get(ARG_METHOD).required().asString())
+            request.setMethod(content.get(ARG_METHOD).required().asString())
                     .setUri(content.get(ARG_URL).required().asString());
 
             final Map<String, Object> headerMap = content.get(ARG_HEADERS).defaultTo(Collections.emptyMap()).asMap();
@@ -329,15 +328,18 @@ public class RestService implements SingletonResourceProvider {
                     request.getHeaders().put("Authorization", "Bearer " + token);
                     logger.debug("Using bearer authentication");
                 } else {
+                    closeSilently(request);
                     return new BadRequestException("Invalid auth type \"" + type + "\" on "
                             + actionRequest.getResourcePath() + "/" + actionRequest.getAction()).asPromise();
                 }
             }
         } catch (URISyntaxException e) {
+            closeSilently(request);
             return new BadRequestException("Invalid action call on "
                     + actionRequest.getResourcePath() + "/" + actionRequest.getAction()
                     + " : invalid 'url' JSON field: " + actionRequest.getContent().get(ARG_URL).toString()).asPromise();
         } catch (JsonValueException e) {
+            closeSilently(request);
             return new BadRequestException("Invalid action call on "
                     + actionRequest.getResourcePath() + "/" + actionRequest.getAction()
                     + " : invalid or missing JSON field: " + e.getMessage()).asPromise();
@@ -390,7 +392,8 @@ public class RestService implements SingletonResourceProvider {
                         }
                     }
                 },
-                org.forgerock.http.protocol.Responses.<ActionResponse, ResourceException>noopExceptionFunction());
+                org.forgerock.http.protocol.Responses.<ActionResponse, ResourceException>noopExceptionFunction())
+                .thenAlways(request::close);
     }
 
     /**

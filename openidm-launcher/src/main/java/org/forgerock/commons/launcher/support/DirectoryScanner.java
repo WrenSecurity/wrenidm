@@ -11,7 +11,7 @@
  * Header, with the fields enclosed by brackets [] replaced by your own identifying
  * information: "Portions copyright [year] [name of copyright owner]".
  *
- * Copyright 2024 Wren Security
+ * Copyright 2024-2026 Wren Security
  */
 package org.forgerock.commons.launcher.support;
 
@@ -23,6 +23,7 @@ import java.nio.file.PathMatcher;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Simple file tree walker based on previously used Plexus Utils' {@code DirectoryScanner}.
@@ -48,13 +49,15 @@ public class DirectoryScanner {
     }
 
     public List<Path> scan(Path start) throws IOException {
-        return Files.walk(start, FileVisitOption.FOLLOW_LINKS)
-                .map(start::relativize)
-                .filter(includes::matches)
-                .filter(Predicate.not(excludes::matches))
-                .filter(Predicate.not(Files::isDirectory))
-                .map(start::resolve)
-                .collect(Collectors.toList());
+        try (Stream<Path> paths = Files.walk(start, FileVisitOption.FOLLOW_LINKS)) {
+            return paths
+                    .map(start::relativize)
+                    .filter(includes::matches)
+                    .filter(Predicate.not(excludes::matches))
+                    .filter(Predicate.not(Files::isDirectory))
+                    .map(start::resolve)
+                    .collect(Collectors.toList());
+        }
     }
 
 }

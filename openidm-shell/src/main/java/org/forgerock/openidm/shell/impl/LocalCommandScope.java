@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2026 Wren Security.
  */
 
 package org.forgerock.openidm.shell.impl;
@@ -180,9 +181,7 @@ public class LocalCommandScope extends CustomCommandScope {
                     continue;
                 }
                 // TODO pretty print
-                try {
-                    String json = FileUtil.readFile(subFile);
-                    JsonParser parser = mapper.getFactory().createParser(json);
+                try (JsonParser parser = mapper.getFactory().createParser(FileUtil.readFile(subFile))) {
                     while (parser.nextToken() != null) {
                         /* be happy */
                     }

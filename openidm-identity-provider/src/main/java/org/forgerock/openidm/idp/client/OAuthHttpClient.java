@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2026 Wren Security
  */
 package org.forgerock.openidm.idp.client;
 
@@ -242,7 +242,8 @@ public class OAuthHttpClient {
         return httpClient
                 .send(request)
                 .then(handleResponse,
-                        Responses.<JsonValue, ResourceException>noopExceptionFunction());
+                        Responses.<JsonValue, ResourceException>noopExceptionFunction())
+                .thenAlways(request::close);
     }
 
     private Promise<JsonValue, ResourceException> sendPostRequest(final URI uri, final String contentType,
@@ -259,6 +260,7 @@ public class OAuthHttpClient {
         return httpClient
                 .send(request)
                 .then(handleResponse,
-                        Responses.<JsonValue, ResourceException>noopExceptionFunction());
+                        Responses.<JsonValue, ResourceException>noopExceptionFunction())
+                .thenAlways(request::close);
     }
 }

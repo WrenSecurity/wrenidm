@@ -27,6 +27,7 @@ package org.forgerock.openidm.servletregistration.impl;
 import static org.forgerock.json.JsonValueFunctions.listOf;
 import static org.forgerock.json.JsonValueFunctions.url;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -93,6 +94,9 @@ public class ServletRegistrationSingleton implements ServletRegistration {
 
     /** Tracks OSGi Whiteboard filter registrations for unregistration. */
     private Map<Filter, ServiceRegistration<Filter>> filterRegistrations = new HashMap<>();
+
+    /** Tracks class loaders of registered filters, closed when the filter is unregistered. */
+    private Map<Filter, URLClassLoader> filterClassLoaders = new HashMap<>();
 
     private final static Object registrationLock = new Object();
 
@@ -220,7 +224,7 @@ public class ServletRegistrationSingleton implements ServletRegistration {
 
         // Create a classloader and dynamically create the requested filter
         Filter filter = null;
-        ClassLoader filterCL = null;
+        URLClassLoader filterCL = null;
         ClassLoader origCL = Thread.currentThread().getContextClassLoader();
         try {
             filterCL = new URLClassLoader(urls.toArray(new URL[0]), this.getClass().getClassLoader());
@@ -228,6 +232,7 @@ public class ServletRegistrationSingleton implements ServletRegistration {
             filter = (Filter)(Class.forName(filterClass, true, filterCL).newInstance());
         } catch (Exception ex) {
             logger.warn("Configured class {} failed to load from configured class path URLs {}", filterClass, urls, ex);
+            closeClassLoader(filterCL);
             throw ex;
         } finally {
             Thread.currentThread().setContextClassLoader(origCL);
@@ -252,6 +257,7 @@ public class ServletRegistrationSingleton implements ServletRegistration {
         ServiceRegistration<Filter> registration = bundleContext.registerService(
                 Filter.class, proxiedFilter, whiteboardProps);
         filterRegistrations.put(proxiedFilter, registration);
+        filterClassLoaders.put(proxiedFilter, filterCL);
         return proxiedFilter;
     }
 
@@ -274,6 +280,18 @@ public class ServletRegistrationSingleton implements ServletRegistration {
         ServiceRegistration<Filter> registration = filterRegistrations.remove(filter);
         if (registration != null) {
             registration.unregister();
+        }
+        closeClassLoader(filterClassLoaders.remove(filter));
+    }
+
+    private static void closeClassLoader(URLClassLoader classLoader) {
+        if (classLoader == null) {
+            return;
+        }
+        try {
+            classLoader.close();
+        } catch (IOException e) {
+            logger.warn("Failed to close servlet filter class loader", e);
         }
     }
 

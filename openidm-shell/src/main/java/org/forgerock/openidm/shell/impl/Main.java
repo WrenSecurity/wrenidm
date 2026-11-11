@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2011-2016 ForgeRock AS.
+ * Portions Copyright 2026 Wren Security.
  */
 
 package org.forgerock.openidm.shell.impl;
@@ -63,7 +64,11 @@ public final class Main {
             Thread thread = new Thread(new Console(session, new History()), "OpenIDM shell");
             thread.start();
         } else {
-            processor.eval(session, args);
+            try {
+                processor.eval(session, args);
+            } finally {
+                session.close();
+            }
         }
     }
 

@@ -77,15 +77,15 @@ public class OAuthResolverImpl implements OAuthResolver {
     }
 
     private JsonValue sendGetRequest(final URI uri, final String accessToken) throws OAuthVerificationException {
-        final Request request = new Request()
-                .setMethod("GET")
-                .setUri(uri);
-        request.getHeaders().put(new GenericHeader("Authorization", "Bearer " + accessToken));
-        try (Response response = httpClient.send(request).getOrThrowUninterruptibly()) {
-            if (!response.getStatus().isSuccessful()) {
-                throw new OAuthVerificationException("User info request failed with status " + response.getStatus().getCode());
+        try (Request request = new Request().setMethod("GET").setUri(uri)) {
+            request.getHeaders().put(new GenericHeader("Authorization", "Bearer " + accessToken));
+            try (Response response = httpClient.send(request).getOrThrowUninterruptibly()) {
+                if (!response.getStatus().isSuccessful()) {
+                    throw new OAuthVerificationException(
+                            "User info request failed with status " + response.getStatus().getCode());
+                }
+                return json(response.getEntity().getJson());
             }
-            return json(response.getEntity().getJson());
         } catch (IOException e) {
             throw new OAuthVerificationException("Unable to read user info response", e);
         }
