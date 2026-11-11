@@ -646,7 +646,7 @@ class ObjectClassResourceProvider implements RequestHandler {
             // prevent the exception from stopping the remaining update
         }
 
-        if (reauthUser == null | reauthPassword == null) {
+        if (reauthUser == null || reauthPassword == null) {
             return null;
         }
         return new Pair<>(reauthUser, new GuardedString(reauthPassword.toCharArray()));
