@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2026 Wren Security
  */
 package org.forgerock.openidm.keystore.impl;
 
@@ -107,7 +107,7 @@ public class KeyStoreManagementServiceImpl implements KeyStoreManagementService 
                 }
             }
 
-            final SSLContext context = SSLContext.getInstance("SSL");
+            final SSLContext context = SSLContext.getInstance("TLS");
             context.init(keyManagers, trustManagers, null);
             SSLContext.setDefault(context);
         } catch (final NoSuchAlgorithmException|KeyStoreException|KeyManagementException|UnrecoverableKeyException e) {
