@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Portions copyright 2013-2016 ForgeRock AS.
- * Portions Copyright 2020 Wren Security
+ * Portions Copyright 2020-2026 Wren Security
  */
 package org.forgerock.openidm.cluster;
 
@@ -827,8 +827,7 @@ public class ClusterManager implements RequestHandler, ClusterManagementService 
                             }
                         }
                     } catch (Exception e) {
-                        logger.error("Error performing cluster manager thread logic");
-                        e.printStackTrace();
+                        logger.error("Error performing cluster manager thread logic", e);
                     }
                 }
             }, checkinOffset, checkinInterval + checkinOffset, TimeUnit.MILLISECONDS);
