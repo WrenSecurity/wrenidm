@@ -126,6 +126,8 @@
 
         <maven.compiler.release>17</maven.compiler.release>
 
+        <sonar.projectName>wrenidm</sonar.projectName>
+
         <!-- Commons versions -->
         <wrensec.commons.version>23.1.0</wrensec.commons.version>
         <commons.script.version>5.0.0</commons.script.version>
