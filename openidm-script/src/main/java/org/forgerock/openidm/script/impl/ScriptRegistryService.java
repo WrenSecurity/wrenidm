@@ -12,7 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2013-2016 ForgeRock AS.
- * Portions Copyright 2020-2023 Wren Security
+ * Portions Copyright 2020-2026 Wren Security
  */
 
 package org.forgerock.openidm.script.impl;
@@ -23,6 +23,7 @@ import static org.forgerock.util.promise.Promises.newResultPromise;
 import jakarta.xml.bind.DatatypeConverter;
 import java.io.File;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -597,18 +598,18 @@ public class ScriptRegistryService extends ScriptRegistryImpl implements Request
                  * This results in a newly created and cached class on every invocation.
                  */
                 try {
-                    MessageDigest md = MessageDigest.getInstance("SHA-1");
+                    MessageDigest md = MessageDigest.getInstance("SHA-256");
 
                     // digest source AND type as we could have identical source for different types
                     String type = scriptConfig.get(SourceUnit.ATTR_TYPE).asString();
-                    byte[] nameAndType = (source.asString() + type).getBytes();
+                    byte[] nameAndType = (source.asString() + type).getBytes(StandardCharsets.UTF_8);
                     byte[] digest = md.digest(nameAndType);
                     String name = DatatypeConverter.printHexBinary(digest);
 
                     scriptConfig.put(SourceUnit.ATTR_NAME, name);
                 } catch (NoSuchAlgorithmException e) {
-                    // SHA-1 is a required implementation. This should never happen.
-                    logger.error("Could not get SHA-1 MessageDigest instance. This should be implemented on any standard JVM.", e);
+                    // SHA-256 is a required implementation. This should never happen.
+                    logger.error("Could not get SHA-256 MessageDigest instance. This should be implemented on any standard JVM.", e);
                 }
             }
         }
