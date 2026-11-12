@@ -74,9 +74,6 @@ public final class ResourceServlet extends HttpServlet {
     private static final String CONFIG_DEFAULT_DIR = "defaultDir";
     private static final String CONFIG_EXTENSION_DIR = "extensionDir";
 
-    /** the Felix web console self-attaches to this servlet target */
-    private static final String FELIX_WEB_CONSOLE = "/system/console";
-
     //TODO Decide where to put the web and the java resources. Now both are in root
     private String defaultDir;
     private String extensionDir;
@@ -127,10 +124,6 @@ public final class ResourceServlet extends HttpServlet {
             }
 
             target = prependSlash(target);
-            if (target.startsWith(FELIX_WEB_CONSOLE)) {
-                // this request is not for us
-                return;
-            }
 
             // Locate the file in extension dir first, fall back to default dir
             URL url = null;

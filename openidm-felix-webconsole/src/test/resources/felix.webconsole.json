@@ -1,4 +1,5 @@
 {
+  "enabled" : true,
   "username" : "admin",
   "password" : "password"
 }

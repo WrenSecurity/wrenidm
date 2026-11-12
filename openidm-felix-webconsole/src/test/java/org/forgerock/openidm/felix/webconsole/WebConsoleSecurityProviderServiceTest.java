@@ -22,6 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,13 +30,20 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
+import java.util.Dictionary;
 import java.util.Hashtable;
+
+import org.apache.felix.webconsole.spi.SecurityProvider;
 
 import org.forgerock.http.util.Json;
 import org.forgerock.json.JsonValue;
+import org.forgerock.json.JsonValueException;
 import org.forgerock.openidm.config.enhanced.JSONEnhancedConfig;
 import org.forgerock.openidm.crypto.CryptoService;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -47,6 +55,9 @@ public class WebConsoleSecurityProviderServiceTest {
     private static final String CORRECT_PASSWORD = "password";
     private static final String INCORRECT_USERNAME = "incorrectUsername";
     private static final String INCORRECT_PASSWORD = "incorrectPassword";
+
+    private BundleContext bundleContext;
+    private ServiceRegistration<SecurityProvider> registration;
 
     /**
      * Creates a credentials provider to test all the possible credential cases. The format of the data provider is:
@@ -86,43 +97,89 @@ public class WebConsoleSecurityProviderServiceTest {
         } else {
             assertThat(user).isNull();
         }
+        assertThat(getRegisteredProviderId(webConsoleSecurityProviderService))
+                .isEqualTo(WebConsoleSecurityProviderService.SECURITY_PROVIDER_ID);
     }
 
-    @DataProvider(name = "unsetPasswordData")
-    public Object[][] unsetPasswordData() {
+    @DataProvider(name = "enabledData")
+    public Object[][] enabledData() {
         return new Object[][] {
-                { null, "" },
-                { null, "admin" },
-                { "", "" },
-                { "", "admin" }
+                { true, true },
+                { false, false },
+                { null, false }
         };
     }
 
-    @Test(dataProvider = "unsetPasswordData")
-    public void testLoginNotPossibleWithoutConfiguredPassword(String configuredPassword, String attemptedPassword)
-            throws IOException {
+    @Test(dataProvider = "enabledData")
+    public void testEnabledFlag(Boolean enabled, boolean expectEnabled) throws IOException {
         // given
         final JsonValue config = getConfiguration(FELIX_WEBCONSOLE_JSON_CONFIG);
-        config.remove("password");
-        if (configuredPassword != null) {
-            config.put("password", configuredPassword);
+        config.remove("enabled");
+        if (enabled != null) {
+            config.put("enabled", enabled);
         }
         final WebConsoleSecurityProviderService webConsoleSecurityProviderService =
                 createWebConsoleSecurityProviderService(config);
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
         String authHeader = "Basic " + Base64.getEncoder().encodeToString(
-                (CORRECT_USERNAME + ":" + attemptedPassword).getBytes());
+                (CORRECT_USERNAME + ":" + CORRECT_PASSWORD).getBytes());
         when(request.getHeader(eq("Authorization"))).thenReturn(authHeader);
 
         // when
         final Object user = webConsoleSecurityProviderService.authenticate(request, response);
 
         // then
-        assertThat(user).isNull();
+        final Object providerId = getRegisteredProviderId(webConsoleSecurityProviderService);
+        if (expectEnabled) {
+            assertThat(user).isNotNull();
+            assertThat(webConsoleSecurityProviderService.authorize(user, "any")).isTrue();
+            assertThat(providerId).isEqualTo(WebConsoleSecurityProviderService.SECURITY_PROVIDER_ID);
+        } else {
+            assertThat(user).isNull();
+            assertThat(webConsoleSecurityProviderService.authorize(new Object(), "any")).isFalse();
+            verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
+            assertThat(providerId).isNull();
+        }
     }
 
+    @Test(expectedExceptions = JsonValueException.class)
+    public void testEnabledFlagRejectsNonBooleanValue() throws IOException {
+        // given
+        final JsonValue config = getConfiguration(FELIX_WEBCONSOLE_JSON_CONFIG);
+        config.put("enabled", "true");
+
+        // when
+        createWebConsoleSecurityProviderService(config);
+    }
+
+    @Test
+    public void testDeactivateUnregistersProvider() throws IOException {
+        // given
+        final WebConsoleSecurityProviderService webConsoleSecurityProviderService =
+                createWebConsoleSecurityProviderService(getConfiguration(FELIX_WEBCONSOLE_JSON_CONFIG));
+
+        // when
+        webConsoleSecurityProviderService.deactivate(null);
+
+        // then
+        verify(registration).unregister();
+        assertThat(webConsoleSecurityProviderService.authorize(new Object(), "any")).isFalse();
+    }
+
+    @SuppressWarnings("unchecked")
+    private Object getRegisteredProviderId(final WebConsoleSecurityProviderService service) {
+        final ArgumentCaptor<Dictionary<String, Object>> properties = ArgumentCaptor.forClass(Dictionary.class);
+        verify(bundleContext).registerService(eq(SecurityProvider.class), eq(service), properties.capture());
+        return properties.getValue().get(WebConsoleSecurityProviderService.SECURITY_PROVIDER_ID_PROPERTY);
+    }
+
+    @SuppressWarnings("unchecked")
     private WebConsoleSecurityProviderService createWebConsoleSecurityProviderService(final JsonValue config) {
+        bundleContext = mock(BundleContext.class);
+        registration = mock(ServiceRegistration.class);
+        when(bundleContext.registerService(eq(SecurityProvider.class), any(SecurityProvider.class),
+                ArgumentMatchers.<Dictionary<String, Object>>any())).thenReturn(registration);
         final WebConsoleSecurityProviderService webConsoleSecurityProviderService =
                 new WebConsoleSecurityProviderService();
         final JSONEnhancedConfig jsonEnhancedConfig = mock(JSONEnhancedConfig.class);
@@ -130,6 +187,7 @@ public class WebConsoleSecurityProviderServiceTest {
         ComponentContext context = mock(ComponentContext.class);
         when(cryptoService.decryptIfNecessary(any(JsonValue.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(context.getProperties()).thenReturn(new Hashtable<String, Object>());
+        when(context.getBundleContext()).thenReturn(bundleContext);
         when(jsonEnhancedConfig.getConfiguration(ArgumentMatchers.<Hashtable<String, Object>>any(), ArgumentMatchers.<String>any(), anyBoolean()))
                 .thenReturn(config);
         webConsoleSecurityProviderService.bindCryptoService(cryptoService);
