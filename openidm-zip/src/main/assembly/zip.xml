@@ -97,15 +97,34 @@
                 <exclude>com.github.cverges:expect4j</exclude>
                 <exclude>com.jcraft:jsch</exclude>
                 <exclude>org.apache.felix:org.apache.felix.framework</exclude>
+                <exclude>org.apache.felix:org.apache.felix.inventory</exclude>
+                <exclude>org.apache.felix:org.apache.felix.webconsole</exclude>
+                <exclude>org.apache.felix:org.apache.felix.webconsole.plugins.*</exclude>
                 <exclude>org.apache.olingo:odata-client-core</exclude>
                 <exclude>org.apache.tomcat:tomcat-jdbc</exclude>
                 <exclude>oro:oro</exclude>
                 <exclude>org.osgi:osgi.cmpn</exclude>
+                <exclude>org.owasp.encoder:encoder</exclude>
                 <exclude>org.wrensecurity.wrends:opendj-core</exclude>
                 <exclude>org.wrensecurity.wrenicf.connectors:*</exclude>
                 <exclude>org.wrensecurity.wrenidm:openidm-shell</exclude>
                 <exclude>org.wrensecurity.wrenidm.tools:custom-scripted-connector-bundler</exclude>
             </excludes>
+        </dependencySet>
+
+        <!-- Felix web console bundles, installed only when enabled (see openidm-felix-webconsole) -->
+        <dependencySet>
+            <outputDirectory>/wrenidm/console</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <scope>runtime</scope>
+
+            <includes>
+                <include>org.apache.felix:org.apache.felix.inventory</include>
+                <include>org.apache.felix:org.apache.felix.webconsole</include>
+                <include>org.apache.felix:org.apache.felix.webconsole.plugins.*</include>
+                <include>org.owasp.encoder:encoder</include>
+            </includes>
         </dependencySet>
 
         <!-- Enduser UI arfifacts -->

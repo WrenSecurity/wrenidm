@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2026 Wren Security
  */
 package org.forgerock.openidm.felix.webconsole.metadata;
 
@@ -22,7 +23,7 @@ import static org.forgerock.json.JsonValue.object;
 import java.util.List;
 
 import org.forgerock.json.JsonPointer;
-import org.forgerock.openidm.felix.webconsole.WebConsoleSecurityProviderService;
+import org.forgerock.openidm.felix.webconsole.WebConsoleSetupService;
 import org.forgerock.openidm.metadata.NotConfiguration;
 import org.forgerock.openidm.metadata.WaitForMetaData;
 import org.testng.annotations.Test;
@@ -36,7 +37,7 @@ public class ConfigMetaTest {
 
         // when
         final List<JsonPointer> propertiesToEncrypt =
-                configMeta.getPropertiesToEncrypt(WebConsoleSecurityProviderService.PID, "", json(object()));
+                configMeta.getPropertiesToEncrypt(WebConsoleSetupService.PID, "", json(object()));
 
         // then
         assertThat(propertiesToEncrypt).hasSize(1).contains(new JsonPointer("password"));

@@ -13,7 +13,7 @@
     information: "Portions copyright [year] [name of copyright owner]".
 
     Copyright 2016 ForgeRock AS.
-    Portions Copyright 2020-2022 Wren Security
+    Portions Copyright 2020-2026 Wren Security
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -26,7 +26,12 @@
 
     <artifactId>openidm-felix-webconsole</artifactId>
 
-    <name>Wren:IDM - Felix Web Console Authentication Plugin</name>
+    <name>Wren:IDM - Felix Web Console Setup</name>
+
+    <properties>
+        <!-- The web console SPI is exported by the web console bundle installed at runtime -->
+        <openidm.osgi.import.before.defaults>!org.apache.felix.webconsole.spi</openidm.osgi.import.before.defaults>
+    </properties>
 
     <dependencies>
         <!-- OpenIDM Dependencies -->
@@ -46,6 +51,7 @@
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.webconsole</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Jakarta EE -->
@@ -93,6 +99,11 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <DynamicImport-Package>org.apache.felix.webconsole.spi;version="[1.3,2)"</DynamicImport-Package>
+                    </instructions>
+                </configuration>
             </plugin>
         </plugins>
     </build>

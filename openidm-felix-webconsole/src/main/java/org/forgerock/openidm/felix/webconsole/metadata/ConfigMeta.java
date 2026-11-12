@@ -12,6 +12,7 @@
  * information: "Portions copyright [year] [name of copyright owner]".
  *
  * Copyright 2016 ForgeRock AS.
+ * Portions Copyright 2026 Wren Security
  */
 package org.forgerock.openidm.felix.webconsole.metadata;
 
@@ -20,14 +21,14 @@ import java.util.List;
 
 import org.forgerock.json.JsonPointer;
 import org.forgerock.json.JsonValue;
-import org.forgerock.openidm.felix.webconsole.WebConsoleSecurityProviderService;
+import org.forgerock.openidm.felix.webconsole.WebConsoleSetupService;
 import org.forgerock.openidm.metadata.MetaDataProvider;
 import org.forgerock.openidm.metadata.MetaDataProviderCallback;
 import org.forgerock.openidm.metadata.NotConfiguration;
 import org.forgerock.openidm.metadata.WaitForMetaData;
 
 /**
- * Implements a {@link MetaDataProvider} to encrypt sensitive fields in the {@link WebConsoleSecurityProviderService}
+ * Implements a {@link MetaDataProvider} to encrypt sensitive fields in the {@link WebConsoleSetupService}
  * json configuration.
  */
 public class ConfigMeta implements MetaDataProvider {
@@ -45,7 +46,7 @@ public class ConfigMeta implements MetaDataProvider {
     @Override
     public List<JsonPointer> getPropertiesToEncrypt(String pidOrFactory, String instanceAlias, JsonValue config)
             throws WaitForMetaData, NotConfiguration {
-        if (!WebConsoleSecurityProviderService.PID.equalsIgnoreCase(pidOrFactory)) {
+        if (!WebConsoleSetupService.PID.equalsIgnoreCase(pidOrFactory)) {
             return null;
         }
         return encryptedFields;

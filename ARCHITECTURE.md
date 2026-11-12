@@ -73,7 +73,7 @@ tests that run against a started Wren:IDM over REST are in the `wrenidm-test` mo
 | `openidm-infoservice`, `openidm-maintenance` | `/info`, `/health`; maintenance mode and the inherited update mechanism |
 | `openidm-external-email`, `openidm-external-rest`, `openidm-messaging` | outbound email and REST calls, JMS subscribers |
 | `openidm-smartevent` | internal event publishing and statistics (monitoring) |
-| `openidm-felix-webconsole` | security provider for the Felix web console (`/system/console`) |
+| `openidm-felix-webconsole` | setup and security provider of the Felix web console (`/system/console`), bundles from `console/` |
 | `openidm-shell` | command-line tool `cli.sh` (`bin/openidm.jar`): config import and export, encryption, connector configuration |
 | `openidm-ui` | the UIs: `openidm-ui-common`, `openidm-ui-admin`, `openidm-ui-enduser`, `openidm-ui-api` |
 | `openidm-util` | shared utilities, `CryptoService` interface, scripted router filter |
@@ -382,7 +382,9 @@ stages (stateless storage). `selfservice/user` lets users update their own profi
   `conf/*.patch`, `db/<database>/scripts/updates/`) dates from OpenIDM 4.5 / 5.0 and is not
   maintained.
 * **Felix web console** (`/system/console`) manages the OSGi framework - installing bundles
-  included - with credentials from `conf/felix.webconsole.json`.
+  included - with credentials from `conf/felix.webconsole.json`. Its bundles in `console/` are not
+  started by the launcher: only when the configuration enables it, `WebConsoleSetupService`
+  installs them, registers the security provider and then starts them.
 
 ## User interface
 
