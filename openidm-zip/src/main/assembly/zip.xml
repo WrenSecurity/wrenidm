@@ -99,6 +99,7 @@
                 <exclude>org.apache.felix:org.apache.felix.framework</exclude>
                 <exclude>org.apache.olingo:odata-client-core</exclude>
                 <exclude>org.apache.tomcat:tomcat-jdbc</exclude>
+                <exclude>org.apache.tomcat:tomcat-juli</exclude>
                 <exclude>oro:oro</exclude>
                 <exclude>org.osgi:osgi.cmpn</exclude>
                 <exclude>org.wrensecurity.wrends:opendj-core</exclude>
@@ -165,6 +166,7 @@
                 <include>com.jcraft:jsch</include>
                 <include>org.apache.olingo:*</include>
                 <include>org.apache.tomcat:tomcat-jdbc</include>
+                <include>org.apache.tomcat:tomcat-juli</include>
                 <include>org.wrensecurity.wrenicf.connectors:groovy-connector</include>
                 <include>org.wrensecurity.wrenicf.connectors:ssh-connector</include>
                 <include>org.wrensecurity.wrends:opendj-*</include>
