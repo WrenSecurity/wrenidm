@@ -129,8 +129,8 @@
         <sonar.projectName>wrenidm</sonar.projectName>
 
         <!-- Commons versions -->
-        <wrensec.commons.version>23.1.0</wrensec.commons.version>
-        <commons.script.version>5.0.0</commons.script.version>
+        <wrensec.commons.version>23.1.1</wrensec.commons.version>
+        <commons.script.version>5.1.0</commons.script.version>
 
         <!-- Third party dependency versions -->
         <joda-time.version>2.14.0</joda-time.version>
@@ -140,7 +140,7 @@
         <pax.swissbox.extender.version>1.8.5</pax.swissbox.extender.version>
         <!-- quartz 2.x is not compatible yet -->
         <quartz.version>1.8.6_1</quartz.version>
-        <rhino.version>1.7.15_1</rhino.version>
+        <rhino.version>1.9.2</rhino.version>
         <groovy.version>5.0.2</groovy.version>
 
         <!-- OSGi / Felix versions -->
@@ -637,8 +637,20 @@
             </dependency>
 
             <dependency>
-                <groupId>org.apache.servicemix.bundles</groupId>
-                <artifactId>org.apache.servicemix.bundles.rhino</artifactId>
+                <groupId>org.mozilla</groupId>
+                <artifactId>rhino</artifactId>
+                <version>${rhino.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mozilla</groupId>
+                <artifactId>rhino-engine</artifactId>
+                <version>${rhino.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mozilla</groupId>
+                <artifactId>rhino-tools</artifactId>
                 <version>${rhino.version}</version>
             </dependency>
 
@@ -757,7 +769,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson</groupId>
                 <artifactId>jackson-bom</artifactId>
-                <version>2.21.0</version>
+                <version>2.23.0</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
