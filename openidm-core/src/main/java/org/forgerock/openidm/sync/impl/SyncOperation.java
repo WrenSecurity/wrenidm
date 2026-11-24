@@ -910,7 +910,7 @@ abstract class SyncOperation {
      * @param reconContext Recon context or {@code null}
      * @throws SynchronizationException if applying the mappings fails.
      */
-    private void applyMappings(Context context, JsonValue source, JsonValue oldSource, JsonValue target,
+    protected void applyMappings(Context context, JsonValue source, JsonValue oldSource, JsonValue target,
             JsonValue existingTarget, String linkQualifier, ReconciliationContext reconContext) throws SynchronizationException {
         EventEntry measure = Publisher.start(objectMapping.getObjectMappingEventName(), source, null);
         try {
