@@ -52,7 +52,8 @@
                 "location":"bundle",
                 "includes":[
                     "**/openidm-cluster-*.jar",
-                    "**/groovy-*.jar"
+                    "**/groovy-*.jar",
+                    "**/rhino-*.jar"
                 ],
                 "start-level":9,
                 "action":"install.start"
@@ -61,7 +62,7 @@
                 "location":"bundle",
                 "includes":["*.jar"],
                 "excludes":[
-                    "**/org.apache.aries.dynamic.*.jar",
+                    "**/org.apache.aries.spifly.*.jar",
                     "**/slf4j-*.jar",
                     "**/osgi-over-slf4j-*",
                     "**/openidm-system-*.jar",
@@ -74,7 +75,10 @@
                     "**/org.apache.felix.configadmin-*.jar",
                     "**/org.apache.felix.fileinstall-*.jar",
                     "**/org.apache.felix.http.jetty12*.jar",
-                    "**/openidm-scheduler-*.jar"
+                    "**/openidm-scheduler-*.jar",
+                    "**/openidm-cluster-*.jar",
+                    "**/groovy-*.jar",
+                    "**/rhino-*.jar"
                 ]
             },
             {
